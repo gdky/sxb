@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtUser">
+      <Property name="creationType">gov.hygs.htgl.entity.User</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="login_Name">
+        <Property></Property>
+        <Property name="label">登录名</Property>
+      </PropertyDef>
+      <PropertyDef name="user_Name">
+        <Property></Property>
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property></Property>
+        <Property name="label">电话号码</Property>
+      </PropertyDef>
+      <PropertyDef name="rzsj">
+        <Property name="dataType">Date</Property>
+        <Property name="label">入职日期</Property>
+      </PropertyDef>
+      <PropertyDef name="zw">
+        <Property></Property>
+        <Property name="label">职位</Property>
+      </PropertyDef>
+      <PropertyDef name="pwd">
+        <Property></Property>
+        <Property name="label">密码</Property>
+      </PropertyDef>
+      <PropertyDef name="photo">
+        <Property></Property>
+        <Property name="label">头像</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">所在科室</Property>
+      </PropertyDef>
+      <PropertyDef name="birthday">
+        <Property name="dataType">Date</Property>
+        <Property name="label">生日</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsUser">
+      <Property name="dataType">[dtUser]</Property>
+      <Property name="dataProvider">yhJsglController#getUserInfo</Property>
+      <Property name="pageSize">30</Property>
+    </DataSet>
+    <UpdateAction id="updateActionUser">
+      <Property name="dataResolver">yhJsglController#saveUserInfo</Property>
+      <Property name="successMessage">保存成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsUser</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <GroupBox>
+      <Property name="caption">用户管理</Property>
+      <Buttons/>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="dataSet">dsUser</Property>
+            <Property name="itemCodes">pages</Property>
+          </DataPilot>
+          <ToolBarButton>
+            <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).insert();&#xD;
+view.get(&quot;#DialogUser&quot;).show();&#xD;
+</ClientEvent>
+            <Property name="caption">增加</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
+</ClientEvent>
+            <Property name="caption">修改</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+	view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).remove();&#xD;
+	view.get(&quot;#updateActionUser&quot;).execute();&#xD;
+});&#xD;
+</ClientEvent>
+            <Property name="caption">删除</Property>
+          </ToolBarButton>
+        </ToolBar>
+        <DataGrid>
+          <Property name="dataSet">dsUser</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn name="login_Name">
+            <Property name="property">login_Name</Property>
+          </DataColumn>
+          <DataColumn name="user_Name">
+            <Property name="property">user_Name</Property>
+          </DataColumn>
+          <DataColumn name="phone">
+            <Property name="property">phone</Property>
+          </DataColumn>
+          <DataColumn name="rzsj">
+            <Property name="property">rzsj</Property>
+          </DataColumn>
+          <DataColumn name="zw">
+            <Property name="property">zw</Property>
+          </DataColumn>
+          <DataColumn name="pwd">
+            <Property name="property">pwd</Property>
+          </DataColumn>
+          <DataColumn name="photo">
+            <Property name="property">photo</Property>
+          </DataColumn>
+          <DataColumn name="deptid">
+            <Property name="property">deptid</Property>
+          </DataColumn>
+          <DataColumn name="birthday">
+            <Property name="property">birthday</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+    </GroupBox>
+    <Dialog id="DialogUser">
+      <Property name="width">600</Property>
+      <Property name="height">300</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
+view.get(&quot;#updateActionUser&quot;).execute();</ClientEvent>
+          <Property name="caption">确定</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).cancel(); &#xD;
+view.get(&quot;#DialogUser&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <AutoForm>
+          <Property name="dataSet">dsUser</Property>
+          <Property name="dataPath">#</Property>
+          <AutoFormElement>
+            <Property name="name">login_Name</Property>
+            <Property name="property">login_Name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">user_Name</Property>
+            <Property name="property">user_Name</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">phone</Property>
+            <Property name="property">phone</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">rzsj</Property>
+            <Property name="property">rzsj</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">zw</Property>
+            <Property name="property">zw</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">pwd</Property>
+            <Property name="property">pwd</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">photo</Property>
+            <Property name="property">photo</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">deptid</Property>
+            <Property name="property">deptid</Property>
+            <Editor/>
+          </AutoFormElement>
+        </AutoForm>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>

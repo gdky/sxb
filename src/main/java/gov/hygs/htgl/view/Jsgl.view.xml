@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtRole">
+      <Property name="creationType">gov.hygs.htgl.entity.Role</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="role_Name">
+        <Property/>
+        <Property name="label">角色名称</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property/>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <Reference name="users">
+        <Property name="dataType">[dtUser]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">yhJsglController#getUserInfoByRole</Property>
+        <Property name="pageSize">20</Property>
+      </Reference>
+      <Reference name="menus">
+        <Property name="dataType">[dtMenu]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">yhJsglController#getMenuInfoByRole</Property>
+        <Property name="pageSize">20</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dtMenu">
+      <Property name="creationType">gov.hygs.htgl.entity.Menu</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parent_Id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="menu_Name">
+        <Property/>
+        <Property name="label">菜单名称</Property>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property/>
+        <Property name="label">功能访问地址</Property>
+      </PropertyDef>
+      <PropertyDef name="yxbz">
+        <Property/>
+        <Property name="label">有效标志</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtUser">
+      <Property name="creationType">gov.hygs.htgl.entity.User</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="login_Name">
+        <Property></Property>
+        <Property name="label">登录名</Property>
+      </PropertyDef>
+      <PropertyDef name="user_Name">
+        <Property></Property>
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property></Property>
+        <Property name="label">电话号码</Property>
+      </PropertyDef>
+      <PropertyDef name="rzsj">
+        <Property name="dataType">Date</Property>
+        <Property name="label">入职日期</Property>
+      </PropertyDef>
+      <PropertyDef name="zw">
+        <Property></Property>
+        <Property name="label">职位</Property>
+      </PropertyDef>
+      <PropertyDef name="pwd">
+        <Property></Property>
+        <Property name="label">密码</Property>
+      </PropertyDef>
+      <PropertyDef name="photo">
+        <Property></Property>
+        <Property name="label">头像</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">所在科室</Property>
+      </PropertyDef>
+      <PropertyDef name="birthday">
+        <Property name="dataType">Date</Property>
+        <Property name="label">生日</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsRole">
+      <Property name="dataType">[dtRole]</Property>
+      <Property name="dataProvider">yhJsglController#getRoleInfo</Property>
+      <Property name="pageSize">20</Property>
+    </DataSet>
+    <DataSet id="dsUser">
+      <Property name="dataProvider">yhJsglController#getUserInfo</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataType">[dtUser]</Property>
+    </DataSet>
+    <DataSet id="dsMenu">
+      <Property name="dataType">[dtMenu]</Property>
+      <Property name="pageSize">20</Property>
+      <Property name="dataProvider">yhJsglController#getMenuInfo</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">200</Property>
+      <MainControl>
+        <SplitPanel>
+          <Property name="direction">top</Property>
+          <Property name="position">50%</Property>
+          <MainControl>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">//view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;).insert();&#xD;
+view.get(&quot;#DialogMenu&quot;).show();&#xD;
+</ClientEvent>
+                  <Property name="caption">增加</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+				view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;).remove(); &#xD;
+				view.get(&quot;#updateActionRole&quot;).execute();&#xD;
+			})&#xD;
+ </ClientEvent>
+                  <Property name="caption">删除</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dsRole</Property>
+                <Property name="dataPath">#.menus</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="menu_Name">
+                  <Property name="property">menu_Name</Property>
+                </DataColumn>
+                <DataColumn name="url">
+                  <Property name="property">url</Property>
+                </DataColumn>
+                <DataColumn name="yxbz">
+                  <Property name="property">yxbz</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </MainControl>
+          <SideControl>
+            <Container>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">&#xD;
+&#xD;
+view.get(&quot;#DialogUser&quot;).show();&#xD;
+</ClientEvent>
+                  <Property name="caption">增加</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+				view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;).remove(); &#xD;
+				view.get(&quot;#updateActionRole&quot;).execute();&#xD;
+			})&#xD;
+ </ClientEvent>
+                  <Property name="caption">删除</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dsRole</Property>
+                <Property name="dataPath">#.users</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="login_Name">
+                  <Property name="property">login_Name</Property>
+                </DataColumn>
+                <DataColumn name="user_Name">
+                  <Property name="property">user_Name</Property>
+                </DataColumn>
+                <DataColumn name="phone">
+                  <Property name="property">phone</Property>
+                </DataColumn>
+                <DataColumn name="rzsj">
+                  <Property name="property">rzsj</Property>
+                </DataColumn>
+                <DataColumn name="zw">
+                  <Property name="property">zw</Property>
+                </DataColumn>
+                <DataColumn name="pwd">
+                  <Property name="property">pwd</Property>
+                </DataColumn>
+                <DataColumn name="photo">
+                  <Property name="property">photo</Property>
+                </DataColumn>
+                <DataColumn name="deptid">
+                  <Property name="property">deptid</Property>
+                </DataColumn>
+                <DataColumn name="birthday">
+                  <Property name="property">birthday</Property>
+                </DataColumn>
+              </DataGrid>
+            </Container>
+          </SideControl>
+        </SplitPanel>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <ToolBarButton>
+              <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).insert();</ClientEvent>
+              <Property name="caption">增加</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+	view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).remove();&#xD;
+});</ClientEvent>
+              <Property name="caption">删除</Property>
+            </ToolBarButton>
+            <ToolBarButton>
+              <Property name="caption">保存</Property>
+              <Property name="action">updateActionRole</Property>
+            </ToolBarButton>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsRole</Property>
+            <DataColumn name="role_Name">
+              <Property name="property">role_Name</Property>
+            </DataColumn>
+            <DataColumn name="ms">
+              <Property name="property">ms</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <UpdateAction id="updateActionRole">
+      <Property name="dataResolver">yhJsglController#saveRole</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsRole</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <Dialog id="DialogUser">
+      <Property name="height">500</Property>
+      <Property name="width">700</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var entity = view.get('#DataGridUser.selection');&#xD;
+var users = view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;)&#xD;
+users.each(function(o){&#xD;
+	if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+		&#xD;
+		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+		return false;&#xD;
+}})&#xD;
+view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;).insert(entity);&#xD;
+view.get(&quot;#updateActionRole&quot;).execute();&#xD;
+view.get(&quot;#DialogUser&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages</Property>
+            <Property name="dataSet">dsUser</Property>
+          </DataPilot>
+        </ToolBar>
+        <DataGrid id="DataGridUser">
+          <Property name="dataSet">dsUser</Property>
+          <Property name="selectionMode">singleRow</Property>
+          <Property name="readOnly">true</Property>
+          <RowSelectorColumn/>
+          <DataColumn name="login_Name">
+            <Property name="property">login_Name</Property>
+          </DataColumn>
+          <DataColumn name="user_Name">
+            <Property name="property">user_Name</Property>
+          </DataColumn>
+          <DataColumn name="phone">
+            <Property name="property">phone</Property>
+          </DataColumn>
+          <DataColumn name="rzsj">
+            <Property name="property">rzsj</Property>
+          </DataColumn>
+          <DataColumn name="zw">
+            <Property name="property">zw</Property>
+          </DataColumn>
+          <DataColumn name="pwd">
+            <Property name="property">pwd</Property>
+          </DataColumn>
+          <DataColumn name="photo">
+            <Property name="property">photo</Property>
+          </DataColumn>
+          <DataColumn name="deptid">
+            <Property name="property">deptid</Property>
+          </DataColumn>
+          <DataColumn name="birthday">
+            <Property name="property">birthday</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="DialogMenu">
+      <Property name="height">500</Property>
+      <Property name="width">700</Property>
+      <Buttons>
+        <Button>
+          <ClientEvent name="onClick">var entity = view.get('#DataGridMenu.selection');&#xD;
+var menus = view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;)&#xD;
+menus.each(function(o){&#xD;
+	if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+		&#xD;
+		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+		return false;&#xD;
+}})&#xD;
+&#xD;
+view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;).insert(entity);&#xD;
+view.get(&quot;#updateActionRole&quot;).execute();&#xD;
+view.get(&quot;#DialogMenu&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">确定</Property>
+        </Button>
+        <Button>
+          <ClientEvent name="onClick">view.get(&quot;#DialogMenu&quot;).hide();&#xD;
+</ClientEvent>
+          <Property name="caption">取消</Property>
+        </Button>
+      </Buttons>
+      <Children>
+        <ToolBar>
+          <DataPilot>
+            <Property name="itemCodes">pages</Property>
+            <Property name="dataSet">dsMenu</Property>
+          </DataPilot>
+        </ToolBar>
+        <DataGrid id="DataGridMenu">
+          <Property name="dataSet">dsMenu</Property>
+          <Property name="selectionMode">singleRow</Property>
+          <Property name="readOnly">true</Property>
+          <RowSelectorColumn/>
+          <DataColumn name="menu_Name">
+            <Property name="property">menu_Name</Property>
+          </DataColumn>
+          <DataColumn name="url">
+            <Property name="property">url</Property>
+          </DataColumn>
+          <DataColumn name="yxbz">
+            <Property name="property">yxbz</Property>
+          </DataColumn>
+        </DataGrid>
+      </Children>
+      <Tools/>
+    </Dialog>
+  </View>
+</ViewConfig>
