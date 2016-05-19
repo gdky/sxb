@@ -1,6 +1,8 @@
 package gov.hygs.htgl.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model class of 功能菜单.
@@ -27,6 +29,8 @@ public class Menu implements Serializable {
 
 	/** 有效标志. */
 	private String yxbz;
+	
+	private List<Menu> menus = new ArrayList<Menu>();
 
 	/**
 	 * Constructor.
@@ -127,6 +131,15 @@ public class Menu implements Serializable {
 	 */
 	public String getYxbz() {
 		return this.yxbz;
+	}
+
+	
+	public List<Menu> getMenus() {
+		return menus;
+	}
+
+	public void setMenus(List<Menu> menus) {
+		this.menus = menus;
 	}
 
 	/**

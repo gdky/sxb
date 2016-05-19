@@ -10,7 +10,7 @@
       http://www.springframework.org/schema/beans 
       http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<beans:import resource="dataSource-context.xml" />
-	<beans:import resource="context.xml" />
+
 	<http entry-point-ref="restAuthenticationEntryPoint">
 		<intercept-url pattern="/api/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<!-- <intercept-url pattern="/api/*" access="hasRole('ROLE_USER')" /> -->
