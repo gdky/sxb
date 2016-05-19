@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtMenu">
+      <Property name="creationType">gov.hygs.htgl.entity.Menu</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parent_Id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="menu_Name">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property/>
+      </PropertyDef>
+      <PropertyDef name="yxbz">
+        <Property/>
+      </PropertyDef>
+      <Reference name="childMenus">
+        <Property name="dataType">[dtMenu]</Property>
+        <Property name="dataProvider">mainController#getChildMenus</Property>
+        <Property name="parameter">$${this.id_}</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsMenu">
+      <Property name="dataType">[dtMenu]</Property>
+      <Property name="dataProvider">mainController#getUserMenu</Property>
+    </DataSet>
+    <Panel>
+      <Buttons/>
+      <Children>
+        <HtmlContainer>
+          <Property name="height">80</Property>
+        </HtmlContainer>
+      </Children>
+      <Tools/>
+    </Panel>
+    <SplitPanel>
+      <Property name="position">300</Property>
+      <MainControl>
+        <TabControl>
+          <IFrameTab>
+            <Property name="caption">我的工作台</Property>
+          </IFrameTab>
+        </TabControl>
+      </MainControl>
+      <SideControl>
+        <Panel>
+          <Buttons/>
+          <Children>
+            <CardBook>
+              <Accordion>
+                <Section>
+                  <DataTree id="dataTreeMenu">
+                    <ClientEvent name="onClick">var id =view.get(&quot;#dataTreeMenu&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;id_&quot;)&#xD;
+alert(id)&#xD;
+</ClientEvent>
+                    <Property name="currentNodeDataPath">currentNode</Property>
+                    <Property name="dataSet">dsMenu</Property>
+                    <BindingConfigs>
+                      <BindingConfig>
+                        <Property name="name">childMenus</Property>
+                        <Property name="labelProperty">menu_Name</Property>
+                        <Property name="childrenProperty">childMenus</Property>
+                        <Property name="recursive">true</Property>
+                        <Property name="expandLevel">1</Property>
+                      </BindingConfig>
+                    </BindingConfigs>
+                  </DataTree>
+                </Section>
+              </Accordion>
+            </CardBook>
+          </Children>
+          <Tools/>
+        </Panel>
+      </SideControl>
+    </SplitPanel>
+  </View>
+</ViewConfig>
