@@ -1,4 +1,4 @@
-package gov.hygs.htgl.test;
+package gov.hygs.htgl.security;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,7 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.gdky.restfull.api.RestExceptionHandler;
-import gov.hygs.htgl.test.Constants;
+
+import gov.hygs.htgl.config.Constants;
 
 @Component
 public class TokenUtils {
