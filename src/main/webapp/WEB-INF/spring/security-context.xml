@@ -11,37 +11,44 @@
       http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<beans:import resource="dataSource-context.xml" />
 
-	<http entry-point-ref="restAuthenticationEntryPoint">
+	<http pattern="/gov.hygs.htgl.login.Login.d" security="none"/>
+	
+	<http pattern="/**/*.dpkg" security="none"/>
+	<http pattern="/**/*.css" security="none"/>
+	<http pattern="/**/*.js" security="none"/>
+	<http pattern="/**/*.ico" security="none"/>
+	<http auto-config="true"><!--  entry-point-ref="restAuthenticationEntryPoint" -->
 		<intercept-url pattern="/api/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<!-- <intercept-url pattern="/api/*" access="hasRole('ROLE_USER')" /> -->
+		<intercept-url pattern="/gov.hygs.htgl.login.Login.d"  />
+		<intercept-url pattern="/**/*.dpkg"  />
+		<intercept-url pattern="/**/*.css"  />
+		<intercept-url pattern="/**/*.js"  />
+		<intercept-url pattern="/**/*.ico"  />
 		<intercept-url pattern="/*" access="hasRole('ROLE_USER')" /> 
 		<intercept-url pattern="/dorado/**" access="hasRole('ROLE_USER')" />
-		<form-login authentication-success-handler-ref="mySuccessHandler" />
-		<!-- <csrf request-matcher-ref="csrfSecurityRequestMatcher"/>  -->
+		<form-login login-page="/gov.hygs.htgl.login.Login.d" 
+			authentication-failure-url="/gov.hygs.htgl.login.Login.d?error=true"  username-parameter="username"
+            password-parameter="password"  login-processing-url="/j_spring_security_check" 
+			default-target-url="/gov.hygs.htgl.view.Main.d"/>
 		<csrf disabled="true"/>
+		<headers defaults-disabled="true">
+   			<cache-control/>
+		</headers>
 		<logout />
 	</http>
+ 
+ 
 	
-	<beans:bean id="csrfSecurityRequestMatcher" class="com.gdky.restfull.security.CsrfSecurityRequestMatcher">
-        <beans:property name="execludeUrls">
-            <beans:list>
-                <beans:value>/api/</beans:value>
-            </beans:list>
-        </beans:property>
-    </beans:bean>
-
-	<beans:bean id="mySuccessHandler"
-		class="com.gdky.restfull.security.MySavedRequestAwareAuthenticationSuccessHandler" />
-
-	<authentication-manager alias="authenticationManager">
-		<authentication-provider>
-			<user-service>
-				<user name="temporary" password="temporary" authorities="ROLE_ADMIN" />
-				<user name="user" password="user" authorities="ROLE_USER" />
-			</user-service>
+   <beans:bean id="customAuthenticationProvider" class="gov.hygs.htgl.test.CustomAuthenticationProvider">
+     <beans:property name="userDetailsService" ref ="userDetailsService"></beans:property>
+   </beans:bean>
+ <beans:bean id="userDetailsService" class="gov.hygs.htgl.test.CustomUserDetailsService">
+   </beans:bean>
+	<authentication-manager alias="authenticationManager" >
+		<authentication-provider ref="customAuthenticationProvider">
 		</authentication-provider>
-		
-		<!--<authentication-provider>
+<!-- 	<authentication-provider>
 			<jdbc-user-service data-source-ref="dataSource"
 				users-by-username-query="select username,password, yxbz enabled from fw_user where username =?"
 				authorities-by-username-query="select  u.username, r.name role from fw_user u,fw_role r,fw_userrole ur where u.id = ur.userid and r.id = ur.roleid and u.username=?  " />
