@@ -40,10 +40,10 @@
  
  
 	
-   <beans:bean id="customAuthenticationProvider" class="gov.hygs.htgl.test.CustomAuthenticationProvider">
+   <beans:bean id="customAuthenticationProvider" class="gov.hygs.htgl.controller.CustomAuthenticationProvider">
      <beans:property name="userDetailsService" ref ="userDetailsService"></beans:property>
    </beans:bean>
- <beans:bean id="userDetailsService" class="gov.hygs.htgl.test.CustomUserDetailsService">
+ <beans:bean id="userDetailsService" class="gov.hygs.htgl.security.CustomUserDetailsService">
    </beans:bean>
 	<authentication-manager alias="authenticationManager" >
 		<authentication-provider ref="customAuthenticationProvider">

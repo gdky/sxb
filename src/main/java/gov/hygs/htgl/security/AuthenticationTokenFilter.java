@@ -1,4 +1,4 @@
-package gov.hygs.htgl.test;
+package gov.hygs.htgl.security;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-import gov.hygs.htgl.test.Constants;
+import gov.hygs.htgl.config.Constants;
 
 public class AuthenticationTokenFilter extends
 		UsernamePasswordAuthenticationFilter {
