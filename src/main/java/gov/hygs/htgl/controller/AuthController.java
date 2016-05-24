@@ -1,6 +1,10 @@
-package gov.hygs.htgl.test;
+package gov.hygs.htgl.controller;
 
-import java.util.HashMap;
+import gov.hygs.htgl.entity.AuthRequest;
+import gov.hygs.htgl.entity.AuthResponse;
+import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.security.TokenUtils;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gdky.restfull.configuration.Constants;
-
-import gov.hygs.htgl.entity.AuthRequest;
-import gov.hygs.htgl.entity.AuthResponse;
-
-import gov.hygs.htgl.entity.Role;
-
-import gov.hygs.htgl.test.CustomUserDetails;
-import gov.hygs.htgl.test.TokenUtils;
 
 @RestController
 @RequestMapping(value = Constants.URI_API_PREFIX)

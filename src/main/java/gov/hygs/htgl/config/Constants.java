@@ -1,4 +1,4 @@
-package gov.hygs.htgl.test;
+package gov.hygs.htgl.config;
 
 public final class Constants {
 
