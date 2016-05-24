@@ -1,5 +1,7 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<script type="text/javascript">
+window.open('gov.hygs.htgl.view.Main.d','_self');
+</script>
 </body>
 </html>

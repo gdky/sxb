@@ -12,13 +12,13 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="menu_Name">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="url">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <PropertyDef name="yxbz">
-        <Property/>
+        <Property></Property>
       </PropertyDef>
       <Reference name="childMenus">
         <Property name="dataType">[dtMenu]</Property>
@@ -28,39 +28,228 @@
     </DataType>
   </Model>
   <View>
+    <ClientEvent name="onCreate">&#xD;
+self.$openTab = function(config){&#xD;
+    if (!config) {&#xD;
+        return;&#xD;
+    }&#xD;
+    var tabConfig = config.tab;&#xD;
+	&#xD;
+    if (!tabConfig) {&#xD;
+        dorado.MessageBox.alert(&quot;必须指定要打开标签的配置&quot;);&#xD;
+        return;&#xD;
+    }&#xD;
+    if (!tabConfig || &quot;object&quot; != (typeof tabConfig)) {&#xD;
+        dorado.MessageBox.alert(&quot;必须指定打开的Tab页的配置集&quot;);&#xD;
+        return;&#xD;
+    }&#xD;
+	/*if(tabConfig.gnmk &amp;&amp; tabConfig.gnmk instanceof dorado.Entity){&#xD;
+		tabConfig.gnmk = tabConfig.gnmk.getData();&#xD;
+	}*/&#xD;
+    if (!tabConfig.name &amp;&amp; !tabConfig.caption) {&#xD;
+        dorado.MessageBox.alert(&quot;必须指定标签的名称&quot;);&#xD;
+    }&#xD;
+    if (!tabConfig.caption) {&#xD;
+        tabConfig.caption = tabConfig.name;&#xD;
+    }&#xD;
+    if (!tabConfig.name) {&#xD;
+        tabConfig.name = tabConfig.caption;&#xD;
+    }&#xD;
+    if (!tabConfig.closeable) {&#xD;
+        tabConfig.closeable = true;&#xD;
+    }&#xD;
+	&#xD;
+	var tab = {&#xD;
+		&quot;$type&quot;: &quot;Control&quot;,&#xD;
+		name: tabConfig.name,&#xD;
+		caption: tabConfig.caption,&#xD;
+		closeable: true,&#xD;
+		&quot;control&quot; : {&#xD;
+		 &#xD;
+				&quot;$type&quot;: &quot;IFrame&quot;,&#xD;
+				&quot;visible&quot;: true,&#xD;
+				&quot;path&quot;: $url(tabConfig.path),&#xD;
+				&quot;listener&quot;: {&#xD;
+					&quot;onReady&quot;: (function(self, arg){&#xD;
+						var cf = 	new CFInstance(&#xD;
+								{ &#xD;
+								  node:self._doms.iframe,&#xD;
+								   src: $url(tabConfig.path),&#xD;
+								   className:&quot;chromeFrame&quot;&#xD;
+								});&#xD;
+						  &#xD;
+						})&#xD;
+					 &#xD;
+				}&#xD;
+&#xD;
+		}&#xD;
+&#xD;
+	};&#xD;
+   var removeOld = config.removeOld || &quot;S&quot; == self.$getOpenTabMode();&#xD;
+	var refreshOld = config.refreshOld;&#xD;
+	&#xD;
+	delete(config.removeOld);&#xD;
+	delete(config.refreshOld);&#xD;
+    var index = config.index;&#xD;
+    var tabControlWorkspace = view.get(&quot;#tabControlWorkspace&quot;);&#xD;
+    &#xD;
+    if (&quot;S&quot; == self.$getOpenTabMode()) {&#xD;
+        tabControlWorkspace.removeAllTabs();&#xD;
+    }&#xD;
+    &#xD;
+    if (!index) {&#xD;
+        index = tabControlWorkspace.get(&quot;tabs&quot;).size;&#xD;
+    }&#xD;
+	&#xD;
+&#xD;
+    var oldTab = tabControlWorkspace.getTab(tabConfig.name);&#xD;
+&#xD;
+    if (!oldTab) {&#xD;
+		//modified&#xD;
+	    var currentTab = null;&#xD;
+		&#xD;
+		if( tabConfig.gnmk &amp;&amp; (tabConfig.gnmk.openWith) =='0'){&#xD;
+			&#xD;
+				if(window.externalHost){&#xD;
+					//代表用ChromeFrame打开&#xD;
+					currentTab = tabControlWorkspace.addTab(tab, index);&#xD;
+				}else {&#xD;
+					currentTab = tabControlWorkspace.addTab(tabConfig, index);&#xD;
+				}&#xD;
+				&#xD;
+		}else if(tabConfig.gnmk &amp;&amp; (tabConfig.gnmk.openWith) =='1'){//主界面一定是使用IE访问，普通打开tab就是用ie&#xD;
+				currentTab = tabControlWorkspace.addTab(tabConfig, index);&#xD;
+		}else{&#xD;
+			&#xD;
+			if(window.externalHost){&#xD;
+				//代表用ChromeFrame打开&#xD;
+				currentTab = tabControlWorkspace.addTab(tab, index);&#xD;
+			}else {&#xD;
+				if(dorado.Browser.msie){&#xD;
+					currentTab = tabControlWorkspace.addTab(tabConfig, index);&#xD;
+				}else{&#xD;
+					currentTab = tabControlWorkspace.addTab(tabConfig, index);&#xD;
+				}&#xD;
+			}&#xD;
+		}&#xD;
+		&#xD;
+        tabControlWorkspace.set(&quot;currentTab&quot;, currentTab);&#xD;
+   &#xD;
+		&#xD;
+&#xD;
+		var iframe_tab = currentTab.get('control').getIFrameWindow();&#xD;
+&#xD;
+		&#xD;
+        return currentTab;&#xD;
+    }else{&#xD;
+		dorado.MessageBox.alert(&quot;当前页面已经打开了&quot;)	&#xD;
+	}&#xD;
+    if (removeOld) {&#xD;
+        tabControlWorkspace.removeTab(tab);&#xD;
+        tabControlWorkspace.addTab(tabConfig, index);&#xD;
+        return;&#xD;
+    }&#xD;
+    &#xD;
+  &#xD;
+    if (refreshOld) {&#xD;
+        oldTab.set(&quot;path&quot;, tabConfig.path);&#xD;
+    }&#xD;
+    tabControlWorkspace.set(&quot;currentTab&quot;, oldTab);&#xD;
+    &#xD;
+};&#xD;
+&#xD;
+self.$getOpenTabMode = function(){&#xD;
+    return &quot;M&quot;;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
     <DataSet id="dsMenu">
       <Property name="dataType">[dtMenu]</Property>
       <Property name="dataProvider">mainController#getUserMenu</Property>
     </DataSet>
-    <Panel>
+    <Panel id="panelHeader">
+      <Property name="height">80</Property>
       <Buttons/>
       <Children>
         <HtmlContainer>
-          <Property name="height">80</Property>
+          <Property name="height">100%</Property>
+          <Property name="style">
+            <Property name="background">url(icons/top_banner.jpg)</Property>
+          </Property>
         </HtmlContainer>
       </Children>
       <Tools/>
     </Panel>
-    <SplitPanel>
+    <SplitPanel id="splitPanel">
       <Property name="position">300</Property>
       <MainControl>
-        <TabControl>
-          <IFrameTab>
+        <TabControl id="tabControlWorkspace">
+          <ClientEvent name="onReady">var panel = view.get(&quot;#panelHeader&quot;);&#xD;
+var splitPanel1 = view.get(&quot;#splitPanel&quot;);&#xD;
+&#xD;
+self.addRightToolButton(new dorado.widget.SimpleIconButton(&#xD;
+	{&#xD;
+		icon: &quot;icons/ico_tagMax_h.gif&quot;,&#xD;
+		&quot;listener&quot;:{&#xD;
+					&quot;onClick&quot;:(function(self,arg){&#xD;
+						if(!self.$isCollapse){&#xD;
+							panel.doSetCollapsed(true);&#xD;
+						    splitPanel1.doSetCollapsed(true);&#xD;
+							self.$isCollapse=true;&#xD;
+						}else{&#xD;
+							panel.doSetCollapsed(false);&#xD;
+						    splitPanel1.doSetCollapsed(false);&#xD;
+							self.$isCollapse=false;&#xD;
+						}&#xD;
+						&#xD;
+ &#xD;
+ &#xD;
+					})&#xD;
+				}&#xD;
+	}&#xD;
+));&#xD;
+   </ClientEvent>
+          <ClientEvent name="onTabContextMenu">var menu = view.get(&quot;#menuTabControl&quot;);&#xD;
+var tab = arg.tab;&#xD;
+menu.getItem(&quot;close&quot;).set(&quot;disabled&quot;, tab.get(&quot;disabled&quot;) || !tab.get(&quot;closeable&quot;));&#xD;
+&#xD;
+menu.show({&#xD;
+	event: arg.event&#xD;
+});&#xD;
+</ClientEvent>
+          <ControlTab>
             <Property name="caption">我的工作台</Property>
-          </IFrameTab>
+            <HtmlContainer>
+              <Property name="style">
+                <Property name="background"></Property>
+              </Property>
+            </HtmlContainer>
+          </ControlTab>
         </TabControl>
       </MainControl>
       <SideControl>
         <Panel>
+          <Property name="contentOverflow">hidden</Property>
           <Buttons/>
           <Children>
             <CardBook>
               <Accordion>
                 <Section>
                   <DataTree id="dataTreeMenu">
-                    <ClientEvent name="onClick">var id =view.get(&quot;#dataTreeMenu&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;id_&quot;)&#xD;
-alert(id)&#xD;
-</ClientEvent>
+                    <ClientEvent name="onDataRowClick">var data =view.get(&quot;#dataTreeMenu&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;)&#xD;
+if(data.get('url')!=null){&#xD;
+	view.$openTab({&#xD;
+            tab: {&#xD;
+                $type: &quot;IFrame&quot;,&#xD;
+                path: data.get(&quot;url&quot;),&#xD;
+                name: data.get(&quot;menu_Name&quot;),&#xD;
+                caption: data.get(&quot;menu_Name&quot;),&#xD;
+                closeable: true&#xD;
+          &#xD;
+            }&#xD;
+        });&#xD;
+} </ClientEvent>
                     <Property name="currentNodeDataPath">currentNode</Property>
                     <Property name="dataSet">dsMenu</Property>
                     <BindingConfigs>
@@ -81,5 +270,27 @@ alert(id)&#xD;
         </Panel>
       </SideControl>
     </SplitPanel>
+    <Menu id="menuTabControl">
+      <MenuItem>
+        <ClientEvent name="onClick">var tab = this.id(&quot;tabControlWorkspace&quot;);&#xD;
+tab.closeAllTabs();</ClientEvent>
+        <Property name="caption">关闭所有页面</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tab = this.id(&quot;tabControlWorkspace&quot;);&#xD;
+var currentTab = tab.get(&quot;currentTab&quot;);&#xD;
+ &#xD;
+	tab.removeTab(currentTab);&#xD;
+ </ClientEvent>
+        <Property name="caption">关闭当前页面</Property>
+        <Property name="name">close</Property>
+      </MenuItem>
+      <MenuItem>
+        <ClientEvent name="onClick">var tabcontrol = this.id(&quot;tabControlWorkspace&quot;);&#xD;
+var tab = tabcontrol.get(&quot;contextMenuTab&quot;);&#xD;
+if (tab) tabcontrol.closeOtherTabs(tab);</ClientEvent>
+        <Property name="caption">关闭其他页面</Property>
+      </MenuItem>
+    </Menu>
   </View>
 </ViewConfig>

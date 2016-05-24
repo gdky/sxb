@@ -2,6 +2,7 @@ package gov.hygs.htgl.dao;
 
 import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
+import gov.hygs.htgl.entity.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +17,8 @@ public interface MainDao {
 	List<Menu> getUserMenu(Map<String, Object> para);
 
 	List<Menu> getChildMenus(int id);
+
+	User getUser(String username);
 
 	
 
