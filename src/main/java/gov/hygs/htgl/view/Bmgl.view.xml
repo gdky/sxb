@@ -10,6 +10,12 @@
       </PropertyDef>
       <PropertyDef name="dept_name">
         <Property></Property>
+        <Property name="label">部门名称</Property>
+        <Validator type="ajax">
+          <Property name="service">qzBmCdglController#checkDeptName</Property>
+          <Property name="executingMessage">正在检查部门名...</Property>
+          <Property name="async">false</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="parentId">
         <Property name="dataType">Integer</Property>
@@ -39,118 +45,66 @@
       <Property name="dataType">[deptType]</Property>
     </DataSet>
     <SplitPanel>
+      <Property name="position">20%</Property>
       <MainControl>
         <Container>
-          <ToolBar>
-            <Button>
-              <ClientEvent name="onClick">var parent_Id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;parentId&quot;);&#xD;
-//view.get(&quot;#addNodeForm&quot;).set(&quot;entity&quot;,{id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:parent_Id,ms:&quot;&quot;});&#xD;
-view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:parent_Id,ms:&quot;&quot;});&#xD;
-//view.get(&quot;#deptDataSet&quot;).insert({id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:parent_Id,ms:&quot;&quot;});&#xD;
-view.get(&quot;#addNode&quot;).show();&#xD;
-</ClientEvent>
-              <Property name="caption">添加同级节点</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentEntity&quot;);&#xD;
-if(!currentEntity){&#xD;
-	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
-}&#xD;
-var id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
-currentEntity.remove();&#xD;
-currentEntity.get(&quot;child&quot;);&#xD;
-&#xD;
-//view.get(&quot;#deleteUpdateAction&quot;).set(&quot;parameter&quot;,)&#xD;
-</ClientEvent>
-              <Property name="caption">删除节点</Property>
-            </Button>
-            <Button>
-              <Property name="caption">保存</Property>
-            </Button>
-          </ToolBar>
-          <FieldSet>
-            <Buttons/>
-            <Children>
-              <AutoForm id="currentNodeForm">
-                <Property name="dataSet">deptDataSet</Property>
-                <Property name="dataPath">!current_Node</Property>
-                <AutoFormElement>
-                  <Property name="name">id_</Property>
-                  <Property name="property">id_</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">dept_name</Property>
-                  <Property name="property">dept_name</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">parentId</Property>
-                  <Property name="property">parentId</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">ms</Property>
-                  <Property name="property">ms</Property>
-                  <Editor/>
-                </AutoFormElement>
-              </AutoForm>
-            </Children>
-          </FieldSet>
-          <ToolBar>
-            <Button>
-              <ClientEvent name="onClick">var id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
-//view.get(&quot;#addChildForm&quot;).set(&quot;entity&quot;,{id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:id,ms:&quot;&quot;});&#xD;
-view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:id,ms:&quot;&quot;});&#xD;
-view.get(&quot;#addChild&quot;).show();&#xD;
-</ClientEvent>
-              <Property name="caption">添加子节点</Property>
-            </Button>
-            <DataPilot>
-              <Property name="itemCodes">pages,pageSize</Property>
-              <Property name="dataSet">deptDataSet</Property>
-              <Property name="dataPath">!current_Node.childDataGrid</Property>
-            </DataPilot>
-          </ToolBar>
-          <DataGrid>
-            <Property name="dataSet">deptDataSet</Property>
-            <Property name="dataPath">!current_Node.childDataGrid</Property>
-            <DataColumn name="id_">
-              <Property name="property">id_</Property>
-            </DataColumn>
-            <DataColumn name="dept_name">
-              <Property name="property">dept_name</Property>
-            </DataColumn>
-            <DataColumn name="parentId">
-              <Property name="property">parentId</Property>
-            </DataColumn>
-            <DataColumn name="ms">
-              <Property name="property">ms</Property>
-            </DataColumn>
-          </DataGrid>
           <Container id="dialogCont">
             <Dialog id="addNode">
               <Buttons>
                 <Button>
                   <ClientEvent name="onClick">var entity = view.get(&quot;#addNodeForm&quot;).get(&quot;entity&quot;);&#xD;
-var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;); &#xD;
-if (!currentNode) {&#xD;
-	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
-}&#xD;
-var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
- currentEntity.createBrother({&#xD;
-	dept_name : entity.get(&quot;dept_name&quot;)&#xD;
-});&#xD;
+//var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;); &#xD;
+//var currentEntity = null;&#xD;
+/*&#xD;
+if (currentNode != null) {&#xD;
+	currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	&#xD;
+	currentEntity.parent.insert({&#xD;
+		dept_name : entity.get(&quot;dept_name&quot;)&#xD;
+	}, &quot;begin&quot;);&#xD;
+}*/&#xD;
 &#xD;
 view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#addNode&quot;).close();&#xD;
+	&#xD;
+	if(entity==undefined || !entity.get(&quot;parentId&quot;)){&#xD;
+		view.get(&quot;#deptDataSet&quot;).flush();&#xD;
+	}else{&#xD;
+		var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+		childs.each(function(entity){&#xD;
+				&#xD;
+		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+			view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+			var newNode = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			entity.set({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				dept_name:newNode.get(&quot;dept_name&quot;),&#xD;
+				parentId:newNode.get(&quot;parentId&quot;),&#xD;
+				ms:newNode.get(&quot;ms&quot;)&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		&#xD;
+		var newNode = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				dept_name:newNode.get(&quot;dept_name&quot;),&#xD;
+				parentId:newNode.get(&quot;parentId&quot;),&#xD;
+				ms:newNode.get(&quot;ms&quot;)&#xD;
+			});&#xD;
+		view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();//Async();&#xD;
+	}&#xD;
 });&#xD;
-&#xD;
 </ClientEvent>
                   <Property name="caption">提交</Property>
                 </Button>
                 <Button>
                   <ClientEvent name="onClick">view.get(&quot;#addNode&quot;).close();&#xD;
+var node = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+if(node != undefined){&#xD;
+	view.get(&quot;#addNodeDataSet&quot;).clear();&#xD;
+	node.remove();&#xD;
+}&#xD;
 </ClientEvent>
                   <Property name="caption">取消</Property>
                 </Button>
@@ -177,6 +131,7 @@ view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
               <Buttons>
                 <Button>
                   <ClientEvent name="onClick">var entity = view.get(&quot;#addChildForm&quot;).get(&quot;entity&quot;);&#xD;
+/*&#xD;
 var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
 if(!currentNode){&#xD;
 	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
@@ -187,19 +142,47 @@ currentNode.expandAsync(function(){&#xD;
 			dept_name : entity.get(&quot;dept_name&quot;)&#xD;
 	});&#xD;
 });&#xD;
-&#xD;
-&#xD;
+*/&#xD;
+	&#xD;
 view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#addChild&quot;).close();&#xD;
-	view.get(&quot;#deptDataSet&quot;).flushAsync();&#xD;
+&#xD;
+	var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+	childs.each(function(entity){&#xD;
+		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+			view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+			var newNode = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			entity.set({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				dept_name:newNode.get(&quot;dept_name&quot;),&#xD;
+				parentId:newNode.get(&quot;parentId&quot;),&#xD;
+				ms:newNode.get(&quot;ms&quot;)&#xD;
+				});&#xD;
+		}&#xD;
+	});&#xD;
+	&#xD;
+	&#xD;
+	var newNode = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+	view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+			id_:newNode.get(&quot;id_&quot;),&#xD;
+			dept_name:newNode.get(&quot;dept_name&quot;),&#xD;
+			parentId:newNode.get(&quot;parentId&quot;),&#xD;
+			ms:newNode.get(&quot;ms&quot;)&#xD;
+		});&#xD;
+	view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();//Async();&#xD;
 });&#xD;
-&#xD;
-&#xD;
 </ClientEvent>
                   <Property name="caption">提交</Property>
                 </Button>
                 <Button>
                   <ClientEvent name="onClick">view.get(&quot;#addChild&quot;).close();&#xD;
+var child = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
+child.each(function(entity){&#xD;
+	if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+		entity.remove();&#xD;
+		view.get(&quot;#addNodeDataSet&quot;).clear();&#xD;
+	}&#xD;
+});&#xD;
 </ClientEvent>
                   <Property name="caption">取消</Property>
                 </Button>
@@ -223,6 +206,177 @@ view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
               <Tools/>
             </Dialog>
           </Container>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">//var parent_Id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;parentId&quot;);&#xD;
+var dept = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+&#xD;
+if(dept != undefined){&#xD;
+	var parent_Id = dept.get(&quot;parentId&quot;);&#xD;
+	view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:parent_Id,ms:&quot;&quot;});&#xD;
+}else{&#xD;
+	view.get(&quot;#addNodeDataSet&quot;).insert();&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;); &#xD;
+var currentEntity = null;&#xD;
+&#xD;
+if (currentNode != null) {&#xD;
+	currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	currentEntity.parent.insert({}, &quot;begin&quot;);&#xD;
+}&#xD;
+&#xD;
+//var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+//currentEntity.parent.insert({dept_name:&quot;&quot;}, &quot;begin&quot;);&#xD;
+&#xD;
+view.get(&quot;#addNode&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">添加同级节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(!currentEntity){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){	&#xD;
+	var id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
+	currentEntity.remove();&#xD;
+	currentEntity.get(&quot;child&quot;);&#xD;
+	view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
+	view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
+		view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();//Async();&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">删除节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var dept = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&quot;depts&quot;:dept});&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">保存</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#deptDataSet&quot;).flush();&#xD;
+</ClientEvent>
+              <Property name="caption">刷新</Property>
+            </Button>
+          </ToolBar>
+          <FieldSet>
+            <Buttons/>
+            <Children>
+              <AutoForm id="currentNodeForm">
+                <Property name="dataSet">deptDataSet</Property>
+                <Property name="dataPath">!current_Node</Property>
+                <Property name="readOnly">true</Property>
+                <AutoFormElement>
+                  <Property name="name">dept_name</Property>
+                  <Property name="property">dept_name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+&#xD;
+//currentNode.setState(dorado.Entity.STATE_NONE);&#xD;
+&#xD;
+var id = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
+&#xD;
+view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,dept_name:&quot;&quot;,parentId:id,ms:&quot;&quot;});&#xD;
+&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+currentNode.expandAsync(function(){&#xD;
+	currentEntity.createChild(&quot;child&quot;,{});&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#addChild&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">添加子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">&#xD;
+var dept = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).current;&#xD;
+if(dept != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前子节点数据？&quot;,function(){&#xD;
+		var child = view.get(&quot;#datatree&quot;).get(&quot;currentEntity&quot;).get(&quot;child&quot;);&#xD;
+		var id = dept.get(&quot;id_&quot;);&#xD;
+		child.each(function(entity){&#xD;
+			if(id == entity.get(&quot;id_&quot;)){&#xD;
+				//alert(dept.get(&quot;id_&quot;));&#xD;
+				entity.remove();&#xD;
+				view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
+				view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
+					view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();//Async();&#xD;
+				});&#xD;
+			}&#xD;
+		})&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">删除子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">//view.get(&quot;#updateDialog&quot;).show();&#xD;
+view.get(&quot;#deptGrid&quot;).set(&quot;readOnly&quot;,false);&#xD;
+</ClientEvent>
+              <Property name="caption">修改子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var dept = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;);&#xD;
+view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&quot;depts&quot;:dept});&#xD;
+&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#deptGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">保存</Property>
+            </Button>
+            <DataPilot>
+              <Property name="itemCodes">pages,pageSize</Property>
+              <Property name="dataSet">deptDataSet</Property>
+              <Property name="dataPath">!current_Node.childDataGrid</Property>
+            </DataPilot>
+          </ToolBar>
+          <DataGrid id="deptGrid">
+            <Property name="dataSet">deptDataSet</Property>
+            <Property name="dataPath">!current_Node.childDataGrid</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="dept_name">
+              <Property name="property">dept_name</Property>
+            </DataColumn>
+            <DataColumn name="ms">
+              <Property name="property">ms</Property>
+            </DataColumn>
+          </DataGrid>
         </Container>
       </MainControl>
       <SideControl>
@@ -241,16 +395,21 @@ view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
       </SideControl>
     </SplitPanel>
     <UpdateAction id="addNodeAction">
+      <ClientEvent name="onSuccess">//view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flushAsync();</ClientEvent>
       <Property name="dataResolver">qzBmCdglController#saveDeptNodeInfo</Property>
       <UpdateItem>
         <Property name="dataSet">addNodeDataSet</Property>
         <Property name="dataPath">[#visible]</Property>
       </UpdateItem>
     </UpdateAction>
-    <UpdateAction id="deleteUpdateAction">
+    <AjaxAction id="deleteAction">
+      <Property name="service">qzBmCdglController#deleteDeptNodeInfo</Property>
+    </AjaxAction>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">qzBmCdglController#updataNodeInfo</Property>
       <UpdateItem>
         <Property name="dataSet">deptDataSet</Property>
-        <Property name="dataPath">[#visible]</Property>
+        <Property name="dataPath">!DIRTY_TREE</Property>
       </UpdateItem>
     </UpdateAction>
   </View>

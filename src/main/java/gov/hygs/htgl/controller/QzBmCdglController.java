@@ -1,9 +1,14 @@
 package gov.hygs.htgl.controller;
 
-import gov.hygs.htgl.dao.QXBmCdglDao;
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Grouptable;
+import gov.hygs.htgl.entity.Menu;
+import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.service.QzBmCdglService;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,29 +17,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.data.variant.Record;
 
 @Component
 public class QzBmCdglController {
 	@Resource
-	QXBmCdglDao bmglDao;
+	QzBmCdglService qzBmCdglService;
 	/**
 	 * 获取dept的根节点
 	 * @return
 	 */
 	@DataProvider
 	public List<Dept> getDeptRoot(){
-		return bmglDao.getDeptRoot();
+		return qzBmCdglService.getDeptRoot();
 	}
 	
 	/**
-	 * 获取dept当前节点信息
+	 * 获取dept树当前节点信息
 	 * @param id_ 当前dept节点的id
 	 * @return
 	 */
 	@DataProvider
 	public List<Dept> getCurrentDeptById(String id_){
-		return bmglDao.getCurrentDeptById(id_);
+		return qzBmCdglService.getCurrentDeptById(id_);
 	}
 	
 	/**
@@ -45,21 +52,142 @@ public class QzBmCdglController {
 	@DataProvider
 	public void getCurrentDeptPageById(Page<Dept> page,String id_){
 		if(id_ != null){
-			bmglDao.getCurrentDeptPageById(page, id_);
+			qzBmCdglService.getCurrentDeptPageById(page, id_);
 		}
 	}
 	
+	/**
+	 * 保存同级或子级节点信息
+	 * @param depts
+	 */
 	@DataResolver
 	@Transactional
 	public void saveDeptNodeInfo(List<Dept> depts){
-		bmglDao.saveDeptNodeInfo(depts);
+		//bmglDao.saveDeptNodeInfo(depts);
+		qzBmCdglService.saveDeptNodeInfo(depts);
+	}
+	
+	/**
+	 * 删除该节点和该节点下所有节点
+	 * @param id
+	 */
+	@Expose
+	@Transactional
+	public void deleteDeptNodeInfo(String id){
+		qzBmCdglService.deleteDeptNodeInfo(id);
+	}
+	
+	/**
+	 * 保存修改后的节点信息
+	 * @param record 接收修改后的数据
+	 */
+	@DataResolver
+	@Transactional
+	public void updataNodeInfo(Record record){
+		qzBmCdglService.updataNodeInfo(record);
+	}
+	
+	/**
+	 * 用于校验部门字段是否重名
+	 * @param param
+	 * @return
+	 */
+	@Expose
+	public String checkDeptName(String param){
+		return qzBmCdglService.checkDeptName(param);
+	}
+	
+	@DataProvider
+	public Collection<Menu> getMenuRoot(){
+		return qzBmCdglService.getMenuRoot();
+	}
+	/**
+	 * 获取menu树当前节点信息
+	 * @param id_
+	 * @return
+	 */
+	@DataProvider
+	public Collection<Menu> getCurrentMenuById(String id_){
+		return qzBmCdglService.getCurrentMenuById(id_);
+	}
+	
+	/**
+	 * 获取当前节点后，用分页显示
+	 * @param page
+	 * @param id_
+	 */
+	@DataProvider
+	public void getCurrentMenuPageById(Page<Menu> page, String id_){
+		if(id_ != null){
+			qzBmCdglService.getCurrentMenuPageById(page, id_);
+		}
+	}
+	
+	/**
+	 * 保存同级或子级节点
+	 * @param menus
+	 */
+	@DataResolver
+	@Transactional
+	public void saveMenuNodeInfo(List<Menu> menus){
+		qzBmCdglService.saveMenuNodeInfo(menus);
+	}
+	
+	/**
+	 * 删除该节点和该节点下所有节点
+	 * @param id
+	 */
+	@Expose
+	@Transactional
+	public void deleteMenuNodeInfo(String id){
+		qzBmCdglService.deleteMenuNodeInfo(id);
+	}
+	
+	/**
+	 * 保存修改后的节点信息
+	 * @param record 接收修改后的数据
+	 */
+	@DataResolver
+	@Transactional
+	public void updateNodeInfo(Record record){
+		qzBmCdglService.updateNodeInfo(record);
+	}
+	
+	/**
+	 * 用于校验部门字段是否重名
+	 * @param param
+	 * @return
+	 */
+	@Expose
+	public String checkMenuName(String param){
+		return qzBmCdglService.checkMenuName(param);
+	}
+	
+	@DataProvider
+	public Collection<Grouptable> getGrouptableInfo(){
+		return qzBmCdglService.getGrouptableInfo();
+	}
+	
+	@DataProvider 
+	public Collection<User> getUserByGroupInfo(Record record){
+		
+		return qzBmCdglService.getUserByGroupInfo(record);
 	}
 	
 	@DataResolver
 	@Transactional
-	public void deleteDeptNodeInfo(List<Dept> depts){
-		for(Dept dept : depts){
-			System.out.println(dept.getId_());
-		}
+	public void updateGroupInfo(List<Grouptable> groups){
+		qzBmCdglService.updateGroupInfo(groups);
+	}
+	
+	@DataResolver
+	@Transactional
+	public void updateUserInfo(List<User> users){
+		qzBmCdglService.updateUserInfo(users);
+	}
+
+	@Expose
+	public String checkGroupName(String param){
+		return qzBmCdglService.checkGroupName(param);
 	}
 }

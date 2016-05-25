@@ -2,6 +2,430 @@
 <ViewConfig>
   <Arguments/>
   <Context/>
-  <Model/>
-  <View/>
+  <Model>
+    <DataType name="menuType">
+      <Property name="creationType">gov.hygs.htgl.entity.Menu</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parent_Id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="menu_Name">
+        <Property></Property>
+        <Validator type="ajax">
+          <Property name="async">false</Property>
+          <Property name="executingMessage">正在检查菜单名...</Property>
+          <Property name="service">qzBmCdglController#checkMenuName</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="url">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentMenuById</Property>
+      </Reference>
+      <Reference name="childDataGrid">
+        <Property name="pageSize">1</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentMenuPageById</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="menuDataSet">
+      <Property name="dataType">[menuType]</Property>
+      <Property name="dataProvider">qzBmCdglController#getMenuRoot</Property>
+    </DataSet>
+    <DataSet id="addNodeDataSet">
+      <Property name="dataType">[menuType]</Property>
+    </DataSet>
+    <SplitPanel>
+      <Property name="position">20%</Property>
+      <MainControl>
+        <Container>
+          <Container id="dialogCont">
+            <Dialog id="addNode">
+              <Buttons>
+                <Button>
+                  <ClientEvent name="onClick">var entity = view.get(&quot;#addNodeForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#addNode&quot;).close();&#xD;
+	&#xD;
+	if(entity==undefined || !entity.get(&quot;parent_Id&quot;)){&#xD;
+		view.get(&quot;#menuDataSet&quot;).flush();&#xD;
+	}else{&#xD;
+		var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+		childs.each(function(entity){&#xD;
+				&#xD;
+		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+			var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			entity.set({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+				url:newNode.get(&quot;url&quot;),&#xD;
+				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+				});&#xD;
+			}&#xD;
+		});&#xD;
+		&#xD;
+		var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+				url:newNode.get(&quot;url&quot;),&#xD;
+				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+			});&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">提交</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#addNode&quot;).close();&#xD;
+var node = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+if(node != undefined){&#xD;
+	var child = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
+	child.each(function(entity){&#xD;
+	if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+		entity.remove();&#xD;
+		view.get(&quot;#addNodeDataSet&quot;).clear();&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                  <Property name="caption">取消</Property>
+                </Button>
+              </Buttons>
+              <Children>
+                <AutoForm id="addNodeForm">
+                  <Property name="dataSet">addNodeDataSet</Property>
+                  <Property name="width">300</Property>
+                  <AutoFormElement>
+                    <Property name="name">id_</Property>
+                    <Property name="property">id_</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">parent_Id</Property>
+                    <Property name="property">parent_Id</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">menu_Name</Property>
+                    <Property name="property">menu_Name</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">url</Property>
+                    <Property name="property">url</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">yxbz</Property>
+                    <Property name="property">yxbz</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Children>
+              <Tools/>
+            </Dialog>
+            <Dialog id="addChild">
+              <Buttons>
+                <Button>
+                  <ClientEvent name="onClick">var entity = view.get(&quot;#addChildForm&quot;).get(&quot;entity&quot;);&#xD;
+	&#xD;
+view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#addChild&quot;).close();&#xD;
+&#xD;
+	var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+	childs.each(function(entity){&#xD;
+		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+			var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+			entity.set({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+				url:newNode.get(&quot;url&quot;),&#xD;
+				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+				});&#xD;
+		}&#xD;
+	});&#xD;
+	&#xD;
+	&#xD;
+	var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+				id_:newNode.get(&quot;id_&quot;),&#xD;
+				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+				url:newNode.get(&quot;url&quot;),&#xD;
+				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+		});&#xD;
+	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">提交</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#addChild&quot;).close();&#xD;
+var child = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
+child.each(function(entity){&#xD;
+	if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+		entity.remove();&#xD;
+		view.get(&quot;#addNodeDataSet&quot;).clear();&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">取消</Property>
+                </Button>
+              </Buttons>
+              <Children>
+                <AutoForm id="addChildForm">
+                  <Property name="dataSet">addNodeDataSet</Property>
+                  <Property name="width">300</Property>
+                  <AutoFormElement>
+                    <Property name="name">id_</Property>
+                    <Property name="property">id_</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">parent_Id</Property>
+                    <Property name="property">parent_Id</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">menu_Name</Property>
+                    <Property name="property">menu_Name</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">url</Property>
+                    <Property name="property">url</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
+                    <Property name="name">yxbz</Property>
+                    <Property name="property">yxbz</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                </AutoForm>
+              </Children>
+              <Tools/>
+            </Dialog>
+          </Container>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+&#xD;
+if(menu != undefined){&#xD;
+	var parentId = menu.get(&quot;parent_Id&quot;);&#xD;
+	view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,menu_Name:&quot;&quot;,parent_Id:parentId,url:&quot;&quot;,yxbz:&quot;&quot;});&#xD;
+}else{&#xD;
+	view.get(&quot;#addNodeDataSet&quot;).insert();&#xD;
+}&#xD;
+&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;); &#xD;
+var currentEntity = null;&#xD;
+if (currentNode != null) {&#xD;
+	currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	currentEntity.parent.insert({}, &quot;begin&quot;);&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#addNode&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">添加同级节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentEntity&quot;);&#xD;
+if(!currentEntity){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){	&#xD;
+	var id = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
+	currentEntity.remove();&#xD;
+	currentEntity.get(&quot;child&quot;);&#xD;
+	view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
+	view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+	});&#xD;
+});&#xD;
+&#xD;
+&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">删除节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,false);</ClientEvent>
+              <Property name="caption">修改</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+});</ClientEvent>
+              <Property name="caption">保存</Property>
+            </Button>
+          </ToolBar>
+          <FieldSet>
+            <Buttons/>
+            <Children>
+              <AutoForm id="currentNodeForm">
+                <Property name="dataSet">menuDataSet</Property>
+                <Property name="dataPath">!current_Node</Property>
+                <Property name="readOnly">true</Property>
+                <AutoFormElement>
+                  <Property name="name">id_</Property>
+                  <Property name="property">id_</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">parent_Id</Property>
+                  <Property name="property">parent_Id</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">menu_Name</Property>
+                  <Property name="property">menu_Name</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">url</Property>
+                  <Property name="property">url</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">yxbz</Property>
+                  <Property name="property">yxbz</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </FieldSet>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+&#xD;
+var id = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).get(&quot;id_&quot;);&#xD;
+&#xD;
+view.get(&quot;#addNodeDataSet&quot;).insert({id_:&quot;&quot;,menu_Name:&quot;&quot;,parent_Id:id,url:&quot;&quot;,yxbz:&quot;&quot;});&#xD;
+&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+currentNode.expandAsync(function(){&#xD;
+	currentEntity.createChild(&quot;child&quot;,{});&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#addChild&quot;).show();</ClientEvent>
+              <Property name="caption">添加子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).current;&#xD;
+if(menu != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前子节点数据？&quot;,function(){&#xD;
+		var child = view.get(&quot;#datatree&quot;).get(&quot;currentEntity&quot;).get(&quot;child&quot;);&#xD;
+		var id = menu.get(&quot;id_&quot;);&#xD;
+		child.each(function(entity){&#xD;
+			if(id == entity.get(&quot;id_&quot;)){&#xD;
+				entity.remove();&#xD;
+				view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
+				view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
+					view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+				});&#xD;
+			}&#xD;
+		})&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#menuGrid&quot;).set(&quot;readOnly&quot;,false);</ClientEvent>
+              <Property name="caption">修改子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;);&#xD;
+view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
+&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#menuGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
+});</ClientEvent>
+              <Property name="caption">保存</Property>
+            </Button>
+            <DataPilot>
+              <Property name="itemCodes">pages,pageSize</Property>
+              <Property name="dataSet">menuDataSet</Property>
+              <Property name="dataPath">!current_Node.childDataGrid</Property>
+            </DataPilot>
+          </ToolBar>
+          <DataGrid id="menuGrid">
+            <Property name="dataSet">menuDataSet</Property>
+            <Property name="dataPath">!current_Node.childDataGrid</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="id_">
+              <Property name="property">id_</Property>
+            </DataColumn>
+            <DataColumn name="parent_Id">
+              <Property name="property">parent_Id</Property>
+            </DataColumn>
+            <DataColumn name="menu_Name">
+              <Property name="property">menu_Name</Property>
+            </DataColumn>
+            <DataColumn name="url">
+              <Property name="property">url</Property>
+            </DataColumn>
+            <DataColumn name="yxbz">
+              <Property name="property">yxbz</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <DataTree id="datatree">
+          <Property name="dataSet">menuDataSet</Property>
+          <Property name="currentNodeDataPath">current_Node</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="recursive">true</Property>
+              <Property name="labelProperty">menu_Name</Property>
+              <Property name="name">menu_Name</Property>
+              <Property name="childrenProperty">child</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </SideControl>
+    </SplitPanel>
+    <UpdateAction id="addNodeAction">
+      <Property name="dataResolver">qzBmCdglController#saveMenuNodeInfo</Property>
+      <UpdateItem>
+        <Property name="dataSet">addNodeDataSet</Property>
+        <Property name="dataPath">[#visible]</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <AjaxAction id="deleteAction">
+      <Property name="service">qzBmCdglController#deleteMenuNodeInfo</Property>
+    </AjaxAction>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">qzBmCdglController#updateNodeInfo</Property>
+      <UpdateItem>
+        <Property name="dataSet">menuDataSet</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
 </ViewConfig>

@@ -9,11 +9,11 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="role_Name">
-        <Property/>
+        <Property></Property>
         <Property name="label">角色名称</Property>
       </PropertyDef>
       <PropertyDef name="ms">
-        <Property/>
+        <Property></Property>
         <Property name="label">描述</Property>
       </PropertyDef>
       <Reference name="users">
@@ -38,15 +38,15 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="menu_Name">
-        <Property/>
+        <Property></Property>
         <Property name="label">菜单名称</Property>
       </PropertyDef>
       <PropertyDef name="url">
-        <Property/>
+        <Property></Property>
         <Property name="label">功能访问地址</Property>
       </PropertyDef>
       <PropertyDef name="yxbz">
-        <Property/>
+        <Property></Property>
         <Property name="label">有效标志</Property>
       </PropertyDef>
     </DataType>
@@ -222,7 +222,7 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
               <Property name="action">updateActionRole</Property>
             </ToolBarButton>
           </ToolBar>
-          <DataGrid>
+          <DataGrid id="dataGridRole">
             <Property name="dataSet">dsRole</Property>
             <DataColumn name="role_Name">
               <Property name="property">role_Name</Property>
@@ -235,6 +235,15 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
       </SideControl>
     </SplitPanel>
     <UpdateAction id="updateActionRole">
+      <ClientEvent name="onSuccess">var role_Name = view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;role_Name&quot;);&#xD;
+&#xD;
+view.get(&quot;#dsRole&quot;).flush();&#xD;
+&#xD;
+var entity = view.get(&quot;#dsRole&quot;).getData(&quot;[@.get('role_Name')=='&quot;+role_Name+&quot;']&quot;)&#xD;
+&#xD;
+view.get(&quot;#dsRole&quot;).getData().setCurrent(entity)&#xD;
+&#xD;
+</ClientEvent>
       <Property name="dataResolver">yhJsglController#saveRole</Property>
       <UpdateItem>
         <Property name="dataSet">dsRole</Property>

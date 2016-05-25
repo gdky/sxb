@@ -18,6 +18,9 @@ public class User implements Serializable {
 	private String yxbz;
 	private Integer deptId;
 	private String cname;
+	public User(User u) {
+		// TODO Auto-generated constructor stub
+	}
 	public Integer getId() {
 		return id;
 	}

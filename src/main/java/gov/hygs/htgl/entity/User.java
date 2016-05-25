@@ -44,6 +44,12 @@ public class User implements Serializable {
 	/** 生日. */
 	private Date birthday;
 
+	
+	private Integer accountEnabled;
+	private Integer accountExpired;
+	private Integer accountLocked;
+	private Integer credentialsExpired;
+	
 	/**
 	 * Constructor.
 	 */
@@ -239,6 +245,57 @@ public class User implements Serializable {
 	public Date getBirthday() {
 		return this.birthday;
 	}
+
+	
+	public Integer getAccountEnabled() {
+		return accountEnabled;
+	}
+
+	public void setAccountEnabled(Integer accountEnabled) {
+		this.accountEnabled = accountEnabled;
+	}
+
+	public Integer getAccountExpired() {
+		return accountExpired;
+	}
+
+	public void setAccountExpired(Integer accountExpired) {
+		this.accountExpired = accountExpired;
+	}
+
+	public Integer getAccountLocked() {
+		return accountLocked;
+	}
+
+	public void setAccountLocked(Integer accountLocked) {
+		this.accountLocked = accountLocked;
+	}
+
+	public Integer getCredentialsExpired() {
+		return credentialsExpired;
+	}
+
+
+
+	public User(User u) {
+		
+		this.id_ = u.id_;
+		this.login_Name = u.login_Name;
+		this.user_Name = u.user_Name;
+		this.phone = u.phone;
+		this.rzsj = u.rzsj;
+		this.zw = u.zw;
+		this.pwd = u.pwd;
+		this.photo = u.photo;
+		this.deptid = u.deptid;
+		this.birthday = u.birthday;
+		this.accountEnabled = u.accountEnabled;
+		this.accountExpired = u.accountExpired;
+		this.accountLocked = u.accountLocked;
+		this.credentialsExpired = u.credentialsExpired;
+	}
+
+	
 
 	/**
 	 * {@inheritDoc}
