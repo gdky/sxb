@@ -10,14 +10,25 @@
       </PropertyDef>
       <PropertyDef name="groupName">
         <Property></Property>
+        <Property name="label">群名称</Property>
         <Validator type="ajax">
           <Property name="executingMessage">正在检查群名...</Property>
           <Property name="async">false</Property>
-          <Property name="service">qzglController#checkGroupName</Property>
+          <Property name="service">qzBmCdglController#checkGroupName</Property>
+          <Property name="revalidateOldValue">false</Property>
+        </Validator>
+        <Validator name="validator1" type="length">
+          <Property name="resultMessage">群主名不能为空，请输入内容</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+        <Validator name="validator2" type="regExp">
+          <Property name="whiteRegExp">^[a-zA-Z\d\u4e00-\u9fa5]+$</Property>
+          <Property name="resultMessage">群主名必须是汉字、字母、数字的组合</Property>
         </Validator>
       </PropertyDef>
       <PropertyDef name="ms">
         <Property></Property>
+        <Property name="label">描述</Property>
       </PropertyDef>
     </DataType>
     <DataType name="userType">
@@ -27,30 +38,37 @@
       </PropertyDef>
       <PropertyDef name="login_Name">
         <Property></Property>
+        <Property name="label">登陆名称</Property>
       </PropertyDef>
       <PropertyDef name="user_Name">
         <Property></Property>
+        <Property name="label">用户名称</Property>
       </PropertyDef>
       <PropertyDef name="phone">
         <Property></Property>
+        <Property name="label">手机号码</Property>
       </PropertyDef>
       <PropertyDef name="rzsj">
         <Property name="dataType">Date</Property>
+        <Property name="label">入职时间</Property>
       </PropertyDef>
       <PropertyDef name="zw">
         <Property></Property>
+        <Property name="label">职位</Property>
       </PropertyDef>
       <PropertyDef name="pwd">
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="photo">
         <Property></Property>
+        <Property name="label">头像</Property>
       </PropertyDef>
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="birthday">
         <Property name="dataType">Date</Property>
+        <Property name="label">生日</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -66,162 +84,189 @@ self.flush();</ClientEvent>
       <Property name="dataProvider">qzBmCdglController#getUserByGroupInfo</Property>
       <Property name="dataType">[userType]</Property>
     </DataSet>
+    <DataSet id="dsUser">
+      <Property name="dataType">[userType]</Property>
+      <Property name="dataProvider">qzBmCdglController#getUserInfo</Property>
+      <Property name="pageSize">2</Property>
+    </DataSet>
     <SplitPanel>
       <Property name="position">20%</Property>
       <MainControl>
         <Container>
-          <ToolBar>
-            <Button>
-              <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;)&#xD;
-if(group != undefined){&#xD;
-	view.get(&quot;#userDataSet&quot;).insert({id_:group.get(&quot;id&quot;)});&#xD;
-	view.get(&quot;#userDialog&quot;).show();&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-              <Property name="caption">添加</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
-if(user != undefined){&#xD;
-	user.remove();&#xD;
-	view.get(&quot;#userUpdate&quot;).execute();&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-              <Property name="caption">删除</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
-if(user != undefined){&#xD;
-	view.get(&quot;#userDialog&quot;).show();&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-              <Property name="caption">修改</Property>
-            </Button>
-            <Button>
-              <Property name="caption">保存</Property>
-            </Button>
-          </ToolBar>
-          <DataGrid id="userGrid">
-            <Property name="dataSet">userDataSet</Property>
-            <Property name="readOnly">true</Property>
-            <DataColumn name="id_">
-              <Property name="property">id_</Property>
-            </DataColumn>
-            <DataColumn name="login_Name">
-              <Property name="property">login_Name</Property>
-            </DataColumn>
-            <DataColumn name="user_Name">
-              <Property name="property">user_Name</Property>
-            </DataColumn>
-            <DataColumn name="phone">
-              <Property name="property">phone</Property>
-            </DataColumn>
-            <DataColumn name="rzsj">
-              <Property name="property">rzsj</Property>
-            </DataColumn>
-            <DataColumn name="zw">
-              <Property name="property">zw</Property>
-            </DataColumn>
-            <DataColumn name="pwd">
-              <Property name="property">pwd</Property>
-            </DataColumn>
-            <DataColumn name="photo">
-              <Property name="property">photo</Property>
-            </DataColumn>
-            <DataColumn name="deptid">
-              <Property name="property">deptid</Property>
-            </DataColumn>
-            <DataColumn name="birthday">
-              <Property name="property">birthday</Property>
-            </DataColumn>
-          </DataGrid>
-        </Container>
-      </MainControl>
-      <SideControl>
-        <Container>
-          <ToolBar>
-            <Button>
-              <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).insert();&#xD;
+          <GroupBox>
+            <Property name="caption">群主信息</Property>
+            <Property name="height">150</Property>
+            <Buttons/>
+            <Children>
+              <ToolBar>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).insert();&#xD;
 view.get(&quot;#groupDialog&quot;).show();&#xD;
 </ClientEvent>
-              <Property name="caption">添加</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+                  <Property name="caption">添加</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
 if(group != undefined){&#xD;
-	group.remove();&#xD;
-	view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
-		var currentGroup = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
-		if(currentGroup != undefined){&#xD;
-			var user = view.get(&quot;#userDataSet&quot;);&#xD;
-			user.set(&quot;parameter&quot;,{&quot;id&quot;:currentGroup.get(&quot;id&quot;)});&#xD;
-			user.flush();&#xD;
-		}&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		group.remove();&#xD;
+		view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
+			var currentGroup = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+			if(currentGroup != undefined){&#xD;
+				var user = view.get(&quot;#userDataSet&quot;);&#xD;
+				user.set(&quot;parameter&quot;,{&quot;id&quot;:currentGroup.get(&quot;id&quot;)});&#xD;
+				user.flush();&#xD;
+			}&#xD;
+		});&#xD;
 	});&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
-              <Property name="caption">删除</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </Button>
+                <Button>
+                  <Property name="caption">保存</Property>
+                  <Property name="action">groupUpdate</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+                </Button>
+              </ToolBar>
+              <AutoForm>
+                <Property name="dataSet">groupDataSet</Property>
+                <AutoFormElement>
+                  <Property name="name">groupName</Property>
+                  <Property name="property">groupName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+          <GroupBox>
+            <Property name="caption">用户信息</Property>
+            <Buttons/>
+            <Children>
+              <ToolBar>
+                <Button>
+                  <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
 if(group != undefined){&#xD;
-	view.get(&quot;#groupDialog&quot;).show();&#xD;
+	//view.get(&quot;#userDataSet&quot;).insert({id_:group.get(&quot;id&quot;)});&#xD;
+	view.get(&quot;#userDialog&quot;).show();&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
-              <Property name="caption">修改</Property>
-            </Button>
-            <Button>
-              <Property name="caption">保存</Property>
-            </Button>
-          </ToolBar>
-          <DataGrid id="groupGrid">
-            <ClientEvent name="onDataRowClick">var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+                  <Property name="caption">添加</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
+if(user != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+		user.set({deptid:groupId});&#xD;
+		user.remove();&#xD;
+		view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
+			view.get(&quot;#userDialog&quot;).close();&#xD;
+			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+			var user = view.get(&quot;#userDataSet&quot;);&#xD;
+			user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+			user.flush();&#xD;
+		});&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </Button>
+              </ToolBar>
+              <DataGrid id="userGrid">
+                <Property name="dataSet">userDataSet</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="login_Name">
+                  <Property name="property">login_Name</Property>
+                </DataColumn>
+                <DataColumn name="user_Name">
+                  <Property name="property">user_Name</Property>
+                </DataColumn>
+                <DataColumn name="phone">
+                  <Property name="property">phone</Property>
+                </DataColumn>
+                <DataColumn name="rzsj">
+                  <Property name="property">rzsj</Property>
+                </DataColumn>
+                <DataColumn name="zw">
+                  <Property name="property">zw</Property>
+                </DataColumn>
+                <DataColumn name="photo">
+                  <Property name="property">photo</Property>
+                </DataColumn>
+                <DataColumn name="birthday">
+                  <Property name="property">birthday</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <GroupBox>
+            <Property name="caption">群主管理</Property>
+            <Buttons/>
+            <Children>
+              <DataGrid id="groupGrid">
+                <ClientEvent name="onDataRowClick">var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
 var user = view.get(&quot;#userDataSet&quot;);&#xD;
 user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 user.flush();&#xD;
 </ClientEvent>
-            <Property name="dataSet">groupDataSet</Property>
-            <Property name="readOnly">true</Property>
-            <DataColumn name="id">
-              <Property name="property">id</Property>
-            </DataColumn>
-            <DataColumn name="groupName">
-              <Property name="property">groupName</Property>
-            </DataColumn>
-            <DataColumn name="ms">
-              <Property name="property">ms</Property>
-            </DataColumn>
-          </DataGrid>
+                <Property name="dataSet">groupDataSet</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="groupName">
+                  <Property name="property">groupName</Property>
+                </DataColumn>
+                <DataColumn name="ms">
+                  <Property name="property">ms</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
         </Container>
       </SideControl>
     </SplitPanel>
     <UpdateAction id="groupUpdate">
       <Property name="dataResolver">qzBmCdglController#updateGroupInfo</Property>
+      <Property name="executingMessage">正在执行...</Property>
+      <Property name="successMessage">执行成功</Property>
       <UpdateItem>
         <Property name="dataSet">groupDataSet</Property>
       </UpdateItem>
     </UpdateAction>
     <UpdateAction id="userUpdate">
-      <ClientEvent name="onSuccess">view.get(&quot;#userDialog&quot;).close();&#xD;
-var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-var user = view.get(&quot;#userDataSet&quot;);&#xD;
-user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
-user.flush();</ClientEvent>
       <Property name="dataResolver">qzBmCdglController#updateUserInfo</Property>
+      <Property name="executingMessage">正在执行...</Property>
+      <Property name="successMessage">执行成功</Property>
       <UpdateItem>
         <Property name="dataSet">userDataSet</Property>
       </UpdateItem>
     </UpdateAction>
-    <Dialog id="groupDialog">
-      <Buttons>
-        <Button>
-          <ClientEvent name="onClick">//groupAutoForm&#xD;
-var autoEntity = view.get(&quot;#groupAutoForm&quot;).get(&quot;entity&quot;);&#xD;
+    <Dialog id="groupDialog" layout="hbox pack:center" layoutConstraint="center">
+      <Property name="width">400</Property>
+      <Property name="height">210</Property>
+      <Buttons/>
+      <Children>
+        <GroupBox layout="hbox pack:center">
+          <Property name="caption">群主管理</Property>
+          <Property name="width">400</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var autoEntity = view.get(&quot;#groupAutoForm&quot;).get(&quot;entity&quot;);&#xD;
 view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
 	view.get(&quot;#groupDialog&quot;).close();&#xD;
 	view.get(&quot;#groupDataSet&quot;).flush();&#xD;
@@ -237,103 +282,114 @@ view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
 	});	&#xD;
 });&#xD;
 </ClientEvent>
-          <Property name="caption">提交</Property>
-        </Button>
-        <Button>
-          <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
+              <Property name="caption">提交</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#groupDialog&quot;).close();&#xD;
 </ClientEvent>
-          <Property name="caption">取消</Property>
-        </Button>
-      </Buttons>
-      <Children>
-        <AutoForm id="groupAutoForm">
-          <Property name="dataSet">groupDataSet</Property>
-          <AutoFormElement>
-            <Property name="name">id</Property>
-            <Property name="property">id</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">groupName</Property>
-            <Property name="property">groupName</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">ms</Property>
-            <Property name="property">ms</Property>
-            <Editor/>
-          </AutoFormElement>
-        </AutoForm>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm id="groupAutoForm">
+              <Property name="dataSet">groupDataSet</Property>
+              <Property name="cols">*</Property>
+              <Property name="width">250</Property>
+              <Property name="height">60</Property>
+              <AutoFormElement>
+                <Property name="name">groupName</Property>
+                <Property name="property">groupName</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">ms</Property>
+                <Property name="property">ms</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+        </GroupBox>
       </Children>
       <Tools/>
     </Dialog>
     <Dialog id="userDialog">
-      <Buttons>
-        <Button>
-          <Property name="caption">提交</Property>
-          <Property name="action">userUpdate</Property>
-        </Button>
-        <Button>
-          <ClientEvent name="onClick">view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
-view.get(&quot;#userDialog&quot;).close();</ClientEvent>
-          <Property name="caption">取消</Property>
-        </Button>
-      </Buttons>
+      <Property name="width">700</Property>
+      <Property name="height">500</Property>
+      <Buttons/>
       <Children>
-        <AutoForm id="userAutoForm">
-          <Property name="dataSet">userDataSet</Property>
-          <AutoFormElement>
-            <Property name="name">id_</Property>
-            <Property name="property">id_</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">login_Name</Property>
-            <Property name="property">login_Name</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">user_Name</Property>
-            <Property name="property">user_Name</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">phone</Property>
-            <Property name="property">phone</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">rzsj</Property>
-            <Property name="property">rzsj</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">zw</Property>
-            <Property name="property">zw</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">pwd</Property>
-            <Property name="property">pwd</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">photo</Property>
-            <Property name="property">photo</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">deptid</Property>
-            <Property name="property">deptid</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">birthday</Property>
-            <Property name="property">birthday</Property>
-            <Editor/>
-          </AutoFormElement>
-        </AutoForm>
+        <GroupBox>
+          <Property name="caption">用户管理</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var entity = view.get('#userDataGrid.selection');&#xD;
+var users = view.get(&quot;#userDataSet&quot;).getData();&#xD;
+users.each(function(o){&#xD;
+	if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+		&#xD;
+		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+		return false;&#xD;
+}});&#xD;
+var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+entity.set({deptid:groupId});&#xD;
+view.get(&quot;#userDataSet&quot;).getData().insert(entity);&#xD;
+&#xD;
+view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
+	view.get(&quot;#userDialog&quot;).close();&#xD;
+	var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+	var user = view.get(&quot;#userDataSet&quot;);&#xD;
+	user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+	user.flush();&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">提交</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#userDialog&quot;).close();</ClientEvent>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <ToolBar>
+              <DataPilot>
+                <Property name="dataSet">dsUser</Property>
+                <Property name="itemCodes">pages,pageSize</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid id="userDataGrid">
+              <Property name="dataSet">dsUser</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="selectionMode">singleRow</Property>
+              <RowSelectorColumn/>
+              <DataColumn name="login_Name">
+                <Property name="property">login_Name</Property>
+              </DataColumn>
+              <DataColumn name="user_Name">
+                <Property name="property">user_Name</Property>
+              </DataColumn>
+              <DataColumn name="phone">
+                <Property name="property">phone</Property>
+              </DataColumn>
+              <DataColumn name="rzsj">
+                <Property name="property">rzsj</Property>
+              </DataColumn>
+              <DataColumn name="zw">
+                <Property name="property">zw</Property>
+              </DataColumn>
+              <DataColumn name="photo">
+                <Property name="property">photo</Property>
+              </DataColumn>
+              <DataColumn name="birthday">
+                <Property name="property">birthday</Property>
+              </DataColumn>
+            </DataGrid>
+          </Children>
+        </GroupBox>
       </Children>
       <Tools/>
     </Dialog>

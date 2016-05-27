@@ -3,6 +3,7 @@ package gov.hygs.htgl.service;
 import gov.hygs.htgl.entity.Dept;
 import gov.hygs.htgl.entity.Grouptable;
 import gov.hygs.htgl.entity.Menu;
+import gov.hygs.htgl.entity.SystemProps;
 import gov.hygs.htgl.entity.User;
 
 import java.util.Collection;
@@ -51,4 +52,10 @@ public interface QzBmCdglService {
 	public void updateNodeInfo(Record record);
 
 	public String checkMenuName(String param);
+
+	public void getUserInfo(Page page, Map<String, Object> param);
+
+	public void getSystemPropsInfo(Page page, Map<String, Object> param);
+
+	public void updateSystemPropsInfo(List<SystemProps> list);
 }

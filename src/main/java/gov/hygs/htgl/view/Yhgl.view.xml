@@ -3,6 +3,38 @@
   <Arguments/>
   <Context/>
   <Model>
+    <DataType name="deptType">
+      <Property name="creationType">gov.hygs.htgl.entity.Dept</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dept_name">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+        <Validator type="ajax">
+          <Property name="service">qzBmCdglController#checkDeptName</Property>
+          <Property name="executingMessage">正在检查部门名...</Property>
+          <Property name="async">false</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
+      </Reference>
+      <Reference name="childDataGrid">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentDeptPageById</Property>
+        <Property name="pageSize">1</Property>
+      </Reference>
+    </DataType>
     <DataType name="dtUser">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>
       <PropertyDef name="id_">
@@ -11,10 +43,39 @@
       <PropertyDef name="login_Name">
         <Property></Property>
         <Property name="label">登录名</Property>
+        <Validator type="ajax">
+          <Property name="async">false</Property>
+          <Property name="revalidateOldValue">false</Property>
+          <Property name="executingMessage">正在检查登陆账号...</Property>
+          <Property name="service">yhJsglController#checkLoginName</Property>
+        </Validator>
+        <Validator name="validator1" type="length">
+          <Property name="minLength">1</Property>
+          <Property name="resultMessage">登陆账号不能为空，请输入内容</Property>
+        </Validator>
+        <Validator type="regExp">
+          <Property name="whiteRegExp">^[a-zA-z][a-zA-Z0-9_]{5,11}$</Property>
+          <Property name="resultMessage">登陆账号是6或12位的字母与数字的组合且必须以字母开头</Property>
+          <Property name="name">validator2</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="user_Name">
         <Property></Property>
         <Property name="label">用户名</Property>
+        <Validator type="ajax">
+          <Property name="executingMessage">正在检查用户名名...</Property>
+          <Property name="async">false</Property>
+          <Property name="revalidateOldValue">false</Property>
+          <Property name="service">yhJsglController#checkUserName</Property>
+        </Validator>
+        <Validator name="validator1" type="length">
+          <Property name="resultMessage">用户名不能为空，请输入内容</Property>
+          <Property name="minLength">1</Property>
+        </Validator>
+        <Validator name="validator2" type="regExp">
+          <Property name="whiteRegExp">^[a-zA-Z\d\u4e00-\u9fa5]+$</Property>
+          <Property name="resultMessage">用户名必须是汉字、字母、数字的组合</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="phone">
         <Property></Property>
@@ -44,6 +105,9 @@
         <Property name="dataType">Date</Property>
         <Property name="label">生日</Property>
       </PropertyDef>
+      <PropertyDef name="deptMc">
+        <Property name="label">所在科室</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -51,6 +115,10 @@
       <Property name="dataType">[dtUser]</Property>
       <Property name="dataProvider">yhJsglController#getUserInfo</Property>
       <Property name="pageSize">30</Property>
+    </DataSet>
+    <DataSet id="deptDataSet">
+      <Property name="dataType">[deptType]</Property>
+      <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
     </DataSet>
     <UpdateAction id="updateActionUser">
       <Property name="dataResolver">yhJsglController#saveUserInfo</Property>
@@ -112,8 +180,8 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
           <DataColumn name="photo">
             <Property name="property">photo</Property>
           </DataColumn>
-          <DataColumn name="deptid">
-            <Property name="property">deptid</Property>
+          <DataColumn name="deptMc">
+            <Property name="property">deptMc</Property>
           </DataColumn>
           <DataColumn name="birthday">
             <Property name="property">birthday</Property>
@@ -140,7 +208,6 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
       <Children>
         <AutoForm>
           <Property name="dataSet">dsUser</Property>
-          <Property name="dataPath">#</Property>
           <AutoFormElement>
             <Property name="name">login_Name</Property>
             <Property name="property">login_Name</Property>
@@ -177,13 +244,59 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
             <Editor/>
           </AutoFormElement>
           <AutoFormElement>
-            <Property name="name">deptid</Property>
-            <Property name="property">deptid</Property>
+            <Property name="name">deptMc</Property>
+            <Property name="property">deptMc</Property>
+            <Property name="trigger">BmDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">birthday</Property>
+            <Property name="property">birthday</Property>
             <Editor/>
           </AutoFormElement>
         </AutoForm>
       </Children>
       <Tools/>
     </Dialog>
+    <CustomDropDown id="BmDropDown">
+      <Property name="height">200</Property>
+      <Panel>
+        <Buttons>
+          <Button>
+            <ClientEvent name="onClick">var data = view.get(&quot;#deptDataSet&quot;).getData(&quot;!current_Node&quot;)&#xD;
+&#xD;
+var dsUser  = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;)&#xD;
+&#xD;
+dsUser.set(&quot;deptid&quot;,data.get(&quot;id_&quot;))&#xD;
+&#xD;
+dsUser.set(&quot;deptMc&quot;,data.get(&quot;dept_name&quot;))&#xD;
+view.get(&quot;#BmDropDown&quot;).close();</ClientEvent>
+            <Property name="caption">确定</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#BmDropDown&quot;).close();</ClientEvent>
+            <Property name="caption">取消</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <DataTree id="BmDataTree">
+            <Property name="currentNodeDataPath">current_Node</Property>
+            <Property name="dataSet">deptDataSet</Property>
+            <Property name="selectionMode">none</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="recursive">true</Property>
+                <Property name="childrenProperty">child</Property>
+                <Property name="labelProperty">dept_name</Property>
+                <Property name="name">dept_name</Property>
+                <Property name="checkable">false</Property>
+                <Property name="expandLevel">1</Property>
+              </BindingConfig>
+            </BindingConfigs>
+          </DataTree>
+        </Children>
+        <Tools/>
+      </Panel>
+    </CustomDropDown>
   </View>
 </ViewConfig>

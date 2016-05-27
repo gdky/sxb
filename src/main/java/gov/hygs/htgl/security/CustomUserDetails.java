@@ -69,7 +69,10 @@ public class CustomUserDetails extends User implements UserDetails {
 		return this.getUser_Name();
 	}
 	
-
+	public Integer getId() {
+		// TODO Auto-generated method stub
+		return this.getId_();
+	}
 
 
 }

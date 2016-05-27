@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="syspropType">
+      <Property name="creationType">gov.hygs.htgl.entity.SystemProps</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="key">
+        <Property></Property>
+        <Property name="label">参数</Property>
+      </PropertyDef>
+      <PropertyDef name="value">
+        <Property></Property>
+        <Property name="label">参数值</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsSysprop">
+      <Property name="dataType">[syspropType]</Property>
+      <Property name="dataProvider">qzBmCdglController#getSystemPropsInfo</Property>
+      <Property name="pageSize">10</Property>
+    </DataSet>
+    <Container>
+      <GroupBox>
+        <Property name="height">150</Property>
+        <Property name="caption">系统参数信息</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsSysprop&quot;).insert();&#xD;
+view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">增加</Property>
+              <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var currentData = view.get(&quot;#dsSysprop&quot;).getData(&quot;#&quot;);&#xD;
+if(currentData != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+	currentData.remove();&#xD;
+	view.get(&quot;#updateAction&quot;).execute();&#xD;
+	//view.get(&quot;#dsSysprop&quot;).flush();&#xD;
+	});	&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+            </Button>
+            <Button>
+              <Property name="caption">保存</Property>
+              <Property name="action">updateAction</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+            </Button>
+          </ToolBar>
+          <AutoForm>
+            <Property name="dataSet">dsSysprop</Property>
+            <AutoFormElement>
+              <Property name="name">key</Property>
+              <Property name="property">key</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">value</Property>
+              <Property name="property">value</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">ms</Property>
+              <Property name="property">ms</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">系统参数信息表</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsSysprop</Property>
+              <Property name="itemCodes">pages,pageSize</Property>
+            </DataPilot>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsSysprop</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="key">
+              <Property name="property">key</Property>
+            </DataColumn>
+            <DataColumn name="value">
+              <Property name="property">value</Property>
+            </DataColumn>
+            <DataColumn name="ms">
+              <Property name="property">ms</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+    </Container>
+    <Dialog id="dialog">
+      <Property name="width">400</Property>
+      <Buttons/>
+      <Children>
+        <GroupBox layout="hbox pack:center">
+          <Property name="caption">系统参数信息</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	view.get(&quot;#dsSysprop&quot;).flush();&#xD;
+	/*var data = view.get(&quot;#dsSysprop&quot;).getData();&#xD;
+	data.each(function(entity){&#xD;
+		if(entity.get(&quot;id&quot;)==undefined){&#xD;
+			view.get(&quot;#dsSysprop&quot;).flush();&#xD;
+			view.get(&quot;#dsSysprop&quot;).getData().setCurrent(&quot;entity&quot;);&#xD;
+		}&#xD;
+	});&#xD;
+	*/&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">提交</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dialog&quot;).close();&#xD;
+view.get(&quot;#dsSysprop&quot;).getData(&quot;#&quot;).cancel();&#xD;
+</ClientEvent>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm id="autoForm">
+              <Property name="dataSet">dsSysprop</Property>
+              <Property name="cols">*</Property>
+              <Property name="height">95</Property>
+              <Property name="width">250</Property>
+              <AutoFormElement>
+                <Property name="name">key</Property>
+                <Property name="property">key</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">value</Property>
+                <Property name="property">value</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">ms</Property>
+                <Property name="property">ms</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+        </GroupBox>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">qzBmCdglController#updateSystemPropsInfo</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsSysprop</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

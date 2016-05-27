@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import gov.hygs.htgl.entity.Menu;
+import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.service.MainService;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,14 +53,14 @@ public class MainController {
 	
 	@DataProvider
 	public List<Menu> getUserMenu(Map<String,Object> para){
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal();
-		String username = userDetails.getUsername();
+		int username = userDetails.getId();
 		if(para==null){
 			para= new HashMap<String,Object>();
 		}
-		para.put("username", username);
+		para.put("user_id", username);
 		return mainService.getUserMenu(para);
 		
 	}

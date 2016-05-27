@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 
 @Component
@@ -54,5 +55,44 @@ public class YhJsglController {
 	@DataProvider
 	public void getMenuInfo(Page page){
 		yhglService.getMenuInfo(page);
+	}
+	
+	@DataProvider
+	public List<Map<String,Object>> getMenuRoot(int id_){
+		return yhglService.getMenuRoot(id_);
+	}
+	
+	@DataProvider
+	public List<Map<String,Object>> getCurrentMenuById(int id_,int role_id){
+		return yhglService.getCurrentMenuById(id_,role_id);
+	}
+	
+	@Expose
+	public Boolean saveRoleMenu(int role_id,int menu_id){
+		return yhglService.saveRoleMenu(role_id,menu_id);
+	}
+	
+	@Expose 
+	public Boolean validateMenu(int role_id,int menu_id){
+		return yhglService.validateMenu(role_id,menu_id);	
+	}
+	@Expose
+	public Boolean deleteMenu(int role_id,int menu_id){
+		 return yhglService.deleteMenu(role_id,menu_id);
+	}
+	
+	@Expose
+	public String checkLoginName(String param){
+		return yhglService.checkLoginName(param);
+	}
+	
+	@Expose
+	public String checkUserName(String param){
+		return yhglService.checkUserName(param);
+	}
+	
+	@Expose
+	public String checkRoleName(String param){
+		return yhglService.checkRoleName(param);
 	}
 }
