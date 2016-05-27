@@ -4,6 +4,7 @@ import gov.hygs.htgl.dao.QzBmCdglDao;
 import gov.hygs.htgl.entity.Dept;
 import gov.hygs.htgl.entity.Grouptable;
 import gov.hygs.htgl.entity.Menu;
+import gov.hygs.htgl.entity.SystemProps;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.service.QzBmCdglService;
 
@@ -45,12 +46,10 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 			if (EntityUtils.getState(dept).equals(EntityState.NEW)) {
 				qzBmCdglDao.saveDeptNodeInfo(dept);
 			}
-			if (EntityUtils.getState(dept).equals(EntityState.MODIFIED)) {
-				qzBmCdglDao.updateDeptNodeInfo(dept);
-			}
-			if (EntityUtils.getState(dept).equals(EntityState.DELETED)) {
-
-			}
+			/*
+			 * if (EntityUtils.getState(dept).equals(EntityState.MODIFIED)) {
+			 * qzBmCdglDao.updateDeptNodeInfo(dept); }
+			 */
 		}
 	}
 
@@ -72,32 +71,31 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		qzBmCdglDao.getCurrentDeptPageById(page, id_);
 	}
 
-
 	@Override
 	public void updataNodeInfo(Record record) {
 		// TODO Auto-generated method stub
-		if(record != null){
-		Dept dept = new Dept();
-		Object obj = record.get("depts");
-		if(obj instanceof Record){
-			record = (Record) obj;
-			dept.setId_((Integer) record.get("id_"));
-			dept.setDept_name((String) record.get("dept_name"));
-			dept.setParentId((Integer) record.get("parentId"));
-			dept.setMs((String) record.get("ms"));
-			qzBmCdglDao.updateDeptNodeInfo(dept);
-		}else if(obj instanceof List){
-			List list = (List) obj;
-			for(int i=0; i < list.size(); i++){
-				record = (Record) list.get(i);
+		if (record != null) {
+			Dept dept = new Dept();
+			Object obj = record.get("depts");
+			if (obj instanceof Record) {
+				record = (Record) obj;
 				dept.setId_((Integer) record.get("id_"));
 				dept.setDept_name((String) record.get("dept_name"));
 				dept.setParentId((Integer) record.get("parentId"));
 				dept.setMs((String) record.get("ms"));
 				qzBmCdglDao.updateDeptNodeInfo(dept);
+			} else if (obj instanceof List) {
+				List list = (List) obj;
+				for (int i = 0; i < list.size(); i++) {
+					record = (Record) list.get(i);
+					dept.setId_((Integer) record.get("id_"));
+					dept.setDept_name((String) record.get("dept_name"));
+					dept.setParentId((Integer) record.get("parentId"));
+					dept.setMs((String) record.get("ms"));
+					qzBmCdglDao.updateDeptNodeInfo(dept);
+				}
 			}
 		}
-	}
 	}
 
 	@Override
@@ -115,24 +113,29 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	@Override
 	public Collection<User> getUserByGroupInfo(Record record) {
 		// TODO Auto-generated method stub
-		if(record.get("id") != null){
+		if (record.get("id") != null) {
 			return qzBmCdglDao.getUserByGroupId(record.get("id"));
 		}
 		return null;
 	}
 
+	@Override
+	public void getUserInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		qzBmCdglDao.getUserInfo(page, param);
+	}
 
 	@Override
 	public void updateUserInfo(List<User> users) {
 		// TODO Auto-generated method stub
-		for(User user : users){
-			if(EntityUtils.getState(user).equals(EntityState.NEW)){
+		for (User user : users) {
+			if (EntityUtils.getState(user).equals(EntityState.NEW)) {
 				qzBmCdglDao.addUser(user);
 			}
-			if(EntityUtils.getState(user).equals(EntityState.MODIFIED)){
+			if (EntityUtils.getState(user).equals(EntityState.MODIFIED)) {
 				qzBmCdglDao.updataUser(user);
 			}
-			if(EntityUtils.getState(user).equals(EntityState.DELETED)){
+			if (EntityUtils.getState(user).equals(EntityState.DELETED)) {
 				qzBmCdglDao.deleteUser(user);
 			}
 		}
@@ -141,18 +144,18 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	@Override
 	public void updateGroupInfo(List<Grouptable> groups) {
 		// TODO Auto-generated method stub
-		for(Grouptable group : groups){
-			if(EntityUtils.getState(group).equals(EntityState.NEW)){
+		for (Grouptable group : groups) {
+			if (EntityUtils.getState(group).equals(EntityState.NEW)) {
 				qzBmCdglDao.addGroup(group);
 			}
-			if(EntityUtils.getState(group).equals(EntityState.MODIFIED)){
+			if (EntityUtils.getState(group).equals(EntityState.MODIFIED)) {
 				qzBmCdglDao.updataGroup(group);
 			}
-			if(EntityUtils.getState(group).equals(EntityState.DELETED)){
+			if (EntityUtils.getState(group).equals(EntityState.DELETED)) {
 				qzBmCdglDao.deleteGroup(group);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -160,7 +163,7 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		// TODO Auto-generated method stub
 		return qzBmCdglDao.checkGroupName(param);
 	}
-	
+
 	@Override
 	public Collection<Menu> getMenuRoot() {
 		// TODO Auto-generated method stub
@@ -182,23 +185,23 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	@Override
 	public void saveMenuNodeInfo(List<Menu> menus) {
 		// TODO Auto-generated method stub
-		for(Menu menu : menus){
+		for (Menu menu : menus) {
 			if (EntityUtils.getState(menu).equals(EntityState.NEW)) {
 				qzBmCdglDao.saveMenuNodeInfo(menu);
-			}
-			if (EntityUtils.getState(menu).equals(EntityState.MODIFIED)) {
-				qzBmCdglDao.updateMenuNodeInfo(menu);
-			}
+			}/*
+			 * if (EntityUtils.getState(menu).equals(EntityState.MODIFIED)) {
+			 * qzBmCdglDao.updateMenuNodeInfo(menu); }
+			 */
 		}
 	}
 
 	@Override
 	public void deleteMenuNodeInfo(String id) {
 		// TODO Auto-generated method stub
-		if(id != null){
+		if (id != null) {
 			qzBmCdglDao.deleteMenuNodeInfo(id);
 			List<Menu> menus = (List<Menu>) qzBmCdglDao.getCurrentMenuById(id);
-			for(Menu menu : menus){
+			for (Menu menu : menus) {
 				deleteMenuNodeInfo(menu.getId_().toString());
 			}
 		}
@@ -207,10 +210,10 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	@Override
 	public void updateNodeInfo(Record record) {
 		// TODO Auto-generated method stub
-		if(record != null){
+		if (record != null) {
 			Menu menu = new Menu();
 			Object obj = record.get("menus");
-			if(obj instanceof Record){
+			if (obj instanceof Record) {
 				record = (Record) obj;
 				menu.setId_((Integer) record.get("id_"));
 				menu.setMenu_Name((String) record.get("menu_name"));
@@ -218,9 +221,9 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 				menu.setUrl((String) record.get("url"));
 				menu.setYxbz((String) record.get("yxbz"));
 				qzBmCdglDao.updateMenuNodeInfo(menu);
-			}else if(obj instanceof List){
+			} else if (obj instanceof List) {
 				List list = (List) obj;
-				for(int i=0; i< list.size(); i++){
+				for (int i = 0; i < list.size(); i++) {
 					record = (Record) list.get(i);
 					menu.setId_((Integer) record.get("id_"));
 					menu.setMenu_Name((String) record.get("menu_name"));
@@ -238,4 +241,27 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		// TODO Auto-generated method stub
 		return qzBmCdglDao.checkMenuName(param);
 	}
+
+	@Override
+	public void getSystemPropsInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		qzBmCdglDao.getSystemPropsInfo(page, param);
+	}
+
+	@Override
+	public void updateSystemPropsInfo(List<SystemProps> list) {
+		// TODO Auto-generated method stub
+		for(SystemProps sp : list){
+			if (EntityUtils.getState(sp).equals(EntityState.NEW)) {
+				qzBmCdglDao.addSystemProps(sp);
+			}
+			if(EntityUtils.getState(sp).equals(EntityState.MODIFIED)){
+				qzBmCdglDao.updateSystemProps(sp);
+			}
+			if(EntityUtils.getState(sp).equals(EntityState.DELETED)){
+				qzBmCdglDao.deleteSystemProps(sp);
+			}
+		}
+	}
+
 }

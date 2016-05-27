@@ -4,6 +4,7 @@ import gov.hygs.htgl.dao.QzBmCdglDao;
 import gov.hygs.htgl.entity.Dept;
 import gov.hygs.htgl.entity.Grouptable;
 import gov.hygs.htgl.entity.Menu;
+import gov.hygs.htgl.entity.SystemProps;
 import gov.hygs.htgl.entity.User;
 
 import java.sql.ResultSet;
@@ -81,8 +82,9 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		String sql = "select * from dept where dept_name=?";
 		Object[] objs = { param };
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, objs);
-		return list.size()>0?"部门名称'"+param+"'已存在":null;
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+				objs);
+		return list.size() > 0 ? "部门名称'" + param + "'已存在" : null;
 	}
 
 	private int getDeptInfoCount(String id_) {
@@ -129,7 +131,6 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		}
 		return depts;
 	}
-
 
 	@Override
 	public Collection<Menu> getMenuRoot() {
@@ -189,8 +190,9 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		String sql = "select * from menu where menu_name=?";
 		Object[] objs = { param };
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, objs);
-		return list.size()>0?"部门名称'"+param+"'已存在":null;
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+				objs);
+		return list.size() > 0 ? "部门名称'" + param + "'已存在" : null;
 	}
 
 	private int getCount(String id_) {
@@ -238,7 +240,6 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		return menus;
 	}
 
-
 	@Override
 	public Collection<Grouptable> getGrouptableInfo() {
 		// TODO Auto-generated method stub
@@ -260,6 +261,39 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 				});
 		return groups;
 	}
+
+	@Override
+	public void getUserInfo(Page page, Map<String, Object> param) {
+		String sqlCount = "select count(*) from user";
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
+				Integer.class);
+		String sql = "select * from user limit ?,? ";
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
+						page.getPageSize() });
+		page.setEntityCount(entityCount);
+		page.setEntities(list);
+	}
+
+	/*
+	 * private Collection<User> getAllUserInfo() { // TODO Auto-generated method
+	 * stub String sql = "select * from user"; List<User> users =
+	 * this.jdbcTemplate.query(sql, new RowMapper<User>() {
+	 * 
+	 * @Override public User mapRow(ResultSet result, int i) throws SQLException
+	 * { // TODO Auto-generated method stub User user = new User();
+	 * user.setId_(result.getInt("id_"));
+	 * user.setLogin_Name(result.getString("login_name"));
+	 * user.setUser_Name(result.getString("user_name"));
+	 * user.setPhone(result.getString("phone"));
+	 * user.setRzsj(result.getDate("rzsj")); user.setZw(result.getString("zw"));
+	 * user.setPwd(result.getString("pwd"));
+	 * user.setPhoto(result.getString("photo"));
+	 * user.setDeptid(result.getInt("deptid"));
+	 * user.setBirthday(result.getDate("birthday")); return user; }
+	 * 
+	 * }); return users; }
+	 */
 
 	@Override
 	public Collection<User> getUserByGroupId(Object id) {
@@ -295,27 +329,19 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void addUser(User user) {
 		// TODO Auto-generated method stub
-		int groupId = user.getId_();
-		String sql = "insert into user values(?,?,?,?,?,?,?,?,?,?)";
-		Object[] objs = { null, user.getLogin_Name(), user.getUser_Name(),
-				user.getPhone(), user.getRzsj(), user.getZw(), user.getPwd(),
-				user.getPhoto(), user.getDeptid(), user.getBirthday() };
-
-		String userId = this.insertAndGetKeyByJdbc(sql, objs,
-				new String[] { "id_" }).toString();
-
-		sql = "insert into user_group values(?,?,?)";
-		objs = new Object[] { null, userId, groupId };
+		int userId = user.getId_();
+		int groupId = user.getDeptid();
+		String sql = "insert into user_group values(?,?,?)";
+		Object[] objs = new Object[] { null, userId, groupId };
 		this.jdbcTemplate.update(sql, objs);
-
 	}
 
 	@Override
 	public void deleteUser(User user) {
-		String sql = "delete from user where id_=?";
-		Object[] objs = { user.getId_() };
-		this.jdbcTemplate.update(sql, objs);
-		sql = "delete from user_group where user_id=?";
+		int groupId = user.getDeptid();
+		int userId = user.getId_();
+		String sql = "delete from user_group where group_id=? and user_id=?";
+		Object[] objs = { groupId, userId };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
@@ -353,9 +379,6 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		String sql = "delete from grouptable where id_=?";
 		Object[] objs = { group.getId() };
 		this.jdbcTemplate.update(sql, objs);
-		sql = "delete from user where id_ in "
-				+ "(select user_id from user_group " + "where group_id=?)";
-		this.jdbcTemplate.update(sql, objs);
 		sql = "delete from user_group where group_id=?";
 		this.jdbcTemplate.update(sql, objs);
 	}
@@ -365,8 +388,62 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		String sql = "select * from grouptable where group_name=?";
 		Object[] objs = { param };
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, objs);
-		return list.size()>0?"群名称'"+param+"'已存在":null;
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+				objs);
+		return list.size() > 0 ? "群名称'" + param + "'已存在" : null;
+	}
+
+	@Override
+	public void getSystemPropsInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		String sqlCount = "select count(*) from system_props";
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
+				Integer.class);
+		String sql = "select * from system_props limit ?,?";
+
+		List<SystemProps> list = this.jdbcTemplate.query(sql,
+				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
+						page.getPageSize() }, new RowMapper<SystemProps>() {
+
+					@Override
+					public SystemProps mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						SystemProps sp = new SystemProps();
+						sp.setId(result.getInt("id_"));
+						sp.setKey(result.getString("key_"));
+						sp.setValue(result.getString("value"));
+						sp.setMs(result.getString("ms"));
+						return sp;
+					}
+				});
+		page.setEntityCount(entityCount);
+		page.setEntities(list);
+	}
+
+	@Override
+	public void addSystemProps(SystemProps sp) {
+		// TODO Auto-generated method stub
+		String sql = "insert into system_props values(?,?,?,?)";
+		Object[] obj = new Object[] { sp.getId(), sp.getKey(), sp.getValue(),
+				sp.getMs() };
+		this.jdbcTemplate.update(sql, obj);
+	}
+
+	@Override
+	public void updateSystemProps(SystemProps sp) {
+		// TODO Auto-generated method stub
+		String sql = "update system_props set key_=?,value=?,ms=? where id_=?";
+		Object[] obj = new Object[] { sp.getKey(), sp.getValue(), sp.getMs(),
+				sp.getId() };
+		this.jdbcTemplate.update(sql, obj);
+	}
+
+	@Override
+	public void deleteSystemProps(SystemProps sp) {
+		// TODO Auto-generated method stub
+		String sql = "delete from system_props where id_=?";
+		this.jdbcTemplate.update(sql, new Object[] { sp.getId() });
 	}
 
 }

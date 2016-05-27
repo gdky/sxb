@@ -24,4 +24,20 @@ public interface YhJsglService {
 
 	void getMenuInfo(Page page);
 
+	List<Map<String, Object>> getMenuRoot(int id_);
+
+	List<Map<String, Object>> getCurrentMenuById(int id_, int role_id);
+
+	Boolean saveRoleMenu(int role_id, int menu_id);
+
+	Boolean validateMenu(int role_id, int menu_id);
+
+	Boolean deleteMenu(int role_id, int menu_id);
+
+	String checkLoginName(String param);
+
+	String checkUserName(String param);
+
+	String checkRoleName(String param);
+
 }
