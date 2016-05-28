@@ -174,15 +174,20 @@
           <Property name="position">50%</Property>
           <MainControl>
             <Container>
-              <ToolBar>
-                <ToolBarButton>
-                  <ClientEvent name="onClick">//view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;).insert();&#xD;
+              <GroupBox>
+                <Property name="caption">功能菜单信息</Property>
+                <Buttons/>
+                <Children>
+                  <ToolBar>
+                    <ToolBarButton>
+                      <ClientEvent name="onClick">//view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;menus&quot;).insert();&#xD;
 view.get(&quot;#DialogMenu&quot;).show();&#xD;
 </ClientEvent>
-                  <Property name="caption">增加</Property>
-                </ToolBarButton>
-                <ToolBarButton>
-                  <ClientEvent name="onClick">var menus = view.get(&quot;#menuDataTree&quot;).get(&quot;currentNode.data&quot;); &#xD;
+                      <Property name="caption">增加</Property>
+                      <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+                    </ToolBarButton>
+                    <ToolBarButton>
+                      <ClientEvent name="onClick">var menus = view.get(&quot;#menuDataTree&quot;).get(&quot;currentNode.data&quot;); &#xD;
 var dsRole= view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;);&#xD;
 &#xD;
 var role_Name = dsRole.get(&quot;role_Name&quot;);&#xD;
@@ -205,111 +210,131 @@ dorado.MessageBox.confirm(&quot;真的要删除当 前数据？&quot;,function()
 	&#xD;
 })&#xD;
 </ClientEvent>
-                  <Property name="caption">删除</Property>
-                </ToolBarButton>
-              </ToolBar>
-              <DataTree id="menuDataTree">
-                <Property name="dataSet">dsRole</Property>
-                <Property name="selectionMode">none</Property>
-                <Property name="dataPath">#.menus</Property>
-                <Property name="currentNodeDataPath">menu_node</Property>
-                <BindingConfigs>
-                  <BindingConfig>
-                    <Property name="recursive">true</Property>
-                    <Property name="labelProperty">menu_Name</Property>
-                    <Property name="name">menu_Name</Property>
-                    <Property name="childrenProperty">child</Property>
-                    <Property name="expandLevel">2</Property>
-                    <Property name="checkable">false</Property>
-                    <Property name="autoCheckChildren">true</Property>
-                  </BindingConfig>
-                </BindingConfigs>
-              </DataTree>
+                      <Property name="caption">删除</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                    </ToolBarButton>
+                  </ToolBar>
+                  <DataTree id="menuDataTree">
+                    <Property name="dataSet">dsRole</Property>
+                    <Property name="selectionMode">none</Property>
+                    <Property name="dataPath">#.menus</Property>
+                    <Property name="currentNodeDataPath">menu_node</Property>
+                    <BindingConfigs>
+                      <BindingConfig>
+                        <Property name="recursive">true</Property>
+                        <Property name="labelProperty">menu_Name</Property>
+                        <Property name="name">menu_Name</Property>
+                        <Property name="childrenProperty">child</Property>
+                        <Property name="expandLevel">2</Property>
+                        <Property name="checkable">false</Property>
+                        <Property name="autoCheckChildren">true</Property>
+                      </BindingConfig>
+                    </BindingConfigs>
+                  </DataTree>
+                </Children>
+              </GroupBox>
             </Container>
           </MainControl>
           <SideControl>
             <Container>
-              <ToolBar>
-                <ToolBarButton>
-                  <ClientEvent name="onClick">&#xD;
+              <GroupBox>
+                <Property name="caption">用户信息</Property>
+                <Buttons/>
+                <Children>
+                  <ToolBar>
+                    <ToolBarButton>
+                      <ClientEvent name="onClick">&#xD;
 &#xD;
 view.get(&quot;#DialogUser&quot;).show();&#xD;
 </ClientEvent>
-                  <Property name="caption">增加</Property>
-                </ToolBarButton>
-                <ToolBarButton>
-                  <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+                      <Property name="caption">增加</Property>
+                      <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+                    </ToolBarButton>
+                    <ToolBarButton>
+                      <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 				view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;).remove(); &#xD;
 				view.get(&quot;#updateActionRole&quot;).execute();&#xD;
 			})&#xD;
  </ClientEvent>
-                  <Property name="caption">删除</Property>
-                </ToolBarButton>
-              </ToolBar>
-              <DataGrid>
-                <Property name="dataSet">dsRole</Property>
-                <Property name="dataPath">#.users</Property>
-                <Property name="readOnly">true</Property>
-                <Property name="selectionMode">none</Property>
-                <DataColumn name="login_Name">
-                  <Property name="property">login_Name</Property>
-                </DataColumn>
-                <DataColumn name="user_Name">
-                  <Property name="property">user_Name</Property>
-                </DataColumn>
-                <DataColumn name="phone">
-                  <Property name="property">phone</Property>
-                </DataColumn>
-                <DataColumn name="rzsj">
-                  <Property name="property">rzsj</Property>
-                </DataColumn>
-                <DataColumn name="zw">
-                  <Property name="property">zw</Property>
-                </DataColumn>
-                <DataColumn name="pwd">
-                  <Property name="property">pwd</Property>
-                </DataColumn>
-                <DataColumn name="photo">
-                  <Property name="property">photo</Property>
-                </DataColumn>
-                <DataColumn name="deptid">
-                  <Property name="property">deptid</Property>
-                </DataColumn>
-                <DataColumn name="birthday">
-                  <Property name="property">birthday</Property>
-                </DataColumn>
-              </DataGrid>
+                      <Property name="caption">删除</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                    </ToolBarButton>
+                  </ToolBar>
+                  <DataGrid>
+                    <Property name="dataSet">dsRole</Property>
+                    <Property name="dataPath">#.users</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="selectionMode">none</Property>
+                    <DataColumn name="login_Name">
+                      <Property name="property">login_Name</Property>
+                    </DataColumn>
+                    <DataColumn name="user_Name">
+                      <Property name="property">user_Name</Property>
+                    </DataColumn>
+                    <DataColumn name="phone">
+                      <Property name="property">phone</Property>
+                    </DataColumn>
+                    <DataColumn name="rzsj">
+                      <Property name="property">rzsj</Property>
+                    </DataColumn>
+                    <DataColumn name="zw">
+                      <Property name="property">zw</Property>
+                    </DataColumn>
+                    <DataColumn name="pwd">
+                      <Property name="property">pwd</Property>
+                    </DataColumn>
+                    <DataColumn name="photo">
+                      <Property name="property">photo</Property>
+                    </DataColumn>
+                    <DataColumn name="deptid">
+                      <Property name="property">deptid</Property>
+                    </DataColumn>
+                    <DataColumn name="birthday">
+                      <Property name="property">birthday</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+              </GroupBox>
             </Container>
           </SideControl>
         </SplitPanel>
       </MainControl>
       <SideControl>
         <Container>
-          <ToolBar>
-            <ToolBarButton>
-              <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).insert();</ClientEvent>
-              <Property name="caption">增加</Property>
-            </ToolBarButton>
-            <ToolBarButton>
-              <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+          <GroupBox>
+            <Property name="caption">角色信息</Property>
+            <Buttons/>
+            <Children>
+              <ToolBar>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).insert();</ClientEvent>
+                  <Property name="caption">增加</Property>
+                  <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 	view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).remove();&#xD;
 });</ClientEvent>
-              <Property name="caption">删除</Property>
-            </ToolBarButton>
-            <ToolBarButton>
-              <Property name="caption">保存</Property>
-              <Property name="action">updateActionRole</Property>
-            </ToolBarButton>
-          </ToolBar>
-          <DataGrid id="dataGridRole">
-            <Property name="dataSet">dsRole</Property>
-            <DataColumn name="role_Name">
-              <Property name="property">role_Name</Property>
-            </DataColumn>
-            <DataColumn name="ms">
-              <Property name="property">ms</Property>
-            </DataColumn>
-          </DataGrid>
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <Property name="caption">保存</Property>
+                  <Property name="action">updateActionRole</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid id="dataGridRole">
+                <Property name="dataSet">dsRole</Property>
+                <DataColumn name="role_Name">
+                  <Property name="property">role_Name</Property>
+                </DataColumn>
+                <DataColumn name="ms">
+                  <Property name="property">ms</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
         </Container>
       </SideControl>
     </SplitPanel>
@@ -331,9 +356,13 @@ view.get(&quot;#dsRole&quot;).getData().setCurrent(entity)&#xD;
     <Dialog id="DialogUser">
       <Property name="height">500</Property>
       <Property name="width">700</Property>
-      <Buttons>
-        <Button>
-          <ClientEvent name="onClick">var entity = view.get('#DataGridUser.selection');&#xD;
+      <Buttons/>
+      <Children>
+        <GroupBox>
+          <Property name="caption">添加用户信息</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var entity = view.get('#DataGridUser.selection');&#xD;
 var users = view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;)&#xD;
 users.each(function(o){&#xD;
 	if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
@@ -346,63 +375,71 @@ view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).get(&quot;users&quot;).inse
 view.get(&quot;#updateActionRole&quot;).execute();&#xD;
 view.get(&quot;#DialogUser&quot;).hide();&#xD;
 </ClientEvent>
-          <Property name="caption">确定</Property>
-        </Button>
-        <Button>
-          <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
+              <Property name="caption">确定</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
 </ClientEvent>
-          <Property name="caption">取消</Property>
-        </Button>
-      </Buttons>
-      <Children>
-        <ToolBar>
-          <DataPilot>
-            <Property name="itemCodes">pages</Property>
-            <Property name="dataSet">dsUser</Property>
-          </DataPilot>
-        </ToolBar>
-        <DataGrid id="DataGridUser">
-          <Property name="dataSet">dsUser</Property>
-          <Property name="selectionMode">singleRow</Property>
-          <Property name="readOnly">true</Property>
-          <RowSelectorColumn/>
-          <DataColumn name="login_Name">
-            <Property name="property">login_Name</Property>
-          </DataColumn>
-          <DataColumn name="user_Name">
-            <Property name="property">user_Name</Property>
-          </DataColumn>
-          <DataColumn name="phone">
-            <Property name="property">phone</Property>
-          </DataColumn>
-          <DataColumn name="rzsj">
-            <Property name="property">rzsj</Property>
-          </DataColumn>
-          <DataColumn name="zw">
-            <Property name="property">zw</Property>
-          </DataColumn>
-          <DataColumn name="pwd">
-            <Property name="property">pwd</Property>
-          </DataColumn>
-          <DataColumn name="photo">
-            <Property name="property">photo</Property>
-          </DataColumn>
-          <DataColumn name="deptid">
-            <Property name="property">deptid</Property>
-          </DataColumn>
-          <DataColumn name="birthday">
-            <Property name="property">birthday</Property>
-          </DataColumn>
-        </DataGrid>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <ToolBar>
+              <DataPilot>
+                <Property name="itemCodes">pages</Property>
+                <Property name="dataSet">dsUser</Property>
+              </DataPilot>
+            </ToolBar>
+            <DataGrid id="DataGridUser">
+              <Property name="dataSet">dsUser</Property>
+              <Property name="selectionMode">singleRow</Property>
+              <Property name="readOnly">true</Property>
+              <RowSelectorColumn/>
+              <DataColumn name="login_Name">
+                <Property name="property">login_Name</Property>
+              </DataColumn>
+              <DataColumn name="user_Name">
+                <Property name="property">user_Name</Property>
+              </DataColumn>
+              <DataColumn name="phone">
+                <Property name="property">phone</Property>
+              </DataColumn>
+              <DataColumn name="rzsj">
+                <Property name="property">rzsj</Property>
+              </DataColumn>
+              <DataColumn name="zw">
+                <Property name="property">zw</Property>
+              </DataColumn>
+              <DataColumn name="pwd">
+                <Property name="property">pwd</Property>
+              </DataColumn>
+              <DataColumn name="photo">
+                <Property name="property">photo</Property>
+              </DataColumn>
+              <DataColumn name="deptid">
+                <Property name="property">deptid</Property>
+              </DataColumn>
+              <DataColumn name="birthday">
+                <Property name="property">birthday</Property>
+              </DataColumn>
+            </DataGrid>
+          </Children>
+        </GroupBox>
       </Children>
       <Tools/>
     </Dialog>
     <Dialog id="DialogMenu">
       <Property name="height">500</Property>
       <Property name="width">700</Property>
-      <Buttons>
-        <Button>
-          <ClientEvent name="onClick">var entity = view.get('#menuDataSet').getData(&quot;!current_Node&quot;);&#xD;
+      <Buttons/>
+      <Children>
+        <GroupBox>
+          <Property name="caption">添加功能菜单信息</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var entity = view.get('#menuDataSet').getData(&quot;!current_Node&quot;);&#xD;
 &#xD;
 var dsRole= view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;);&#xD;
 var role_Name = dsRole.get(&quot;role_Name&quot;);&#xD;
@@ -439,28 +476,32 @@ view.get(&quot;#validateMenuAjaxAction&quot;).set(&quot;parameter&quot;,{&#xD;
 &#xD;
 &#xD;
 </ClientEvent>
-          <Property name="caption">确定</Property>
-        </Button>
-        <Button>
-          <ClientEvent name="onClick">view.get(&quot;#DialogMenu&quot;).hide();&#xD;
+              <Property name="caption">确定</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#DialogMenu&quot;).hide();&#xD;
 </ClientEvent>
-          <Property name="caption">取消</Property>
-        </Button>
-      </Buttons>
-      <Children>
-        <DataTree id="datatree">
-          <Property name="dataSet">menuDataSet</Property>
-          <Property name="currentNodeDataPath">current_Node</Property>
-          <BindingConfigs>
-            <BindingConfig>
-              <Property name="recursive">true</Property>
-              <Property name="labelProperty">menu_Name</Property>
-              <Property name="name">menu_Name</Property>
-              <Property name="childrenProperty">child</Property>
-              <Property name="expandLevel">2</Property>
-            </BindingConfig>
-          </BindingConfigs>
-        </DataTree>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <DataTree id="datatree">
+              <Property name="dataSet">menuDataSet</Property>
+              <Property name="currentNodeDataPath">current_Node</Property>
+              <BindingConfigs>
+                <BindingConfig>
+                  <Property name="recursive">true</Property>
+                  <Property name="labelProperty">menu_Name</Property>
+                  <Property name="name">menu_Name</Property>
+                  <Property name="childrenProperty">child</Property>
+                  <Property name="expandLevel">2</Property>
+                </BindingConfig>
+              </BindingConfigs>
+            </DataTree>
+          </Children>
+        </GroupBox>
       </Children>
       <Tools/>
     </Dialog>
