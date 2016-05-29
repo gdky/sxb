@@ -29,6 +29,8 @@ public class Menu implements Serializable {
 
 	/** 有效标志. */
 	private String yxbz;
+
+	private Boolean selected;
 	
 	private List<Menu> menus = new ArrayList<Menu>();
 
@@ -36,6 +38,14 @@ public class Menu implements Serializable {
 	 * Constructor.
 	 */
 	public Menu() {
+	}
+
+	public Boolean getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
 	}
 
 	/**
