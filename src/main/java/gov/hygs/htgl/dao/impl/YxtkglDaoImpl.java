@@ -2,9 +2,10 @@ package gov.hygs.htgl.dao.impl;
 
 import gov.hygs.htgl.dao.YxtkglDao;
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.DeptTkGxjl;
+import gov.hygs.htgl.entity.GrTkGxjl;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Yxtkda;
 import gov.hygs.htgl.entity.Yxtkxzx;
 
 import java.sql.ResultSet;
@@ -13,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.regexp.recompile;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -28,7 +28,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
-		String sqlCount = "select count(*) from yxtk";
+		String sqlCount = "select count(*) from yxtk where yxbz='Y'";
 		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
 				Integer.class);
 		List<Yxtk> list = this.getYxtkInfo(pageSize * (pageNow - 1), pageSize);
@@ -38,7 +38,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	private List<Yxtk> getYxtkInfo(int begin, int offest) {
 		// TODO Auto-generated method stub
-		String sql = "select * from yxtk limit ?,? ";
+		String sql = "select * from yxtk where yxbz='Y'limit ?,?";
 		List<Yxtk> list = this.jdbcTemplate.query(sql, new Object[] { begin,
 				offest }, new RowMapper<Yxtk>() {
 
@@ -227,12 +227,89 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void addYxtk(Yxtk yxtk) {
 		// TODO Auto-generated method stub
-		String sql = "insert into yxtk values(?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into yxtk values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
 				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
 				yxtk.getDeptid(), yxtk.getContent(), yxtk.getTmfz(),
-				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode() };
+				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N" };
 		this.jdbcTemplate.update(sql, obj);
+		this.addGrTkGxJl(yxtk);
+		this.addDeptTkGxJl(yxtk);
+	}
+	
+	private void addDeptTkGxJl(Yxtk yxtk){
+		List<DeptTkGxjl> deptTkGxjls = this.getDeptTkGxjlInfoById(yxtk);
+		String sqlDept = null;
+		Object[] objs = null;
+		if(deptTkGxjls.size() > 0){
+			DeptTkGxjl deptTkGxjl = deptTkGxjls.get(0);
+			sqlDept = "update dept_tk_gxjl set gxz=gxz+? where id_=?";
+			objs = new Object[]{deptTkGxjl.getGxly(),deptTkGxjl.getId()};
+		}else{
+			sqlDept = "insert into dept_tk_gxjl values(?,?,?,?,?,?)";
+			objs = new Object[]{yxtk.getDeptid(),yxtk.getDeptid(),yxtk.getId(),1,1,yxtk.getCreateDate()};
+		}
+		this.jdbcTemplate.update(sqlDept, objs);
+	}
+	
+	private List<DeptTkGxjl> getDeptTkGxjlInfoById(Yxtk yxtk){
+		String sql = "select * from dept_tk_gxjl where id_=?";
+		List<DeptTkGxjl> list = this.jdbcTemplate.query(sql, new Object[]{yxtk.getDeptid()}, new RowMapper<DeptTkGxjl>(){
+
+			@Override
+			public DeptTkGxjl mapRow(ResultSet result, int i)
+					throws SQLException {
+				// TODO Auto-generated method stub
+				DeptTkGxjl deptTkGxjl = new DeptTkGxjl();
+				deptTkGxjl.setId(result.getString("id_"));
+				deptTkGxjl.setDeptId(result.getInt("dept_id"));
+				deptTkGxjl.setTkId(result.getString("tk_id"));
+				deptTkGxjl.setGxz(result.getDouble("gxz"));
+				deptTkGxjl.setGxly(result.getInt("gxly"));
+				deptTkGxjl.setGxDate(result.getDate("gx_date"));
+				return deptTkGxjl;
+			}
+			
+		});
+		return list;
+	}
+
+	private void addGrTkGxJl(Yxtk yxtk) {
+		List<GrTkGxjl> grTkGxjls = this.getGrTkGxjlInfoById(yxtk);
+		String sqlUser = null;
+		Object[] objs = null;
+		if (grTkGxjls.size() > 0) {
+			GrTkGxjl grTkGxjl = grTkGxjls.get(0);
+			sqlUser = "update gr_tk_gxjl set gxz=gxz+? where id_=?";
+			objs = new Object[] { grTkGxjl.getGxly(), grTkGxjl.getId() };
+		}else{
+			sqlUser = "insert into gr_tk_gxjl values(?,?,?,?,?,?)";
+			objs = new Object[]{yxtk.getUserId(),yxtk.getDeptid(),yxtk.getId(),1,1,yxtk.getCreateDate()};
+		}
+		this.jdbcTemplate.update(sqlUser, objs);
+	}
+
+	private List<GrTkGxjl> getGrTkGxjlInfoById(Yxtk yxtk) {
+		String sql = "select * from gr_tk_gxjl where id_=?";
+		List<GrTkGxjl> list = this.jdbcTemplate.query(sql,
+				new Object[] { yxtk.getUserId() }, new RowMapper<GrTkGxjl>() {
+
+					@Override
+					public GrTkGxjl mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						GrTkGxjl grTkGxjl = new GrTkGxjl();
+						grTkGxjl.setId(result.getString("id_"));
+						grTkGxjl.setDeptId(result.getInt("dept_id"));
+						grTkGxjl.setTkId(result.getString("tk_id"));
+						grTkGxjl.setGxz(result.getDouble("gxz"));
+						grTkGxjl.setGxly(result.getInt("gxly"));
+						grTkGxjl.setGxDate(result.getDate("gx_date"));
+						return grTkGxjl;
+					}
+
+				});
+		return list;
 	}
 
 	@Override
@@ -251,10 +328,19 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void deleteYxtk(Yxtk yxtk) {
 		// TODO Auto-generated method stub
-		String sql = "delete from yxtk where id_=?";
+		// String sql = "delete from yxtk where id_=?";
+		String sql = "update yxtk set yxbz='N' where id_=?";
 		this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
+		this.deleteGrDeptGxJl(yxtk);
 	}
-
+	
+	private void deleteGrDeptGxJl(Yxtk yxtk) {
+		String sqlUser = "update gr_tk_gxjl set gxz=gxz-1 where id_=?";
+		this.jdbcTemplate.update(sqlUser, new Object[]{yxtk.getUserId()});
+		String sqlDept = "update dept_tk_gxjl set gxz=gxz-1 where id_=?";
+		this.jdbcTemplate.update(sqlDept, new Object[]{yxtk.getDeptid()});
+	}
+	
 	@Override
 	public Collection<Yxtkxzx> getToFInfo() {
 		// TODO Auto-generated method stub

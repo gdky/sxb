@@ -51,6 +51,11 @@ public class Yxtk implements Serializable {
 	/** 选择类型 1单选，2多选. */
 	private String mode;
 	
+	/** 有效标志 Y为添加 N为删除 */
+	private String yxbz;
+	
+	/** 正式库选中为Y否则N */
+	private String xybz;
 	
 	private Collection<Yxtkxzx> yxtkxzx;
 	private Collection<Yxtkxzx> daxzx;
@@ -70,17 +75,23 @@ public class Yxtk implements Serializable {
 	public void setYxtkxzx(Collection<Yxtkxzx> yxtkxzx) {
 		this.yxtkxzx = yxtkxzx;
 	}
-	/*//可以不要
-	private Collection<Yxtkda> yxtkda;
-	public Collection<Yxtkda> getYxtkda() {
-		return yxtkda;
+	
+	public String getYxbz() {
+		return yxbz;
 	}
 
-	public void setYxtkda(Collection<Yxtkda> yxtkda) {
-		this.yxtkda = yxtkda;
-	}*/
-	
-	
+	public void setYxbz(String yxbz) {
+		this.yxbz = yxbz;
+	}
+
+	public String getXybz() {
+		return xybz;
+	}
+
+	public void setXybz(String xybz) {
+		this.xybz = xybz;
+	}
+
 	/**
 	 * Constructor.
 	 */
