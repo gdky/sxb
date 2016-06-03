@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="tmlyType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tmly</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tkflType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkfl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tkmc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">tkcspzController#getCurrentTkflById</Property>
+      </Reference>
+    </DataType>
+  </Model>
+  <View>
+    <Container id="dataSets">
+      <DataSet id="dsTmly">
+        <Property name="dataType">[tmlyType]</Property>
+        <Property name="dataProvider">tkcspzController#getTmlyInfo</Property>
+      </DataSet>
+      <DataSet id="dsTkfl">
+        <Property name="dataType">[tkflType]</Property>
+        <Property name="dataProvider">tkcspzController#getTkflRoot</Property>
+      </DataSet>
+      <DataSet id="dsCondition">
+        <Property name="dataType">[tkflType]</Property>
+      </DataSet>
+    </Container>
+    <SplitPanel>
+      <Property name="position">50%</Property>
+      <MainControl>
+        <Container>
+          <Dialog id="addDialog">
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#tmlyUpdateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#addDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTmly&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#addDialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsTmly</Property>
+                <AutoFormElement>
+                  <Property name="name">id</Property>
+                  <Property name="property">id</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">content</Property>
+                  <Property name="property">content</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <AutoForm>
+            <Property name="dataSet">dsTmly</Property>
+            <AutoFormElement>
+              <Property name="name">id</Property>
+              <Property name="property">id</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">title</Property>
+              <Property name="property">title</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">content</Property>
+              <Property name="property">content</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsTmly&quot;).insert();&#xD;
+view.get(&quot;#addDialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">增加</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+	data.remove();&#xD;
+	view.get(&quot;#tmlyUpdateAction&quot;).execute();&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+            </Button>
+            <Button>
+              <Property name="caption">保存</Property>
+              <Property name="action">tmlyUpdateAction</Property>
+            </Button>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsTmly</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="id">
+              <Property name="property">id</Property>
+            </DataColumn>
+            <DataColumn name="title">
+              <Property name="property">title</Property>
+            </DataColumn>
+            <DataColumn name="content">
+              <Property name="property">content</Property>
+            </DataColumn>
+          </DataGrid>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">var tkfltree = view.get(&quot;#tkfltree&quot;);&#xD;
+var currentNode = tkfltree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+var newEntity = currentEntity.createBrother({&#xD;
+	parentId:currentEntity.get('parentId')&#xD;
+});&#xD;
+view.get(&quot;#dsCondition&quot;).insert({parentId:currentEntity.get('parentId')});&#xD;
+tkfltree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+view.get(&quot;#dialog&quot;).show();&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">添加同级节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var tkfltree = view.get(&quot;#tkfltree&quot;);&#xD;
+var currentNode = tkfltree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.MessageBox.alert(&quot;请先选中一个父节点&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+var newEntity = currentEntity.createChild(&quot;child&quot;,{&#xD;
+	parentId:currentEntity.get(&quot;id&quot;)&#xD;
+});&#xD;
+currentNode.expand();&#xD;
+tkfltree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+view.get(&quot;#dsCondition&quot;).insert({parentId:currentEntity.get(&quot;id&quot;)});&#xD;
+view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">添加子节点</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var currentNode = view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+currentEntity.remove();&#xD;
+view.get(&quot;#updateAction&quot;).execute();&#xD;
+</ClientEvent>
+              <Property name="caption">删除</Property>
+            </Button>
+            <Button>
+              <Property name="caption">保存</Property>
+              <Property name="action">updateAction</Property>
+            </Button>
+          </ToolBar>
+          <Dialog id="dialog">
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var currentEntity = view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+currentEntity.set({tkmc:data.get(&quot;tkmc&quot;),ms:data.get(&quot;ms&quot;)});&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){ //updateNodeAction&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	var current = view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+	view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).parent.flush();&#xD;
+	var newNode = view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).parent.getLast();&#xD;
+	current.set({&#xD;
+		id:newNode.get(&quot;id&quot;),&#xD;
+		tkmc:newNode.get(&quot;tkmc&quot;),&#xD;
+		parentId:newNode.get(&quot;parentId&quot;),&#xD;
+		ms:newNode.get(&quot;ms&quot;)&#xD;
+		});&#xD;
+	//view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).parent.flush();	&#xD;
+	//view.get(&quot;#dsCondition&quot;).clear();&#xD;
+	//view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).setState(dorado.Entity.STATE_NONE);&#xD;
+	//view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;).enableAutoRefresh();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">var currentEntity = view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+currentEntity.cancel();&#xD;
+view.get(&quot;#dialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="tkflForm">
+                <Property name="dataSet">dsCondition</Property>
+                <AutoFormElement>
+                  <Property name="name">id</Property>
+                  <Property name="property">id</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">parentId</Property>
+                  <Property name="property">parentId</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">tkmc</Property>
+                  <Property name="property">tkmc</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+            <Tools/>
+          </Dialog>
+          <DataTreeGrid id="tkfltree">
+            <Property name="currentNodeDataPath">current_Node</Property>
+            <Property name="dataSet">dsTkfl</Property>
+            <Property name="dataType">tkflType</Property>
+            <Property name="treeColumn">tkmc</Property>
+            <Property name="autoCreateColumns">true</Property>
+            <BindingConfigs>
+              <BindingConfig>
+                <Property name="recursive">true</Property>
+                <Property name="childrenProperty">child</Property>
+              </BindingConfig>
+            </BindingConfigs>
+            <Columns>
+              <DataColumn>
+                <Property name="name">id</Property>
+                <Property name="property">id</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">parentId</Property>
+                <Property name="property">parentId</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">tkmc</Property>
+                <Property name="property">tkmc</Property>
+                <Editor/>
+              </DataColumn>
+              <DataColumn>
+                <Property name="name">ms</Property>
+                <Property name="property">ms</Property>
+                <Editor/>
+              </DataColumn>
+            </Columns>
+          </DataTreeGrid>
+        </Container>
+      </SideControl>
+    </SplitPanel>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">tkcspzController#updateTkfl</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTkfl</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="updateNodeAction">
+      <Property name="dataResolver">tkcspzController#updateTkfl</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTkfl</Property>
+        <Property name="dataPath">!current_Node</Property>
+      </UpdateItem>
+    </UpdateAction>
+    <UpdateAction id="tmlyUpdateAction">
+      <Property name="dataResolver">tkcspzController#updateTmly</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsTmly</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>

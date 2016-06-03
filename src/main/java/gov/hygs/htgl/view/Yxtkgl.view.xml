@@ -65,6 +65,12 @@
         <Property name="dataType">[yxtkxzxType]</Property>
         <Property name="dataProvider">yxtkglController#getToFInfo</Property>
       </Reference>
+      <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xybz">
+        <Property></Property>
+      </PropertyDef>
     </DataType>
     <DataType name="yxtkdaType">
       <Property name="creationType">gov.hygs.htgl.entity.Yxtkda</Property>
@@ -670,6 +676,7 @@ view.get(&quot;#yxtkDialog&quot;).show();</ClientEvent>
           <ClientEvent name="onClick">var current = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
 if(current != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+		/*&#xD;
 		var das = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
 		das.each(function(da){&#xD;
@@ -678,6 +685,7 @@ if(current != undefined){&#xD;
 		xzs.each(function(xz){&#xD;
 			xz.remove();&#xD;
 		});&#xD;
+		*/&#xD;
 		current.remove();&#xD;
 		view.get(&quot;#updateAction&quot;).execute();&#xD;
 	});&#xD;
@@ -686,12 +694,7 @@ if(current != undefined){&#xD;
           <Property name="caption">删除</Property>
         </Button>
         <Button>
-          <ClientEvent name="onClick">//view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#updateAction&quot;).execute();&#xD;
-&#xD;
-//var dept = view.get(&quot;#dsDept&quot;).getData(&quot;#&quot;).get(&quot;id_&quot;);&#xD;
-//alert(dept);&#xD;
-</ClientEvent>
+          <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
           <Property name="caption">保存</Property>
         </Button>
         <Button>
