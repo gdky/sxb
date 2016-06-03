@@ -421,11 +421,23 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
               <Property name="caption">保存</Property>
             </Button>
+            <Button>
+              <ClientEvent name="onClick">var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+var s = [];&#xD;
+xzs.each(function(xz){&#xD;
+	s.push(xz);&#xD;
+});&#xD;
+view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,s);&#xD;
+</ClientEvent>
+              <Property name="caption">勾选</Property>
+            </Button>
           </ToolBar>
           <DataGrid id="yxtkxzxGrid">
             <Property name="dataSet">dsYxtk</Property>
             <Property name="dataPath">#.yxtkxzx</Property>
             <Property name="height">200</Property>
+            <Property name="highlightSelectedRow">false</Property>
+            <Property name="highlightCurrentRow">false</Property>
             <RowSelectorColumn/>
             <DataColumn name="id">
               <Property name="property">id</Property>
@@ -443,6 +455,9 @@ view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
           <DataGrid id="daGrid">
             <Property name="dataSet">dsYxtk</Property>
             <Property name="dataPath">#.daxzx</Property>
+            <Property name="highlightCurrentRow">false</Property>
+            <Property name="highlightSelectedRow">false</Property>
+            <Property name="readOnly">true</Property>
             <DataColumn name="id">
               <Property name="property">id</Property>
             </DataColumn>
@@ -613,6 +628,8 @@ view.get(&quot;#updateAction&quot;).execute();&#xD;
             <Property name="dataSet">dsYxtk</Property>
             <Property name="dataPath">#.tof</Property>
             <Property name="height">200</Property>
+            <Property name="highlightCurrentRow">false</Property>
+            <Property name="highlightSelectedRow">false</Property>
             <RowSelectorColumn/>
             <DataColumn name="id">
               <Property name="property">id</Property>
@@ -630,6 +647,9 @@ view.get(&quot;#updateAction&quot;).execute();&#xD;
           <DataGrid id="datofGrid">
             <Property name="dataSet">dsYxtk</Property>
             <Property name="dataPath">#.daxzx</Property>
+            <Property name="highlightCurrentRow">false</Property>
+            <Property name="highlightSelectedRow">false</Property>
+            <Property name="readOnly">true</Property>
             <DataColumn name="id">
               <Property name="property">id</Property>
             </DataColumn>
@@ -694,7 +714,8 @@ if(current != undefined){&#xD;
           <Property name="caption">删除</Property>
         </Button>
         <Button>
-          <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
+          <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();&#xD;
+</ClientEvent>
           <Property name="caption">保存</Property>
         </Button>
         <Button>
@@ -719,22 +740,26 @@ if(mode ==1 || mode == 2){&#xD;
 	//单选或多选题&#xD;
 	if(entity.current == undefined){&#xD;
 		view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#dialog&quot;).show();&#xD;
 	}else{&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
 		view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,true);&#xD;
+		var selects = [];&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
 		entity.each(function(da){&#xD;
 			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){//用da.tkxzxid与xzx.id进行配对&#xD;
-					//选项(xz)被勾选上&#xD;
-					alert(xz.get(&quot;xzKey&quot;));&#xD;
-					//var select = view.get('#yxtkxzxGrid.selection');&#xD;
-					//view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,xz);&#xD;
+				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
+					selects.push(xz);&#xD;
 				}&#xD;
 			});&#xD;
 		});&#xD;
 	}&#xD;
 	view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
+	if(mode == 1){&#xD;
+		view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
+	}else if(mode == 2){&#xD;
+		view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
+	}&#xD;
 }else{&#xD;
 	//判断题&#xD;
 	if(entity.current == undefined){&#xD;
@@ -742,24 +767,20 @@ if(mode ==1 || mode == 2){&#xD;
 	}else{&#xD;
 		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tof&quot;);&#xD;
 		view.get(&quot;#datofGrid&quot;).set(&quot;visible&quot;,true);&#xD;
-		//alert(xzs);&#xD;
-		&#xD;
+		var select = null;&#xD;
 		entity.each(function(da){&#xD;
 			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){//用da.xzKey与xzx.xzKey进行配对&#xD;
-					//选项(xz)被勾选上&#xD;
-					alert(xz.get(&quot;xzKey&quot;));&#xD;
+				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
+					select = xz;&#xD;
 					da.set({tkId:view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-					//var select = view.get('#yxtktofGrid.selection');&#xD;
-					//view.get(&quot;#yxtktofGrid&quot;).set(&quot;selection&quot;,xz);&#xD;
 				}&#xD;
 			});&#xD;
 		});&#xD;
-		&#xD;
-		&#xD;
+				&#xD;
 	}&#xD;
 	view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
 	view.get(&quot;#tofDialog&quot;).show();&#xD;
+	view.get(&quot;#yxtktofGrid&quot;).set(&quot;selection&quot;,select);&#xD;
 }&#xD;
 </ClientEvent>
           <Property name="caption">查看</Property>
