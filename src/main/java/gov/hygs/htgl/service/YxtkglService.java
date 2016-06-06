@@ -1,6 +1,8 @@
 package gov.hygs.htgl.service;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkda;
@@ -29,5 +31,9 @@ public interface YxtkglService {
 	public Collection<User> getUserByDeptId(String id);
 
 	public Collection<Yxtkxzx> getToFInfo();
+
+	public Collection<Tmly> getTmlyInfoByTmlyId(String id);
+
+	public Collection<Tkfl> getTkflInfoByflId(String id);
 
 }
