@@ -1,9 +1,10 @@
 package gov.hygs.htgl.controller;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Yxtkda;
 import gov.hygs.htgl.entity.Yxtkxzx;
 import gov.hygs.htgl.service.YxtkglService;
 
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
-import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 
 @Component
@@ -95,5 +95,15 @@ public class YxtkglController {
 	@DataProvider
 	public Collection<Yxtkxzx> getToFInfo(){
 		return yxtkglService.getToFInfo();
+	}
+	
+	@DataProvider
+	public Collection<Tmly> getTmlyInfoByTmlyId(String id){
+			return yxtkglService.getTmlyInfoByTmlyId(id);
+	}
+	
+	@DataProvider
+	public Collection<Tkfl> getTkflInfoByflId(String id){
+		return yxtkglService.getTkflInfoByflId(id);
 	}
 }

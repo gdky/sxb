@@ -1,6 +1,8 @@
 package gov.hygs.htgl.dao;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkda;
@@ -45,5 +47,9 @@ public interface YxtkglDao {
 	public void deleteYxtk(Yxtk yxtk);
 
 	public Collection<Yxtkxzx> getToFInfo();
+
+	public Collection<Tmly> getTmlyInfoByTmlyId(String id);
+
+	public Collection<Tkfl> getTkflInfoByflId(String id);
 
 }

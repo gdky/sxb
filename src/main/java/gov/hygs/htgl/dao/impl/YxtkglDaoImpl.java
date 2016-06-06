@@ -4,6 +4,8 @@ import gov.hygs.htgl.dao.YxtkglDao;
 import gov.hygs.htgl.entity.Dept;
 import gov.hygs.htgl.entity.DeptTkGxjl;
 import gov.hygs.htgl.entity.GrTkGxjl;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkxzx;
@@ -38,7 +40,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	private List<Yxtk> getYxtkInfo(int begin, int offest) {
 		// TODO Auto-generated method stub
-		String sql = "select * from yxtk where yxbz='Y'limit ?,?";
+		String sql = "select * from yxtk where yxbz='Y'order by id_ desc limit ?,?";
 		List<Yxtk> list = this.jdbcTemplate.query(sql, new Object[] { begin,
 				offest }, new RowMapper<Yxtk>() {
 
@@ -236,41 +238,43 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		this.addGrTkGxJl(yxtk);
 		this.addDeptTkGxJl(yxtk);
 	}
-	
-	private void addDeptTkGxJl(Yxtk yxtk){
+
+	private void addDeptTkGxJl(Yxtk yxtk) {
 		List<DeptTkGxjl> deptTkGxjls = this.getDeptTkGxjlInfoById(yxtk);
 		String sqlDept = null;
 		Object[] objs = null;
-		if(deptTkGxjls.size() > 0){
+		if (deptTkGxjls.size() > 0) {
 			DeptTkGxjl deptTkGxjl = deptTkGxjls.get(0);
 			sqlDept = "update dept_tk_gxjl set gxz=gxz+? where id_=?";
-			objs = new Object[]{deptTkGxjl.getGxly(),deptTkGxjl.getId()};
-		}else{
+			objs = new Object[] { deptTkGxjl.getGxly(), deptTkGxjl.getId() };
+		} else {
 			sqlDept = "insert into dept_tk_gxjl values(?,?,?,?,?,?)";
-			objs = new Object[]{yxtk.getDeptid(),yxtk.getDeptid(),yxtk.getId(),1,1,yxtk.getCreateDate()};
+			objs = new Object[] { yxtk.getDeptid(), yxtk.getDeptid(),
+					yxtk.getId(), 1, 1, yxtk.getCreateDate() };
 		}
 		this.jdbcTemplate.update(sqlDept, objs);
 	}
-	
-	private List<DeptTkGxjl> getDeptTkGxjlInfoById(Yxtk yxtk){
-		String sql = "select * from dept_tk_gxjl where id_=?";
-		List<DeptTkGxjl> list = this.jdbcTemplate.query(sql, new Object[]{yxtk.getDeptid()}, new RowMapper<DeptTkGxjl>(){
 
-			@Override
-			public DeptTkGxjl mapRow(ResultSet result, int i)
-					throws SQLException {
-				// TODO Auto-generated method stub
-				DeptTkGxjl deptTkGxjl = new DeptTkGxjl();
-				deptTkGxjl.setId(result.getString("id_"));
-				deptTkGxjl.setDeptId(result.getInt("dept_id"));
-				deptTkGxjl.setTkId(result.getString("tk_id"));
-				deptTkGxjl.setGxz(result.getDouble("gxz"));
-				deptTkGxjl.setGxly(result.getInt("gxly"));
-				deptTkGxjl.setGxDate(result.getDate("gx_date"));
-				return deptTkGxjl;
-			}
-			
-		});
+	private List<DeptTkGxjl> getDeptTkGxjlInfoById(Yxtk yxtk) {
+		String sql = "select * from dept_tk_gxjl where id_=?";
+		List<DeptTkGxjl> list = this.jdbcTemplate.query(sql,
+				new Object[] { yxtk.getDeptid() }, new RowMapper<DeptTkGxjl>() {
+
+					@Override
+					public DeptTkGxjl mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						DeptTkGxjl deptTkGxjl = new DeptTkGxjl();
+						deptTkGxjl.setId(result.getString("id_"));
+						deptTkGxjl.setDeptId(result.getInt("dept_id"));
+						deptTkGxjl.setTkId(result.getString("tk_id"));
+						deptTkGxjl.setGxz(result.getDouble("gxz"));
+						deptTkGxjl.setGxly(result.getInt("gxly"));
+						deptTkGxjl.setGxDate(result.getDate("gx_date"));
+						return deptTkGxjl;
+					}
+
+				});
 		return list;
 	}
 
@@ -282,9 +286,10 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			GrTkGxjl grTkGxjl = grTkGxjls.get(0);
 			sqlUser = "update gr_tk_gxjl set gxz=gxz+? where id_=?";
 			objs = new Object[] { grTkGxjl.getGxly(), grTkGxjl.getId() };
-		}else{
+		} else {
 			sqlUser = "insert into gr_tk_gxjl values(?,?,?,?,?,?)";
-			objs = new Object[]{yxtk.getUserId(),yxtk.getDeptid(),yxtk.getId(),1,1,yxtk.getCreateDate()};
+			objs = new Object[] { yxtk.getUserId(), yxtk.getDeptid(),
+					yxtk.getId(), 1, 1, yxtk.getCreateDate() };
 		}
 		this.jdbcTemplate.update(sqlUser, objs);
 	}
@@ -333,18 +338,61 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
 		this.deleteGrDeptGxJl(yxtk);
 	}
-	
+
 	private void deleteGrDeptGxJl(Yxtk yxtk) {
 		String sqlUser = "update gr_tk_gxjl set gxz=gxz-1 where id_=?";
-		this.jdbcTemplate.update(sqlUser, new Object[]{yxtk.getUserId()});
+		this.jdbcTemplate.update(sqlUser, new Object[] { yxtk.getUserId() });
 		String sqlDept = "update dept_tk_gxjl set gxz=gxz-1 where id_=?";
-		this.jdbcTemplate.update(sqlDept, new Object[]{yxtk.getDeptid()});
+		this.jdbcTemplate.update(sqlDept, new Object[] { yxtk.getDeptid() });
 	}
-	
+
 	@Override
 	public Collection<Yxtkxzx> getToFInfo() {
 		// TODO Auto-generated method stub
 		return this.getYxtkxzxInfoByYxtkId("0");
+	}
+
+	@Override
+	public Collection<Tmly> getTmlyInfoByTmlyId(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select * from tmly where id_=?";
+		List<Tmly> list = this.jdbcTemplate.query(sql, new Object[] { id },
+				new RowMapper<Tmly>() {
+
+					@Override
+					public Tmly mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tmly tmly = new Tmly();
+						tmly.setId(result.getInt("id_"));
+						tmly.setTitle(result.getString("title"));
+						tmly.setContent(result.getString("content"));
+						return tmly;
+					}
+
+				});
+		return list;
+	}
+
+	@Override
+	public Collection<Tkfl> getTkflInfoByflId(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select * from tkfl where id_=?";
+		List<Tkfl> list = this.jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Tkfl>(){
+
+			@Override
+			public Tkfl mapRow(ResultSet result, int i) throws SQLException {
+				// TODO Auto-generated method stub
+				Tkfl tkfl = new Tkfl();
+				tkfl.setId(result.getInt("id_"));
+				tkfl.setParentId(result.getInt("parent_id"));
+				tkfl.setTkmc(result.getString("tkmc"));
+				tkfl.setMs(result.getString("ms"));
+				return tkfl;
+			}
+			
+		});
+		return list;
 	}
 
 }
