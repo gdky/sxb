@@ -16,6 +16,8 @@ import com.bstek.dorado.data.provider.Page;
 
 import gov.hygs.htgl.dao.YxtkglDao;
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkda;
@@ -129,6 +131,18 @@ public class YxtkglServiceImpl implements YxtkglService {
 	public Collection<Yxtkxzx> getToFInfo() {
 		// TODO Auto-generated method stub
 		return yxtkglDao.getToFInfo();
+	}
+
+	@Override
+	public Collection<Tmly> getTmlyInfoByTmlyId(String id) {
+		// TODO Auto-generated method stub
+		return yxtkglDao.getTmlyInfoByTmlyId(id);
+	}
+
+	@Override
+	public Collection<Tkfl> getTkflInfoByflId(String id) {
+		// TODO Auto-generated method stub
+		return yxtkglDao.getTkflInfoByflId(id);
 	}
 
 }
