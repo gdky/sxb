@@ -5,6 +5,8 @@ import gov.hygs.htgl.entity.Tmly;
 
 import java.util.Collection;
 
+import com.bstek.dorado.data.provider.Page;
+
 public interface TkcspzDao {
 
 	public Collection<Tkfl> getTkflRoot();
@@ -24,5 +26,5 @@ public interface TkcspzDao {
 	public void updateTmly(Tmly tmly);
 
 	public void deleteTmly(Tmly tmly);
-	
+
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.data.variant.Record;
 
 public interface YxtkglService {
 
@@ -35,5 +36,7 @@ public interface YxtkglService {
 	public Collection<Tmly> getTmlyInfoByTmlyId(String id);
 
 	public Collection<Tkfl> getTkflInfoByflId(String id);
+
+	public String countGxjl(Record record);
 
 }

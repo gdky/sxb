@@ -27,7 +27,7 @@ public class Tkfl implements Serializable {
 	private String ms;
 	
 	private Collection<Tkfl> child;
-	
+
 	public Collection<Tkfl> getChild() {
 		return child;
 	}

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
+import com.bstek.dorado.data.provider.Page;
 @Service
 public class TkcspzServiceImpl implements TkcspzService {
 	@Resource
