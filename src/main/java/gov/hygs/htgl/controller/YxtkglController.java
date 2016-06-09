@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.data.variant.Record;
 
 @Component
 public class YxtkglController {
@@ -105,5 +107,10 @@ public class YxtkglController {
 	@DataProvider
 	public Collection<Tkfl> getTkflInfoByflId(String id){
 		return yxtkglService.getTkflInfoByflId(id);
+	}
+	
+	@Expose
+	public String countGxjl(Record record){
+		return yxtkglService.countGxjl(record);
 	}
 }
