@@ -62,12 +62,16 @@
     <Container id="actions">
       <UpdateAction id="updateAction">
         <Property name="dataResolver">tkcspzController#updateTkfl</Property>
+        <Property name="executingMessage">正在执行...</Property>
+        <Property name="successMessage">执行成功</Property>
         <UpdateItem>
           <Property name="dataSet">dsTkfl</Property>
         </UpdateItem>
       </UpdateAction>
       <UpdateAction id="tmlyUpdateAction">
         <Property name="dataResolver">tkcspzController#updateTmly</Property>
+        <Property name="executingMessage">正在执行...</Property>
+        <Property name="successMessage">执行成功</Property>
         <UpdateItem>
           <Property name="dataSet">dsTmly</Property>
         </UpdateItem>
@@ -79,9 +83,10 @@
       <MainControl>
         <Container>
           <Dialog id="addDialog">
+            <Property name="width">400</Property>
             <Buttons/>
             <Children>
-              <GroupBox>
+              <GroupBox layout="hbox pack:center">
                 <Property name="caption">添加题库来源</Property>
                 <Buttons>
                   <Button>
@@ -104,6 +109,9 @@ view.get(&quot;#addDialog&quot;).close();&#xD;
                 <Children>
                   <AutoForm>
                     <Property name="dataSet">dsTmly</Property>
+                    <Property name="cols">*</Property>
+                    <Property name="height">70</Property>
+                    <Property name="width">250</Property>
                     <AutoFormElement>
                       <Property name="name">title</Property>
                       <Property name="property">title</Property>
@@ -186,9 +194,10 @@ if(data != undefined){&#xD;
       <SideControl>
         <Container>
           <Dialog id="dialog">
+            <Property name="width">400</Property>
             <Buttons/>
             <Children>
-              <GroupBox>
+              <GroupBox layout="hbox pack:center">
                 <Property name="caption">添加题库分类</Property>
                 <Buttons>
                   <Button>
@@ -229,6 +238,9 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                 <Children>
                   <AutoForm id="tkflForm">
                     <Property name="dataSet">dsCondition</Property>
+                    <Property name="cols">*</Property>
+                    <Property name="width">250</Property>
+                    <Property name="height">70</Property>
                     <AutoFormElement>
                       <Property name="name">tkmc</Property>
                       <Property name="property">tkmc</Property>

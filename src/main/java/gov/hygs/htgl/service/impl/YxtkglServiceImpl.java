@@ -162,4 +162,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 		return yxtkglDao.countGxjl(record);
 	}
 
+	@Override
+	public String checkContent(String content) {
+		// TODO Auto-generated method stub
+		return yxtkglDao.checkContent(content);
+	}
+
 }
