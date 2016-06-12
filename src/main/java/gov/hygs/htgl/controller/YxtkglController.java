@@ -99,18 +99,44 @@ public class YxtkglController {
 		return yxtkglService.getToFInfo();
 	}
 	
+	/**
+	 * 根据题目来源id获取题目来源信息
+	 * @param id
+	 * @return
+	 */
 	@DataProvider
 	public Collection<Tmly> getTmlyInfoByTmlyId(String id){
 			return yxtkglService.getTmlyInfoByTmlyId(id);
 	}
 	
+	/**
+	 * 根据分类id获取题库分类信息
+	 * @param id
+	 * @return
+	 */
 	@DataProvider
 	public Collection<Tkfl> getTkflInfoByflId(String id){
 		return yxtkglService.getTkflInfoByflId(id);
 	}
 	
+	/**
+	 * 统计贡献记录
+	 * @param record
+	 * @return
+	 */
 	@Expose
 	public String countGxjl(Record record){
 		return yxtkglService.countGxjl(record);
 	}
+	
+	/**
+	 * 用户校验选项对应的内容是否重复
+	 * @param content
+	 * @return
+	 */
+	@Expose
+	public String checkContent(String content){
+		return yxtkglService.checkContent(content);
+	}
+	
 }

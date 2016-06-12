@@ -43,7 +43,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	private List<Yxtk> getYxtkInfo(int begin, int offest) {
 		// TODO Auto-generated method stub
-		String sql = "select * from yxtk where yxbz='Y'order by id_ desc limit ?,?";
+		String sql = "select * from yxtk where yxbz='Y'order by create_date desc limit ?,?";
 		List<Yxtk> list = this.jdbcTemplate.query(sql, new Object[] { begin,
 				offest }, new RowMapper<Yxtk>() {
 
@@ -416,8 +416,19 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				record.getDate("end") };
 		Integer userCount = this.jdbcTemplate.queryForObject(sql, objs,
 				Integer.class);
-		String str = "{deptCount:"+deptCount+",userCount:"+userCount+"}";
+		String str = "{deptCount:" + deptCount + ",userCount:" + userCount
+				+ "}";
 		return String.valueOf(str);
+	}
+
+	@Override
+	public String checkContent(String content) {
+		// TODO Auto-generated method stub
+		String sql = "select * from yxtkxzx where content=?";
+		List list = this.jdbcTemplate.queryForList(sql,
+				new Object[] { content });
+		
+		return list.size() > 0 ? "答案重复" : null;
 	}
 
 }

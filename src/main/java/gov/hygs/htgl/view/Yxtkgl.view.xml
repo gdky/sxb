@@ -72,6 +72,27 @@
       <PropertyDef name="mode">
         <Property></Property>
         <Property name="label">选择类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="value">判断题</Property>
+                <Property name="key">0</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">单选题</Property>
+                <Property name="key">1</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">多选题</Property>
+                <Property name="key">2</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">模式不能为空</Property>
+        </Validator>
       </PropertyDef>
       <Reference name="yxtkxzx">
         <Property name="parameter">$${this.id}</Property>
@@ -89,6 +110,9 @@
       </Reference>
       <PropertyDef name="yxbz">
         <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues"></Property>
+        </Property>
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
@@ -115,10 +139,33 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="xzKey">
+        <ClientEvent name="onSet">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).each(function(entity){&#xD;
+	if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
+		//alert(arg.value);&#xD;
+		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+		return false;&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
         <Property></Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">选项不能为空</Property>
+        </Validator>
+        <Validator name="validator2" type="length">
+          <Property name="maxLength">1</Property>
+          <Property name="minLength">-1</Property>
+          <Property name="resultMessage">文本内容过多，长度应为1</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">内容不能为空</Property>
+        </Validator>
+        <Validator name="validator2" type="ajax">
+          <Property name="async">false</Property>
+          <Property name="service">yxtkglController#checkContent</Property>
+        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="deptType">
@@ -215,7 +262,7 @@
       <DataSet id="dsYxtk">
         <Property name="dataType">[yxtkType]</Property>
         <Property name="dataProvider">yxtkglController#getYxtkInfo</Property>
-        <Property name="pageSize">3</Property>
+        <Property name="pageSize">10</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -339,12 +386,10 @@ if(tmly != undefined){&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="dataSet">dsTmly</Property>
-        <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
         <Property name="property">title</Property>
       </DataSetDropDown>
       <CustomDropDown id="tkflDropDown">
-        <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
           <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
@@ -476,9 +521,11 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 }&#xD;
 	&#xD;
 //action.execute&#xD;
-view.get(&quot;#dialog&quot;).close();&#xD;
-view.get(&quot;#updateAction&quot;).execute();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).flush();</ClientEvent>
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
             <Property name="caption">提交</Property>
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
           </Button>
@@ -837,6 +884,7 @@ view.get(&quot;#updateAction&quot;).execute();&#xD;
 view.get(&quot;#gxCountAction&quot;).execute();&#xD;
 </ClientEvent>
                 <Property name="caption">查询</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#deptResult&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -846,6 +894,7 @@ var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).remove();&#
 &#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -883,6 +932,9 @@ var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).remove();&#
     <Container id="actionContainer">
       <UpdateAction id="updateAction">
         <Property name="dataResolver">yxtkglController#updateYxtk</Property>
+        <Property name="alwaysExecute">true</Property>
+        <Property name="executingMessage">正在执行...</Property>
+        <Property name="successMessage">执行成功</Property>
         <UpdateItem>
           <Property name="dataSet">dsYxtk</Property>
         </UpdateItem>
@@ -905,6 +957,8 @@ alert(entity.deptCount);&#xD;
 alert(entity.userCount);&#xD;
 //userResult*/</ClientEvent>
         <Property name="service">yxtkglController#countGxjl</Property>
+        <Property name="successMessage">执行成功</Property>
+        <Property name="executingMessage">正在执行...</Property>
       </AjaxAction>
     </Container>
     <Container>
@@ -968,8 +1022,7 @@ if(current != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();&#xD;
-</ClientEvent>
+              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
               <Property name="caption">保存</Property>
               <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
             </Button>

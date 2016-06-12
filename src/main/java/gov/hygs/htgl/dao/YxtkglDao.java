@@ -59,4 +59,6 @@ public interface YxtkglDao {
 
 	public String countGxjl(Record record);
 
+	public String checkContent(String content);
+
 }
