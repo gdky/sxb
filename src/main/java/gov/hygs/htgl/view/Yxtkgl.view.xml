@@ -139,13 +139,16 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="xzKey">
-        <ClientEvent name="onSet">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).each(function(entity){&#xD;
-	if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
-		//alert(arg.value);&#xD;
-		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
-		return false;&#xD;
-	}&#xD;
-});&#xD;
+        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
+	datas.each(function(entity){&#xD;
+		if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
+			//alert(arg.value);&#xD;
+			throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+			return false;&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
 </ClientEvent>
         <Property></Property>
         <Validator name="validator1" type="required">
@@ -161,10 +164,6 @@
         <Property></Property>
         <Validator name="validator1" type="required">
           <Property name="resultMessage">内容不能为空</Property>
-        </Validator>
-        <Validator name="validator2" type="ajax">
-          <Property name="async">false</Property>
-          <Property name="service">yxtkglController#checkContent</Property>
         </Validator>
       </PropertyDef>
     </DataType>
@@ -524,6 +523,7 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
@@ -570,7 +570,14 @@ if(current != undefined){&#xD;
 				daxzx.remove();&#xD;
 			}&#xD;
 		});&#xD;
+		var entity = view.get('#yxtkxzxGrid.selection');&#xD;
 		current.remove();&#xD;
+		if(view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;) == 1){&#xD;
+			if(current != entity){&#xD;
+				view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,entity);&#xD;
+			}&#xD;
+		}&#xD;
+		&#xD;
 	});&#xD;
 }&#xD;
 </ClientEvent>
@@ -641,17 +648,6 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 });</ClientEvent>
                   <Property name="caption">保存</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
-                </Button>
-                <Button>
-                  <ClientEvent name="onClick">var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
-var s = [];&#xD;
-xzs.each(function(xz){&#xD;
-	s.push(xz);&#xD;
-});&#xD;
-view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,s);&#xD;
-</ClientEvent>
-                  <Property name="caption">勾选</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
                 </Button>
               </ToolBar>
               <DataGrid id="yxtkxzxGrid">
@@ -811,10 +807,11 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 }&#xD;
 	&#xD;
 //action.execute&#xD;
-view.get(&quot;#tofDialog&quot;).close();&#xD;
-view.get(&quot;#updateAction&quot;).execute();&#xD;
-//yxtktofGrid&#xD;
-//datofGrid</ClientEvent>
+&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#tofDialog&quot;).close();&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+});</ClientEvent>
             <Property name="caption">提交</Property>
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
           </Button>
@@ -1022,7 +1019,10 @@ if(current != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute();</ClientEvent>
+              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
               <Property name="caption">保存</Property>
               <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
             </Button>

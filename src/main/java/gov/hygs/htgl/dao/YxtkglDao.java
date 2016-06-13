@@ -7,6 +7,7 @@ import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkda;
 import gov.hygs.htgl.entity.Yxtkxzx;
+import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +18,7 @@ import com.bstek.dorado.data.variant.Record;
 
 public interface YxtkglDao {
 
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param);
+	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param, CustomUserDetails userDetails);
 
 	public Collection<Dept> getDeptInfoByDeptId(String id);
 
@@ -58,7 +59,5 @@ public interface YxtkglDao {
 	public void deleteGrDeptGxJl(Yxtk yxtk);
 
 	public String countGxjl(Record record);
-
-	public String checkContent(String content);
 
 }
