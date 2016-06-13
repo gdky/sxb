@@ -37,7 +37,9 @@ public class YxtkglServiceImpl implements YxtkglService {
 	@Override
 	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		yxtkglDao.getYxtkInfo(page, param);
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		yxtkglDao.getYxtkInfo(page, param, userDetails);
 	}
 
 	@Override
@@ -160,12 +162,6 @@ public class YxtkglServiceImpl implements YxtkglService {
 	public String countGxjl(Record record) {
 		// TODO Auto-generated method stub
 		return yxtkglDao.countGxjl(record);
-	}
-
-	@Override
-	public String checkContent(String content) {
-		// TODO Auto-generated method stub
-		return yxtkglDao.checkContent(content);
 	}
 
 }

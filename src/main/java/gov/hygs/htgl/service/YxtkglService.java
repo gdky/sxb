@@ -39,6 +39,4 @@ public interface YxtkglService {
 
 	public String countGxjl(Record record);
 
-	public String checkContent(String content);
-
 }

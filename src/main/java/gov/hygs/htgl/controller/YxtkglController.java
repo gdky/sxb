@@ -129,14 +129,4 @@ public class YxtkglController {
 		return yxtkglService.countGxjl(record);
 	}
 	
-	/**
-	 * 用户校验选项对应的内容是否重复
-	 * @param content
-	 * @return
-	 */
-	@Expose
-	public String checkContent(String content){
-		return yxtkglService.checkContent(content);
-	}
-	
 }
