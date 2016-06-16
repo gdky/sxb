@@ -2,8 +2,6 @@ package gov.hygs.htgl.dao.impl;
 
 import gov.hygs.htgl.dao.YxtkglDao;
 import gov.hygs.htgl.entity.Dept;
-import gov.hygs.htgl.entity.DeptTkGxjl;
-import gov.hygs.htgl.entity.GrTkGxjl;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
@@ -14,16 +12,18 @@ import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.bstek.dorado.data.provider.Page;
-import com.bstek.dorado.data.variant.Record;
 import com.gdky.restfull.dao.BaseJdbcDao;
 
 @Repository
@@ -35,59 +35,101 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
-		String roleName = this.getRoleInfoByUserId(userDetails.getId());
-		String sqlCount = "";
+		String roleName = this.getRoleInfoByUserId(userDetails.getId())
+				.getRole_Name();
+		StringBuilder count = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
 
-			sqlCount = "select count(*) from yxtk where yxbz='Y'";
-
+			count.append("select count(*) from yxtk where yxbz='Y'");
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(count, param);
+			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
 
-			sqlCount = "select count(*) from yxtk where yxbz='Y' and deptid="
-					+ userDetails.getDeptid();
-
+			count.append("select count(*) from yxtk where yxbz='Y' and deptid="
+					+ userDetails.getDeptid());
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(count, param);
+			}
 		} else if ("USER".equals(roleName)) {// 普通用户
 
-			sqlCount = sqlCount = "select count(*) from yxtk where yxbz='Y' and deptid="
-					+ userDetails.getDeptid()
-					+ " and user_id="
-					+ userDetails.getId();
+			count.append("select count(*) from yxtk where yxbz='Y' and deptid="
+					+ userDetails.getDeptid() + " and user_id="
+					+ userDetails.getId());
 
 		}
-		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
+		int entityCount = this.jdbcTemplate.queryForObject(count.toString(),
 				Integer.class);
 		List<Yxtk> list = this.getYxtkInfo(pageSize * (pageNow - 1), pageSize,
-				userDetails, roleName);
+				userDetails, roleName, param);
 		page.setEntityCount(entityCount);
 		page.setEntities(list);
 	}
 
+	private void rebuileSqlByConditionAndRole(StringBuilder sql,
+			Map<String, Object> param) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = (Integer) param.get("deptid");
+		Integer userId = (Integer) param.get("userid");
+		Date begin = (Date) param.get("begin");
+		Date end = (Date) param.get("end");
+		String content = (String) param.get("content");
+		if (!sql.toString().contains("deptid")) {
+			if (deptid != null) {
+				sql.append(" and deptid=" + deptid);
+			}
+		}
+		if (userId != null) {
+			sql.append(" and user_id=" + userId);
+		}
+		if (begin != null) {
+			sql.append(" and create_date >= date_format('" + sdf.format(begin)
+					+ "','%Y%m%d')");
+		}
+		if (end != null) {
+			sql.append(" and create_date <= date_format('" + sdf.format(end)
+					+ "','%Y%m%d')");
+		}
+		if (content != null) {
+			sql.append(" and tmly_id in "
+					+ "(select id_ from tmly where title like '%" + content
+					+ "%' or content like '%" + content + "%') ");
+		}
+		// return null;
+	}
+
 	private List<Yxtk> getYxtkInfo(int begin, int offest,
-			CustomUserDetails userDetails, String roleName) {
+			CustomUserDetails userDetails, String roleName,
+			Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		String sql = "";
+		StringBuilder sql = new StringBuilder("");
 		Object[] objs = {};
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
-
-			sql = "select * from yxtk where yxbz='Y' "
-					+ "order by create_date desc limit ?,?";
-			objs = new Object[] { begin, offest };
+			sql.append("select * from yxtk where yxbz='Y' ");
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(sql, param);
+			}
+			sql.append(" order by create_date desc limit " + begin + ","
+					+ offest);
 
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-
-			sql = "select * from yxtk where yxbz='Y' and deptid=? "
-					+ "order by create_date desc limit ?,?";
-			objs = new Object[] { userDetails.getDeptid(), begin, offest };
+			sql.append("select * from yxtk where yxbz='Y' and deptid="
+					+ userDetails.getDeptid() + " ");
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(sql, param);
+			}
+			sql.append(" order by create_date desc limit " + begin + ","
+					+ offest);
 
 		} else if ("USER".equals(roleName)) {// 普通用户
-
-			sql = "select * from yxtk where yxbz='Y' and deptid=? and user_id=? "
-					+ "order by create_date desc limit ?,?";
-			objs = new Object[] { userDetails.getDeptid(), userDetails.getId(),
-					begin, offest };
+			sql.append("select * from yxtk where yxbz='Y' and deptid="
+					+ userDetails.getDeptid() + " and user_id="
+					+ userDetails.getId() + " ");
+			sql.append(" order by create_date desc limit " + begin + ","
+					+ offest);
 
 		}
-		List<Yxtk> list = this.jdbcTemplate.query(sql, objs,
+		List<Yxtk> list = this.jdbcTemplate.query(sql.toString(), objs,
 				new RowMapper<Yxtk>() {
 
 					@Override
@@ -114,7 +156,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		return list;
 	}
 
-	private String getRoleInfoByUserId(Integer id) {
+	private Role getRoleInfoByUserId(Integer id) {
 		String sql = "select a.* from role a,user_role b where a.id_=b.role_id and user_id=? order by id_";
 		List<Role> roles = this.jdbcTemplate.query(sql, new Object[] { id },
 				new RowMapper<Role>() {
@@ -125,11 +167,39 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 						// TODO Auto-generated method stub
 						Role role = new Role();
 						role.setRole_Name(result.getString("role_name"));
+						role.setMs(result.getString("ms"));
 						return role;
 					}
 
 				});
-		return roles.get(0).getRole_Name();
+
+		return this.chackRolePower(roles);
+	}
+
+	private Role chackRolePower(List<Role> roles) {
+		Role aRole = null;
+		if (aRole == null) {
+			for (Role role : roles) {
+				if ("SuAdmin".equals(role.getRole_Name())) {// 超级管理员
+					aRole = role;
+				}
+			}
+		}
+		if (aRole == null) {
+			for (Role role : roles) {
+				if ("DeptAdmin".equals(role.getRole_Name())) {// 部门管理员
+					aRole = role;
+				}
+			}
+		}
+		if (aRole == null) {
+			for (Role role : roles) {
+				if ("USER".equals(role.getRole_Name())) {// 普通用户
+					aRole = role;
+				}
+			}
+		}
+		return aRole;
 	}
 
 	@Override
@@ -293,19 +363,29 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void addYxtk(Yxtk yxtk) {
 		// TODO Auto-generated method stub
+		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
 		String sql = "insert into yxtk values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
 				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
-				yxtk.getDeptid(), yxtk.getContent(), yxtk.getTmfz(),
+				yxtk.getDeptid(), yxtk.getContent(), list.get(0).get("value"),
 				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N" };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
+	private List<Map<String, Object>> getSysPropValueByTmnd(Yxtk yxtk) {
+		String sql = "select value from system_props where id_=?";
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+				new Object[] { yxtk.getTmnd() });
+		return list;
+	}
+
 	@Override
 	public void addGrDeptGxJl(Yxtk yxtk) {
-		String sql = "insert into dept_tk_gxjl values(?,?,?,?,?,?,?)";
+		String sql = "select value from system_props where id_=104";
+		Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		sql = "insert into dept_tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-				yxtk.getId(), 1, 1, yxtk.getCreateDate() };
+				yxtk.getId(), value, 104, yxtk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
 		sql = "insert into gr_tk_gxjl values(?,?,?,?,?,?,?)";
 		this.jdbcTemplate.update(sql, objs);
@@ -315,41 +395,44 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	public void updateYxtk(Yxtk yxtk) {
 		// TODO Auto-generated method stub
 		this.chackYxtkModeChangeOrNot(yxtk);
+		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
 		String sql = "update yxtk set fl_id=?,user_id=?,create_date=?,"
 				+ "sp_date=?,spr_id=?,deptid=?," + "content=?,tmfz=?,tmnd=?,"
 				+ "tmly_id=?,mode=? where id_=?";
 		Object[] obj = { yxtk.getFlId(), yxtk.getUserId(),
 				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
-				yxtk.getDeptid(), yxtk.getContent(), yxtk.getTmfz(),
+				yxtk.getDeptid(), yxtk.getContent(), list.get(0).get("value"),
 				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), yxtk.getId() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
 	private void chackYxtkModeChangeOrNot(Yxtk yxtk) {
-		/*String sql = "select count(*) from yxtk where id_='" + yxtk.getId()
-				+ "' and mode='" + yxtk.getMode()+"'";
-		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		if (count == 0) {
-			// sql =
-			// "select if((select mode from yxtk where id_='"+yxtk.getId()+"'),1,0) from dual";
-			sql = "select if((select mode from yxtk where id_='"+yxtk.getId()+"'),1,0) from dual";
-			count = this.jdbcTemplate.queryForObject(sql, Integer.class);
-			if((count == 0 && !yxtk.getMode().equals("0")) || (count == 1 && yxtk.getMode().equals("0"))){//mode从0变成1或2   //mode从1或2变成0
-				sql = "delete from yxtkxzx where tk_id=? and tk_id != '0'";
-				this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
-				
-			}
-			sql = "delete from yxtkda where tk_id=?";
-			this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
-		}*/
+		/*
+		 * String sql = "select count(*) from yxtk where id_='" + yxtk.getId() +
+		 * "' and mode='" + yxtk.getMode()+"'"; int count =
+		 * this.jdbcTemplate.queryForObject(sql, Integer.class); if (count == 0)
+		 * { // sql = //
+		 * "select if((select mode from yxtk where id_='"+yxtk.getId
+		 * ()+"'),1,0) from dual"; sql =
+		 * "select if((select mode from yxtk where id_='"
+		 * +yxtk.getId()+"'),1,0) from dual"; count =
+		 * this.jdbcTemplate.queryForObject(sql, Integer.class); if((count == 0
+		 * && !yxtk.getMode().equals("0")) || (count == 1 &&
+		 * yxtk.getMode().equals("0"))){//mode从0变成1或2 //mode从1或2变成0 sql =
+		 * "delete from yxtkxzx where tk_id=? and tk_id != '0'";
+		 * this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
+		 * 
+		 * } sql = "delete from yxtkda where tk_id=?";
+		 * this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() }); }
+		 */
 		String sql = "select count(*) from yxtk where id_='" + yxtk.getId()
-				+ "' and mode='" + yxtk.getMode()+"'";
+				+ "' and mode='" + yxtk.getMode() + "'";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
 		if (count == 0) {
 			sql = "delete from yxtkda where tk_id=?";
 			this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
 		}
-		
+
 	}
 
 	@Override
@@ -420,21 +503,68 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	}
 
 	@Override
-	public String countGxjl(Record record) {
+	public List countGxjl(Map<String, Object> param) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = (Integer) param.get("deptid");
+		Integer userId = (Integer) param.get("userid");
+		Date begin = (Date) param.get("begin");
+		Date end = (Date) param.get("end");
+		String content = (String) param.get("content");
+		StringBuffer sql = new StringBuffer("select d.dept_name as deptname,");
+		if (userId == null || userId != 0) {
+			sql.append("u.user_name as username,");
+		}
+		sql.append("cou from ");
+		sql.append("(select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou ");
+		sql.append("from gr_tk_gxjl a , yxtk b ");
+		sql.append("where a.tk_id=b.id_ ");
+		if (deptid != null) {
+			sql.append("and a.dept_id=" + deptid + " ");
+			if (userId != null) {
+				if (userId != 0) {
+					sql.append("and a.user_id=" + userId + " ");
+				}
+
+			}
+		}
+		if (begin != null) {
+			sql.append("and a.gx_date >= date_format('"
+					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
+		}
+		if (end != null) {
+			sql.append("and a.gx_date <= date_format('"
+					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
+		}
+		sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
+		if (content != null) {
+			sql.append("where t.title like '%" + content + "%' ");
+			sql.append("or t.content like '%" + content + "%' ");
+		}
+		sql.append(") group by a.dept_id");
+		if (userId == null || userId != 0) {
+			sql.append(",a.user_id ");
+		}
+		sql.append(")t, ");
+		sql.append("user u,dept d where t.did=d.id_ and u.id_=t.uid");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
+
+	@Override
+	public List<Map<String, Object>> getLoginUserInfo(
+			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
-		String sql = "select count(*) from dept_tk_gxjl d where dept_id=? and gx_date >= date_format(?,'%Y%m%d') and gx_date <= date_format(?,'%Y%m%d')";
-		Object[] objs = { record.getInt("deptId"), record.getDate("begin"),
-				record.getDate("end") };
-		Integer deptCount = this.jdbcTemplate.queryForObject(sql, objs,
-				Integer.class);
-		sql = "select count(*) from gr_tk_gxjl g where user_id=? and gx_date >= date_format(?,'%Y%m%d') and gx_date <= date_format(?,'%Y%m%d')";
-		objs = new Object[] { record.getInt("userId"), record.getDate("begin"),
-				record.getDate("end") };
-		Integer userCount = this.jdbcTemplate.queryForObject(sql, objs,
-				Integer.class);
-		String str = "{deptCount:" + deptCount + ",userCount:" + userCount
-				+ "}";
-		return String.valueOf(str);
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Role role = this.getRoleInfoByUserId(userDetails.getId());
+		List<Dept> depts = (List<Dept>) this.getDeptInfoByDeptId(userDetails.getDeptid().toString());
+		map.put("deptname", depts.get(0).getDept_name());
+		map.put("username", userDetails.getLogin_Name());
+		map.put("deptid", userDetails.getDeptid());
+		map.put("rolename", role.getRole_Name());
+		map.put("ms", role.getMs());
+		list.add(map);
+		return list;
 	}
 
 }

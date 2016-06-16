@@ -1,6 +1,7 @@
 package gov.hygs.htgl.controller;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -19,9 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
-import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
-import com.bstek.dorado.data.variant.Record;
 
 @Component
 public class YxtkglController {
@@ -121,12 +120,23 @@ public class YxtkglController {
 	
 	/**
 	 * 统计贡献记录
-	 * @param record
+	 * @param param
 	 * @return
 	 */
-	@Expose
-	public String countGxjl(Record record){
-		return yxtkglService.countGxjl(record);
+	@DataProvider
+	public List countGxjl(Map<String,Object> param){
+		if(param == null){
+			return null;
+		}
+		return yxtkglService.countGxjl(param);
 	}
 	
+	/**
+	 * 获取当前登录用户信息
+	 * @return
+	 */
+	@DataProvider
+	public List<Map<String,Object>> getLoginUserInfo(){
+		return yxtkglService.getLoginUserInfo();
+	}
 }
