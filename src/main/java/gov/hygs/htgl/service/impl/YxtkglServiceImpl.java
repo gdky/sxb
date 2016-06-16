@@ -18,6 +18,7 @@ import com.bstek.dorado.data.variant.Record;
 
 import gov.hygs.htgl.dao.YxtkglDao;
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -159,9 +160,17 @@ public class YxtkglServiceImpl implements YxtkglService {
 	}
 
 	@Override
-	public String countGxjl(Record record) {
+	public List countGxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		return yxtkglDao.countGxjl(record);
+		return yxtkglDao.countGxjl(param);
+	}
+
+	@Override
+	public List<Map<String,Object>> getLoginUserInfo() {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		return yxtkglDao.getLoginUserInfo(userDetails);
 	}
 
 }

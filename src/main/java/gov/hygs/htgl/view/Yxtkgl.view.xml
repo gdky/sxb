@@ -60,6 +60,24 @@
       <PropertyDef name="tmnd">
         <Property name="dataType">Integer</Property>
         <Property name="label">题目难度</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">基础型</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">进阶型</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">难度不能为空</Property>
+          <Property name="acceptZeroOrFalse">true</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="tmlyId">
         <Property name="dataType">Integer</Property>
@@ -237,7 +255,7 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
         <Property name="dataProvider">tkcspzController#getCurrentTkflById</Property>
       </Reference>
     </DataType>
-    <DataType name="countGxType">
+    <DataType name="conditionType">
       <PropertyDef name="begin">
         <Property name="dataType">Date</Property>
         <Property name="label">起始时间</Property>
@@ -246,14 +264,17 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
         <Property name="dataType">Date</Property>
         <Property name="label">终止时间</Property>
       </PropertyDef>
-      <PropertyDef name="deptId"/>
-      <PropertyDef name="userId"/>
-      <PropertyDef name="deptResult">
-        <Property name="label">部门贡献</Property>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
       </PropertyDef>
-      <PropertyDef name="userResult">
-        <Property name="label">个人贡献</Property>
+      <PropertyDef name="user">
+        <Property name="label">用户名</Property>
       </PropertyDef>
+      <PropertyDef name="content">
+        <Property name="label">来源</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid"/>
+      <PropertyDef name="userid"/>
     </DataType>
   </Model>
   <View>
@@ -279,8 +300,8 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
         <Property name="dataType">[tkflType]</Property>
         <Property name="dataProvider">tkcspzController#getTkflRoot</Property>
       </DataSet>
-      <DataSet id="dsCondition">
-        <Property name="dataType">[countGxType]</Property>
+      <DataSet id="dsUserName">
+        <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
       </DataSet>
     </Container>
     <Container id="dropDowns">
@@ -445,6 +466,51 @@ if(user == undefined){&#xD;
           </BindingConfigs>
         </DataTree>
       </CustomDropDown>
+      <CustomDropDown id="conditionDropDown">
+        <Property name="height">500</Property>
+        <DataTree id="condtiondatatree">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+&#xD;
+view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,false);&#xD;
+&#xD;
+view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:&quot;&quot;});&#xD;
+&#xD;
+var user = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	user: &quot;&quot;&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsDept</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">dept</Property>
+              <Property name="name">dept_name</Property>
+              <Property name="labelProperty">dept_name</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
+      <DataSetDropDown id="dsConditionDropDown">
+        <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
+if(user != undefined){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;);&#xD;
+view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,deptId);&#xD;
+view.get(&quot;#dsUser&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="property">user_Name</Property>
+        <Property name="height">500</Property>
+        <Property name="dataSet">dsUser</Property>
+      </DataSetDropDown>
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
@@ -699,7 +765,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxtkDialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+	view.get(&quot;#dsYxtk&quot;).flush();//可能与查询有 冲突&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
@@ -718,7 +784,7 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
         </Buttons>
         <Children>
           <GroupBox>
-            <Property name="caption">增加题目信息</Property>
+            <Property name="caption">题目信息</Property>
             <Buttons/>
             <Children>
               <AutoForm id="yxtkForm">
@@ -729,20 +795,15 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="dataPath">#.tkfl</Property>
-                  <Property name="name">tkmc</Property>
-                  <Property name="property">tkmc</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
                   <Property name="name">spDate</Property>
                   <Property name="property">spDate</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="name">tmfz</Property>
-                  <Property name="property">tmfz</Property>
+                  <Property name="dataPath">#.tkfl</Property>
+                  <Property name="name">tkmc</Property>
+                  <Property name="property">tkmc</Property>
+                  <Property name="trigger">tkflDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
@@ -869,55 +930,86 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="gxjlDialog">
-        <Property name="width">500</Property>
+      <Dialog id="updateDialog">
+        <Property name="height">400</Property>
+        <Property name="width">800</Property>
         <Buttons/>
         <Children>
           <GroupBox>
-            <Property name="caption">部门贡献统计</Property>
+            <Property name="caption">当前题目信息</Property>
             <Buttons>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#gxCountAction&quot;).set(&quot;parameter&quot;,view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;));&#xD;
-view.get(&quot;#gxCountAction&quot;).execute();&#xD;
+                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+	view.get(&quot;#updateDialog&quot;).close();&#xD;
+});&#xD;
 </ClientEvent>
-                <Property name="caption">查询</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#deptResult&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#userResult&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#gxjlDialog&quot;).close();&#xD;
-var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).remove();&#xD;
-&#xD;
-</ClientEvent>
+                <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
-              <AutoForm id="gxCountForm">
-                <Property name="dataSet">dsCondition</Property>
+              <AutoForm id="yxtkInForm">
+                <Property name="dataSet">dsYxtk</Property>
                 <AutoFormElement>
-                  <Property name="name">begin</Property>
-                  <Property name="property">begin</Property>
+                  <Property name="name">dept_name</Property>
+                  <Property name="property">dept_name</Property>
+                  <Property name="dataPath">#.dept</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="name">end</Property>
-                  <Property name="property">end</Property>
+                  <Property name="name">user_Name</Property>
+                  <Property name="property">user_Name</Property>
+                  <Property name="dataPath">#.user</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement id="deptResult">
-                  <Property name="name">deptResult</Property>
-                  <Property name="property">deptResult</Property>
-                  <Property name="visible">false</Property>
+                <AutoFormElement>
+                  <Property name="dataPath">#.tkfl</Property>
+                  <Property name="name">tkmc</Property>
+                  <Property name="property">tkmc</Property>
+                  <Property name="trigger">tkflDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement id="userResult">
-                  <Property name="name">userResult</Property>
-                  <Property name="property">userResult</Property>
-                  <Property name="visible">false</Property>
+                <AutoFormElement>
+                  <Property name="name">createDate</Property>
+                  <Property name="property">createDate</Property>
                   <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">spDate</Property>
+                  <Property name="property">spDate</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">tmnd</Property>
+                  <Property name="property">tmnd</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="dataPath">#.tmly</Property>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Property name="trigger">tmlyDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">mode</Property>
+                  <Property name="property">mode</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">content</Property>
+                  <Property name="property">content</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
                 </AutoFormElement>
               </AutoForm>
             </Children>
@@ -936,34 +1028,74 @@ var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).remove();&#
           <Property name="dataSet">dsYxtk</Property>
         </UpdateItem>
       </UpdateAction>
-      <AjaxAction id="gxCountAction">
-        <ClientEvent name="onSuccess">view.get(&quot;#deptResult&quot;).set(&quot;visible&quot;,true);&#xD;
-view.get(&quot;#userResult&quot;).set(&quot;visible&quot;,true);&#xD;
-var returnValue = dorado.JSON.parse(self.get(&quot;returnValue&quot;));&#xD;
-&#xD;
-view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({&#xD;
-	deptResult:returnValue.deptCount,&#xD;
-	userResult:returnValue.userCount&#xD;
-});&#xD;
-&#xD;
-&#xD;
-/*&#xD;
-&#xD;
-var entity = dorado.JSON.parse(self.get(&quot;returnValue&quot;));&#xD;
-alert(entity.deptCount);&#xD;
-alert(entity.userCount);&#xD;
-//userResult*/</ClientEvent>
-        <Property name="service">yxtkglController#countGxjl</Property>
-        <Property name="successMessage">执行成功</Property>
-        <Property name="executingMessage">正在执行...</Property>
-      </AjaxAction>
     </Container>
     <Container>
       <GroupBox>
-        <Property name="caption">当前题目信息</Property>
+        <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;DeptAdmin&quot;){&#xD;
+		view.get(&quot;#deptInfo&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+			dept:data.get(&quot;deptname&quot;),&#xD;
+			deptid:data.get(&quot;deptid&quot;)&#xD;
+		});&#xD;
+	}else if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+		self.set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
+        <Property name="caption">查询条件</Property>
+        <Property name="hideMode">display</Property>
+        <Buttons/>
+        <Children>
+          <AutoForm id="conditionForm">
+            <Property name="dataType">conditionType</Property>
+            <Property name="createPrivateDataSet">true</Property>
+            <AutoFormElement>
+              <Property name="name">begin</Property>
+              <Property name="property">begin</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">end</Property>
+              <Property name="property">end</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement id="deptInfo">
+              <Property name="name">dept</Property>
+              <Property name="property">dept</Property>
+              <Property name="trigger">conditionDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement id="userInfoName">
+              <Property name="name">user</Property>
+              <Property name="property">user</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="trigger">dsConditionDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">content</Property>
+              <Property name="property">content</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">题目信息表</Property>
         <Buttons/>
         <Children>
           <ToolBar>
+            <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
             <Button>
               <ClientEvent name="onClick">var yxtks = view.get(&quot;#dsYxtk&quot;).getData();&#xD;
 /*&#xD;
@@ -1019,12 +1151,41 @@ if(current != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
-});&#xD;
+              <ClientEvent name="onClick">//view.get(&quot;#updateDialog&quot;).show();&#xD;
+view.get(&quot;#yxtkDialog&quot;).show();&#xD;
 </ClientEvent>
-              <Property name="caption">保存</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </Button>
+            <Button id="findbutton">
+              <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var dept = entity.get(&quot;dept&quot;);&#xD;
+var user = entity.get(&quot;user&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+if(dept == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null,&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(user == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}&#xD;
+view.get(&quot;#dsYxtk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">查询</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              <Property name="hideMode">display</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
@@ -1096,80 +1257,27 @@ if(mode ==1 || mode == 2){&#xD;
 	view.get(&quot;#yxtktofGrid&quot;).set(&quot;selection&quot;,select);&#xD;
 }&#xD;
 </ClientEvent>
-              <Property name="caption">查看</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
+              <Property name="caption">编辑题目</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
             </Button>
-            <Button>
-              <ClientEvent name="onClick">var data = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
-if(data == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-view.get(&quot;#dsCondition&quot;).insert({deptId:data.get(&quot;deptid&quot;),userId:data.get(&quot;userId&quot;)});&#xD;
-view.get(&quot;#gxjlDialog&quot;).show();&#xD;
+            <Button id="inbutton">
+              <ClientEvent name="onClick">var userInfo = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+alert(userInfo.get(&quot;deptname&quot;));&#xD;
+alert(userInfo.get(&quot;username&quot;));&#xD;
+alert(userInfo.get(&quot;deptid&quot;));&#xD;
+alert(userInfo.get(&quot;rolename&quot;));&#xD;
+alert(userInfo.get(&quot;ms&quot;));</ClientEvent>
+              <Property name="caption">入库</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
+              <Property name="hideMode">display</Property>
+            </Button>
+            <Label>
+              <ClientEvent name="onReady">self.set(&quot;text&quot;,&quot;欢迎 &quot;+view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;).get(&quot;ms&quot;)+&quot; '&quot;+view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;).get(&quot;username&quot;)+&quot;' 用户登录&quot;);&#xD;
 </ClientEvent>
-              <Property name="caption">查看贡献</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-            </Button>
-          </ToolBar>
-          <AutoForm id="yxtkInForm">
-            <Property name="dataSet">dsYxtk</Property>
-            <AutoFormElement>
-              <Property name="dataPath">#.tkfl</Property>
-              <Property name="name">tkmc</Property>
-              <Property name="property">tkmc</Property>
-              <Property name="trigger">tkflDropDown</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">createDate</Property>
-              <Property name="property">createDate</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">spDate</Property>
-              <Property name="property">spDate</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">tmfz</Property>
-              <Property name="property">tmfz</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">tmnd</Property>
-              <Property name="property">tmnd</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="dataPath">#.tmly</Property>
-              <Property name="name">title</Property>
-              <Property name="property">title</Property>
-              <Property name="trigger">tmlyDropDown</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">mode</Property>
-              <Property name="property">mode</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement layoutConstraint="colSpan:2">
-              <Property name="name">content</Property>
-              <Property name="property">content</Property>
-              <Editor>
-                <TextArea/>
-              </Editor>
-            </AutoFormElement>
-          </AutoForm>
-        </Children>
-      </GroupBox>
-      <GroupBox>
-        <Property name="caption">题目信息</Property>
-        <Buttons/>
-        <Children>
-          <ToolBar>
+            </Label>
             <DataPilot>
               <Property name="dataSet">dsYxtk</Property>
-              <Property name="itemCodes">pages,pageSize</Property>
+              <Property name="itemCodes">pages</Property>
             </DataPilot>
           </ToolBar>
           <DataGrid>
@@ -1198,6 +1306,12 @@ view.get(&quot;#gxjlDialog&quot;).show();&#xD;
             </DataColumn>
             <DataColumn name="mode">
               <Property name="property">mode</Property>
+            </DataColumn>
+            <DataColumn name="user">
+              <Property name="property">user.user_Name</Property>
+            </DataColumn>
+            <DataColumn name="dept">
+              <Property name="property">dept.dept_name</Property>
             </DataColumn>
           </DataGrid>
         </Children>

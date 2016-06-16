@@ -1,6 +1,7 @@
 package gov.hygs.htgl.dao;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -58,6 +59,8 @@ public interface YxtkglDao {
 
 	public void deleteGrDeptGxJl(Yxtk yxtk);
 
-	public String countGxjl(Record record);
+	public List countGxjl(Map<String, Object> param);
+
+	public List<Map<String,Object>> getLoginUserInfo(CustomUserDetails userDetails);
 
 }

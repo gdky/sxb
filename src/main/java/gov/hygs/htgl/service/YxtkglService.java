@@ -1,6 +1,7 @@
 package gov.hygs.htgl.service;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -37,6 +38,8 @@ public interface YxtkglService {
 
 	public Collection<Tkfl> getTkflInfoByflId(String id);
 
-	public String countGxjl(Record record);
+	public List countGxjl(Map<String, Object> param);
+
+	public List<Map<String,Object>> getLoginUserInfo();
 
 }
