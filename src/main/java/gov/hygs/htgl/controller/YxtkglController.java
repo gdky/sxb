@@ -1,6 +1,7 @@
 package gov.hygs.htgl.controller;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -97,13 +98,45 @@ public class YxtkglController {
 		return yxtkglService.getToFInfo();
 	}
 	
+	/**
+	 * 根据题目来源id获取题目来源信息
+	 * @param id
+	 * @return
+	 */
 	@DataProvider
 	public Collection<Tmly> getTmlyInfoByTmlyId(String id){
 			return yxtkglService.getTmlyInfoByTmlyId(id);
 	}
 	
+	/**
+	 * 根据分类id获取题库分类信息
+	 * @param id
+	 * @return
+	 */
 	@DataProvider
 	public Collection<Tkfl> getTkflInfoByflId(String id){
 		return yxtkglService.getTkflInfoByflId(id);
+	}
+	
+	/**
+	 * 统计贡献记录
+	 * @param param
+	 * @return
+	 */
+	@DataProvider
+	public List countGxjl(Map<String,Object> param){
+		if(param == null){
+			return null;
+		}
+		return yxtkglService.countGxjl(param);
+	}
+	
+	/**
+	 * 获取当前登录用户信息
+	 * @return
+	 */
+	@DataProvider
+	public List<Map<String,Object>> getLoginUserInfo(){
+		return yxtkglService.getLoginUserInfo();
 	}
 }

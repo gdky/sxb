@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.bstek.dorado.data.provider.Page;
 import com.gdky.restfull.dao.BaseJdbcDao;
 
 @Repository
@@ -20,7 +21,8 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public Collection<Tkfl> getTkflRoot() {
 		// TODO Auto-generated method stub
-		String sql = "select * from tkfl where parent_id is null or parent_id = 0";
+		//String sql = "select * from tkfl where parent_id is null or parent_id = 0 order by id_ desc";
+		String sql = "select * from tkfl where parent_id = 0 order by id_ desc";
 		List<Tkfl> list = this.jdbcTemplate.query(sql, new RowMapper<Tkfl>() {
 
 			@Override

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="deptType">
+      <Property name="creationType">gov.hygs.htgl.entity.Dept</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dept_name">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="dept">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
+        <Property name="parameter">$${this.id_}</Property>
+      </Reference>
+      <Reference name="user">
+        <Property name="dataType">[userType]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
+      </Reference>
+    </DataType>
+    <DataType name="userType">
+      <Property name="creationType">gov.hygs.htgl.entity.User</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="user_Name">
+        <Property></Property>
+        <Property name="label">录入人</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="resultType">
+      <PropertyDef name="deptname">
+        <Property name="label">部门</Property>
+      </PropertyDef>
+      <PropertyDef name="username">
+        <Property name="label">个人</Property>
+      </PropertyDef>
+      <PropertyDef name="cou">
+        <Property name="label">贡献统计</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="conditionType">
+      <PropertyDef name="begin">
+        <Property name="dataType">Date</Property>
+        <Property name="label">起始时间</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">Date</Property>
+        <Property name="label">终止时间</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="user">
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property name="label">来源</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid"/>
+      <PropertyDef name="userid"/>
+    </DataType>
+  </Model>
+  <View>
+    <Container id="datasets">
+      <DataSet id="dsDept">
+        <Property name="dataType">[deptType]</Property>
+        <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
+      </DataSet>
+      <DataSet id="dsUser">
+        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
+        <Property name="dataType">[userType]</Property>
+      </DataSet>
+      <DataSet id="dsResult">
+        <Property name="dataType">[resultType]</Property>
+        <Property name="dataProvider">yxtkglController#countGxjl</Property>
+      </DataSet>
+      <DataSet id="dsDeptResult">
+        <Property name="dataProvider">yxtkglController#countGxjl</Property>
+        <Property name="dataType">[resultType]</Property>
+      </DataSet>
+    </Container>
+    <Container id="dropDowns">
+      <CustomDropDown id="conditionDropDown">
+        <Property name="autoOpen">true</Property>
+        <Property name="height">500</Property>
+        <DataTree id="datatree">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+&#xD;
+view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,false);&#xD;
+&#xD;
+view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:&quot;&quot;});&#xD;
+&#xD;
+var user = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	user: &quot;&quot;&#xD;
+});&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsDept</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">dept</Property>
+              <Property name="name">dept_name</Property>
+              <Property name="labelProperty">dept_name</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
+      <DataSetDropDown id="dsConditionDropDown">
+        <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
+if(user != undefined){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;);&#xD;
+view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,deptId);&#xD;
+view.get(&quot;#dsUser&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="autoOpen">true</Property>
+        <Property name="property">user_Name</Property>
+        <Property name="height">500</Property>
+        <Property name="dataSet">dsUser</Property>
+      </DataSetDropDown>
+    </Container>
+    <Container>
+      <GroupBox>
+        <Property name="caption">查询条件</Property>
+        <Buttons/>
+        <Children>
+          <AutoForm id="conditionForm">
+            <Property name="dataType">conditionType</Property>
+            <Property name="createPrivateDataSet">true</Property>
+            <AutoFormElement>
+              <Property name="name">begin</Property>
+              <Property name="property">begin</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">end</Property>
+              <Property name="property">end</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">dept</Property>
+              <Property name="property">dept</Property>
+              <Property name="trigger">conditionDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement id="userInfoName">
+              <Property name="name">user</Property>
+              <Property name="property">user</Property>
+              <Property name="readOnly">true</Property>
+              <Property name="trigger">dsConditionDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">content</Property>
+              <Property name="property">content</Property>
+              <Editor/>
+            </AutoFormElement>
+          </AutoForm>
+          <Button>
+            <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var dept = entity.get(&quot;dept&quot;);&#xD;
+var user = entity.get(&quot;user&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+if(dept == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null,&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(user == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}&#xD;
+/*&#xD;
+if(entity.get(&quot;userid&quot;)==undefined || entity.get(&quot;userid&quot;)==&quot;&quot;){&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+}else{&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+*/&#xD;
+view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsResult&quot;).flush();&#xD;
+&#xD;
+&#xD;
+&#xD;
+var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+view.get(&quot;#dsDeptResult&quot;).set(&quot;parameter&quot;,{&#xD;
+	begin:entity.get(&quot;begin&quot;),&#xD;
+	end:entity.get(&quot;end&quot;),&#xD;
+	deptid:entity.get(&quot;deptid&quot;),&#xD;
+	userid:0,&#xD;
+	content:entity.get(&quot;content&quot;)&#xD;
+});&#xD;
+view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
+</ClientEvent>
+            <Property name="caption">查找</Property>
+          </Button>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">用户贡献统计</Property>
+        <Buttons/>
+        <Children>
+          <DataGrid>
+            <Property name="dataSet">dsResult</Property>
+            <Property name="height">300</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="deptname">
+              <Property name="property">deptname</Property>
+            </DataColumn>
+            <DataColumn id="userName" name="username">
+              <Property name="property">username</Property>
+            </DataColumn>
+            <DataColumn name="cou">
+              <Property name="property">cou</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">部门贡献统计</Property>
+        <Buttons/>
+        <Children>
+          <DataGrid id="deptGrid">
+            <Property name="dataSet">dsDeptResult</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="deptname">
+              <Property name="property">deptname</Property>
+            </DataColumn>
+            <DataColumn name="cou">
+              <Property name="property">cou</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+    </Container>
+  </View>
+</ViewConfig>

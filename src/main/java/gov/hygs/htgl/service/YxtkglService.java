@@ -1,6 +1,7 @@
 package gov.hygs.htgl.service;
 
 import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.data.variant.Record;
 
 public interface YxtkglService {
 
@@ -35,5 +37,9 @@ public interface YxtkglService {
 	public Collection<Tmly> getTmlyInfoByTmlyId(String id);
 
 	public Collection<Tkfl> getTkflInfoByflId(String id);
+
+	public List countGxjl(Map<String, Object> param);
+
+	public List<Map<String,Object>> getLoginUserInfo();
 
 }

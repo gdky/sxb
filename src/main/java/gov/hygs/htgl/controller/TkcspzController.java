@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.data.entity.EntityState;
+import com.bstek.dorado.data.entity.EntityUtils;
+import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.data.variant.Record;
 
 @Component
 public class TkcspzController {
@@ -35,20 +39,6 @@ public class TkcspzController {
 	public void updateTkfl(List<Tkfl> list){
 		tkcspzService.updateTkfl(list);
 	}
-	/*
-	@DataResolver
-	public void updateTkfl(List<Tkfl> list){
-		for(Tkfl tkfl : list){
-			System.out.println("tkfl state is = "+EntityUtils.getState(tkfl));
-			List<Tkfl> childs = (List<Tkfl>) tkfl.getChild();
-			if(childs != null){
-				for(Tkfl child : childs){
-					System.out.println("child state is = "+EntityUtils.getState(child));
-				}
-			}
-		}
-	}
-	*/
 	
 	@DataProvider
 	public Collection<Tmly> getTmlyInfo(){
@@ -59,4 +49,5 @@ public class TkcspzController {
 	public void updateTmly(List<Tmly> tmlys){
 		tkcspzService.updateTmly(tmlys);
 	}
+
 }
