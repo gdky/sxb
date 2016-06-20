@@ -3,8 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="yxtkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtk</Property>
+    <DataType name="zstkType">
+      <Property name="creationType">gov.hygs.htgl.entity.Zstk</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -89,67 +89,49 @@
       </Reference>
       <PropertyDef name="mode">
         <Property></Property>
-        <Property name="label">选择类型</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
               <Entity>
-                <Property name="value">判断题</Property>
                 <Property name="key">0</Property>
+                <Property name="value">判断题</Property>
               </Entity>
               <Entity>
-                <Property name="value">单选题</Property>
                 <Property name="key">1</Property>
+                <Property name="value">单选题</Property>
               </Entity>
               <Entity>
-                <Property name="value">多选题</Property>
                 <Property name="key">2</Property>
+                <Property name="value">多选题</Property>
               </Entity>
             </Collection>
           </Property>
         </Property>
+        <Property name="label">选择类型</Property>
         <Validator name="validator1" type="required">
           <Property name="resultMessage">模式不能为空</Property>
         </Validator>
       </PropertyDef>
-      <Reference name="yxtkxzx">
+      <Reference name="tkxzx">
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getTkzxzInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getYxtkxzxInfoByYxtkId</Property>
       </Reference>
       <Reference name="daxzx">
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getDaXzxInfoByYxtkId</Property>
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getDaXzxInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="tof">
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getToFInfo</Property>
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getToFInfo</Property>
       </Reference>
       <PropertyDef name="yxbz">
         <Property></Property>
-        <Property name="mapping">
-          <Property name="mapValues"></Property>
-        </Property>
-      </PropertyDef>
-      <PropertyDef name="xybz">
-        <Property></Property>
       </PropertyDef>
     </DataType>
-    <DataType name="yxtkdaType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtkda</Property>
-      <PropertyDef name="id">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="tkId">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="tkxzxid">
-        <Property></Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="yxtkxzxType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtkxzx</Property>
+    <DataType name="tkzxzType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkxzx</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -157,7 +139,7 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="xzKey">
-        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+        <ClientEvent name="onSet">var datas = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
 if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
 	datas.each(function(entity){&#xD;
 		if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
@@ -183,6 +165,18 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
         <Validator name="validator1" type="required">
           <Property name="resultMessage">内容不能为空</Property>
         </Validator>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tkdaType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkda</Property>
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tkId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tkxzxid">
+        <Property></Property>
       </PropertyDef>
     </DataType>
     <DataType name="deptType">
@@ -276,49 +270,7 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
     </DataType>
-    <DataType name="zstkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zstk</Property>
-      <PropertyDef name="id">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="flId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="userId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="createDate">
-        <Property name="dataType">Date</Property>
-      </PropertyDef>
-      <PropertyDef name="spDate">
-        <Property name="dataType">Date</Property>
-      </PropertyDef>
-      <PropertyDef name="sprId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="deptid">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="content">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="tmfz">
-        <Property name="dataType">Double</Property>
-      </PropertyDef>
-      <PropertyDef name="tmnd">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tmlyId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="mode">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="yxbz">
-        <Property></Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="yxTzsType">
+    <DataType name="yxtkType">
       <Property name="creationType">gov.hygs.htgl.entity.Yxtk</Property>
       <PropertyDef name="id">
         <Property></Property>
@@ -427,10 +379,10 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
   </Model>
   <View>
     <Container id="datasets">
-      <DataSet id="dsYxtk">
-        <Property name="dataType">[yxtkType]</Property>
-        <Property name="dataProvider">yxtkglController#getYxtkInfo</Property>
+      <DataSet id="dsZstk">
+        <Property name="dataType">[zstkType]</Property>
         <Property name="pageSize">10</Property>
+        <Property name="dataProvider">zstkglController#getZstkInfo</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -451,11 +403,8 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
       <DataSet id="dsUserName">
         <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
       </DataSet>
-      <DataSet id="dsZstk">
-        <Property name="dataType">[zstkType]</Property>
-      </DataSet>
-      <DataSet id="dsYxtkToZstk">
-        <Property name="dataType">[yxTzsType]</Property>
+      <DataSet id="dsYxtk">
+        <Property name="dataType">[yxtkType]</Property>
         <Property name="dataProvider">zstkglController#getYxtkInfo</Property>
         <Property name="pageSize">10</Property>
       </DataSet>
@@ -465,22 +414,22 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
         <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
         <DataTree id="datatree">
-          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).current;&#xD;
+          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
 );&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({deptid:deptId});&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({deptid:deptId});&#xD;
 &#xD;
 view.get(&quot;#userName&quot;).set(&quot;readOnly&quot;,false);&#xD;
 if(user == undefined){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).insert();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).insert();&#xD;
 }else{&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({userId:&quot;&quot;});&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).clear();&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).insert();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({userId:&quot;&quot;});&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).clear();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).insert();&#xD;
 	//view.get(&quot;#yxtkForm&quot;).set({userName:&quot;aaa&quot;});&#xD;
 }&#xD;
 &#xD;
@@ -501,7 +450,7 @@ if(user == undefined){&#xD;
       <DataSetDropDown id="dataSetDropDown">
         <ClientEvent name="onClose">var user = view.get(&quot;#dsDept&quot;).getData(&quot;!current_Node.user&quot;).current;&#xD;
 if(user != undefined){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({userId:user.get(&quot;id_&quot;)});&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({userId:user.get(&quot;id_&quot;)});&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="dataPath">!current_Node.user</Property>
@@ -514,19 +463,19 @@ if(user != undefined){&#xD;
         <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
         <DataTree id="datatree2">
-          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).current;&#xD;
+          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
 );&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({deptid:deptId});&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({deptid:deptId});&#xD;
 &#xD;
 //view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,false);&#xD;
 &#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({userId:&quot;&quot;});&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).current.set({user_Name:&quot;&quot;});&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({userId:&quot;&quot;});&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.user&quot;).current.set({user_Name:&quot;&quot;});&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept_user&quot;).flush();&#xD;
 </ClientEvent>
           <Property name="dataSet">dsDept</Property>
@@ -543,10 +492,10 @@ view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).current.set({user_Name
       <DataSetDropDown id="dataSetDropDown2">
         <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({userId:user.get(&quot;id_&quot;)});&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({userId:user.get(&quot;id_&quot;)});&#xD;
 }&#xD;
 </ClientEvent>
-        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;deptid&quot;);&#xD;
+        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;deptid&quot;);&#xD;
 view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,deptId);&#xD;
 view.get(&quot;#dsUser&quot;).flush();&#xD;
 </ClientEvent>
@@ -558,7 +507,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
       <DataSetDropDown id="tmlyDropDown">
         <ClientEvent name="onClose">var tmly = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
 if(tmly != undefined){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="dataSet">dsTmly</Property>
@@ -568,14 +517,14 @@ if(tmly != undefined){&#xD;
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
-          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
+          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var tkflId = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;tkmc&quot;)&#xD;
 );&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({flId:tkflId});&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({flId:tkflId});&#xD;
 </ClientEvent>
           <Property name="dataSet">dsTkfl</Property>
           <BindingConfigs>
@@ -674,7 +623,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="width">800</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">var mode = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;);&#xD;
+            <ClientEvent name="onClick">var mode = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;);&#xD;
 var entity = view.get('#yxtkxzxGrid.selection');&#xD;
 if(entity == undefined || entity == &quot;&quot;){&#xD;
 	throw new dorado.Exception(&quot;请勾选正确答案！&quot;)&#xD;
@@ -683,7 +632,7 @@ if(entity == undefined || entity == &quot;&quot;){&#xD;
 &#xD;
 if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 	view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,true);&#xD;
-	var da = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+	var da = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 &#xD;
 	if(da.current == undefined){&#xD;
 	&#xD;
@@ -744,16 +693,16 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 //action.execute&#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).flush();&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
           </Button>
           <Button>
-            <ClientEvent name="onClick">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).cancel();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
+            <ClientEvent name="onClick">view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
 view.get(&quot;#dialog&quot;).close();</ClientEvent>
             <Property name="caption">取消</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -775,18 +724,18 @@ view.get(&quot;#dialog&quot;).close();</ClientEvent>
             <Children>
               <ToolBar>
                 <Button>
-                  <ClientEvent name="onClick">var id = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).insert({tkId:id});&#xD;
+                  <ClientEvent name="onClick">var id = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({tkId:id});&#xD;
 </ClientEvent>
                   <Property name="caption">添加</Property>
                   <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
                 </Button>
                 <Button>
-                  <ClientEvent name="onClick">var current = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).current;&#xD;
+                  <ClientEvent name="onClick">var current = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).current;&#xD;
 if(current != undefined){&#xD;
 	//daxzx&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
-		var daxzxs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+		var daxzxs = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 		daxzxs.each(function(daxzx){&#xD;
 			if(current.get(&quot;xzKey&quot;) == daxzx.get(&quot;xzKey&quot;)){&#xD;
 				daxzx.remove();&#xD;
@@ -794,7 +743,7 @@ if(current != undefined){&#xD;
 		});&#xD;
 		var entity = view.get('#yxtkxzxGrid.selection');&#xD;
 		current.remove();&#xD;
-		if(view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;) == 1){&#xD;
+		if(view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;) == 1){&#xD;
 			if(current != entity){&#xD;
 				view.get(&quot;#yxtkxzxGrid&quot;).set(&quot;selection&quot;,entity);&#xD;
 			}&#xD;
@@ -808,10 +757,10 @@ if(current != undefined){&#xD;
                 </Button>
                 <Button>
                   <ClientEvent name="onClick">var entity = view.get('#yxtkxzxGrid.selection');&#xD;
-var mode = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;);&#xD;
+var mode = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;mode&quot;);&#xD;
 if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 	view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,true);&#xD;
-	var da = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+	var da = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 	&#xD;
 	if(da.current == undefined){&#xD;
 		if(mode == 1){&#xD;
@@ -866,15 +815,15 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 &#xD;
 //action.execute&#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
 });</ClientEvent>
                   <Property name="caption">保存</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -140px -20px</Property>
                 </Button>
               </ToolBar>
               <DataGrid id="yxtkxzxGrid">
-                <Property name="dataSet">dsYxtk</Property>
-                <Property name="dataPath">#.yxtkxzx</Property>
+                <Property name="dataSet">dsZstk</Property>
+                <Property name="dataPath">#.tkxzx</Property>
                 <Property name="height">200</Property>
                 <Property name="highlightSelectedRow">false</Property>
                 <Property name="highlightCurrentRow">false</Property>
@@ -895,7 +844,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
             <Buttons/>
             <Children>
               <DataGrid id="daGrid">
-                <Property name="dataSet">dsYxtk</Property>
+                <Property name="dataSet">dsZstk</Property>
                 <Property name="dataPath">#.daxzx</Property>
                 <Property name="highlightCurrentRow">false</Property>
                 <Property name="highlightSelectedRow">false</Property>
@@ -921,7 +870,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxtkDialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxtk&quot;).flush();//可能与查询有 冲突&#xD;
+	view.get(&quot;#dsZstk&quot;).flush();//可能与查询有 冲突&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
@@ -930,7 +879,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).cancel();&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept&quot;).cancel();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
+view.get(&quot;#dsZstk&quot;).getData().cancel();&#xD;
 view.get(&quot;#yxtkDialog&quot;).close();&#xD;
 &#xD;
 </ClientEvent>
@@ -944,7 +893,7 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
             <Buttons/>
             <Children>
               <AutoForm id="yxtkForm">
-                <Property name="dataSet">dsYxtk</Property>
+                <Property name="dataSet">dsZstk</Property>
                 <AutoFormElement>
                   <Property name="name">createDate</Property>
                   <Property name="property">createDate</Property>
@@ -1005,18 +954,18 @@ if(entity == undefined || entity == &quot;&quot;){&#xD;
 &#xD;
 if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 	view.get(&quot;#datofGrid&quot;).set(&quot;visible&quot;,true);&#xD;
-	var da = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+	var da = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 	&#xD;
 	if(da.current == undefined){&#xD;
 	&#xD;
 		da.clear();&#xD;
-		da.insert({id:entity.get(&quot;id&quot;),tkId:view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;),//entity.get(&quot;tkId&quot;),&#xD;
+		da.insert({id:entity.get(&quot;id&quot;),tkId:view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;),//entity.get(&quot;tkId&quot;),&#xD;
 					xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
 	&#xD;
 	}else{&#xD;
 		if(da.current.get(&quot;xzKey&quot;) != entity.get(&quot;xzKey&quot;)){		//&#xD;
 			da.current.remove();&#xD;
-			da.insert({id:entity.get(&quot;id&quot;),tkId:view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;),//entity.get(&quot;tkId&quot;),&#xD;
+			da.insert({id:entity.get(&quot;id&quot;),tkId:view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;),//entity.get(&quot;tkId&quot;),&#xD;
 					xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
 			}&#xD;
 	}&#xD;
@@ -1027,7 +976,7 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 &#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#tofDialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
 });</ClientEvent>
             <Property name="caption">提交</Property>
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
@@ -1053,7 +1002,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
             <Buttons/>
             <Children>
               <DataGrid id="yxtktofGrid">
-                <Property name="dataSet">dsYxtk</Property>
+                <Property name="dataSet">dsZstk</Property>
                 <Property name="dataPath">#.tof</Property>
                 <Property name="height">200</Property>
                 <Property name="highlightCurrentRow">false</Property>
@@ -1071,7 +1020,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
             <Buttons/>
             <Children>
               <DataGrid id="datofGrid">
-                <Property name="dataSet">dsYxtk</Property>
+                <Property name="dataSet">dsZstk</Property>
                 <Property name="dataPath">#.daxzx</Property>
                 <Property name="highlightCurrentRow">false</Property>
                 <Property name="highlightSelectedRow">false</Property>
@@ -1188,16 +1137,16 @@ entitys.each(function(entity){&#xD;
 	zstk.insert(entity);&#xD;
 });&#xD;
 &#xD;
-view.get(&quot;#inAction&quot;).execute(function(){&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-	//view.get(&quot;#dsZstk&quot;).flush();&#xD;
+	view.get(&quot;#dsZstk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-//view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+view.get(&quot;#dsYxtk&quot;).flush();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
               </Button>
@@ -1205,12 +1154,12 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
             <Children>
               <ToolBar>
                 <DataPilot>
+                  <Property name="dataSet">dsYxtk</Property>
                   <Property name="itemCodes">pages</Property>
-                  <Property name="dataSet">dsYxtkToZstk</Property>
                 </DataPilot>
               </ToolBar>
               <DataGrid id="yxtkGrid">
-                <Property name="dataSet">dsYxtkToZstk</Property>
+                <Property name="dataSet">dsYxtk</Property>
                 <Property name="readOnly">true</Property>
                 <Property name="selectionMode">multiRows</Property>
                 <RowSelectorColumn/>
@@ -1251,23 +1200,15 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
         <Tools/>
       </Dialog>
     </Container>
-    <Container id="actionContainer">
-      <UpdateAction id="updateAction">
-        <Property name="dataResolver">yxtkglController#updateYxtk</Property>
-        <Property name="alwaysExecute">true</Property>
-        <Property name="executingMessage">正在执行...</Property>
-        <Property name="successMessage">执行成功</Property>
-        <UpdateItem>
-          <Property name="dataSet">dsYxtk</Property>
-        </UpdateItem>
-      </UpdateAction>
-      <UpdateAction id="inAction">
-        <Property name="dataResolver">zstkglController#updateZstk</Property>
-        <UpdateItem>
-          <Property name="dataSet">dsZstk</Property>
-        </UpdateItem>
-      </UpdateAction>
-    </Container>
+    <UpdateAction id="updateAction">
+      <Property name="alwaysExecute">true</Property>
+      <Property name="executingMessage">正在执行...</Property>
+      <Property name="successMessage">执行成功</Property>
+      <Property name="dataResolver">zstkglController#updateZstk</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsZstk</Property>
+      </UpdateItem>
+    </UpdateAction>
     <Container>
       <GroupBox>
         <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
@@ -1336,7 +1277,7 @@ if(data != undefined){&#xD;
 }&#xD;
 </ClientEvent>
             <Button>
-              <ClientEvent name="onClick">var yxtks = view.get(&quot;#dsYxtk&quot;).getData();&#xD;
+              <ClientEvent name="onClick">var yxtks = view.get(&quot;#dsZstk&quot;).getData();&#xD;
 /*&#xD;
 if(yxtks.current == null){&#xD;
 	view.get(&quot;#dsYxtk&quot;).insert({&#xD;
@@ -1360,15 +1301,15 @@ if(yxtks.current == null){&#xD;
 }&#xD;
 */&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept&quot;).insert();&#xD;
-view.get(&quot;#dsYxtk&quot;).insert();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tmly&quot;).insert();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).insert();&#xD;
+view.get(&quot;#dsZstk&quot;).insert();&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.tmly&quot;).insert();&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkfl&quot;).insert();&#xD;
 view.get(&quot;#yxtkDialog&quot;).show();</ClientEvent>
               <Property name="caption">增加</Property>
               <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">var current = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+              <ClientEvent name="onClick">var current = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
 if(current != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 		/*&#xD;
@@ -1418,8 +1359,8 @@ if(dept == &quot;&quot;){&#xD;
 		userid:null&#xD;
 	});&#xD;
 }&#xD;
-view.get(&quot;#dsYxtk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
-view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+view.get(&quot;#dsZstk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsZstk&quot;).flush();&#xD;
 &#xD;
 </ClientEvent>
               <Property name="caption">查询</Property>
@@ -1427,7 +1368,7 @@ view.get(&quot;#dsYxtk&quot;).flush();&#xD;
               <Property name="hideMode">display</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+              <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
 if(dsYxtk == undefined){&#xD;
 	return;&#xD;
 }&#xD;
@@ -1445,7 +1386,7 @@ if(mode == 1){&#xD;
 	view.get(&quot;#yxtktofGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
 }&#xD;
 &#xD;
-var entity = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+var entity = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
 &#xD;
 if(mode ==1 || mode == 2){&#xD;
 	//单选或多选题&#xD;
@@ -1456,7 +1397,7 @@ if(mode ==1 || mode == 2){&#xD;
 	}else{&#xD;
 		view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+		var xzs = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
 		entity.each(function(da){&#xD;
 			xzs.each(function(xz){&#xD;
 				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
@@ -1478,14 +1419,14 @@ if(mode ==1 || mode == 2){&#xD;
 	if(entity.current == undefined){&#xD;
 		view.get(&quot;#datofGrid&quot;).set(&quot;visible&quot;,false);&#xD;
 	}else{&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tof&quot;);&#xD;
+		var xzs = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tof&quot;);&#xD;
 		view.get(&quot;#datofGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 		var select = null;&#xD;
 		entity.each(function(da){&#xD;
 			xzs.each(function(xz){&#xD;
 				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
 					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
+					da.set({tkId:view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
 				}&#xD;
 			});&#xD;
 		});&#xD;
@@ -1500,18 +1441,19 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();</ClientEvent>
+              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
+</ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
               <Property name="hideMode">display</Property>
             </Button>
             <DataPilot>
-              <Property name="dataSet">dsYxtk</Property>
+              <Property name="dataSet">dsZstk</Property>
               <Property name="itemCodes">pages</Property>
             </DataPilot>
           </ToolBar>
           <DataGrid>
-            <Property name="dataSet">dsYxtk</Property>
+            <Property name="dataSet">dsZstk</Property>
             <Property name="readOnly">true</Property>
             <DataColumn name="tkfl">
               <Property name="property">tkfl.tkmc</Property>

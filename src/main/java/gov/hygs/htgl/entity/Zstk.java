@@ -1,6 +1,7 @@
 package gov.hygs.htgl.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -49,6 +50,38 @@ public class Zstk implements Serializable {
 
 	/** 选择类型 1单选，2多选. */
 	private String mode;
+	
+	/** 有小标志 Y为添加 N为删除*/
+	private String yxbz;
+	
+	private Collection<Tkxzx> tkxzx;
+	private Collection<Tkxzx> daxzx;
+
+	
+
+	public Collection<Tkxzx> getTkxzx() {
+		return tkxzx;
+	}
+
+	public void setTkxzx(Collection<Tkxzx> tkxzx) {
+		this.tkxzx = tkxzx;
+	}
+
+	public Collection<Tkxzx> getDaxzx() {
+		return daxzx;
+	}
+
+	public void setDaxzx(Collection<Tkxzx> daxzx) {
+		this.daxzx = daxzx;
+	}
+
+	public String getYxbz() {
+		return yxbz;
+	}
+
+	public void setYxbz(String yxbz) {
+		this.yxbz = yxbz;
+	}
 
 	/**
 	 * Constructor.
