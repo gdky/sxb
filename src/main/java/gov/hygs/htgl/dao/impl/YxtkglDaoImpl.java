@@ -149,6 +149,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 						yxtk.setTmnd(result.getInt("tmnd"));
 						yxtk.setTmlyId(result.getInt("tmly_id"));
 						yxtk.setMode(result.getString("mode"));
+						yxtk.setYxbz(result.getString("yxbz"));
+						yxtk.setXybz(result.getString("xybz"));
 						return yxtk;
 					}
 
@@ -444,10 +446,10 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	@Override
 	public void deleteGrDeptGxJl(Yxtk yxtk) {
-		String sql = "delete from dept_tk_gxjl where tk_id=?";
-		Object[] objs = { yxtk.getId() };
+		String sql = "delete from dept_tk_gxjl where tk_id=? and gxly=?";
+		Object[] objs = { yxtk.getId(),104 };
 		this.jdbcTemplate.update(sql, objs);
-		sql = "delete from gr_tk_gxjl where tk_id=?";
+		sql = "delete from gr_tk_gxjl where tk_id=? and gxly=?";
 		this.jdbcTemplate.update(sql, objs);
 	}
 

@@ -139,4 +139,5 @@ public class YxtkglController {
 	public List<Map<String,Object>> getLoginUserInfo(){
 		return yxtkglService.getLoginUserInfo();
 	}
+	
 }
