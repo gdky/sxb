@@ -174,11 +174,13 @@ dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,funct
             <Property name="dataSet">dsTkfl</Property>
             <Property name="dataType">tkflType</Property>
             <Property name="treeColumn">tkmc</Property>
+            <Property name="readOnly">true</Property>
             <BindingConfigs>
               <BindingConfig>
                 <Property name="recursive">true</Property>
                 <Property name="childrenProperty">child</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+                <Property name="expandLevel">2</Property>
               </BindingConfig>
             </BindingConfigs>
             <Columns>

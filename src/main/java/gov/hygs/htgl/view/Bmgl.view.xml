@@ -436,6 +436,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
                   <Property name="labelProperty">dept_name</Property>
                   <Property name="name">dept_name</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+                  <Property name="expandLevel">2</Property>
                 </BindingConfig>
               </BindingConfigs>
             </DataTree>
