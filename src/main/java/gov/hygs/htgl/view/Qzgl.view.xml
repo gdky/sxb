@@ -87,7 +87,7 @@ self.flush();</ClientEvent>
     <DataSet id="dsUser">
       <Property name="dataType">[userType]</Property>
       <Property name="dataProvider">qzBmCdglController#getUserInfo</Property>
-      <Property name="pageSize">2</Property>
+      <Property name="pageSize">10</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">20%</Property>
@@ -358,7 +358,7 @@ view.get(&quot;#userDialog&quot;).close();</ClientEvent>
             <ToolBar>
               <DataPilot>
                 <Property name="dataSet">dsUser</Property>
-                <Property name="itemCodes">pages,pageSize</Property>
+                <Property name="itemCodes">pages</Property>
               </DataPilot>
             </ToolBar>
             <DataGrid id="userDataGrid">

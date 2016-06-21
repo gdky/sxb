@@ -43,7 +43,7 @@
         <Property name="dataProvider">qzBmCdglController#getCurrentMenuById</Property>
       </Reference>
       <Reference name="childDataGrid">
-        <Property name="pageSize">1</Property>
+        <Property name="pageSize">10</Property>
         <Property name="parameter">$${this.id_}</Property>
         <Property name="dataType">[SELF]</Property>
         <Property name="dataProvider">qzBmCdglController#getCurrentMenuPageById</Property>
@@ -384,7 +384,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
                   <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
                 </Button>
                 <DataPilot>
-                  <Property name="itemCodes">pages,pageSize</Property>
+                  <Property name="itemCodes">pages</Property>
                   <Property name="dataSet">menuDataSet</Property>
                   <Property name="dataPath">!current_Node.childDataGrid</Property>
                 </DataPilot>
@@ -392,7 +392,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
               <DataGrid id="menuGrid">
                 <Property name="dataSet">menuDataSet</Property>
                 <Property name="dataPath">!current_Node.childDataGrid</Property>
-                <Property name="readOnly">false</Property>
+                <Property name="readOnly">true</Property>
                 <DataColumn name="menu_Name">
                   <Property name="property">menu_Name</Property>
                 </DataColumn>
@@ -422,6 +422,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
                   <Property name="name">menu_Name</Property>
                   <Property name="childrenProperty">child</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+                  <Property name="expandLevel">3</Property>
                 </BindingConfig>
               </BindingConfigs>
             </DataTree>
