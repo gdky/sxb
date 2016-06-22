@@ -240,13 +240,14 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	@Override
 	public void addZstk(Zstk zstk) {
 		// TODO Auto-generated method stub
-		if(this.chackRecordExistOrNot(zstk) == 0){
+		if (this.chackRecordExistOrNot(zstk) == 0) {
 			List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
 			String sql = "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
 					zstk.getCreateDate(), zstk.getSpDate(), zstk.getSprId(),
-					zstk.getDeptid(), zstk.getContent(), list.get(0).get("value"),
-					zstk.getTmnd(), zstk.getTmlyId(), zstk.getMode(), "Y" };
+					zstk.getDeptid(), zstk.getContent(),
+					list.get(0).get("value"), zstk.getTmnd(), zstk.getTmlyId(),
+					zstk.getMode(), "Y" };
 			this.jdbcTemplate.update(sql, objs);
 		}
 	}
@@ -376,8 +377,9 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	private List<Yxtk> getYxtkInfo(int begin, int offest) {
-		String sql = "select * from yxtk where yxbz='Y' and xybz='N'";
-		List<Yxtk> list = this.jdbcTemplate.query(sql, new RowMapper<Yxtk>() {
+		String sql = "select * from yxtk where yxbz='Y' and xybz='N' limit ?,?";
+		List<Yxtk> list = this.jdbcTemplate.query(sql, new Object[] { begin,
+				offest }, new RowMapper<Yxtk>() {
 
 			@Override
 			public Yxtk mapRow(ResultSet result, int i) throws SQLException {
