@@ -1320,6 +1320,36 @@ if(data != undefined){&#xD;
               <Property name="property">content</Property>
               <Editor/>
             </AutoFormElement>
+            <Button id="findbutton">
+              <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var dept = entity.get(&quot;dept&quot;);&#xD;
+var user = entity.get(&quot;user&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+if(dept == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null,&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(user == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}&#xD;
+view.get(&quot;#dsYxtk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+              <Property name="caption">查询</Property>
+              <Property name="hideMode">display</Property>
+            </Button>
           </AutoForm>
         </Children>
       </GroupBox>
@@ -1397,36 +1427,6 @@ view.get(&quot;#yxtkDialog&quot;).show();&#xD;
               <Property name="caption">修改</Property>
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
-            <Button id="findbutton">
-              <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
-var dept = entity.get(&quot;dept&quot;);&#xD;
-var user = entity.get(&quot;user&quot;);&#xD;
-var begin = entity.get(&quot;begin&quot;);&#xD;
-var end = entity.get(&quot;end&quot;);&#xD;
-if(end &lt; begin &amp;&amp; end != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
-}&#xD;
-if(dept == &quot;&quot;){&#xD;
-	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
-		dept:null,&#xD;
-		deptid:null,&#xD;
-		user:null,&#xD;
-		userid:null&#xD;
-	});&#xD;
-}else if(user == &quot;&quot;){&#xD;
-	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
-		user:null,&#xD;
-		userid:null&#xD;
-	});&#xD;
-}&#xD;
-view.get(&quot;#dsYxtk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
-view.get(&quot;#dsYxtk&quot;).flush();&#xD;
-&#xD;
-</ClientEvent>
-              <Property name="caption">查询</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-              <Property name="hideMode">display</Property>
-            </Button>
             <Button>
               <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
 if(dsYxtk == undefined){&#xD;
@@ -1497,7 +1497,7 @@ if(mode ==1 || mode == 2){&#xD;
 	view.get(&quot;#yxtktofGrid&quot;).set(&quot;selection&quot;,select);&#xD;
 }&#xD;
 </ClientEvent>
-              <Property name="caption">编辑题目</Property>
+              <Property name="caption">编辑选项</Property>
               <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
             </Button>
             <Button id="inbutton">

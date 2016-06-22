@@ -54,7 +54,7 @@
           <Property name="resultMessage">登陆账号不能为空，请输入内容</Property>
         </Validator>
         <Validator type="regExp">
-          <Property name="whiteRegExp">^[a-zA-z][a-zA-Z0-9_]{5,11}$</Property>
+          <Property name="whiteRegExp">^[a-zA-z][a-zA-Z0-9_]{5,10}$</Property>
           <Property name="resultMessage">登陆账号是6或12位的字母与数字的组合且必须以字母开头</Property>
           <Property name="name">validator2</Property>
         </Validator>

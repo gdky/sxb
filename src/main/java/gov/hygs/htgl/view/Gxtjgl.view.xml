@@ -44,7 +44,7 @@
         <Property name="label">部门</Property>
       </PropertyDef>
       <PropertyDef name="username">
-        <Property name="label">个人</Property>
+        <Property name="label">用户名</Property>
       </PropertyDef>
       <PropertyDef name="cou">
         <Property name="label">贡献统计</Property>
@@ -233,11 +233,11 @@ view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
             <Property name="dataSet">dsResult</Property>
             <Property name="height">300</Property>
             <Property name="readOnly">true</Property>
-            <DataColumn name="deptname">
-              <Property name="property">deptname</Property>
-            </DataColumn>
             <DataColumn id="userName" name="username">
               <Property name="property">username</Property>
+            </DataColumn>
+            <DataColumn name="deptname">
+              <Property name="property">deptname</Property>
             </DataColumn>
             <DataColumn name="cou">
               <Property name="property">cou</Property>
