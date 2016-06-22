@@ -1053,7 +1053,8 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
                 <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
+                <ClientEvent name="onClick">view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>

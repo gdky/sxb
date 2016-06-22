@@ -27,7 +27,9 @@ public class YxzskServiceImpl implements YxzskService {
 	@Override
 	public void getYxzskInfo(Page<Yxzsk> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		yxzskDao.getYxzskInfo(page, param);
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		yxzskDao.getYxzskInfo(page, param, userDetails);
 	}
 
 	@Override
@@ -39,21 +41,23 @@ public class YxzskServiceImpl implements YxzskService {
 	@Override
 	public void updateYxzsk(List<Yxzsk> yxzsks) {
 		// TODO Auto-generated method stub
-		if(yxzsks != null){
-			for(Yxzsk yxzsk : yxzsks){
-				if(EntityUtils.getState(yxzsk).equals(EntityState.NEW)){
+		if (yxzsks != null) {
+			for (Yxzsk yxzsk : yxzsks) {
+				if (EntityUtils.getState(yxzsk).equals(EntityState.NEW)) {
 					CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 							.getContext().getAuthentication().getPrincipal();
 					yxzsk.setId(getUUID());
 					yxzsk.setUserId(userDetails.getId());
 					yxzsk.setDeptid(userDetails.getDeptid());
-					//yxzskDao.addYxzsk(yxzsk);
-					//yxzskDao.addGrDeptGxJl(yxzsk);
-				}if(EntityUtils.getState(yxzsk).equals(EntityState.MODIFIED)){
-					//yxzskDao.updateYxzsk(yxzsk);
-				}if(EntityUtils.getState(yxzsk).equals(EntityState.DELETED)){
-					//yxzskDao.deleteYxzsk(yxzsk);
-					//yxzskDao.deleteGrDeptGxJl(yxzsk);
+					yxzskDao.addYxzsk(yxzsk);
+					yxzskDao.addGrDeptGxJl(yxzsk);
+				}
+				if (EntityUtils.getState(yxzsk).equals(EntityState.MODIFIED)) {
+					yxzskDao.updateYxzsk(yxzsk);
+				}
+				if (EntityUtils.getState(yxzsk).equals(EntityState.DELETED)) {
+					yxzskDao.deleteYxzsk(yxzsk);
+					yxzskDao.deleteGrDeptGxJl(yxzsk);
 				}
 			}
 		}
@@ -62,5 +66,5 @@ public class YxzskServiceImpl implements YxzskService {
 	private String getUUID() {
 		return UUID.randomUUID().toString().trim().replaceAll("-", "");
 	}
-	
+
 }

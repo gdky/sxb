@@ -3,8 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="yxzskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxzsk</Property>
+    <DataType name="zszskType">
+      <Property name="creationType">gov.hygs.htgl.entity.Zszsk</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -52,9 +52,6 @@
         <Property name="label">知识库题目</Property>
       </PropertyDef>
       <PropertyDef name="yxbz">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="xybz">
         <Property></Property>
       </PropertyDef>
     </DataType>
@@ -131,7 +128,7 @@
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
     </DataType>
-    <DataType name="yxTzsType">
+    <DataType name="yxzskType">
       <Property name="creationType">gov.hygs.htgl.entity.Yxzsk</Property>
       <PropertyDef name="id">
         <Property></Property>
@@ -186,65 +183,13 @@
         <Property></Property>
       </PropertyDef>
     </DataType>
-    <DataType name="zszskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zszsk</Property>
-      <PropertyDef name="id">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="userId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
-      <PropertyDef name="createDate">
-        <Property name="dataType">Date</Property>
-        <Property name="label">创建时间</Property>
-      </PropertyDef>
-      <PropertyDef name="spDate">
-        <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
-      </PropertyDef>
-      <PropertyDef name="sprId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="deptid">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
-      <PropertyDef name="content">
-        <Property></Property>
-        <Property name="label">内容</Property>
-      </PropertyDef>
-      <PropertyDef name="zsklyId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <Reference name="zskly">
-        <Property name="dataType">[zsklyType]</Property>
-        <Property name="parameter">$${this.zsklyId}</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
-      </Reference>
-      <PropertyDef name="title">
-        <Property></Property>
-        <Property name="label">知识库题目</Property>
-      </PropertyDef>
-      <PropertyDef name="yxbz">
-        <Property></Property>
-      </PropertyDef>
-    </DataType>
   </Model>
   <View>
     <Container id="datasets">
-      <DataSet id="dsYxzsk">
-        <Property name="dataType">[yxzskType]</Property>
-        <Property name="dataProvider">yxzskController#getYxzskInfo</Property>
+      <DataSet id="dsZszsk">
+        <Property name="dataType">[zszskType]</Property>
         <Property name="pageSize">10</Property>
+        <Property name="dataProvider">zszskController#getZszskInfo</Property>
       </DataSet>
       <DataSet id="dsZskly">
         <Property name="dataType">[zsklyType]</Property>
@@ -261,13 +206,10 @@
       <DataSet id="dsUserName">
         <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
       </DataSet>
-      <DataSet id="dsYxTzszsk">
-        <Property name="dataType">[yxTzsType]</Property>
-        <Property name="dataProvider">zszskController#getYxzskInfo</Property>
+      <DataSet id="dsYxzsk">
+        <Property name="dataType">[yxzskType]</Property>
         <Property name="pageSize">10</Property>
-      </DataSet>
-      <DataSet id="dsZszsk">
-        <Property name="dataType">[zszskType]</Property>
+        <Property name="dataProvider">zszskController#getYxzskInfo</Property>
       </DataSet>
     </Container>
     <Container id="dropdowns">
@@ -319,7 +261,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
       <DataSetDropDown id="dsZsklyDropDown">
         <ClientEvent name="onClose">var zskly = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
 if(zskly != undefined){&#xD;
-	view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;).set({zsklyId:zskly.get(&quot;id&quot;)});&#xD;
+	view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;).set({zsklyId:zskly.get(&quot;id&quot;)});&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="dataSet">dsZskly</Property>
@@ -334,13 +276,13 @@ if(zskly != undefined){&#xD;
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
+	view.get(&quot;#dsZszsk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
           </Button>
           <Button>
-            <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;).cancel();&#xD;
+            <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dialog&quot;).close();&#xD;
 </ClientEvent>
             <Property name="caption">取消</Property>
@@ -348,7 +290,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
         </Buttons>
         <Children>
           <AutoForm id="yxzskForm">
-            <Property name="dataSet">dsYxzsk</Property>
+            <Property name="dataSet">dsZszsk</Property>
             <AutoFormElement>
               <Property name="name">createDate</Property>
               <Property name="property">createDate</Property>
@@ -393,16 +335,16 @@ entitys.each(function(entity){&#xD;
 	zszsk.insert(entity);&#xD;
 });&#xD;
 &#xD;
-view.get(&quot;#inAction&quot;).execute(function(){&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-	//view.get(&quot;#dsZszsk&quot;).flush();&#xD;
+	view.get(&quot;#dsZszsk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
           </Button>
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-//view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
+view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
 </ClientEvent>
             <Property name="caption">取消</Property>
           </Button>
@@ -410,12 +352,12 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
         <Children>
           <ToolBar>
             <DataPilot>
-              <Property name="dataSet">dsYxTzszsk</Property>
+              <Property name="dataSet">dsYxzsk</Property>
               <Property name="itemCodes">pages</Property>
             </DataPilot>
           </ToolBar>
           <DataGrid id="yxzskGrid">
-            <Property name="dataSet">dsYxTzszsk</Property>
+            <Property name="dataSet">dsYxzsk</Property>
             <Property name="readOnly">true</Property>
             <Property name="selectionMode">multiRows</Property>
             <RowSelectorColumn/>
@@ -445,20 +387,12 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
         <Tools/>
       </Dialog>
     </Container>
-    <Container id="actions">
-      <UpdateAction id="updateAction">
-        <Property name="dataResolver">yxzskController#updateYxzsk</Property>
-        <UpdateItem>
-          <Property name="dataSet">dsYxzsk</Property>
-        </UpdateItem>
-      </UpdateAction>
-      <UpdateAction id="inAction">
-        <Property name="dataResolver">zszskController#updateZszsk</Property>
-        <UpdateItem>
-          <Property name="dataSet">dsZszsk</Property>
-        </UpdateItem>
-      </UpdateAction>
-    </Container>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">zszskController#updateZszsk</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsZszsk</Property>
+      </UpdateItem>
+    </UpdateAction>
     <Container>
       <GroupBox>
         <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
@@ -526,14 +460,14 @@ if(data != undefined){&#xD;
 	}&#xD;
 }</ClientEvent>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).insert();&#xD;
-view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+              <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).insert();&#xD;
+view.get(&quot;#dsZszsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">增加</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">var data = view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;);&#xD;
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 		data.remove();&#xD;
@@ -543,7 +477,7 @@ if(data != undefined){&#xD;
               <Property name="caption">删除</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">if(view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+              <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
 </ClientEvent>
@@ -571,26 +505,25 @@ if(dept == &quot;&quot;){&#xD;
 		userid:null&#xD;
 	});&#xD;
 }&#xD;
-view.get(&quot;#dsYxzsk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
-view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
+view.get(&quot;#dsZszsk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsZszsk&quot;).flush();&#xD;
 &#xD;
 </ClientEvent>
               <Property name="caption">查询</Property>
               <Property name="hideMode">display</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
-</ClientEvent>
+              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();</ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="hideMode">display</Property>
             </Button>
             <DataPilot>
-              <Property name="dataSet">dsYxzsk</Property>
+              <Property name="dataSet">dsZszsk</Property>
               <Property name="itemCodes">pages</Property>
             </DataPilot>
           </ToolBar>
           <DataGrid>
-            <Property name="dataSet">dsYxzsk</Property>
+            <Property name="dataSet">dsZszsk</Property>
             <Property name="readOnly">true</Property>
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
