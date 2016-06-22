@@ -39,6 +39,26 @@ public class Yxzsk implements Serializable {
 
 	/** 知识库标题. */
 	private String title;
+	
+	private String yxbz;
+	
+	private String xybz;
+
+	public String getYxbz() {
+		return yxbz;
+	}
+
+	public void setYxbz(String yxbz) {
+		this.yxbz = yxbz;
+	}
+
+	public String getXybz() {
+		return xybz;
+	}
+
+	public void setXybz(String xybz) {
+		this.xybz = xybz;
+	}
 
 	/**
 	 * Constructor.

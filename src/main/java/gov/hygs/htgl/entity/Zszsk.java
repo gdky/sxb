@@ -40,6 +40,17 @@ public class Zszsk implements Serializable {
 	/** 知识库标题. */
 	private String title;
 
+	/** 有效标志. */
+	private String yxbz;
+	
+	public String getYxbz() {
+		return yxbz;
+	}
+
+	public void setYxbz(String yxbz) {
+		this.yxbz = yxbz;
+	}
+
 	/**
 	 * Constructor.
 	 */

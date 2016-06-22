@@ -106,6 +106,46 @@ view.get(&quot;#dialog&quot;).close();&#xD;
         </Children>
         <Tools/>
       </Dialog>
+      <Dialog id="updateDialog">
+        <Property name="width">400</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox layout="hbox pack:center">
+            <Property name="caption">修改信息</Property>
+            <Buttons>
+              <Button>
+                <Property name="caption">提交</Property>
+                <Property name="action">updateAction</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#dsTkfl&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#updateDialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsTkfl</Property>
+                <Property name="cols">*</Property>
+                <Property name="height">70</Property>
+                <Property name="width">250</Property>
+                <AutoFormElement>
+                  <Property name="name">tkmc</Property>
+                  <Property name="property">tkmc</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor/>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
       <GroupBox>
         <Property name="caption">题库分类</Property>
         <Buttons/>
@@ -148,6 +188,11 @@ view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">添加子节点</Property>
               <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).show();</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">var currentNode = view.get(&quot;#tkfltree&quot;).get(&quot;currentNode&quot;);&#xD;
