@@ -1,6 +1,8 @@
 package gov.hygs.htgl.controller;
 
 
+import gov.hygs.htgl.security.Md5Utils;
+
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -45,7 +47,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		//数据库用户的密码
 		String password = userDetails.getPassword();
 		//与authentication里面的credentials相比较
-		if(!password.equals(token.getCredentials())) {
+		
+		if(!password.equals(Md5Utils.encodeMd5((String)token.getCredentials()))) {
 			throw new BadCredentialsException("Invalid username/password");
 		}
 		//授权

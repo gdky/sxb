@@ -4,6 +4,7 @@ import gov.hygs.htgl.dao.YhJsglDao;
 import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.security.Md5Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bstek.dorado.data.provider.Page;
 import com.gdky.restfull.dao.BaseJdbcDao;
+
 
 @Repository
 public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
@@ -82,12 +84,13 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	@Override
 	public Integer insertUser(User user) {
 		// TODO Auto-generated method stub
+
 		String sql = "insert into USER (login_Name,user_Name, phone,rzsj,zw,pwd,photo,deptid,birthday) values(?,?,?,?,?,?,?,?,?) ";
 		return this.insertAndGetKeyByJdbc(
 				sql,
 				new Object[] { user.getLogin_Name(), user.getUser_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
-						user.getPwd(), user.getPhoto(), user.getDeptid(),
+						Md5Utils.encodeMd5(user.getPwd()), user.getPhoto(), user.getDeptid(),
 						user.getBirthday()
 
 				}, new String[] { "id_" }).intValue();
@@ -101,7 +104,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 				sql,
 				new Object[] { user.getLogin_Name(), user.getLogin_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
-						user.getPwd(), user.getPhoto(), user.getDeptid(),
+						Md5Utils.encodeMd5(user.getPwd()), user.getPhoto(), user.getDeptid(),
 						user.getBirthday(), user.getId_()
 
 				});
