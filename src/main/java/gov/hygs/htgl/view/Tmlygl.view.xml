@@ -25,11 +25,13 @@
     </DataSet>
     <Container>
       <Dialog id="addDialog">
-        <Property name="width">400</Property>
+        <Property name="width">500</Property>
+        <Property name="height">260</Property>
         <Buttons/>
         <Children>
-          <GroupBox layout="hbox pack:center">
-            <Property name="caption">添加题库来源</Property>
+          <GroupBox layout="hbox">
+            <Property name="caption">题库来源信息</Property>
+            <Property name="width">470</Property>
             <Buttons>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#tmlyUpdateAction&quot;).execute(function(){&#xD;
@@ -52,8 +54,7 @@ view.get(&quot;#addDialog&quot;).close();&#xD;
               <AutoForm>
                 <Property name="dataSet">dsTmly</Property>
                 <Property name="cols">*</Property>
-                <Property name="height">70</Property>
-                <Property name="width">250</Property>
+                <Property name="width">468</Property>
                 <AutoFormElement>
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
@@ -62,7 +63,9 @@ view.get(&quot;#addDialog&quot;).close();&#xD;
                 <AutoFormElement>
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
-                  <Editor/>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
                 </AutoFormElement>
               </AutoForm>
             </Children>
@@ -96,22 +99,27 @@ if(data != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
-              <Property name="caption">保存</Property>
-              <Property name="action">tmlyUpdateAction</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+              <ClientEvent name="onClick">view.get(&quot;#addDialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
           </ToolBar>
           <AutoForm>
             <Property name="dataSet">dsTmly</Property>
-            <AutoFormElement>
+            <Property name="readOnly">true</Property>
+            <Property name="cols">*</Property>
+            <AutoFormElement layoutConstraint="colSpan:2">
               <Property name="name">title</Property>
               <Property name="property">title</Property>
               <Editor/>
             </AutoFormElement>
-            <AutoFormElement>
+            <AutoFormElement layoutConstraint="colSpan:2">
               <Property name="name">content</Property>
               <Property name="property">content</Property>
-              <Editor/>
+              <Editor>
+                <TextArea/>
+              </Editor>
             </AutoFormElement>
           </AutoForm>
         </Children>

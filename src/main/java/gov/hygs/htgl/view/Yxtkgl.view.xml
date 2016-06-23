@@ -134,6 +134,21 @@
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">N</Property>
+                <Property name="value">未选上</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Y</Property>
+                <Property name="value">已选上</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">是否选中</Property>
       </PropertyDef>
     </DataType>
     <DataType name="yxtkdaType">
@@ -158,14 +173,16 @@
       </PropertyDef>
       <PropertyDef name="xzKey">
         <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
-if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
-	datas.each(function(entity){&#xD;
-		if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
-			//alert(arg.value);&#xD;
-			throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
-			return false;&#xD;
-		}&#xD;
-	});&#xD;
+if(datas.getLast() != null){&#xD;
+	if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
+		datas.each(function(entity){&#xD;
+			if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
+				//alert(arg.value);&#xD;
+				throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
 }&#xD;
 </ClientEvent>
         <Property></Property>
@@ -275,6 +292,10 @@ if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
       </PropertyDef>
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
+      <PropertyDef name="flId"/>
+      <PropertyDef name="tkfl">
+        <Property name="label">题库分类</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="zstkType">
       <Property name="creationType">gov.hygs.htgl.entity.Zstk</Property>
@@ -951,11 +972,6 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="name">spDate</Property>
-                  <Property name="property">spDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
                   <Property name="dataPath">#.tkfl</Property>
                   <Property name="name">tkmc</Property>
                   <Property name="property">tkmc</Property>
@@ -1191,16 +1207,18 @@ entitys.each(function(entity){&#xD;
 &#xD;
 view.get(&quot;#inAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-	//view.get(&quot;#dsZstk&quot;).flush();&#xD;
+	view.get(&quot;#dsYxtk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
 //view.get(&quot;#dsYxtk&quot;).flush();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -1220,9 +1238,6 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
                 </DataColumn>
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
-                </DataColumn>
-                <DataColumn name="spDate">
-                  <Property name="property">spDate</Property>
                 </DataColumn>
                 <DataColumn name="content">
                   <Property name="property">content</Property>
@@ -1316,6 +1331,12 @@ if(data != undefined){&#xD;
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
+              <Property name="name">tkfl</Property>
+              <Property name="property">tkfl</Property>
+              <Property name="trigger">tkflDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
               <Property name="name">content</Property>
               <Property name="property">content</Property>
               <Editor/>
@@ -1339,6 +1360,10 @@ if(dept == &quot;&quot;){&#xD;
 }else if(user == &quot;&quot;){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(entity.get(&quot;userid&quot;) == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		userid:null&#xD;
 	});&#xD;
 }&#xD;
@@ -1520,9 +1545,6 @@ if(mode ==1 || mode == 2){&#xD;
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
             </DataColumn>
-            <DataColumn name="spDate">
-              <Property name="property">spDate</Property>
-            </DataColumn>
             <DataColumn name="content">
               <Property name="property">content</Property>
             </DataColumn>
@@ -1543,6 +1565,9 @@ if(mode ==1 || mode == 2){&#xD;
             </DataColumn>
             <DataColumn name="dept">
               <Property name="property">dept.dept_name</Property>
+            </DataColumn>
+            <DataColumn name="xybz">
+              <Property name="property">xybz</Property>
             </DataColumn>
           </DataGrid>
         </Children>

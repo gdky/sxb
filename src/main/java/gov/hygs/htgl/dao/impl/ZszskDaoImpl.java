@@ -154,14 +154,18 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		Integer userId = (Integer) param.get("userid");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
 		String content = (String) param.get("content");
 		if (!sql.toString().contains("deptid")) {
-			if (deptid != null) {
-				sql.append(" and deptid=" + deptid);
+			if (deptid != null || dept != null) {
+				//sql.append(" and deptid=" + deptid);
+				sql.append(" and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 			}
 		}
-		if (userId != null) {
-			sql.append(" and user_id=" + userId);
+		if (userId != null || user != null) {
+			//sql.append(" and user_id=" + userId);
+			sql.append(" and user_id in (select id_ from user where user_name like '%"+user+"%') ");
 		}
 		if (begin != null) {
 			sql.append(" and create_date >= date_format('" + sdf.format(begin)
@@ -205,11 +209,12 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	public void addZszsk(Zszsk zszsk) {
 		// TODO Auto-generated method stub
 		if (this.chackRecordExistOrNot(zszsk) == 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String sql = "insert into zszsk values(?,?,?,?,?,?,?,?,?,?)";
 			Object[] objs = { zszsk.getId(), zszsk.getUserId(),
-					zszsk.getCreateDate(), zszsk.getSpDate(), zszsk.getSprId(),
-					zszsk.getDeptid(), zszsk.getContent(), zszsk.getZsklyId(),
-					zszsk.getTitle(), "Y" };
+					sdf.format(zszsk.getCreateDate()), zszsk.getSpDate(),
+					zszsk.getSprId(), zszsk.getDeptid(), zszsk.getContent(),
+					zszsk.getZsklyId(), zszsk.getTitle(), "Y" };
 			this.jdbcTemplate.update(sql, objs);
 		}
 	}
