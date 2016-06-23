@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
+
 @Service
 public class YhJsglServiceImpl implements YhJsglService {
 
@@ -24,23 +25,23 @@ public class YhJsglServiceImpl implements YhJsglService {
 	private YhJsglDao yhglDao;
 
 	@Override
-	public void getUserInfo(Map<String, Object> para,Page page) {
+	public void getUserInfo(Map<String, Object> para, Page page) {
 		// TODO Auto-generated method stub
-		 yhglDao.getUserInfo(para,page);
+		yhglDao.getUserInfo(para, page);
 	}
 
 	@Override
 	public void saveUserInfo(List<User> users) {
 		// TODO Auto-generated method stub
-		for(User user:users)
-		{
-			if(EntityUtils.getState(user).equals(EntityState.NEW)){
-				yhglDao.insertUser(user);
+		for (User user : users) {
+			if (EntityUtils.getState(user).equals(EntityState.NEW)) {
+				user.setId_(yhglDao.insertUser(user));
+				yhglDao.insertUserByRole(user, 14);
 			}
-			if(EntityUtils.getState(user).equals(EntityState.MODIFIED)){
-				yhglDao.updateUser(user);		
+			if (EntityUtils.getState(user).equals(EntityState.MODIFIED)) {
+				yhglDao.updateUser(user);
 			}
-			if(EntityUtils.getState(user).equals(EntityState.DELETED)){
+			if (EntityUtils.getState(user).equals(EntityState.DELETED)) {
 				yhglDao.deleteUser(user);
 			}
 		}
@@ -49,66 +50,65 @@ public class YhJsglServiceImpl implements YhJsglService {
 	@Override
 	public void getRoleInfo(Page page) {
 		// TODO Auto-generated method stub
-		 yhglDao.getRoleInfo(page);
+		yhglDao.getRoleInfo(page);
 	}
 
 	@Override
 	public void getUserInfoByRole(Page page, int id_) {
 		// TODO Auto-generated method stub
-		 yhglDao.getUserInfoByRole(page,id_);
+		yhglDao.getUserInfoByRole(page, id_);
 	}
 
 	@Override
 	public void getMenuInfoByRole(Page page, int id_) {
 		// TODO Auto-generated method stub
-		 yhglDao.getMenuInfoByRole(page,id_);
+		yhglDao.getMenuInfoByRole(page, id_);
 	}
 
 	@Override
 	public void saveRole(List<Role> roles) {
 		// TODO Auto-generated method stub
-		for(Role role:roles)
-		{
-			if(EntityUtils.getState(role).equals(EntityState.NEW)){
+		for (Role role : roles) {
+			if (EntityUtils.getState(role).equals(EntityState.NEW)) {
 				yhglDao.insertRole(role);
 			}
-			if(EntityUtils.getState(role).equals(EntityState.MODIFIED)){
-				yhglDao.updateRole(role);		
+			if (EntityUtils.getState(role).equals(EntityState.MODIFIED)) {
+				yhglDao.updateRole(role);
 			}
-			if(EntityUtils.getState(role).equals(EntityState.DELETED)){
+			if (EntityUtils.getState(role).equals(EntityState.DELETED)) {
 				yhglDao.deleteRole(role);
 			}
-			List<User> users =(List<User>) role.getUsers();
-			List<Menu> menus =(List<Menu>) role.getMenus();
-			if(users!=null){
-				for(User user:users){
-					int roleId=role.getId_();
-					if(EntityUtils.getState(user).equals(EntityState.NEW)){
-						yhglDao.insertUserByRole(user,roleId);
+			List<User> users = (List<User>) role.getUsers();
+			List<Menu> menus = (List<Menu>) role.getMenus();
+			if (users != null) {
+				for (User user : users) {
+					int roleId = role.getId_();
+					if (EntityUtils.getState(user).equals(EntityState.NEW)) {
+						yhglDao.insertUserByRole(user, roleId);
 					}
-					if(EntityUtils.getState(user).equals(EntityState.MODIFIED)){
-					//	yhglDao.updateUserByRole(user,roleId);		
+					if (EntityUtils.getState(user).equals(EntityState.MODIFIED)) {
+						// yhglDao.updateUserByRole(user,roleId);
 					}
-					if(EntityUtils.getState(user).equals(EntityState.DELETED)){
-						yhglDao.deleteUserByRole(user,roleId);
-					}
-				}
-			}
-			if(menus!=null){
-				for(Menu menu:menus){
-					int roleId=role.getId_();
-					if(EntityUtils.getState(menu).equals(EntityState.NEW)){
-						yhglDao.insertMenuByRole(menu,roleId);
-					}
-					if(EntityUtils.getState(menu).equals(EntityState.MODIFIED)){
-				//		yhglDao.updateMenuByRole(menu,roleId);		
-					}
-					if(EntityUtils.getState(menu).equals(EntityState.DELETED)){
-						yhglDao.deleteMenuByRole(menu,roleId);
+					if (EntityUtils.getState(user).equals(EntityState.DELETED)) {
+						yhglDao.deleteUserByRole(user, roleId);
 					}
 				}
 			}
-			
+			if (menus != null) {
+				for (Menu menu : menus) {
+					int roleId = role.getId_();
+					if (EntityUtils.getState(menu).equals(EntityState.NEW)) {
+						yhglDao.insertMenuByRole(menu, roleId);
+					}
+					if (EntityUtils.getState(menu).equals(EntityState.MODIFIED)) {
+						// yhglDao.updateMenuByRole(menu,roleId);
+					}
+					if (EntityUtils.getState(menu).equals(EntityState.DELETED)) {
+						yhglDao.deleteMenuByRole(menu, roleId);
+					}
+				}
+			}
+
 		}
 	}
 
@@ -125,27 +125,27 @@ public class YhJsglServiceImpl implements YhJsglService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getCurrentMenuById(int id_,int role_id) {
+	public List<Map<String, Object>> getCurrentMenuById(int id_, int role_id) {
 		// TODO Auto-generated method stub
-		return yhglDao.getCurrentMenuById(id_,role_id);
+		return yhglDao.getCurrentMenuById(id_, role_id);
 	}
 
 	@Override
 	public Boolean saveRoleMenu(int role_id, int menu_id) {
 		// TODO Auto-generated method stub
-		return yhglDao.saveRoleMenu(role_id,menu_id);
+		return yhglDao.saveRoleMenu(role_id, menu_id);
 	}
 
 	@Override
-	public Boolean validateMenu(int role_id,int menu_id) {
+	public Boolean validateMenu(int role_id, int menu_id) {
 		// TODO Auto-generated method stub
-		return yhglDao.validateMenu(role_id,menu_id);
+		return yhglDao.validateMenu(role_id, menu_id);
 	}
 
 	@Override
 	public Boolean deleteMenu(int role_id, int menu_id) {
 		// TODO Auto-generated method stub
-		return yhglDao.deleteMenu(role_id,menu_id);
+		return yhglDao.deleteMenu(role_id, menu_id);
 	}
 
 	@Override
@@ -165,5 +165,5 @@ public class YhJsglServiceImpl implements YhJsglService {
 		// TODO Auto-generated method stub
 		return yhglDao.checkRoleName(param);
 	}
-	
+
 }

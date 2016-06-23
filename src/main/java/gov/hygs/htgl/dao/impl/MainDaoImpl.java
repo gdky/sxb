@@ -24,7 +24,8 @@ public class MainDaoImpl extends BaseJdbcDao  implements MainDao {
 	@Override
 	public List<Role> getUserRoles(String username) {
 		// TODO Auto-generated method stub
-		String sql ="select c.* from user a,user_role b,role c where a.id_=b.user_id and b.role_id=c.id_ and a.user_name=?";
+		//String sql ="select c.* from user a,user_role b,role c where a.id_=b.user_id and b.role_id=c.id_ and a.user_name=?";
+		String sql ="select c.* from user a,user_role b,role c where a.id_=b.user_id and b.role_id=c.id_ and a.login_name=?";
 		return this.jdbcTemplate.query(sql, new Object[] { username },
 				new RoleRowMapper());
 	}
@@ -105,7 +106,8 @@ public class MainDaoImpl extends BaseJdbcDao  implements MainDao {
 	@Override
 	public User getUser(String username) {
 		// TODO Auto-generated method stub
-		String sql = " select * from user where user_name= ?";
+		//String sql = " select * from user where user_name= ?";
+		String sql = " select * from user where login_name= ?";
 		List<User> users= this.jdbcTemplate.query(sql.toString(), new Object[] {username  },
 				new UserRowMapper());
 		return users.get(0);

@@ -49,14 +49,13 @@
           <Property name="executingMessage">正在检查登陆账号...</Property>
           <Property name="service">yhJsglController#checkLoginName</Property>
         </Validator>
-        <Validator name="validator1" type="length">
-          <Property name="minLength">1</Property>
-          <Property name="resultMessage">登陆账号不能为空，请输入内容</Property>
-        </Validator>
         <Validator type="regExp">
-          <Property name="whiteRegExp">^[a-zA-z][a-zA-Z0-9_]{5,10}$</Property>
-          <Property name="resultMessage">登陆账号是6或12位的字母与数字的组合且必须以字母开头</Property>
+          <Property name="whiteRegExp">^[0-9]{11,11}$</Property>
+          <Property name="resultMessage">登陆账号长度必须11位</Property>
           <Property name="name">validator2</Property>
+        </Validator>
+        <Validator name="validator2" type="required">
+          <Property name="resultMessage">登陆账号不能为空，请输入内容</Property>
         </Validator>
       </PropertyDef>
       <PropertyDef name="user_Name">
@@ -68,9 +67,8 @@
           <Property name="revalidateOldValue">false</Property>
           <Property name="service">yhJsglController#checkUserName</Property>
         </Validator>
-        <Validator name="validator1" type="length">
+        <Validator name="validator1" type="required">
           <Property name="resultMessage">用户名不能为空，请输入内容</Property>
-          <Property name="minLength">1</Property>
         </Validator>
         <Validator name="validator2" type="regExp">
           <Property name="whiteRegExp">^[a-zA-Z\d\u4e00-\u9fa5]+$</Property>
@@ -100,21 +98,44 @@
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
         <Property name="label">所在科室</Property>
-        <Validator name="validator1" type="length">
-          <Property name="minLength">1</Property>
+        <Validator name="validator1" type="required">
           <Property name="resultMessage">请下拉选择</Property>
         </Validator>
       </PropertyDef>
       <PropertyDef name="deptMc">
         <Property name="label">所在科室</Property>
-        <Validator name="validator1" type="length">
-          <Property name="minLength">1</Property>
+        <Validator name="validator1" type="required">
           <Property name="resultMessage">请下拉选择</Property>
         </Validator>
       </PropertyDef>
       <PropertyDef name="birthday">
         <Property name="dataType">Date</Property>
         <Property name="label">生日</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="conditionType">
+      <PropertyDef name="begin">
+        <Property name="dataType">Date</Property>
+        <Property name="label">起始时间</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">Date</Property>
+        <Property name="label">终止时间</Property>
+      </PropertyDef>
+      <PropertyDef name="loginName">
+        <Property name="label">登录名</Property>
+      </PropertyDef>
+      <PropertyDef name="userName">
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property name="label">电话号码</Property>
+      </PropertyDef>
+      <PropertyDef name="zw">
+        <Property name="label">职位</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
       </PropertyDef>
     </DataType>
   </Model>
@@ -135,6 +156,65 @@
         <Property name="dataSet">dsUser</Property>
       </UpdateItem>
     </UpdateAction>
+    <GroupBox>
+      <Property name="caption">条件查询</Property>
+      <Buttons/>
+      <Children>
+        <AutoForm id="conditionForm">
+          <Property name="dataType">conditionType</Property>
+          <Property name="createPrivateDataSet">true</Property>
+          <AutoFormElement>
+            <Property name="name">begin</Property>
+            <Property name="property">begin</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">end</Property>
+            <Property name="property">end</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">loginName</Property>
+            <Property name="property">loginName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">userName</Property>
+            <Property name="property">userName</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">phone</Property>
+            <Property name="property">phone</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">zw</Property>
+            <Property name="property">zw</Property>
+            <Editor/>
+          </AutoFormElement>
+          <AutoFormElement>
+            <Property name="name">dept</Property>
+            <Property name="property">dept</Property>
+            <Property name="trigger">conditionDropDown</Property>
+            <Editor/>
+          </AutoFormElement>
+          <Button>
+            <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsUser&quot;).flush();&#xD;
+</ClientEvent>
+            <Property name="caption">查找</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+          </Button>
+        </AutoForm>
+      </Children>
+    </GroupBox>
     <GroupBox>
       <Property name="caption">用户管理</Property>
       <Buttons/>
@@ -209,9 +289,10 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
           <Property name="caption">添加用户信息</Property>
           <Buttons>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
-view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).validate();&#xD;
-view.get(&quot;#updateActionUser&quot;).execute();</ClientEvent>
+              <ClientEvent name="onClick">//view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).validate();&#xD;
+view.get(&quot;#updateActionUser&quot;).execute(function(){&#xD;
+	view.get(&quot;#DialogUser&quot;).hide();&#xD;
+});</ClientEvent>
               <Property name="caption">确定</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
             </Button>
@@ -306,6 +387,53 @@ view.get(&quot;#BmDropDown&quot;).close();</ClientEvent>
             </Buttons>
             <Children>
               <DataTree id="BmDataTree">
+                <Property name="currentNodeDataPath">current_Node</Property>
+                <Property name="dataSet">deptDataSet</Property>
+                <Property name="selectionMode">none</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="recursive">true</Property>
+                    <Property name="childrenProperty">child</Property>
+                    <Property name="labelProperty">dept_name</Property>
+                    <Property name="name">dept_name</Property>
+                    <Property name="checkable">false</Property>
+                    <Property name="expandLevel">1</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+              </DataTree>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Panel>
+    </CustomDropDown>
+    <CustomDropDown id="conditionDropDown">
+      <Property name="height">200</Property>
+      <Panel>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">部门管理</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var dropDown = dorado.widget.DropDown.findDropDown(view.get(&quot;#conditonDataTree&quot;));&#xD;
+var node = view.get(&quot;#conditonDataTree&quot;).get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+</ClientEvent>
+                <Property name="caption">确定</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#conditionDropDown&quot;).close();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataTree id="conditonDataTree">
                 <Property name="currentNodeDataPath">current_Node</Property>
                 <Property name="dataSet">deptDataSet</Property>
                 <Property name="selectionMode">none</Property>

@@ -172,8 +172,9 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void updateMenuNodeInfo(Menu menu) {
 		// TODO Auto-generated method stub
-		String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=?";
-		Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz() };
+		String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=? where id_=?";
+		Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz(),
+				menu.getId_() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 

@@ -160,14 +160,19 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		Integer userId = (Integer) param.get("userid");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
+		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		if (!sql.toString().contains("deptid")) {
-			if (deptid != null) {
-				sql.append(" and deptid=" + deptid);
+			if (deptid != null || dept != null) {
+				//sql.append(" and deptid=" + deptid);
+				sql.append(" and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 			}
 		}
-		if (userId != null) {
-			sql.append(" and user_id=" + userId);
+		if (userId != null || user != null) {
+			//sql.append(" and user_id=" + userId);
+			sql.append(" and user_id in (select id_ from user where user_name like '%"+user+"%') ");
 		}
 		if (begin != null) {
 			sql.append(" and create_date >= date_format('" + sdf.format(begin)
@@ -176,6 +181,9 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		if (end != null) {
 			sql.append(" and create_date <= date_format('" + sdf.format(end)
 					+ "','%Y%m%d')");
+		}
+		if (tkfl != null) {
+			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"+tkfl+"%') ");
 		}
 		if (content != null) {
 			sql.append(" and tmly_id in "
@@ -242,10 +250,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// TODO Auto-generated method stub
 		if (this.chackRecordExistOrNot(zstk) == 0) {
 			List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String sql = "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
-					zstk.getCreateDate(), zstk.getSpDate(), zstk.getSprId(),
-					zstk.getDeptid(), zstk.getContent(),
+					sdf.format(zstk.getCreateDate()), zstk.getSpDate(),
+					zstk.getSprId(), zstk.getDeptid(), zstk.getContent(),
 					list.get(0).get("value"), zstk.getTmnd(), zstk.getTmlyId(),
 					zstk.getMode(), "Y" };
 			this.jdbcTemplate.update(sql, objs);
