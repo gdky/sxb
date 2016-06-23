@@ -19,6 +19,7 @@ import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.security.Md5Utils;
 @Repository
 public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 
@@ -42,7 +43,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		// TODO Auto-generated method stub
 		String sql ="insert into USER (login_Name,user_Name, phone,rzsj,zw,pwd,photo,deptid,birthday) values(?,?,?,?,?,?,?,?,?) ";
 		this.jdbcTemplate.update(sql,new Object[]{
-				user.getLogin_Name(),user.getLogin_Name(),user.getPhone(),user.getRzsj(),user.getZw(),user.getPwd(),user.getPhoto(),user.getDeptid(),user.getBirthday()
+				user.getLogin_Name(),user.getLogin_Name(),user.getPhone(),user.getRzsj(),user.getZw(),Md5Utils.encodeMd5(user.getPwd()),user.getPhoto(),user.getDeptid(),user.getBirthday()
 
 		});
 		
@@ -53,7 +54,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		// TODO Auto-generated method stub
 		String sql ="update USER set login_Name=?,user_Name=?,phone=?,rzsj=?,zw=?,pwd=?,photo=?,deptid=?,birthday=? where id_=? ";
 		this.jdbcTemplate.update(sql,new Object[]{
-				user.getLogin_Name(),user.getLogin_Name(),user.getPhone(),user.getRzsj(),user.getZw(),user.getPwd(),user.getPhoto(),user.getDeptid(),user.getBirthday(),user.getId_()
+				user.getLogin_Name(),user.getLogin_Name(),user.getPhone(),user.getRzsj(),user.getZw(),Md5Utils.encodeMd5(user.getPwd()),user.getPhoto(),user.getDeptid(),user.getBirthday(),user.getId_()
 
 		});
 		
