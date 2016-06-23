@@ -14,7 +14,7 @@ public interface YhJsglDao {
 
 	void getUserInfo(Map<String, Object> para, Page page);
 
-	void insertUser(User user);
+	Integer insertUser(User user);
 
 	void updateUser(User user);
 

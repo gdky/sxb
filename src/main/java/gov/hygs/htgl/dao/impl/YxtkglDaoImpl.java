@@ -73,14 +73,21 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		Integer userId = (Integer) param.get("userid");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
+		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		if (!sql.toString().contains("deptid")) {
-			if (deptid != null) {
-				sql.append(" and deptid=" + deptid);
+			if (deptid != null || dept != null) {
+				// sql.append(" and deptid=" + deptid);
+				sql.append(" and deptid in (select id_ from dept where dept_name like '%"
+						+ dept + "%') ");
 			}
 		}
-		if (userId != null) {
-			sql.append(" and user_id=" + userId);
+		if (userId != null || user != null) {
+			// sql.append(" and user_id=" + userId);
+			sql.append(" and user_id in (select id_ from user where user_name like '%"
+					+ user + "%') ");
 		}
 		if (begin != null) {
 			sql.append(" and create_date >= date_format('" + sdf.format(begin)
@@ -89,6 +96,9 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		if (end != null) {
 			sql.append(" and create_date <= date_format('" + sdf.format(end)
 					+ "','%Y%m%d')");
+		}
+		if (tkfl != null) {
+			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"+tkfl+"%') ");
 		}
 		if (content != null) {
 			sql.append(" and tmly_id in "
@@ -365,12 +375,14 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void addYxtk(Yxtk yxtk) {
 		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
 		String sql = "insert into yxtk values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
-				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
-				yxtk.getDeptid(), yxtk.getContent(), list.get(0).get("value"),
-				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N" };
+				sdf.format(yxtk.getCreateDate()), yxtk.getSpDate(),
+				yxtk.getSprId(), yxtk.getDeptid(), yxtk.getContent(),
+				list.get(0).get("value"), yxtk.getTmnd(), yxtk.getTmlyId(),
+				yxtk.getMode(), "Y", "N" };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
@@ -447,7 +459,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void deleteGrDeptGxJl(Yxtk yxtk) {
 		String sql = "delete from dept_tk_gxjl where tk_id=? and gxly=?";
-		Object[] objs = { yxtk.getId(),104 };
+		Object[] objs = { yxtk.getId(), 104 };
 		this.jdbcTemplate.update(sql, objs);
 		sql = "delete from gr_tk_gxjl where tk_id=? and gxly=?";
 		this.jdbcTemplate.update(sql, objs);
@@ -559,7 +571,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Role role = this.getRoleInfoByUserId(userDetails.getId());
-		List<Dept> depts = (List<Dept>) this.getDeptInfoByDeptId(userDetails.getDeptid().toString());
+		List<Dept> depts = (List<Dept>) this.getDeptInfoByDeptId(userDetails
+				.getDeptid().toString());
 		map.put("deptname", depts.get(0).getDept_name());
 		map.put("username", userDetails.getLogin_Name());
 		map.put("deptid", userDetails.getDeptid());

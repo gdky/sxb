@@ -112,14 +112,18 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		Integer userId = (Integer) param.get("userid");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
 		String content = (String) param.get("content");
 		if (!sql.toString().contains("deptid")) {
-			if (deptid != null) {
-				sql.append(" and deptid=" + deptid);
+			if (deptid != null || dept != null) {
+				//sql.append(" and deptid=" + deptid);
+				sql.append(" and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 			}
 		}
-		if (userId != null) {
-			sql.append(" and user_id=" + userId);
+		if (userId != null || user != null) {
+			//sql.append(" and user_id=" + userId);
+			sql.append(" and user_id in (select id_ from user where user_name like '%"+user+"%') ");
 		}
 		if (begin != null) {
 			sql.append(" and create_date >= date_format('" + sdf.format(begin)
@@ -212,9 +216,10 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	@Override
 	public void addYxzsk(Yxzsk yxzsk) {
 		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String sql = "insert into yxzsk values(?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] objs = { yxzsk.getId(), yxzsk.getUserId(),
-				yxzsk.getCreateDate(), yxzsk.getSpDate(), yxzsk.getSprId(),
+				sdf.format(yxzsk.getCreateDate()), yxzsk.getSpDate(), yxzsk.getSprId(),
 				yxzsk.getDeptid(), yxzsk.getContent(), yxzsk.getZsklyId(),
 				yxzsk.getTitle(), "Y", "N" };
 		this.jdbcTemplate.update(sql, objs);

@@ -56,6 +56,21 @@
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
+        <Property name="label">是否选中</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">N</Property>
+                <Property name="value">未选上</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Y</Property>
+                <Property name="value">已选上</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
       </PropertyDef>
     </DataType>
     <DataType name="zsklyType">
@@ -330,64 +345,71 @@ if(zskly != undefined){&#xD;
       <Dialog id="dialog">
         <Property name="height">500</Property>
         <Property name="width">700</Property>
-        <Buttons>
-          <Button>
-            <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">知识库信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
-            <Property name="caption">提交</Property>
-          </Button>
-          <Button>
-            <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;).cancel();&#xD;
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dialog&quot;).close();&#xD;
 </ClientEvent>
-            <Property name="caption">取消</Property>
-          </Button>
-        </Buttons>
-        <Children>
-          <AutoForm id="yxzskForm">
-            <Property name="dataSet">dsYxzsk</Property>
-            <AutoFormElement>
-              <Property name="name">createDate</Property>
-              <Property name="property">createDate</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">spDate</Property>
-              <Property name="property">spDate</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">title</Property>
-              <Property name="property">title</Property>
-              <Property name="dataPath">#.zskly</Property>
-              <Property name="trigger">dsZsklyDropDown</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement>
-              <Property name="name">title</Property>
-              <Property name="property">title</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement layoutConstraint="colSpan:2">
-              <Property name="name">content</Property>
-              <Property name="property">content</Property>
-              <Editor>
-                <TextArea/>
-              </Editor>
-            </AutoFormElement>
-          </AutoForm>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="yxzskForm">
+                <Property name="dataSet">dsYxzsk</Property>
+                <AutoFormElement>
+                  <Property name="name">createDate</Property>
+                  <Property name="property">createDate</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Property name="dataPath">#.zskly</Property>
+                  <Property name="trigger">dsZsklyDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">content</Property>
+                  <Property name="property">content</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
         </Children>
         <Tools/>
       </Dialog>
       <Dialog id="yxTzsDialog">
         <Property name="height">500</Property>
         <Property name="width">900</Property>
-        <Buttons>
-          <Button>
-            <ClientEvent name="onClick">var entitys = view.get('#yxzskGrid.selection');&#xD;
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">选题入库</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var entitys = view.get('#yxzskGrid.selection');&#xD;
 var zszsk = view.get(&quot;#dsZszsk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
 	zszsk.insert(entity);&#xD;
@@ -395,52 +417,53 @@ entitys.each(function(entity){&#xD;
 &#xD;
 view.get(&quot;#inAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-	//view.get(&quot;#dsZszsk&quot;).flush();&#xD;
+	view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
-            <Property name="caption">提交</Property>
-          </Button>
-          <Button>
-            <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
 //view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
 </ClientEvent>
-            <Property name="caption">取消</Property>
-          </Button>
-        </Buttons>
-        <Children>
-          <ToolBar>
-            <DataPilot>
-              <Property name="dataSet">dsYxTzszsk</Property>
-              <Property name="itemCodes">pages</Property>
-            </DataPilot>
-          </ToolBar>
-          <DataGrid id="yxzskGrid">
-            <Property name="dataSet">dsYxTzszsk</Property>
-            <Property name="readOnly">true</Property>
-            <Property name="selectionMode">multiRows</Property>
-            <RowSelectorColumn/>
-            <DataColumn name="createDate">
-              <Property name="property">createDate</Property>
-            </DataColumn>
-            <DataColumn name="spDate">
-              <Property name="property">spDate</Property>
-            </DataColumn>
-            <DataColumn name="content">
-              <Property name="property">content</Property>
-            </DataColumn>
-            <DataColumn name="zskly">
-              <Property name="property">zskly.title</Property>
-            </DataColumn>
-            <DataColumn name="user">
-              <Property name="property">user.user_Name</Property>
-            </DataColumn>
-            <DataColumn name="dept">
-              <Property name="property">dept.dept_name</Property>
-            </DataColumn>
-            <DataColumn name="title">
-              <Property name="property">title</Property>
-            </DataColumn>
-          </DataGrid>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dsYxTzszsk</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="yxzskGrid">
+                <Property name="dataSet">dsYxTzszsk</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <RowSelectorColumn/>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="zskly">
+                  <Property name="property">zskly.title</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+                <DataColumn name="title">
+                  <Property name="property">title</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
         </Children>
         <Tools/>
       </Dialog>
@@ -510,45 +533,6 @@ if(data != undefined){&#xD;
               <Property name="property">content</Property>
               <Editor/>
             </AutoFormElement>
-          </AutoForm>
-        </Children>
-      </GroupBox>
-      <GroupBox>
-        <Property name="caption">知识库信息表</Property>
-        <Buttons/>
-        <Children>
-          <ToolBar>
-            <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
-if(data != undefined){&#xD;
-	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
-		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
-		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
-	}&#xD;
-}</ClientEvent>
-            <Button>
-              <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).insert();&#xD;
-view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
-view.get(&quot;#dialog&quot;).show();&#xD;
-</ClientEvent>
-              <Property name="caption">增加</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">var data = view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;);&#xD;
-if(data != undefined){&#xD;
-	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
-		data.remove();&#xD;
-		view.get(&quot;#updateAction&quot;).execute();&#xD;
-	});&#xD;
-}</ClientEvent>
-              <Property name="caption">删除</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">if(view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
-	view.get(&quot;#dialog&quot;).show();&#xD;
-}&#xD;
-</ClientEvent>
-              <Property name="caption">修改</Property>
-            </Button>
             <Button id="findbutton">
               <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
 var dept = entity.get(&quot;dept&quot;);&#xD;
@@ -570,6 +554,10 @@ if(dept == &quot;&quot;){&#xD;
 		user:null,&#xD;
 		userid:null&#xD;
 	});&#xD;
+}else if(entity.get(&quot;userid&quot;) == &quot;&quot;){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		userid:null&#xD;
+	});&#xD;
 }&#xD;
 view.get(&quot;#dsYxzsk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
 view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
@@ -577,12 +565,56 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
 </ClientEvent>
               <Property name="caption">查询</Property>
               <Property name="hideMode">display</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+            </Button>
+          </AutoForm>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">知识库信息表</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+}</ClientEvent>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).insert();&#xD;
+view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">增加</Property>
+              <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+		data.remove();&#xD;
+		view.get(&quot;#updateAction&quot;).execute();&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">if(view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+	view.get(&quot;#dialog&quot;).show();&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="hideMode">display</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
             </Button>
             <DataPilot>
               <Property name="dataSet">dsYxzsk</Property>
@@ -594,9 +626,6 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
             <Property name="readOnly">true</Property>
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
-            </DataColumn>
-            <DataColumn name="spDate">
-              <Property name="property">spDate</Property>
             </DataColumn>
             <DataColumn name="content">
               <Property name="property">content</Property>
@@ -612,6 +641,9 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
             </DataColumn>
             <DataColumn name="title">
               <Property name="property">title</Property>
+            </DataColumn>
+            <DataColumn name="xybz">
+              <Property name="property">xybz</Property>
             </DataColumn>
           </DataGrid>
         </Children>
