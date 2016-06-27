@@ -3,11 +3,10 @@ package gov.hygs.htgl.dao;
 import gov.hygs.htgl.entity.Dept;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tktm;
+import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Yxtkda;
-import gov.hygs.htgl.entity.Yxtkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.util.Collection;
@@ -19,45 +18,39 @@ import com.bstek.dorado.data.variant.Record;
 
 public interface YxtkglDao {
 
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param, CustomUserDetails userDetails);
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param, CustomUserDetails userDetails);
 
 	public Collection<Dept> getDeptInfoByDeptId(String id);
 
 	public Collection<User> getUserInfoByUserId(String id);
 
-	public Collection<Yxtkxzx> getYxtkxzxInfoByYxtkId(String id);
+	public void addYxtkxzx(Tkxzx xz);
 
-	public Collection<Yxtkxzx> getYxtkdaInfoByYxtkId(String id);
+	public void updateYxtkxzx(Tkxzx xz);
 
-	public void addYxtkxzx(Yxtkxzx xz);
+	public void deleteYxtkxzx(Tkxzx xz);
 
-	public void updateYxtkxzx(Yxtkxzx xz);
+	public void addYxtkda(Tkxzx da);
 
-	public void deleteYxtkxzx(Yxtkxzx xz);
+	public void updateYxtkda(Tkxzx da);
 
-	public void addYxtkda(Yxtkxzx da);
-
-	public void updateYxtkda(Yxtkxzx da);
-
-	public void deleteYxtkda(Yxtkxzx da);
+	public void deleteYxtkda(Tkxzx da);
 
 	public Collection<User> getUserByDeptId(String id);
 
-	public void addYxtk(Yxtk yxtk);
+	public void addYxtk(Tktm yxtk);
 
-	public void updateYxtk(Yxtk yxtk);
+	public void updateYxtk(Tktm yxtk);
 
-	public void deleteYxtk(Yxtk yxtk);
-
-	public Collection<Yxtkxzx> getToFInfo();
+	public void deleteYxtk(Tktm yxtk);
 
 	public Collection<Tmly> getTmlyInfoByTmlyId(String id);
 
 	public Collection<Tkfl> getTkflInfoByflId(String id);
 
-	public void addGrDeptGxJl(Yxtk yxtk);
+	public void addGrDeptGxJl(Tktm yxtk);
 
-	public void deleteGrDeptGxJl(Yxtk yxtk);
+	public void deleteGrDeptGxJl(Tktm yxtk);
 
 	public List countGxjl(Map<String, Object> param);
 

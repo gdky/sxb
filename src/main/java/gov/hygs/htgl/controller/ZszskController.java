@@ -1,6 +1,6 @@
 package gov.hygs.htgl.controller;
 
-import gov.hygs.htgl.entity.Yxzsk;
+import gov.hygs.htgl.entity.ZskJl;
 import gov.hygs.htgl.entity.Zszsk;
 import gov.hygs.htgl.service.ZszskService;
 
@@ -22,18 +22,18 @@ public class ZszskController {
 	ZszskService zszskService;
 
 	@DataProvider
-	public void getZszskInfo(Page<Zszsk> page, Map<String, Object> param) {
+	public void getZszskInfo(Page<ZskJl> page, Map<String, Object> param) {
 		zszskService.getZszskInfo(page, param);
 	}
 
 	@DataProvider
-	public void getYxzskInfo(Page<Yxzsk> page, Map<String, Object> param) {
+	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param) {
 		zszskService.getYxzskInfo(page, param);
 	}
 
 	@Transactional
 	@DataResolver
-	public void updateZszsk(List<Zszsk> zszsk) {
+	public void updateZszsk(List<ZskJl> zszsk) {
 		zszskService.updateZszsk(zszsk);
 	}
 }

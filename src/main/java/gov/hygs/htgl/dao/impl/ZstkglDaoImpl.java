@@ -3,6 +3,7 @@ package gov.hygs.htgl.dao.impl;
 import gov.hygs.htgl.dao.ZstkglDao;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkda;
+import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Zstk;
@@ -26,7 +27,7 @@ import com.gdky.restfull.dao.BaseJdbcDao;
 public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 
 	@Override
-	public void getZstkInfo(Page<Zstk> page, Map<String, Object> param,
+	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param,
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
@@ -35,58 +36,58 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				.getRole_Name();
 		StringBuilder count = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			count.append("select count(*) from zstk where yxbz='Y'");
+			count.append("select count(*) from tktm where xybz='Y'");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			count.append("select count(*) from zstk where yxbz='Y' and deptid="
+			count.append("select count(*) from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			count.append("select count(*) from zstk where yxbz='Y' and deptid="
+			count.append("select count(*) from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId());
 		}
 		int entityCount = this.jdbcTemplate.queryForObject(count.toString(),
 				Integer.class);
-		List<Zstk> list = this.getZstkInfo(pageSize * (pageNow - 1), pageSize,
+		List<Tktm> list = this.getZstkInfo(pageSize * (pageNow - 1), pageSize,
 				userDetails, roleName, param);
 		page.setEntityCount(entityCount);
 		page.setEntities(list);
 	}
 
-	private List<Zstk> getZstkInfo(int begin, int offest,
+	private List<Tktm> getZstkInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 		StringBuilder sql = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
-			sql.append("select * from zstk where yxbz='Y' ");
+			sql.append("select * from tktm where xybz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sql.append("select * from zstk where yxbz='Y' and deptid="
+			sql.append("select * from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			sql.append("select * from zstk where yxbz='Y' and deptid="
+			sql.append("select * from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId() + " ");
 		}
 		sql.append(" order by create_date desc limit " + begin + "," + offest);
-		List<Zstk> list = this.jdbcTemplate.query(sql.toString(),
-				new RowMapper<Zstk>() {
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
+				new RowMapper<Tktm>() {
 
 					@Override
-					public Zstk mapRow(ResultSet result, int i)
+					public Tktm mapRow(ResultSet result, int i)
 							throws SQLException {
 						// TODO Auto-generated method stub
-						Zstk zstk = new Zstk();
+						Tktm zstk = new Tktm();
 						zstk.setId(result.getString("id_"));
 						zstk.setFlId(result.getInt("fl_id"));
 						zstk.setUserId(result.getInt("user_id"));
@@ -100,6 +101,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 						zstk.setTmlyId(result.getInt("tmly_id"));
 						zstk.setMode(result.getString("mode"));
 						zstk.setYxbz(result.getString("yxbz"));
+						zstk.setXybz(result.getString("xybz"));
 						return zstk;
 					}
 
@@ -166,13 +168,15 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		String content = (String) param.get("content");
 		if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
-				//sql.append(" and deptid=" + deptid);
-				sql.append(" and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
+				// sql.append(" and deptid=" + deptid);
+				sql.append(" and deptid in (select id_ from dept where dept_name like '%"
+						+ dept + "%') ");
 			}
 		}
 		if (userId != null || user != null) {
-			//sql.append(" and user_id=" + userId);
-			sql.append(" and user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			// sql.append(" and user_id=" + userId);
+			sql.append(" and user_id in (select id_ from user where user_name like '%"
+					+ user + "%') ");
 		}
 		if (begin != null) {
 			sql.append(" and create_date >= date_format('" + sdf.format(begin)
@@ -183,7 +187,8 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 					+ "','%Y%m%d')");
 		}
 		if (tkfl != null) {
-			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"+tkfl+"%') ");
+			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"
+					+ tkfl + "%') ");
 		}
 		if (content != null) {
 			sql.append(" and tmly_id in "
@@ -246,22 +251,31 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void addZstk(Zstk zstk) {
+	public void addZstk(Tktm zstk) {
 		// TODO Auto-generated method stub
-		if (this.chackRecordExistOrNot(zstk) == 0) {
-			List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String sql = "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
-					sdf.format(zstk.getCreateDate()), zstk.getSpDate(),
-					zstk.getSprId(), zstk.getDeptid(), zstk.getContent(),
-					list.get(0).get("value"), zstk.getTmnd(), zstk.getTmlyId(),
-					zstk.getMode(), "Y" };
-			this.jdbcTemplate.update(sql, objs);
-		}
+		/*
+		 * if (this.chackRecordExistOrNot(zstk) == 0) { List<Map<String,
+		 * Object>> list = this.getSysPropValueByTmnd(zstk); SimpleDateFormat
+		 * sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); String sql =
+		 * "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?)"; Object[] objs =
+		 * { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
+		 * sdf.format(zstk.getCreateDate()), zstk.getSpDate(), zstk.getSprId(),
+		 * zstk.getDeptid(), zstk.getContent(), list.get(0).get("value"),
+		 * zstk.getTmnd(), zstk.getTmlyId(), zstk.getMode(), "Y" };
+		 * this.jdbcTemplate.update(sql, objs); }
+		 */
+		List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String sql = "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
+				sdf.format(zstk.getCreateDate()), zstk.getSpDate(),
+				zstk.getSprId(), zstk.getDeptid(), zstk.getContent(),
+				list.get(0).get("value"), zstk.getTmnd(), zstk.getTmlyId(),
+				zstk.getMode(), "Y", "Y" };
+		this.jdbcTemplate.update(sql, objs);
 	}
 
-	private List<Map<String, Object>> getSysPropValueByTmnd(Zstk zstk) {
+	private List<Map<String, Object>> getSysPropValueByTmnd(Tktm zstk) {
 		String sql = "select value from system_props where id_=?";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				new Object[] { zstk.getTmnd() });
@@ -269,36 +283,39 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void addGrDeptGxJl(Zstk zstk) {
+	public void addGrDeptGxJl(Tktm zstk) {
 		// TODO Auto-generated method stub
-		String sql = "select value from system_props where id_=105";
-		Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		sql = "insert into dept_tk_gxjl values(?,?,?,?,?,?,?)";
+		//String sql = "select value from system_props where id_=105";
+		//Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		//sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		//Object[] objs = { zstk.getContent(), zstk.getDeptid(),
+				//zstk.getUserId(), zstk.getId(), value, 105,
+				//zstk.getCreateDate() };
+		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { zstk.getContent(), zstk.getDeptid(),
-				zstk.getUserId(), zstk.getId(), value, 105,
+				zstk.getUserId(), zstk.getId(), 3, 2,
 				zstk.getCreateDate() };
-		this.jdbcTemplate.update(sql, objs);
-		sql = "insert into gr_tk_gxjl values(?,?,?,?,?,?,?)";
 		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
-	public void updateZstk(Zstk zstk) {
+	public void updateZstk(Tktm zstk) {
 		// TODO Auto-generated method stub
 		this.chackYxtkModeChangeOrNot(zstk);
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
-		String sql = "update zstk set fl_id=?,user_id=?,create_date=?,"
+		String sql = "update tktm set fl_id=?,user_id=?,create_date=?,"
 				+ "sp_date=?,spr_id=?,deptid=?," + "content=?,tmfz=?,tmnd=?,"
-				+ "tmly_id=?,mode=? where id_=?";
+				+ "tmly_id=?,mode=?,yxbz=?,xybz=? where id_=?";
 		Object[] obj = { zstk.getFlId(), zstk.getUserId(),
 				zstk.getCreateDate(), zstk.getSpDate(), zstk.getSprId(),
 				zstk.getDeptid(), zstk.getContent(), list.get(0).get("value"),
-				zstk.getTmnd(), zstk.getTmlyId(), zstk.getMode(), zstk.getId() };
+				zstk.getTmnd(), zstk.getTmlyId(), zstk.getMode(),
+				zstk.getYxbz(), zstk.getXybz(), zstk.getId() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
-	private void chackYxtkModeChangeOrNot(Zstk zstk) {
-		String sql = "select count(*) from zstk where id_='" + zstk.getId()
+	private void chackYxtkModeChangeOrNot(Tktm zstk) {
+		String sql = "select count(*) from tktm where id_='" + zstk.getId()
 				+ "' and mode='" + zstk.getMode() + "'";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
 		if (count == 0) {
@@ -308,19 +325,17 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void deleteZstk(Zstk zstk) {
+	public void deleteZstk(Tktm zstk) {
 		// TODO Auto-generated method stub
-		String sql = "update zstk set yxbz='N' where id_=?";
+		String sql = "update tktm set xybz='N' where id_=?";
 		this.jdbcTemplate.update(sql, new Object[] { zstk.getId() });
 	}
 
 	@Override
-	public void deleteGrDeptGxJl(Zstk zstk) {
+	public void deleteGrDeptGxJl(Tktm zstk) {
 		// TODO Auto-generated method stub
-		String sql = "delete from dept_tk_gxjl where tk_id=? and gxly=?";
-		Object[] objs = { zstk.getId(), 105 };
-		this.jdbcTemplate.update(sql, objs);
-		sql = "delete from gr_tk_gxjl where tk_id=? and gxly=?";
+		String sql = "delete from tk_gxjl where tk_id=? and gxly=?";
+		Object[] objs = { zstk.getId(), 2 };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
@@ -373,27 +388,27 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param) {
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
-		String count = "select count(*) from yxtk where yxbz='Y' and xybz='N'";
+		String count = "select count(*) from tktm where yxbz='Y' and xybz='N'";
 		int entityCount = this.jdbcTemplate
 				.queryForObject(count, Integer.class);
-		List<Yxtk> list = this.getYxtkInfo(pageSize * (pageNow - 1), pageSize);
+		List<Tktm> list = this.getYxtkInfo(pageSize * (pageNow - 1), pageSize);
 		page.setEntityCount(entityCount);
 		page.setEntities(list);
 	}
 
-	private List<Yxtk> getYxtkInfo(int begin, int offest) {
-		String sql = "select * from yxtk where yxbz='Y' and xybz='N' limit ?,?";
-		List<Yxtk> list = this.jdbcTemplate.query(sql, new Object[] { begin,
-				offest }, new RowMapper<Yxtk>() {
+	private List<Tktm> getYxtkInfo(int begin, int offest) {
+		String sql = "select * from tktm where yxbz='Y' and xybz='N' limit ?,?";
+		List<Tktm> list = this.jdbcTemplate.query(sql, new Object[] { begin,
+				offest }, new RowMapper<Tktm>() {
 
 			@Override
-			public Yxtk mapRow(ResultSet result, int i) throws SQLException {
+			public Tktm mapRow(ResultSet result, int i) throws SQLException {
 				// TODO Auto-generated method stub
-				Yxtk yxtk = new Yxtk();
+				Tktm yxtk = new Tktm();
 				yxtk.setId(result.getString("id_"));
 				yxtk.setFlId(result.getInt("fl_id"));
 				yxtk.setUserId(result.getInt("user_id"));
@@ -413,90 +428,6 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 
 		});
 		return list;
-	}
-
-	@Override
-	public void addYxtkToZstk(Zstk zstk) {
-		// TODO Auto-generated method stub
-		int count = this.chackRecordExistOrNot(zstk);
-		if (count != 0) {
-			String sql = "update zstk set yxbz='Y' where id_=?";
-			this.jdbcTemplate.update(sql, new Object[] { zstk.getId() });
-			sql = "update yxtk set xybz='Y' where id_=?";
-			this.jdbcTemplate.update(sql, new Object[] { zstk.getId() });
-		} else {
-			String sql = "update yxtk set xybz='Y' where id_=?";
-			this.jdbcTemplate.update(sql, new Object[] { zstk.getId() });
-			this.setYxtkxzxToTkxzx(zstk);
-			this.setYxtkdaToTkda(zstk);
-		}
-	}
-
-	private Integer chackRecordExistOrNot(Zstk zstk) {
-		String sql = "select count(*) from zstk where id_=?";
-		Object[] objs = { zstk.getId() };
-		int count = this.jdbcTemplate.queryForObject(sql, objs, Integer.class);
-		return count;
-	}
-
-	private void setYxtkdaToTkda(Zstk zstk) {
-		List<Tkda> list = null;
-		String sql = "select * from yxtkda where tk_id=?";
-		list = this.jdbcTemplate.query(sql, new Object[] { zstk.getId() },
-				new RowMapper<Tkda>() {
-
-					@Override
-					public Tkda mapRow(ResultSet result, int i)
-							throws SQLException {
-						// TODO Auto-generated method stub
-						Tkda tkda = new Tkda();
-						tkda.setId(result.getString("id_"));
-						tkda.setTkId(result.getString("tk_id"));
-						tkda.setTkxzxid(result.getString("tkxzxid"));
-						return tkda;
-					}
-
-				});
-		sql = "insert into tkda value(?,?,?)";
-		for (Tkda tkda : list) {
-			this.jdbcTemplate.update(sql, tkda.getId(), tkda.getTkId(),
-					tkda.getTkxzxid());
-		}
-
-	}
-
-	private void setYxtkxzxToTkxzx(Zstk zstk) {
-		List<Tkxzx> list = null;
-		if (!zstk.getMode().equals("0")) {
-			String sql = "select * from yxtkxzx where tk_id=?";
-			list = this.jdbcTemplate.query(sql, new Object[] { zstk.getId() },
-					new RowMapper<Tkxzx>() {
-
-						@Override
-						public Tkxzx mapRow(ResultSet result, int i)
-								throws SQLException {
-							// TODO Auto-generated method stub
-							Tkxzx tkxzx = new Tkxzx();
-							tkxzx.setId(result.getString("id_"));
-							tkxzx.setTkId(result.getString("tk_id"));
-							tkxzx.setXzKey(result.getString("xz_key"));
-							tkxzx.setContent(result.getString("content"));
-							return tkxzx;
-						}
-
-					});
-			for (Tkxzx tkxzx : list) {
-				this.addTkxzx(tkxzx);
-			}
-		}
-	}
-
-	@Override
-	public void deleteYxtkFromZstk(Zstk zstk) {
-		// TODO Auto-generated method stub
-		String sql = "update yxtk set xybz='N' where id_=?";
-		Object[] objs = { zstk.getId() };
-		this.jdbcTemplate.update(sql, objs);
 	}
 
 }

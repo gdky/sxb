@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="yxzskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxzsk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -22,7 +22,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -147,7 +146,7 @@
       <PropertyDef name="userid"/>
     </DataType>
     <DataType name="yxTzsType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxzsk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -165,7 +164,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -202,25 +200,19 @@
       </PropertyDef>
     </DataType>
     <DataType name="zszskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zszsk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
         <Property name="label">创建时间</Property>
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -228,11 +220,6 @@
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
       <PropertyDef name="content">
         <Property></Property>
         <Property name="label">内容</Property>
@@ -240,16 +227,14 @@
       <PropertyDef name="zsklyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="zskly">
-        <Property name="dataType">[zsklyType]</Property>
-        <Property name="parameter">$${this.zsklyId}</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
-      </Reference>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">知识库题目</Property>
       </PropertyDef>
       <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xybz">
         <Property></Property>
       </PropertyDef>
     </DataType>
@@ -412,7 +397,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                 <ClientEvent name="onClick">var entitys = view.get('#yxzskGrid.selection');&#xD;
 var zszsk = view.get(&quot;#dsZszsk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
-	zszsk.insert(entity);&#xD;
+	zszsk.insert(entity.set({xybz:&quot;Y&quot;}));&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#inAction&quot;).execute(function(){&#xD;

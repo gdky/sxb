@@ -3,8 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="yxtkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtk</Property>
+    <DataType name="tktmType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -33,7 +33,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批日期</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -113,27 +112,25 @@
         </Validator>
       </PropertyDef>
       <Reference name="yxtkxzx">
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getTkzxzInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getYxtkxzxInfoByYxtkId</Property>
       </Reference>
       <Reference name="daxzx">
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getDaXzxInfoByYxtkId</Property>
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getDaXzxInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="tof">
-        <Property name="dataType">[yxtkxzxType]</Property>
-        <Property name="dataProvider">yxtkglController#getToFInfo</Property>
+        <Property name="dataType">[tkzxzType]</Property>
+        <Property name="dataProvider">zstkglController#getToFInfo</Property>
       </Reference>
       <PropertyDef name="yxbz">
         <Property></Property>
-        <Property name="mapping">
-          <Property name="mapValues"></Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
+        <Property name="label">是否选中</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
@@ -148,11 +145,25 @@
             </Collection>
           </Property>
         </Property>
-        <Property name="label">是否选中</Property>
       </PropertyDef>
     </DataType>
-    <DataType name="yxtkdaType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtkda</Property>
+    <DataType name="tkzxzType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkxzx</Property>
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="tkId">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xzKey">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tkdaType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkda</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -161,45 +172,6 @@
       </PropertyDef>
       <PropertyDef name="tkxzxid">
         <Property></Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="yxtkxzxType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtkxzx</Property>
-      <PropertyDef name="id">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="tkId">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="xzKey">
-        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
-if(datas.getLast() != null){&#xD;
-	if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
-		datas.each(function(entity){&#xD;
-			if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
-				//alert(arg.value);&#xD;
-				throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
-				return false;&#xD;
-			}&#xD;
-		});&#xD;
-	}&#xD;
-}&#xD;
-</ClientEvent>
-        <Property></Property>
-        <Validator name="validator1" type="required">
-          <Property name="resultMessage">选项不能为空</Property>
-        </Validator>
-        <Validator name="validator2" type="length">
-          <Property name="maxLength">1</Property>
-          <Property name="minLength">-1</Property>
-          <Property name="resultMessage">文本内容过多，长度应为1</Property>
-        </Validator>
-      </PropertyDef>
-      <PropertyDef name="content">
-        <Property></Property>
-        <Validator name="validator1" type="required">
-          <Property name="resultMessage">内容不能为空</Property>
-        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="deptType">
@@ -298,7 +270,7 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
     </DataType>
     <DataType name="zstkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zstk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -338,9 +310,12 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="yxbz">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="xybz">
+        <Property></Property>
+      </PropertyDef>
     </DataType>
-    <DataType name="yxTzsType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtk</Property>
+    <DataType name="yxtkType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -362,11 +337,10 @@ if(datas.getLast() != null){&#xD;
       </Reference>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">创建日期</Property>
+        <Property name="label">创建时间</Property>
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批日期</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -437,9 +411,6 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="yxbz">
         <Property></Property>
-        <Property name="mapping">
-          <Property name="mapValues"></Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
@@ -449,7 +420,7 @@ if(datas.getLast() != null){&#xD;
   <View>
     <Container id="datasets">
       <DataSet id="dsYxtk">
-        <Property name="dataType">[yxtkType]</Property>
+        <Property name="dataType">[tktmType]</Property>
         <Property name="dataProvider">yxtkglController#getYxtkInfo</Property>
         <Property name="pageSize">10</Property>
       </DataSet>
@@ -476,7 +447,7 @@ if(datas.getLast() != null){&#xD;
         <Property name="dataType">[zstkType]</Property>
       </DataSet>
       <DataSet id="dsYxtkToZstk">
-        <Property name="dataType">[yxTzsType]</Property>
+        <Property name="dataType">[yxtkType]</Property>
         <Property name="dataProvider">zstkglController#getYxtkInfo</Property>
         <Property name="pageSize">10</Property>
       </DataSet>
@@ -589,7 +560,9 @@ if(tmly != undefined){&#xD;
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
-          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
+          <ClientEvent name="onDataRowClick">var tkfl = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;);&#xD;
+alert(tkfl);&#xD;
+var user = tkfl.current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var tkflId = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
@@ -688,6 +661,28 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
+      <CustomDropDown id="tkflConditionDropDown">
+        <Property name="height">500</Property>
+        <DataTree id="tkflConditionTree">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var tkflId = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;tkmc&quot;)&#xD;
+);&#xD;
+view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({flId:tkflId});&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsTkfl</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">tkfl</Property>
+              <Property name="recursive">true</Property>
+              <Property name="name">tkmc</Property>
+              <Property name="labelProperty">tkmc</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
@@ -1102,94 +1097,6 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="updateDialog">
-        <Property name="height">400</Property>
-        <Property name="width">800</Property>
-        <Buttons/>
-        <Children>
-          <GroupBox>
-            <Property name="caption">当前题目信息</Property>
-            <Buttons>
-              <Button>
-                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
-	view.get(&quot;#updateDialog&quot;).close();&#xD;
-});&#xD;
-</ClientEvent>
-                <Property name="caption">提交</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
-              </Button>
-              <Button>
-                <ClientEvent name="onClick">view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
-                <Property name="caption">取消</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-              </Button>
-            </Buttons>
-            <Children>
-              <AutoForm id="yxtkInForm">
-                <Property name="dataSet">dsYxtk</Property>
-                <AutoFormElement>
-                  <Property name="name">dept_name</Property>
-                  <Property name="property">dept_name</Property>
-                  <Property name="dataPath">#.dept</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">user_Name</Property>
-                  <Property name="property">user_Name</Property>
-                  <Property name="dataPath">#.user</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="dataPath">#.tkfl</Property>
-                  <Property name="name">tkmc</Property>
-                  <Property name="property">tkmc</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">spDate</Property>
-                  <Property name="property">spDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="dataPath">#.tmly</Property>
-                  <Property name="name">title</Property>
-                  <Property name="property">title</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
-                  <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-            </Children>
-          </GroupBox>
-        </Children>
-        <Tools/>
-      </Dialog>
       <Dialog id="yxTzsDialog">
         <Property name="height">500</Property>
         <Property name="width">900</Property>
@@ -1202,7 +1109,7 @@ view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
                 <ClientEvent name="onClick">var entitys = view.get('#yxtkGrid.selection');&#xD;
 var zstk = view.get(&quot;#dsZstk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
-	zstk.insert(entity);&#xD;
+	zstk.insert(entity.set({xybz:&quot;Y&quot;}));&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#inAction&quot;).execute(function(){&#xD;
@@ -1215,7 +1122,7 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-//view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+view.get(&quot;#dsYxtk&quot;).flush();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -1224,8 +1131,8 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
             <Children>
               <ToolBar>
                 <DataPilot>
+                  <Property name="dataSet">dsYxtk</Property>
                   <Property name="itemCodes">pages</Property>
-                  <Property name="dataSet">dsYxtkToZstk</Property>
                 </DataPilot>
               </ToolBar>
               <DataGrid id="yxtkGrid">
@@ -1333,7 +1240,7 @@ if(data != undefined){&#xD;
             <AutoFormElement>
               <Property name="name">tkfl</Property>
               <Property name="property">tkfl</Property>
-              <Property name="trigger">tkflDropDown</Property>
+              <Property name="trigger">tkflConditionDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
