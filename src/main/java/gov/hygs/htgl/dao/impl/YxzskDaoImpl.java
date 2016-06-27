@@ -1,5 +1,12 @@
 package gov.hygs.htgl.dao.impl;
 
+import gov.hygs.htgl.dao.YxzskDao;
+import gov.hygs.htgl.entity.Role;
+import gov.hygs.htgl.entity.Yxzsk;
+import gov.hygs.htgl.entity.ZskJl;
+import gov.hygs.htgl.entity.Zskly;
+import gov.hygs.htgl.security.CustomUserDetails;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -13,17 +20,11 @@ import org.springframework.stereotype.Repository;
 import com.bstek.dorado.data.provider.Page;
 import com.gdky.restfull.dao.BaseJdbcDao;
 
-import gov.hygs.htgl.dao.YxzskDao;
-import gov.hygs.htgl.entity.Role;
-import gov.hygs.htgl.entity.Yxzsk;
-import gov.hygs.htgl.entity.Zskly;
-import gov.hygs.htgl.security.CustomUserDetails;
-
 @Repository
 public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 
 	@Override
-	public void getYxzskInfo(Page<Yxzsk> page, Map<String, Object> param,
+	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param,
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
@@ -33,18 +34,18 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		StringBuilder sqlCount = new StringBuilder("");
 
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			sqlCount.append("select count(*) from yxzsk where yxbz='Y' ");
+			sqlCount.append("select count(*) from zsk_jl where yxbz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sqlCount.append("select count(*) from yxzsk where yxbz='Y' and deptid="
+			sqlCount.append("select count(*) from zsk_jl where yxbz='Y' and deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			sqlCount.append("select count(*) from yxzsk where yxbz='Y' and deptid="
+			sqlCount.append("select count(*) from zsk_jl where yxbz='Y' and deptid="
 					+ userDetails.getDeptid()
 					+ " and user_id="
 					+ userDetails.getId());
@@ -52,18 +53,18 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 
 		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),
 				Integer.class);
-		List<Yxzsk> list = this.getYxzskInfo(pageSize * (pageNow - 1),
+		List<ZskJl> list = this.getYxzskInfo(pageSize * (pageNow - 1),
 				pageSize, userDetails, roleName, param);
 		page.setEntityCount(count);
 		page.setEntities(list);
 	}
 
-	private List<Yxzsk> getYxzskInfo(int begin, int offest,
+	private List<ZskJl> getYxzskInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 		StringBuilder sql = new StringBuilder("");
 
-		sql.append("select * from yxzsk where yxbz='Y' ");
+		sql.append("select * from zsk_jl where yxbz='Y' ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
@@ -79,14 +80,14 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		}
 		sql.append(" order by create_date desc limit " + begin + "," + offest);
 		// String sql = "select * from yxzsk order by create_date desc";
-		List<Yxzsk> list = this.jdbcTemplate.query(sql.toString(),
-				new RowMapper<Yxzsk>() {
+		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),
+				new RowMapper<ZskJl>() {
 
 					@Override
-					public Yxzsk mapRow(ResultSet result, int i)
+					public ZskJl mapRow(ResultSet result, int i)
 							throws SQLException {
 						// TODO Auto-generated method stub
-						Yxzsk yxzsk = new Yxzsk();
+						ZskJl yxzsk = new ZskJl();
 						yxzsk.setId(result.getString("id_"));
 						yxzsk.setUserId(result.getInt("user_id"));
 						yxzsk.setCreateDate(result.getDate("create_date"));
@@ -214,10 +215,10 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	}
 
 	@Override
-	public void addYxzsk(Yxzsk yxzsk) {
+	public void addYxzsk(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String sql = "insert into yxzsk values(?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into zsk_jl values(?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] objs = { yxzsk.getId(), yxzsk.getUserId(),
 				sdf.format(yxzsk.getCreateDate()), yxzsk.getSpDate(), yxzsk.getSprId(),
 				yxzsk.getDeptid(), yxzsk.getContent(), yxzsk.getZsklyId(),
@@ -226,40 +227,39 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	}
 
 	@Override
-	public void addGrDeptGxJl(Yxzsk yxzsk) {
+	public void addGrDeptGxJl(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "select value from system_props where id_=110";
-		Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		sql = "insert into dept_zsk_gxjl values(?,?,?,?,?,?,?)";
+		//String sql = "select value from system_props where id_=110";
+		//Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		//sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
+		//Object[] objs = { yxzsk.getId(), yxzsk.getDeptid(), yxzsk.getUserId(),
+				//yxzsk.getId(), value, 110, yxzsk.getCreateDate() };
+		String sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxzsk.getId(), yxzsk.getDeptid(), yxzsk.getUserId(),
-				yxzsk.getId(), value, 110, yxzsk.getCreateDate() };
-		this.jdbcTemplate.update(sql, objs);
-		sql = "insert into gr_zsk_gxjl values(?,?,?,?,?,?,?)";
+		yxzsk.getId(), 1, 1, yxzsk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
 
 	}
 
 	@Override
-	public void deleteYxzsk(Yxzsk yxzsk) {
+	public void deleteYxzsk(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "update yxzsk set yxbz='N' where id_=?";
+		String sql = "update zsk_jl set yxbz='N' where id_=?";
 		this.jdbcTemplate.update(sql, new Object[] { yxzsk.getId() });
 	}
 
 	@Override
-	public void deleteGrDeptGxJl(Yxzsk yxzsk) {
+	public void deleteGrDeptGxJl(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "delete from dept_zsk_gxjl where zsk_id=? and gxly=?";
-		Object[] objs = { yxzsk.getId(), 110 };
-		this.jdbcTemplate.update(sql, objs);
-		sql = "delete from gr_zsk_gxjl where zsk_id=? and gxly=?";
+		String sql = "delete from zsk_gxjl where zsk_id=? and gxly=?";
+		Object[] objs = { yxzsk.getId(), 1 };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
-	public void updateYxzsk(Yxzsk yxzsk) {
+	public void updateYxzsk(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "update yxzsk set " + "user_id=?,create_date=?,sp_date=?,"
+		String sql = "update zsk_jl set " + "user_id=?,create_date=?,sp_date=?,"
 				+ "spr_id=?,deptid=?,content=?,zskly_id=?," + "title=? "
 				+ "where id_=?";
 		Object[] objs = { yxzsk.getUserId(), yxzsk.getCreateDate(),

@@ -3,8 +3,8 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="zstkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zstk</Property>
+    <DataType name="tktmType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -33,7 +33,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批日期</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -89,6 +88,7 @@
       </Reference>
       <PropertyDef name="mode">
         <Property></Property>
+        <Property name="label">选择类型</Property>
         <Property name="mapping">
           <Property name="mapValues">
             <Collection>
@@ -107,7 +107,6 @@
             </Collection>
           </Property>
         </Property>
-        <Property name="label">选择类型</Property>
         <Validator name="validator1" type="required">
           <Property name="resultMessage">模式不能为空</Property>
         </Validator>
@@ -127,6 +126,9 @@
         <Property name="dataProvider">zstkglController#getToFInfo</Property>
       </Reference>
       <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xybz">
         <Property></Property>
       </PropertyDef>
     </DataType>
@@ -273,10 +275,12 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
       <PropertyDef name="flId"/>
-      <PropertyDef name="tkfl"/>
+      <PropertyDef name="tkfl">
+        <Property name="label">题库分类</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="yxtkType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxtk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -302,7 +306,6 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批日期</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -373,9 +376,6 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="yxbz">
         <Property></Property>
-        <Property name="mapping">
-          <Property name="mapValues"></Property>
-        </Property>
       </PropertyDef>
       <PropertyDef name="xybz">
         <Property></Property>
@@ -385,7 +385,7 @@ if(datas.getLast() != null){&#xD;
   <View>
     <Container id="datasets">
       <DataSet id="dsZstk">
-        <Property name="dataType">[zstkType]</Property>
+        <Property name="dataType">[tktmType]</Property>
         <Property name="pageSize">10</Property>
         <Property name="dataProvider">zstkglController#getZstkInfo</Property>
       </DataSet>
@@ -522,7 +522,7 @@ if(tmly != undefined){&#xD;
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
-          <ClientEvent name="onDataRowClick">var user = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
+          <ClientEvent name="onDataRowClick">//var user = view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkfl&quot;).current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var tkflId = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
@@ -1035,94 +1035,6 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="updateDialog">
-        <Property name="height">400</Property>
-        <Property name="width">800</Property>
-        <Buttons/>
-        <Children>
-          <GroupBox>
-            <Property name="caption">当前题目信息</Property>
-            <Buttons>
-              <Button>
-                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
-	view.get(&quot;#updateDialog&quot;).close();&#xD;
-});&#xD;
-</ClientEvent>
-                <Property name="caption">提交</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
-              </Button>
-              <Button>
-                <ClientEvent name="onClick">view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
-                <Property name="caption">取消</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-              </Button>
-            </Buttons>
-            <Children>
-              <AutoForm id="yxtkInForm">
-                <Property name="dataSet">dsYxtk</Property>
-                <AutoFormElement>
-                  <Property name="name">dept_name</Property>
-                  <Property name="property">dept_name</Property>
-                  <Property name="dataPath">#.dept</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">user_Name</Property>
-                  <Property name="property">user_Name</Property>
-                  <Property name="dataPath">#.user</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="dataPath">#.tkfl</Property>
-                  <Property name="name">tkmc</Property>
-                  <Property name="property">tkmc</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">spDate</Property>
-                  <Property name="property">spDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="dataPath">#.tmly</Property>
-                  <Property name="name">title</Property>
-                  <Property name="property">title</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
-                  <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-            </Children>
-          </GroupBox>
-        </Children>
-        <Tools/>
-      </Dialog>
       <Dialog id="yxTzsDialog">
         <Property name="height">500</Property>
         <Property name="width">900</Property>
@@ -1135,7 +1047,7 @@ view.get(&quot;#updateDialog&quot;).close();</ClientEvent>
                 <ClientEvent name="onClick">var entitys = view.get('#yxtkGrid.selection');&#xD;
 var zstk = view.get(&quot;#dsZstk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
-	zstk.insert(entity);&#xD;
+	zstk.insert(entity.set({xybz:&quot;Y&quot;}));&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
