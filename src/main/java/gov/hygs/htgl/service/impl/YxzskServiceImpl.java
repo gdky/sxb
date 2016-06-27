@@ -1,5 +1,11 @@
 package gov.hygs.htgl.service.impl;
 
+import gov.hygs.htgl.dao.YxzskDao;
+import gov.hygs.htgl.entity.ZskJl;
+import gov.hygs.htgl.entity.Zskly;
+import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.service.YxzskService;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -13,19 +19,13 @@ import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
 
-import gov.hygs.htgl.dao.YxzskDao;
-import gov.hygs.htgl.entity.Yxzsk;
-import gov.hygs.htgl.entity.Zskly;
-import gov.hygs.htgl.security.CustomUserDetails;
-import gov.hygs.htgl.service.YxzskService;
-
 @Service
 public class YxzskServiceImpl implements YxzskService {
 	@Resource
 	YxzskDao yxzskDao;
 
 	@Override
-	public void getYxzskInfo(Page<Yxzsk> page, Map<String, Object> param) {
+	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -39,10 +39,10 @@ public class YxzskServiceImpl implements YxzskService {
 	}
 
 	@Override
-	public void updateYxzsk(List<Yxzsk> yxzsks) {
+	public void updateYxzsk(List<ZskJl> yxzsks) {
 		// TODO Auto-generated method stub
 		if (yxzsks != null) {
-			for (Yxzsk yxzsk : yxzsks) {
+			for (ZskJl yxzsk : yxzsks) {
 				if (EntityUtils.getState(yxzsk).equals(EntityState.NEW)) {
 					CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 							.getContext().getAuthentication().getPrincipal();

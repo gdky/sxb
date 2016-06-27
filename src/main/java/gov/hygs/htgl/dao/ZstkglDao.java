@@ -1,8 +1,7 @@
 package gov.hygs.htgl.dao;
 
+import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Zstk;
 import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.util.Collection;
@@ -12,7 +11,7 @@ import com.bstek.dorado.data.provider.Page;
 
 public interface ZstkglDao {
 
-	public void getZstkInfo(Page<Zstk> page, Map<String, Object> param, CustomUserDetails userDetails);
+	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param, CustomUserDetails userDetails);
 
 	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id);
 
@@ -20,15 +19,15 @@ public interface ZstkglDao {
 
 	public Collection<Tkxzx> getToFInfo();
 
-	public void addZstk(Zstk zstk);
+	public void addZstk(Tktm zstk);
 
-	public void addGrDeptGxJl(Zstk zstk);
+	public void addGrDeptGxJl(Tktm zstk);
 
-	public void updateZstk(Zstk zstk);
+	public void updateZstk(Tktm zstk);
 
-	public void deleteZstk(Zstk zstk);
+	public void deleteZstk(Tktm zstk);
 
-	public void deleteGrDeptGxJl(Zstk zstk);
+	public void deleteGrDeptGxJl(Tktm zstk);
 
 	public void addTkxzx(Tkxzx xz);
 
@@ -42,10 +41,8 @@ public interface ZstkglDao {
 
 	public void deleteTkda(Tkxzx da);
 
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param);
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param);
 
-	public void addYxtkToZstk(Zstk zstk);
 
-	public void deleteYxtkFromZstk(Zstk zstk);
 
 }

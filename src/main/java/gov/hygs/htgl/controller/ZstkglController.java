@@ -1,8 +1,7 @@
 package gov.hygs.htgl.controller;
 
+import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Zstk;
 import gov.hygs.htgl.service.ZstkglService;
 
 import java.util.Collection;
@@ -24,7 +23,7 @@ public class ZstkglController {
 	ZstkglService zstkglService;
 	
 	@DataProvider
-	public void getZstkInfo(Page<Zstk> page, Map<String, Object> param){
+	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param){
 		zstkglService.getZstkInfo(page,param);
 	}
 	
@@ -45,12 +44,12 @@ public class ZstkglController {
 	
 	@Transactional
 	@DataResolver
-	public void updateZstk(List<Zstk> list){
+	public void updateZstk(List<Tktm> list){
 		zstkglService.updateZstk(list);
 	}
 	
 	@DataProvider
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param){
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param){
 		zstkglService.getYxtkInfo(page, param);
 	}
 	

@@ -1,12 +1,10 @@
 package gov.hygs.htgl.controller;
 
 import gov.hygs.htgl.entity.Dept;
-import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Yxtkxzx;
 import gov.hygs.htgl.service.YxtkglService;
 
 import java.util.Collection;
@@ -32,7 +30,7 @@ public class YxtkglController {
 	 * @param param
 	 */
 	@DataProvider
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param){
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param){
 		yxtkglService.getYxtkInfo(page, param);
 	}
 	/**
@@ -54,30 +52,12 @@ public class YxtkglController {
 		return yxtkglService.getUserInfoByUserId(id);
 	}
 	/**
-	 * 根据预选题库id获取预选题库选择项信息
-	 * @param id
-	 * @return
-	 */
-	@DataProvider
-	public Collection<Yxtkxzx> getYxtkxzxInfoByYxtkId(String id){
-		return yxtkglService.getYxtkxzxInfoByYxtkId(id);
-	}
-	/**
-	 * 根据预选题库id获取预选题库答案信息
-	 * @param id
-	 * @return
-	 */
-	@DataProvider
-	public Collection<Yxtkxzx> getDaXzxInfoByYxtkId(String id){
-		return yxtkglService.getYxtkdaInfoByYxtkId(id);
-	}
-	/**
 	 * 更新预选题库信息
 	 * @param list
 	 */
 	@Transactional
 	@DataResolver
-	public void updateYxtk(List<Yxtk> list){
+	public void updateYxtk(List<Tktm> list){
 		yxtkglService.updateYxtk(list);
 	}
 	/**
@@ -88,14 +68,6 @@ public class YxtkglController {
 	@DataProvider
 	public Collection<User> getUserByDeptId(String id){
 		return yxtkglService.getUserByDeptId(id);
-	}
-	/**
-	 * 获取判断题选项信息
-	 * @return
-	 */
-	@DataProvider
-	public Collection<Yxtkxzx> getToFInfo(){
-		return yxtkglService.getToFInfo();
 	}
 	
 	/**

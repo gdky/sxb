@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="zszskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zszsk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -22,7 +22,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -52,6 +51,9 @@
         <Property name="label">知识库题目</Property>
       </PropertyDef>
       <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xybz">
         <Property></Property>
       </PropertyDef>
     </DataType>
@@ -129,7 +131,7 @@
       <PropertyDef name="userid"/>
     </DataType>
     <DataType name="yxzskType">
-      <Property name="creationType">gov.hygs.htgl.entity.Yxzsk</Property>
+      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -147,7 +149,6 @@
       </PropertyDef>
       <PropertyDef name="spDate">
         <Property name="dataType">Date</Property>
-        <Property name="label">审批时间</Property>
       </PropertyDef>
       <PropertyDef name="sprId">
         <Property name="dataType">Integer</Property>
@@ -339,7 +340,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                 <ClientEvent name="onClick">var entitys = view.get('#yxzskGrid.selection');&#xD;
 var zszsk = view.get(&quot;#dsZszsk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
-	zszsk.insert(entity);&#xD;
+	zszsk.insert(entity.set({xybz:'Y'}));&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;

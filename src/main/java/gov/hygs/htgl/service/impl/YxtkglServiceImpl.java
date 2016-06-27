@@ -1,5 +1,15 @@
 package gov.hygs.htgl.service.impl;
 
+import gov.hygs.htgl.dao.YxtkglDao;
+import gov.hygs.htgl.entity.Dept;
+import gov.hygs.htgl.entity.Tkfl;
+import gov.hygs.htgl.entity.Tktm;
+import gov.hygs.htgl.entity.Tkxzx;
+import gov.hygs.htgl.entity.Tmly;
+import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.service.YxtkglService;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,29 +24,16 @@ import org.springframework.stereotype.Service;
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
-import com.bstek.dorado.data.variant.Record;
-
-import gov.hygs.htgl.dao.YxtkglDao;
-import gov.hygs.htgl.entity.Dept;
-import gov.hygs.htgl.entity.Role;
-import gov.hygs.htgl.entity.Tkfl;
-import gov.hygs.htgl.entity.Tmly;
-import gov.hygs.htgl.entity.User;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Yxtkda;
-import gov.hygs.htgl.entity.Yxtkxzx;
-import gov.hygs.htgl.security.CustomUserDetails;
-import gov.hygs.htgl.service.YxtkglService;
 
 @Service
 public class YxtkglServiceImpl implements YxtkglService {
 	@Resource
 	YxtkglDao yxtkglDao;
 
-	private List<Yxtkxzx> yxtkNew = new ArrayList<Yxtkxzx>();
+	private List<Tkxzx> yxtkNew = new ArrayList<Tkxzx>();
 	
 	@Override
-	public void getYxtkInfo(Page<Yxtk> page, Map<String, Object> param) {
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -56,21 +53,9 @@ public class YxtkglServiceImpl implements YxtkglService {
 	}
 
 	@Override
-	public Collection<Yxtkxzx> getYxtkxzxInfoByYxtkId(String id) {
+	public void updateYxtk(List<Tktm> list) {
 		// TODO Auto-generated method stub
-		return yxtkglDao.getYxtkxzxInfoByYxtkId(id);
-	}
-
-	@Override
-	public Collection<Yxtkxzx> getYxtkdaInfoByYxtkId(String id) {
-		// TODO Auto-generated method stub
-		return yxtkglDao.getYxtkdaInfoByYxtkId(id);
-	}
-
-	@Override
-	public void updateYxtk(List<Yxtk> list) {
-		// TODO Auto-generated method stub
-		for (Yxtk yxtk : list) {
+		for (Tktm yxtk : list) {
 			if (EntityUtils.getState(yxtk).equals(EntityState.NEW)) {
 				CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 						.getContext().getAuthentication().getPrincipal();
@@ -88,11 +73,11 @@ public class YxtkglServiceImpl implements YxtkglService {
 				yxtkglDao.deleteGrDeptGxJl(yxtk);
 			}
 
-			List<Yxtkxzx> das = (List<Yxtkxzx>) yxtk.getDaxzx();
-			List<Yxtkxzx> xzs = (List<Yxtkxzx>) yxtk.getYxtkxzx();
+			List<Tkxzx> das = (List<Tkxzx>) yxtk.getDaxzx();
+			List<Tkxzx> xzs = (List<Tkxzx>) yxtk.getTkxzx();
 
 			if (xzs != null) {
-				for (Yxtkxzx xz : xzs) {
+				for (Tkxzx xz : xzs) {
 					if (EntityUtils.getState(xz).equals(EntityState.NEW)) {
 						xz.setId(this.getUUID());
 						yxtkNew.add(xz);
@@ -107,10 +92,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 				}
 			}
 			if (das != null) {
-				for (Yxtkxzx da : das) {
+				for (Tkxzx da : das) {
 					if (EntityUtils.getState(da).equals(EntityState.NEW)) {
 						if(da.getId() == null){
-							for(Yxtkxzx xz : yxtkNew){
+							for(Tkxzx xz : yxtkNew){
 								if(da.getXzKey().equals(xz.getXzKey())){
 									da.setId(xz.getId());
 								}
@@ -139,12 +124,6 @@ public class YxtkglServiceImpl implements YxtkglService {
 	public Collection<User> getUserByDeptId(String id) {
 		// TODO Auto-generated method stub
 		return yxtkglDao.getUserByDeptId(id);
-	}
-
-	@Override
-	public Collection<Yxtkxzx> getToFInfo() {
-		// TODO Auto-generated method stub
-		return yxtkglDao.getToFInfo();
 	}
 
 	@Override
