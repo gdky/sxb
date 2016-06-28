@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.ListSelectionEvent;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -100,7 +102,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 					+ "','%Y%m%d')");
 		}
 		if (tkfl != null) {
-			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"+tkfl+"%') ");
+			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"
+					+ tkfl + "%') ");
 		}
 		if (content != null) {
 			sql.append(" and tmly_id in "
@@ -349,11 +352,11 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	@Override
 	public void addGrDeptGxJl(Tktm yxtk) {
-		//String sql = "select value from system_props where id_=104";
-		//Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		//sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
-		//Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-				//yxtk.getId(), value, 104, yxtk.getCreateDate() };
+		// String sql = "select value from system_props where id_=104";
+		// Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		// sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		// Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
+		// yxtk.getId(), value, 104, yxtk.getCreateDate() };
 		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
 				yxtk.getId(), 1, 1, yxtk.getCreateDate() };
@@ -526,6 +529,45 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		map.put("rolename", role.getRole_Name());
 		map.put("ms", role.getMs());
 		list.add(map);
+		return list;
+	}
+
+	@Override
+	public List countDeptGxjl(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = param==null?null:(Integer) param.get("deptid");
+		Date begin = param==null?null:(Date) param.get("begin");
+		Date end = param==null?null:(Date) param.get("end");
+		String content = param==null?null:(String) param.get("content");
+		StringBuffer sql = new StringBuffer("select ifnull("
+				+ "(select sum(b.gxz) " + "from dept a, tk_gxjl b "
+				+ "where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) "
+				+ "and a.id_=b.dept_id),0)"
+				+ "as cou,pt.dept_name as deptname "
+				+ "from dept pt where pt.id_ in(" + " select d.id_"
+				+ " from dept d,tk_gxjl a ," + " tktm b"
+				+ " where a.tk_id=b.id_" + " and d.id_ = a.dept_id");
+		if (deptid == null || param == null) {
+			//sql.append(" and d.parent_id is null");
+		} else {
+			sql.append(" and a.dept_id =" + deptid);
+		}
+		if (begin != null) {
+			sql.append("and a.gx_date >= date_format('"
+					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
+		}
+		if (end != null) {
+			sql.append("and a.gx_date <= date_format('"
+					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
+		}
+		if (content != null) {
+			sql.append("and b.tmly_id in (" + " select t.id_ "
+					+ " from tmly t " + " where t.title like '%" + content
+					+ "%' " + " or t.content like '%" + content + "%') ");
+		}
+		sql.append(")");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
 		return list;
 	}
 
