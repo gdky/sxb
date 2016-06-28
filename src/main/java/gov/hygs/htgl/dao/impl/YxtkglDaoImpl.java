@@ -477,7 +477,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		}
 		sql.append("cou from ");
 		sql.append("(select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou ");
-		sql.append("from gr_tk_gxjl a , yxtk b ");
+		sql.append("from tk_gxjl a , tktm b ");
 		sql.append("where a.tk_id=b.id_ ");
 		if (deptid != null) {
 			sql.append("and a.dept_id=" + deptid + " ");

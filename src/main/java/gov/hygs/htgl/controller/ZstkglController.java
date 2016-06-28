@@ -15,42 +15,54 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 
 @Component
 public class ZstkglController {
 	@Resource
 	ZstkglService zstkglService;
-	
+
 	@DataProvider
-	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param){
-		zstkglService.getZstkInfo(page,param);
+	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param) {
+		zstkglService.getZstkInfo(page, param);
 	}
-	
+
 	@DataProvider
-	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id){
+	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id) {
 		return zstkglService.getTkzxzInfoByZstkId(id);
 	}
-	
+
 	@DataProvider
-	public Collection<Tkxzx> getDaXzxInfoByZstkId(String id){
+	public Collection<Tkxzx> getDaXzxInfoByZstkId(String id) {
 		return zstkglService.getDaXzxInfoByZstkId(id);
 	}
-	
+
 	@DataProvider
-	public Collection<Tkxzx> getToFInfo(){
+	public Collection<Tkxzx> getToFInfo() {
 		return zstkglService.getToFInfo();
 	}
-	
+
 	@Transactional
 	@DataResolver
-	public void updateZstk(List<Tktm> list){
+	public void updateZstk(List<Tktm> list) {
 		zstkglService.updateZstk(list);
 	}
-	
+
 	@DataProvider
-	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param){
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param) {
 		zstkglService.getYxtkInfo(page, param);
+	}
+
+	@DataProvider
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
+		zstkglService.getRandomTktmFilter(page, param);
+	}
+
+	@Transactional
+	@Expose
+	public void updateTkfxtsInfo(Map<String,Object> param){
+		zstkglService.updateTkfxtsInfo(param);
 	}
 	
 }
