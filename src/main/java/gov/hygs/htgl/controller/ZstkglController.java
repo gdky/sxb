@@ -65,4 +65,10 @@ public class ZstkglController {
 		zstkglService.updateTkfxtsInfo(param);
 	}
 	
+	@Transactional
+	@Expose
+	public void updateKstsjlInfo(Map<String,Object> param){
+		zstkglService.updateKstsjlInfo(param);
+	}
+	
 }

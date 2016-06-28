@@ -403,7 +403,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				"select * from tktm where yxbz='Y'");
 		if (offest == -1 && begin == -1) {
 			sql.append(" and xybz='Y' ");
-		}else{
+		} else {
 			sql.append(" and xybz='N' limit " + begin + "," + offest);
 		}
 		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
@@ -440,10 +440,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		List<Tktm> list = this.getYxtkInfo(-1, -1);
-		if(list.size() > 0){
+		if (list.size() > 0) {
 			Collections.shuffle(list);
 			List<Tktm> randomList = new ArrayList<Tktm>();
-			for (int i = 0; i < (pageSize > list.size()? list.size():pageSize); i++) {
+			for (int i = 0; i < (pageSize > list.size() ? list.size()
+					: pageSize); i++) {
 				randomList.add(list.get(i));
 			}
 			page.setEntityCount(pageSize);
@@ -466,12 +467,37 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 					new Object[] { null, userDetails.getId(), new Date(), ms },
 					new String[] { "id_" }).intValue();
 			sql = "insert into tktsqz values(?,?,?)";
-			this.jdbcTemplate.update(sql, new Object[]{null,groupId,jlId});
-			for(String id : ids){
+			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
+			for (String id : ids) {
 				sql = "insert into tktsnr values(?,?,?)";
-				this.jdbcTemplate.update(sql, new Object[]{null,jlId,id});
+				this.jdbcTemplate.update(sql, new Object[] { null, jlId, id });
 			}
-			
+
+		}
+	}
+
+	@Override
+	public void updateKstsjlInfo(Map<String, Object> param,
+			CustomUserDetails userDetails) {
+		// TODO Auto-generated method stub
+		List<String> ids = (List<String>) param.get("id");
+		if (ids.size() > 0) {
+			Integer groupId = (Integer) param.get("groupId");
+			String ms = (String) param.get("ms");
+			Date begin = (Date) param.get("begin");
+			Date end = (Date) param.get("end");
+
+			String sql = "insert into kstsjl values(?,?,?,?,?,?)";
+			int jlId = this.insertAndGetKeyByJdbc(
+					sql,
+					new Object[] { null, userDetails.getId(), new Date(), ms,
+							begin, end }, new String[] { "id_" }).intValue();
+			sql = "insert into kstsqz value(?,?,?)";
+			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
+			for (String id : ids) {
+				sql = "insert into kstsnr values(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, jlId, id });
+			}
 		}
 	}
 

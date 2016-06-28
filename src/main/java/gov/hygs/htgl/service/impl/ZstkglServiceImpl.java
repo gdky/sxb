@@ -149,4 +149,12 @@ public class ZstkglServiceImpl implements ZstkglService {
 		zstkglDao.updateTkfxtsInfo(param, userDetails);
 	}
 
+	@Override
+	public void updateKstsjlInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		zstkglDao.updateKstsjlInfo(param, userDetails);
+	}
+
 }

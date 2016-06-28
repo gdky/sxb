@@ -27,4 +27,6 @@ public interface ZstkglService {
 
 	public void updateTkfxtsInfo(Map<String, Object> param);
 
+	public void updateKstsjlInfo(Map<String, Object> param);
+
 }
