@@ -56,4 +56,6 @@ public interface YxtkglDao {
 
 	public List<Map<String,Object>> getLoginUserInfo(CustomUserDetails userDetails);
 
+	public List countDeptGxjl(Map<String, Object> param);
+
 }
