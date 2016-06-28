@@ -2,17 +2,16 @@ package gov.hygs.htgl.dao.impl;
 
 import gov.hygs.htgl.dao.ZstkglDao;
 import gov.hygs.htgl.entity.Role;
-import gov.hygs.htgl.entity.Tkda;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
-import gov.hygs.htgl.entity.Yxtk;
-import gov.hygs.htgl.entity.Zstk;
 import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -285,16 +284,15 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	@Override
 	public void addGrDeptGxJl(Tktm zstk) {
 		// TODO Auto-generated method stub
-		//String sql = "select value from system_props where id_=105";
-		//Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		//sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
-		//Object[] objs = { zstk.getContent(), zstk.getDeptid(),
-				//zstk.getUserId(), zstk.getId(), value, 105,
-				//zstk.getCreateDate() };
+		// String sql = "select value from system_props where id_=105";
+		// Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		// sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		// Object[] objs = { zstk.getContent(), zstk.getDeptid(),
+		// zstk.getUserId(), zstk.getId(), value, 105,
+		// zstk.getCreateDate() };
 		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { zstk.getContent(), zstk.getDeptid(),
-				zstk.getUserId(), zstk.getId(), 3, 2,
-				zstk.getCreateDate() };
+				zstk.getUserId(), zstk.getId(), 3, 2, zstk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
@@ -401,33 +399,80 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	private List<Tktm> getYxtkInfo(int begin, int offest) {
-		String sql = "select * from tktm where yxbz='Y' and xybz='N' limit ?,?";
-		List<Tktm> list = this.jdbcTemplate.query(sql, new Object[] { begin,
-				offest }, new RowMapper<Tktm>() {
+		StringBuilder sql = new StringBuilder(
+				"select * from tktm where yxbz='Y'");
+		if (offest == -1 && begin == -1) {
+			sql.append(" and xybz='Y' ");
+		}else{
+			sql.append(" and xybz='N' limit " + begin + "," + offest);
+		}
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
+				new RowMapper<Tktm>() {
 
-			@Override
-			public Tktm mapRow(ResultSet result, int i) throws SQLException {
-				// TODO Auto-generated method stub
-				Tktm yxtk = new Tktm();
-				yxtk.setId(result.getString("id_"));
-				yxtk.setFlId(result.getInt("fl_id"));
-				yxtk.setUserId(result.getInt("user_id"));
-				yxtk.setCreateDate(result.getDate("create_date"));
-				yxtk.setSpDate(result.getDate("sp_date"));
-				yxtk.setSprId(result.getInt("spr_id"));
-				yxtk.setDeptid(result.getInt("deptid"));
-				yxtk.setContent(result.getString("content"));
-				yxtk.setTmfz(result.getDouble("tmfz"));
-				yxtk.setTmnd(result.getInt("tmnd"));
-				yxtk.setTmlyId(result.getInt("tmly_id"));
-				yxtk.setMode(result.getString("mode"));
-				yxtk.setYxbz(result.getString("yxbz"));
-				yxtk.setXybz(result.getString("xybz"));
-				return yxtk;
-			}
+					@Override
+					public Tktm mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tktm yxtk = new Tktm();
+						yxtk.setId(result.getString("id_"));
+						yxtk.setFlId(result.getInt("fl_id"));
+						yxtk.setUserId(result.getInt("user_id"));
+						yxtk.setCreateDate(result.getDate("create_date"));
+						yxtk.setSpDate(result.getDate("sp_date"));
+						yxtk.setSprId(result.getInt("spr_id"));
+						yxtk.setDeptid(result.getInt("deptid"));
+						yxtk.setContent(result.getString("content"));
+						yxtk.setTmfz(result.getDouble("tmfz"));
+						yxtk.setTmnd(result.getInt("tmnd"));
+						yxtk.setTmlyId(result.getInt("tmly_id"));
+						yxtk.setMode(result.getString("mode"));
+						yxtk.setYxbz(result.getString("yxbz"));
+						yxtk.setXybz(result.getString("xybz"));
+						return yxtk;
+					}
 
-		});
+				});
 		return list;
+	}
+
+	@Override
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageSize = page.getPageSize();
+		List<Tktm> list = this.getYxtkInfo(-1, -1);
+		if(list.size() > 0){
+			Collections.shuffle(list);
+			List<Tktm> randomList = new ArrayList<Tktm>();
+			for (int i = 0; i < (pageSize > list.size()? list.size():pageSize); i++) {
+				randomList.add(list.get(i));
+			}
+			page.setEntityCount(pageSize);
+			page.setEntities(randomList);
+		}
+	}
+
+	@Override
+	public void updateTkfxtsInfo(Map<String, Object> param,
+			CustomUserDetails userDetails) {
+		// TODO Auto-generated method stub
+		List<String> ids = (List<String>) param.get("id");
+		if (ids.size() > 0) {
+			Integer groupId = (Integer) param.get("groupId");
+			String groupname = (String) param.get("groupname");
+			String ms = (String) param.get("ms");
+
+			String sql = "insert into tkfxtsjl values(?,?,?,?)";
+			int jlId = this.insertAndGetKeyByJdbc(sql,
+					new Object[] { null, userDetails.getId(), new Date(), ms },
+					new String[] { "id_" }).intValue();
+			sql = "insert into tktsqz values(?,?,?)";
+			this.jdbcTemplate.update(sql, new Object[]{null,groupId,jlId});
+			for(String id : ids){
+				sql = "insert into tktsnr values(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[]{null,jlId,id});
+			}
+			
+		}
 	}
 
 }

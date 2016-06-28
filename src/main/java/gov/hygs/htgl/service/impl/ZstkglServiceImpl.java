@@ -67,19 +67,19 @@ public class ZstkglServiceImpl implements ZstkglService {
 					zstk.setId(getUUID());
 					zstkglDao.addZstk(zstk);
 				} else {
-					//zstkglDao.addYxtkToZstk(zstk);
+					// zstkglDao.addYxtkToZstk(zstk);
 					zstkglDao.updateZstk(zstk);
 				}
 				zstk.setContent(getUUID());
 				zstkglDao.addGrDeptGxJl(zstk);
 			}
 			if (EntityUtils.getState(zstk).equals(EntityState.MODIFIED)) {
-				zstkglDao.updateZstk(zstk);	//把yxbz和xybz都设置
+				zstkglDao.updateZstk(zstk); // 把yxbz和xybz都设置
 			}
 			if (EntityUtils.getState(zstk).equals(EntityState.DELETED)) {
-				//zstkglDao.deleteYxtkFromZstk(zstk);
-				//zstkglDao.updateZstk(zstk);	删除调用该方法，前台把xybz设置为n
-				zstkglDao.deleteZstk(zstk);//前台不需要这是xybz，该方法会把xybz设置为n
+				// zstkglDao.deleteYxtkFromZstk(zstk);
+				// zstkglDao.updateZstk(zstk); 删除调用该方法，前台把xybz设置为n
+				zstkglDao.deleteZstk(zstk);// 前台不需要这是xybz，该方法会把xybz设置为n
 				zstkglDao.deleteGrDeptGxJl(zstk);
 			}
 
@@ -133,6 +133,20 @@ public class ZstkglServiceImpl implements ZstkglService {
 	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		zstkglDao.getYxtkInfo(page, param);
+	}
+
+	@Override
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.getRandomTktmFilter(page, param);
+	}
+
+	@Override
+	public void updateTkfxtsInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		zstkglDao.updateTkfxtsInfo(param, userDetails);
 	}
 
 }
