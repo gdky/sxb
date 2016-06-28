@@ -230,6 +230,14 @@
       </Reference>
     </DataType>
     <DataType name="conditonType">
+      <PropertyDef name="begin">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间起</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间止</Property>
+      </PropertyDef>
       <PropertyDef name="tsrq">
         <Property name="dataType">Date</Property>
       </PropertyDef>
@@ -279,16 +287,38 @@
     </Container>
     <Container id="dialogs">
       <Dialog id="conditionDialog">
-        <Property name="width">400</Property>
+        <Property name="width">600</Property>
+        <Property name="height">300</Property>
         <Buttons/>
         <Children>
           <GroupBox>
             <Property name="caption">推送信息</Property>
             <Buttons>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).show();&#xD;
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var beginTime = condition.get(&quot;begin&quot;);&#xD;
+var endTime = condition.get(&quot;end&quot;);&#xD;
+&#xD;
+if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#optDialog&quot;).show();&#xD;
 </ClientEvent>
-                <Property name="caption">查看推送题目</Property>
+                <Property name="caption">选择推送</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var beginTime = condition.get(&quot;begin&quot;);&#xD;
+var endTime = condition.get(&quot;end&quot;);&#xD;
+&#xD;
+if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#tktmDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">随机推送</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#conditionDialog&quot;).close();&#xD;
@@ -301,14 +331,23 @@ view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
             <Children>
               <AutoForm id="conditonForm">
                 <Property name="dataSet">dsCondition</Property>
-                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">begin</Property>
+                  <Property name="property">begin</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">end</Property>
+                  <Property name="property">end</Property>
+                  <Editor/>
+                </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">groupname</Property>
                   <Property name="property">groupname</Property>
                   <Property name="trigger">groupDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
                   <Editor>
@@ -331,7 +370,6 @@ view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
             <Buttons>
               <Button>
                 <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
-&#xD;
 var id = [];&#xD;
 view.get(&quot;#dsTktmFilter&quot;).getData().each(function(entity){&#xD;
 	id.push(entity.get(&quot;id&quot;));&#xD;
@@ -343,6 +381,8 @@ if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;g
 }&#xD;
 view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;id&quot;:id,&#xD;
+	&quot;begin&quot;:condition.get(&quot;begin&quot;),&#xD;
+	&quot;end&quot;:condition.get(&quot;end&quot;),&#xD;
 	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
 	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
@@ -400,10 +440,106 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
         </Children>
         <Tools/>
       </Dialog>
+      <Dialog id="optDialog">
+        <Property name="width">700</Property>
+        <Property name="height">500</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送题目</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var entitys = view.get('#optGrid.selection');&#xD;
+var ids = [];&#xD;
+var i = 0;&#xD;
+entitys.each(function(entity){&#xD;
+	ids.push(entity.get(&quot;id&quot;));&#xD;
+	i++;&#xD;
+});&#xD;
+if(i&lt;5){&#xD;
+	throw new dorado.Exception(&quot;选择题目数不足5题！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:ids,&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;begin&quot;:condition.get(&quot;begin&quot;),&#xD;
+	&quot;end&quot;:condition.get(&quot;end&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#conditionDialog&quot;).close();&#xD;
+	view.get(&quot;#optDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#optDialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dsTktm</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="optGrid">
+                <Property name="dataSet">dsTktm</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <RowSelectorColumn/>
+                <DataColumn name="tkfl">
+                  <Property name="property">tkfl.tkmc</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly.title</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
     </Container>
     <Container>
       <GroupBox>
-        <Property name="caption">题目信息</Property>
+        <Property name="caption">考试题目信息</Property>
         <Buttons/>
         <Children>
           <ToolBar>
@@ -415,7 +551,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
               <ClientEvent name="onClick">view.get(&quot;#dsCondition&quot;).insert();&#xD;
 view.get(&quot;#conditionDialog&quot;).show();&#xD;
 </ClientEvent>
-              <Property name="caption">题库复习推送</Property>
+              <Property name="caption">考试题目推送</Property>
             </Button>
           </ToolBar>
           <DataGrid>
@@ -453,7 +589,7 @@ view.get(&quot;#conditionDialog&quot;).show();&#xD;
       </GroupBox>
     </Container>
     <AjaxAction id="tsAction">
-      <Property name="service">zstkglController#updateTkfxtsInfo</Property>
+      <Property name="service">zstkglController#updateKstsjlInfo</Property>
     </AjaxAction>
     <DataSetDropDown id="groupDropDown">
       <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
