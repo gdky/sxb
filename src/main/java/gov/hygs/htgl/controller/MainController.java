@@ -1,5 +1,6 @@
 package gov.hygs.htgl.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.common.event.DefaultClientEvent;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileResolver;
 import com.bstek.dorado.view.widget.base.accordion.Accordion;
 import com.bstek.dorado.view.widget.base.accordion.Section;
 import com.bstek.dorado.view.widget.tree.Tree;
@@ -50,6 +53,17 @@ public class MainController {
 		}
 		
 	}
+	
+	@FileResolver
+    public String process1(UploadFile file, Map<String, Object> parameter) {
+        try {
+            System.out.println(file.getFileName());
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+ 
+        return file.getFileName();
+    }
 	
 	@DataProvider
 	public List<Menu> getUserMenu(Map<String,Object> para){

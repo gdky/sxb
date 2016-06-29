@@ -44,7 +44,7 @@ function layoutLoginContainer(){&#xD;
 	var height=$(window).height();&#xD;
 	var width=$(window).width();&#xD;
 	var bgImgFolder=&quot;${configure.getString('fsds.login.backgroundImageFolder')}&quot;;&#xD;
-	var bgImg=&quot;rest-backend/icons/login-bg1.jpg&quot;;&#xD;
+	var bgImg=&quot;sxb-backend/icons/login-bg1.jpg&quot;;&#xD;
 	var bgHeight=464;&#xD;
 	var loginInfoHeight=380;&#xD;
 	if(useCaptcha==&quot;true&quot; &amp;&amp; useRemember==&quot;false&quot;){&#xD;
