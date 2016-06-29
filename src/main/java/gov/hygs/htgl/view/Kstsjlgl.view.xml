@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="tkfxtsjlType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkfxtsjl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tsr">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tsrq">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tktsnrType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktsnr</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tsjlid">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tmid">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tktsqzType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktsqz</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tsjlid">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tktmType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
+      <PropertyDef name="id">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="flId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <Reference name="tkfl">
+        <Property name="parameter">$${this.flId}</Property>
+        <Property name="dataProvider">yxtkglController#getTkflInfoByflId</Property>
+        <Property name="dataType">[tkflType]</Property>
+      </Reference>
+      <PropertyDef name="userId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <Reference name="user">
+        <Property name="dataType">[userType]</Property>
+        <Property name="parameter">$${this.userId}</Property>
+        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
+      </Reference>
+      <PropertyDef name="createDate">
+        <Property name="dataType">Date</Property>
+        <Property name="label">创建时间</Property>
+      </PropertyDef>
+      <PropertyDef name="spDate">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="sprId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <Reference name="dept">
+        <Property name="dataType">[deptType]</Property>
+        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
+        <Property name="parameter">$${this.deptid}</Property>
+      </Reference>
+      <PropertyDef name="content">
+        <Property></Property>
+        <Property name="label">提干内容</Property>
+      </PropertyDef>
+      <PropertyDef name="tmfz">
+        <Property name="dataType">Double</Property>
+        <Property name="label">题目分值</Property>
+      </PropertyDef>
+      <PropertyDef name="tmnd">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">题目难度</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">基础型</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">进阶型</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="tmlyId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <Reference name="tmly">
+        <Property name="parameter">$${this.tmlyId}</Property>
+        <Property name="dataProvider">yxtkglController#getTmlyInfoByTmlyId</Property>
+        <Property name="dataType">[tmlyType]</Property>
+      </Reference>
+      <PropertyDef name="mode">
+        <Property></Property>
+        <Property name="label">选择类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="value">判断题</Property>
+                <Property name="key">0</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">单选题</Property>
+                <Property name="key">1</Property>
+              </Entity>
+              <Entity>
+                <Property name="value">多选题</Property>
+                <Property name="key">2</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="yxbz">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="xybz">
+        <Property></Property>
+        <Property name="label">是否选中</Property>
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">N</Property>
+                <Property name="value">未选上</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">Y</Property>
+                <Property name="value">已选上</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="deptType">
+      <Property name="creationType">gov.hygs.htgl.entity.Dept</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dept_name">
+        <Property></Property>
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="dept">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
+        <Property name="parameter">$${this.id_}</Property>
+      </Reference>
+      <Reference name="user">
+        <Property name="dataType">[userType]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
+      </Reference>
+    </DataType>
+    <DataType name="userType">
+      <Property name="creationType">gov.hygs.htgl.entity.User</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="user_Name">
+        <Property></Property>
+        <Property name="label">录入人</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tmlyType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tmly</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property></Property>
+        <Property name="label">题目来源</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="tkflType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkfl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tkmc">
+        <Property></Property>
+        <Property name="label">所属分类</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="tkfl">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">tkcspzController#getCurrentTkflById</Property>
+      </Reference>
+    </DataType>
+    <DataType name="conditonType">
+      <PropertyDef name="begin">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间起</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间止</Property>
+      </PropertyDef>
+      <PropertyDef name="tsrq">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupname">
+        <Property name="label">群组名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="groupType">
+      <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <Container id="datasets">
+      <DataSet id="dsTktm">
+        <Property name="dataType">[tktmType]</Property>
+        <Property name="dataProvider">zstkglController#getZstkInfo</Property>
+        <Property name="pageSize">10</Property>
+      </DataSet>
+      <DataSet id="dsCondition">
+        <Property name="dataType">[conditonType]</Property>
+      </DataSet>
+      <DataSet id="dsTktmFilter">
+        <Property name="dataType">[tktmType]</Property>
+        <Property name="dataProvider">zstkglController#getRandomTktmFilter</Property>
+        <Property name="pageSize">5</Property>
+      </DataSet>
+      <DataSet id="dsGroupt">
+        <Property name="dataProvider">qzBmCdglController#getGrouptableInfo</Property>
+        <Property name="dataType">[groupType]</Property>
+      </DataSet>
+    </Container>
+    <Container id="dialogs">
+      <Dialog id="conditionDialog">
+        <Property name="width">600</Property>
+        <Property name="height">300</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var beginTime = condition.get(&quot;begin&quot;);&#xD;
+var endTime = condition.get(&quot;end&quot;);&#xD;
+&#xD;
+if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#optDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">选择推送</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var beginTime = condition.get(&quot;begin&quot;);&#xD;
+var endTime = condition.get(&quot;end&quot;);&#xD;
+&#xD;
+if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+view.get(&quot;#tktmDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">随机推送</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#conditionDialog&quot;).close();&#xD;
+view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="conditonForm">
+                <Property name="dataSet">dsCondition</Property>
+                <AutoFormElement>
+                  <Property name="name">begin</Property>
+                  <Property name="property">begin</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">end</Property>
+                  <Property name="property">end</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">groupname</Property>
+                  <Property name="property">groupname</Property>
+                  <Property name="trigger">groupDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="tktmDialog">
+        <Property name="height">500</Property>
+        <Property name="width">700</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送题目</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var id = [];&#xD;
+view.get(&quot;#dsTktmFilter&quot;).getData().each(function(entity){&#xD;
+	id.push(entity.get(&quot;id&quot;));&#xD;
+});&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:id,&#xD;
+	&quot;begin&quot;:condition.get(&quot;begin&quot;),&#xD;
+	&quot;end&quot;:condition.get(&quot;end&quot;),&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#conditionDialog&quot;).close();&#xD;
+	view.get(&quot;#tktmDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).close();&#xD;
+&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataGrid>
+                <Property name="dataSet">dsTktmFilter</Property>
+                <DataColumn name="tkfl">
+                  <Property name="property">tkfl.tkmc</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly.title</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="optDialog">
+        <Property name="width">700</Property>
+        <Property name="height">500</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送题目</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+var entitys = view.get('#optGrid.selection');&#xD;
+var ids = [];&#xD;
+var i = 0;&#xD;
+entitys.each(function(entity){&#xD;
+	ids.push(entity.get(&quot;id&quot;));&#xD;
+	i++;&#xD;
+});&#xD;
+if(i&lt;5){&#xD;
+	throw new dorado.Exception(&quot;选择题目数不足5题！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:ids,&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;begin&quot;:condition.get(&quot;begin&quot;),&#xD;
+	&quot;end&quot;:condition.get(&quot;end&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#conditionDialog&quot;).close();&#xD;
+	view.get(&quot;#optDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#optDialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dsTktm</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
+              <DataGrid id="optGrid">
+                <Property name="dataSet">dsTktm</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <RowSelectorColumn/>
+                <DataColumn name="tkfl">
+                  <Property name="property">tkfl.tkmc</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly.title</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+    </Container>
+    <Container>
+      <GroupBox>
+        <Property name="caption">考试题目信息</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <DataPilot>
+              <Property name="dataSet">dsTktm</Property>
+              <Property name="itemCodes">pages</Property>
+            </DataPilot>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsCondition&quot;).insert();&#xD;
+view.get(&quot;#conditionDialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">考试题目推送</Property>
+            </Button>
+          </ToolBar>
+          <DataGrid>
+            <Property name="dataSet">dsTktm</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="tkfl">
+              <Property name="property">tkfl.tkmc</Property>
+            </DataColumn>
+            <DataColumn name="createDate">
+              <Property name="property">createDate</Property>
+            </DataColumn>
+            <DataColumn name="content">
+              <Property name="property">content</Property>
+            </DataColumn>
+            <DataColumn name="tmfz">
+              <Property name="property">tmfz</Property>
+            </DataColumn>
+            <DataColumn name="tmnd">
+              <Property name="property">tmnd</Property>
+            </DataColumn>
+            <DataColumn name="tmly">
+              <Property name="property">tmly.title</Property>
+            </DataColumn>
+            <DataColumn name="mode">
+              <Property name="property">mode</Property>
+            </DataColumn>
+            <DataColumn name="user">
+              <Property name="property">user.user_Name</Property>
+            </DataColumn>
+            <DataColumn name="dept">
+              <Property name="property">dept.dept_name</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+    </Container>
+    <AjaxAction id="tsAction">
+      <Property name="service">zstkglController#updateKstsjlInfo</Property>
+    </AjaxAction>
+    <DataSetDropDown id="groupDropDown">
+      <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
+if(group != undefined){&#xD;
+	view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
+}</ClientEvent>
+      <Property name="dataSet">dsGroupt</Property>
+      <Property name="property">groupName</Property>
+    </DataSetDropDown>
+  </View>
+</ViewConfig>

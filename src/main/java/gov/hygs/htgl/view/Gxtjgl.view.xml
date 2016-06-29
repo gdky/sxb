@@ -87,7 +87,7 @@
         <Property name="dataProvider">yxtkglController#countGxjl</Property>
       </DataSet>
       <DataSet id="dsDeptResult">
-        <Property name="dataProvider">yxtkglController#countGxjl</Property>
+        <Property name="dataProvider">yxtkglController#countDeptGxjl</Property>
         <Property name="dataType">[resultType]</Property>
       </DataSet>
     </Container>
@@ -186,14 +186,14 @@ var end = entity.get(&quot;end&quot;);&#xD;
 if(end &lt; begin &amp;&amp; end != null){&#xD;
 	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
 }&#xD;
-if(dept == &quot;&quot;){&#xD;
+if(dept == &quot;&quot; || dept == undefined){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		dept:null,&#xD;
 		deptid:null,&#xD;
 		user:null,&#xD;
 		userid:null&#xD;
 	});&#xD;
-}else if(user == &quot;&quot;){&#xD;
+}else if(user == &quot;&quot; || user == undefined){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		user:null,&#xD;
 		userid:null&#xD;

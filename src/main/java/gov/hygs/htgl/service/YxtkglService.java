@@ -32,4 +32,6 @@ public interface YxtkglService {
 
 	public List<Map<String,Object>> getLoginUserInfo();
 
+	public List countDeptGxjl(Map<String, Object> param);
+
 }

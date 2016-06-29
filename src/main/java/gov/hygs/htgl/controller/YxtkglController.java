@@ -103,6 +103,11 @@ public class YxtkglController {
 		return yxtkglService.countGxjl(param);
 	}
 	
+	@DataProvider
+	public List countDeptGxjl(Map<String,Object> param){
+		return yxtkglService.countDeptGxjl(param);
+	}
+	
 	/**
 	 * 获取当前登录用户信息
 	 * @return

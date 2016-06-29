@@ -23,4 +23,10 @@ public interface ZstkglService {
 
 	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param);
 
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param);
+
+	public void updateTkfxtsInfo(Map<String, Object> param);
+
+	public void updateKstsjlInfo(Map<String, Object> param);
+
 }

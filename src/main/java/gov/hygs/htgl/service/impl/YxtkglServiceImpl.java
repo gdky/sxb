@@ -152,4 +152,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 		return yxtkglDao.getLoginUserInfo(userDetails);
 	}
 
+	@Override
+	public List countDeptGxjl(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return yxtkglDao.countDeptGxjl(param);
+	}
+
 }
