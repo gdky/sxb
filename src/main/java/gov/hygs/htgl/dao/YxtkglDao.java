@@ -58,4 +58,12 @@ public interface YxtkglDao {
 
 	public List countDeptGxjl(Map<String, Object> param);
 
+	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent);
+
+	public int getUserIdByDeptIdAndUserName(int deptid, String userName);
+
+	public int getDeptIdByDeptName(String deptName);
+
+	public int getTkflInfoOrAddTkfl(String tkflTkmc);
+
 }
