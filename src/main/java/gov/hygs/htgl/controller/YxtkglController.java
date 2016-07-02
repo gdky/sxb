@@ -6,6 +6,8 @@ import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.service.YxtkglService;
+import gov.hygs.htgl.utils.excel.TkcjTableExcelToList;
+import gov.hygs.htgl.utils.excel.entity.TkcjTable;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileResolver;
 
 @Component
 public class YxtkglController {
@@ -115,6 +119,26 @@ public class YxtkglController {
 	@DataProvider
 	public List<Map<String,Object>> getLoginUserInfo(){
 		return yxtkglService.getLoginUserInfo();
+	}
+	
+	/**
+	 * 导入题库采集表excel
+	 * @param file
+	 * @param param
+	 * @return
+	 */
+	@Transactional
+	@FileResolver
+	public String ImportTkcjTableExcel(UploadFile file, Map<String, Object> param){
+		try {
+			List<Map<String,Object>> list = TkcjTableExcelToList.explainExcel(file, param);
+			yxtkglService.ImportTkcjTableExcel(list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return null;
 	}
 	
 }

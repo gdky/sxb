@@ -536,10 +536,10 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	public List countDeptGxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Integer deptid = param==null?null:(Integer) param.get("deptid");
-		Date begin = param==null?null:(Date) param.get("begin");
-		Date end = param==null?null:(Date) param.get("end");
-		String content = param==null?null:(String) param.get("content");
+		Integer deptid = param == null ? null : (Integer) param.get("deptid");
+		Date begin = param == null ? null : (Date) param.get("begin");
+		Date end = param == null ? null : (Date) param.get("end");
+		String content = param == null ? null : (String) param.get("content");
 		StringBuffer sql = new StringBuffer("select ifnull("
 				+ "(select sum(b.gxz) " + "from dept a, tk_gxjl b "
 				+ "where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) "
@@ -549,7 +549,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				+ " from dept d,tk_gxjl a ," + " tktm b"
 				+ " where a.tk_id=b.id_" + " and d.id_ = a.dept_id");
 		if (deptid == null || param == null) {
-			//sql.append(" and d.parent_id is null");
+			// sql.append(" and d.parent_id is null");
 		} else {
 			sql.append(" and a.dept_id =" + deptid);
 		}
@@ -571,4 +571,57 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		return list;
 	}
 
+	@Override
+	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),id_,0) from tmly where title=? and content=?";
+		int tmlyid = this.jdbcTemplate.queryForObject(sql, new Object[] {
+				tmlyTitle, tmlyContent }, Integer.class);
+		if (tmlyid == 0) {
+			tmlyid = this.addTmly(tmlyTitle, tmlyContent);
+		}
+		return tmlyid;
+	}
+
+	private int addTmly(String tmlyTitle, String tmlyContent) {
+		String sql = "insert into tmly values(?,?,?,?)";
+		return this.insertAndGetKeyByJdbc(sql,
+				new Object[] { null, tmlyTitle, tmlyContent, null },
+				new String[] { "id_" }).intValue();
+	}
+
+	@Override
+	public int getDeptIdByDeptName(String deptName) {
+		// TODO Auto-generated method stub
+		String sql = "select id_ from dept where dept_name=?";
+		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptName },
+				Integer.class);
+	}
+
+	@Override
+	public int getUserIdByDeptIdAndUserName(int deptid, String userName) {
+		// TODO Auto-generated method stub
+		String sql = "select id_ from user where deptid=? and user_name=?";
+		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptid,
+				userName }, Integer.class);
+	}
+
+	@Override
+	public int getTkflInfoOrAddTkfl(String tkflTkmc) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),id_,0) from tkfl where tkmc=?";
+		int flId = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tkflTkmc }, Integer.class);
+		if (flId == 0) {
+			flId = this.addFlId(tkflTkmc);
+		}
+		return flId;
+	}
+
+	private int addFlId(String tkflTkmc) {
+		String sql = "insert into tkfl values(?,?,?,?)";
+		return this.insertAndGetKeyByJdbc(sql,
+				new Object[] { null, 0, tkflTkmc, tkflTkmc },
+				new String[] { "id_" }).intValue();
+	}
 }

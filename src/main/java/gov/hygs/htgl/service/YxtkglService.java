@@ -5,6 +5,7 @@ import gov.hygs.htgl.entity.Tkfl;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.utils.excel.entity.TkcjTable;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,5 +34,7 @@ public interface YxtkglService {
 	public List<Map<String,Object>> getLoginUserInfo();
 
 	public List countDeptGxjl(Map<String, Object> param);
+
+	public void ImportTkcjTableExcel(List<Map<String, Object>> list);
 
 }
