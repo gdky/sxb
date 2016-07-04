@@ -70,6 +70,10 @@
                 <Property name="key">1</Property>
                 <Property name="value">进阶型</Property>
               </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">非税收业务类</Property>
+              </Entity>
             </Collection>
           </Property>
         </Property>
@@ -156,7 +160,27 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="xzKey">
+        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+if(datas.getLast() != null){&#xD;
+	if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
+		datas.each(function(entity){&#xD;
+			if(entity.get(&quot;xzKey&quot;) == arg.value){&#xD;
+				//alert(arg.value);&#xD;
+				throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+				return false;&#xD;
+			}&#xD;
+		});&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
         <Property></Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">选项不能为空</Property>
+        </Validator>
+        <Validator name="validator2" type="length">
+          <Property name="maxLength">1</Property>
+          <Property name="resultMessage">文本内容过多，长度应为1</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
@@ -1190,6 +1214,23 @@ view.get(&quot;#dsYxtk&quot;).flush();&#xD;
           <Property name="dataSet">dsZstk</Property>
         </UpdateItem>
       </UpdateAction>
+      <UploadAction id="uploadAction">
+        <ClientEvent name="onFilesAdded">self.set(&quot;parameter&quot;,{&#xD;
+	&quot;fields&quot;:[&quot;Mode,TkflTkmc,TktmTmnd,&quot;&#xD;
+				+&quot;TktmContent,DaToF,TmlyTitle,&quot;&#xD;
+				+&quot;TmlyContent,UserName,DeptName&quot;]&#xD;
+});</ClientEvent>
+        <ClientEvent name="onFileUploaded">var returnValue = arg.returnValue;&#xD;
+if(!returnValue){&#xD;
+	alert(&quot;成功&quot;);&#xD;
+	view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;出错&quot;);&#xD;
+}</ClientEvent>
+        <Property name="fileResolver">yxtkglController#ImportTkcjTableExcel</Property>
+        <Property name="maxFileSize">1MB</Property>
+        <Filters/>
+      </UploadAction>
     </Container>
     <Container>
       <GroupBox>
@@ -1295,6 +1336,9 @@ if(data != undefined){&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;SuAdmin&quot;){&#xD;
+		view.get(&quot;#importExcel&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
 }&#xD;
 </ClientEvent>
@@ -1437,6 +1481,13 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="caption">选题入库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
               <Property name="hideMode">display</Property>
+            </Button>
+            <Button id="importExcel">
+              <Property name="caption">导入</Property>
+              <Property name="action">uploadAction</Property>
+              <Property name="visible">false</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -80px -60px</Property>
             </Button>
             <DataPilot>
               <Property name="dataSet">dsYxtk</Property>

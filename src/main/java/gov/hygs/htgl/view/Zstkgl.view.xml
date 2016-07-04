@@ -70,6 +70,10 @@
                 <Property name="key">1</Property>
                 <Property name="value">进阶型</Property>
               </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">非税收业务类</Property>
+              </Entity>
             </Collection>
           </Property>
         </Property>
