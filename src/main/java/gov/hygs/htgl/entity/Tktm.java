@@ -57,6 +57,9 @@ public class Tktm implements Serializable {
 	/** 选用标志. */
 	private String xybz;
 	
+	/** 导入标志.  */
+	private String drbz;
+	
 	private Collection<Tkxzx> tkxzx;
 	private Collection<Tkxzx> daxzx;
 
@@ -70,6 +73,14 @@ public class Tktm implements Serializable {
 
 	public Collection<Tkxzx> getDaxzx() {
 		return daxzx;
+	}
+
+	public String getDrbz() {
+		return drbz;
+	}
+
+	public void setDrbz(String drbz) {
+		this.drbz = drbz;
 	}
 
 	public void setDaxzx(Collection<Tkxzx> daxzx) {

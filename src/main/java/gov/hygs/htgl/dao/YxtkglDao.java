@@ -66,4 +66,9 @@ public interface YxtkglDao {
 
 	public int getTkflInfoOrAddTkfl(String tkflTkmc);
 
+	public boolean chackTktmExistOrNot(String tktmContent);
+
+	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
+			List<Tkxzx> tkdas);
+
 }

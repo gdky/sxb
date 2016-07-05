@@ -12,6 +12,7 @@ import gov.hygs.htgl.entity.Yxtk;
 import gov.hygs.htgl.entity.Yxtkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import javax.swing.event.ListSelectionEvent;
 
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -334,12 +336,12 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
-		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
 				sdf.format(yxtk.getCreateDate()), yxtk.getSpDate(),
 				yxtk.getSprId(), yxtk.getDeptid(), yxtk.getContent(),
 				list.get(0).get("value"), yxtk.getTmnd(), yxtk.getTmlyId(),
-				yxtk.getMode(), "Y", "N" };
+				yxtk.getMode(), "Y", "N", yxtk.getDrbz() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
@@ -593,7 +595,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public int getDeptIdByDeptName(String deptName) {
 		// TODO Auto-generated method stub
-		String sql = "select id_ from dept where dept_name=?";
+		String sql = "select if(count(*),id_,0) from dept where dept_name=?";
 		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptName },
 				Integer.class);
 	}
@@ -601,7 +603,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public int getUserIdByDeptIdAndUserName(int deptid, String userName) {
 		// TODO Auto-generated method stub
-		String sql = "select id_ from user where deptid=? and user_name=?";
+		String sql = "select if(count(*),id_,0) from user where deptid=? and user_name=?";
 		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptid,
 				userName }, Integer.class);
 	}
@@ -623,5 +625,67 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		return this.insertAndGetKeyByJdbc(sql,
 				new Object[] { null, 0, tkflTkmc, tkflTkmc },
 				new String[] { "id_" }).intValue();
+	}
+
+	@Override
+	public boolean chackTktmExistOrNot(String tktmContent) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),1,0) from tktm where content=?";
+		int record = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tktmContent }, Integer.class);
+		return record == 0 ? true : false;
+	}
+
+	@Override
+	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
+			List<Tkxzx> tkdas) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Map<Integer, Integer> chackTmnd = new HashMap<Integer, Integer>();
+		List<Map<String, Object>> list = null;
+		List<Object[]> batchArgs = new ArrayList<Object[]>();
+		List<Object[]> gxjlBatchArgs = new ArrayList<Object[]>();
+		for (Tktm yxtk : tktms) {
+			if (chackTmnd.get(yxtk.getTmnd()) == null) {
+				list = this.getSysPropValueByTmnd(yxtk);
+			}
+			batchArgs.add(new Object[] { yxtk.getId(), yxtk.getFlId(),
+					yxtk.getUserId(), sdf.format(yxtk.getCreateDate()),
+					yxtk.getSpDate(), yxtk.getSprId(), yxtk.getDeptid(),
+					yxtk.getContent(), list.get(0).get("value"),
+					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
+					yxtk.getDrbz() });
+			gxjlBatchArgs.add(new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
+					yxtk.getId(), 1, 1, yxtk.getCreateDate()});
+		}
+		
+		if (batchArgs.size() > 0) {
+			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			this.jdbcTemplate.batchUpdate(sql, batchArgs);
+			sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+			this.jdbcTemplate.batchUpdate(sql, gxjlBatchArgs);
+
+			List<Object[]> tkxzxBatchArgs = new ArrayList<Object[]>();
+			List<Object[]> tkdaBatchArgs = new ArrayList<Object[]>();
+
+			for (Tkxzx xz : tkxzxs) {
+				tkxzxBatchArgs.add(new Object[] { xz.getId(), xz.getTkId(),
+						xz.getXzKey(), xz.getContent() });
+			}
+			if (tkxzxBatchArgs.size() > 0) {
+				sql = "insert into tkxzx values(?,?,?,?)";
+				this.jdbcTemplate.batchUpdate(sql, tkxzxBatchArgs);
+			}
+
+			for (Tkxzx da : tkdas) {
+				tkdaBatchArgs.add(new Object[] { da.getContent(), da.getTkId(),
+						da.getId() });
+			}
+			if (tkdaBatchArgs.size() > 0) {
+				sql = "insert into tkda values(?,?,?)";
+				this.jdbcTemplate.batchUpdate(sql, tkdaBatchArgs);
+			}
+		}
+
 	}
 }

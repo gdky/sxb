@@ -35,6 +35,6 @@ public interface YxtkglService {
 
 	public List countDeptGxjl(Map<String, Object> param);
 
-	public void ImportTkcjTableExcel(List<Map<String, Object>> list);
+	public List<TkcjTable> ImportTkcjTableExcel(List<Map<String, Object>> list);
 
 }
