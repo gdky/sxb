@@ -1,6 +1,7 @@
 package gov.hygs.htgl.utils.excel.entity;
 
 public class TkcjTable {
+	private String num;
 	private String mode;
 	private String tkflTkmc;
 	private String tktmTmnd;
@@ -10,6 +11,12 @@ public class TkcjTable {
 	private String tmlyContent;
 	private String userName;
 	private String deptName;
+	public String getNum() {
+		return num;
+	}
+	public void setNum(String num) {
+		this.num = num;
+	}
 	public String getMode() {
 		return mode;
 	}

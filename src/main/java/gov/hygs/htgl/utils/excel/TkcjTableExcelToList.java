@@ -48,13 +48,13 @@ public class TkcjTableExcelToList {
 					TkcjTable tkcjTable = new TkcjTable();
 					Class clazz = tkcjTable.getClass();
 					int i = 0;
-					for (int cellnum = 1; cellnum < row.getLastCellNum() - 1; cellnum++) {// 格
+					for (int cellnum = 0; cellnum < row.getLastCellNum() - 1; cellnum++) {// 格
 						HSSFCell cell = row.getCell(cellnum);
 
 						if (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC) {
 
 							Method method = clazz.getMethod("set"
-									+ fields[cellnum - 1 - i],
+									+ fields[cellnum - i],
 									new Class[] { String.class });
 
 							if (cell.getCellType() == cell.CELL_TYPE_STRING
@@ -103,7 +103,7 @@ public class TkcjTableExcelToList {
 								num.add(cellnum);
 								xzx.add(cell.getStringCellValue());
 								i++;
-							}
+							}//=======================================================================================================================
 						}
 
 					}

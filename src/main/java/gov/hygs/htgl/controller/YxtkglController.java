@@ -6,9 +6,11 @@ import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tmly;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.service.YxtkglService;
+import gov.hygs.htgl.utils.JsonUtils;
 import gov.hygs.htgl.utils.excel.TkcjTableExcelToList;
 import gov.hygs.htgl.utils.excel.entity.TkcjTable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -130,15 +132,16 @@ public class YxtkglController {
 	@Transactional
 	@FileResolver
 	public String ImportTkcjTableExcel(UploadFile file, Map<String, Object> param){
+		List<TkcjTable> tkcj = new ArrayList<TkcjTable>();
 		try {
 			List<Map<String,Object>> list = TkcjTableExcelToList.explainExcel(file, param);
-			yxtkglService.ImportTkcjTableExcel(list);
+			tkcj = yxtkglService.ImportTkcjTableExcel(list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			//return null;
 		}
-		return null;
+		return tkcj.size()>0?JsonUtils.list2json(tkcj):null;
 	}
 	
 }
