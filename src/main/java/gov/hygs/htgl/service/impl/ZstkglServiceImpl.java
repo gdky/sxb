@@ -65,6 +65,7 @@ public class ZstkglServiceImpl implements ZstkglService {
 					zstk.setUserId(userDetails.getId());
 					zstk.setDeptid(userDetails.getDeptid());
 					zstk.setId(getUUID());
+					zstk.setDrbz("N");
 					zstkglDao.addZstk(zstk);
 				} else {
 					// zstkglDao.addYxtkToZstk(zstk);
