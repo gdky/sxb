@@ -37,6 +37,11 @@ public class YhJsglController {
 		yhglService.saveUserInfo(users);
 	}
 	
+	@DataResolver
+	public void saveUserPwd(List<User> users){
+		yhglService.saveUserPwd(users);
+	}
+	
 	@DataProvider
 	public void getRoleInfo(Page page){
 		yhglService.getRoleInfo(page);

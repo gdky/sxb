@@ -64,4 +64,8 @@ public interface YhJsglDao {
 
 	String getCurrentUserName();
 
+	int getRoleIdByRoleName(String roleName);
+
+	void updateUserPwd(User user);
+
 }
