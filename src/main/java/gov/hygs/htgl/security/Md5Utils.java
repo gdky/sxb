@@ -72,15 +72,15 @@ public class Md5Utils {
 	
 		 public static String encodeMd5(String text){
 
-		     Md5Utils encoderMd5 = new Md5Utils(text, "MD5");
-		     String encode = encoderMd5.encode("sxb");
+		     Md5Utils encoderMd5 = new Md5Utils("sxb", "MD5");
+		     String encode = encoderMd5.encode(text);
 		     return encode;
 		 }
 		public static void main(String[] args) {
-		   /*   String salt = "helloworld";
+		   /*  String salt = "sxb";
 		     Md5Utils encoderMd5 = new Md5Utils(salt, "MD5");
-		     String encode = encoderMd5.encode("test");
-		     System.out.println(encode);
+		     String encode = encoderMd5.encode("666666");
+		     System.out.println(encode); 
 		     boolean passwordValid = encoderMd5.isPasswordValid("083a8db3ff5b9b4ece3ef2bde03226c8", "test");
 		     System.out.println(passwordValid);
 
