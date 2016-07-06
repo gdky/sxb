@@ -40,4 +40,6 @@ public interface YhJsglService {
 
 	String checkRoleName(String param);
 
+	String getCurrentUserName();
+
 }

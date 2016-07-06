@@ -142,7 +142,7 @@ self.$openTab = function(config){&#xD;
 		&#xD;
         return currentTab;&#xD;
     }else{&#xD;
-		dorado.MessageBox.alert(&quot;当前页面已经打开了&quot;)	&#xD;
+		//dorado.MessageBox.alert(&quot;当前页面已经打开了&quot;)	&#xD;
 	}&#xD;
     if (removeOld) {&#xD;
         tabControlWorkspace.removeTab(tab);&#xD;
@@ -177,12 +177,27 @@ self.$getOpenTabMode = function(){&#xD;
           <Property name="style">
             <Property name="background">url(icons/top_banner.jpg)</Property>
           </Property>
+          <HtmlContainer>
+            <Property name="width">400</Property>
+            <Property name="height">60</Property>
+          </HtmlContainer>
+          <HtmlContainer layoutConstraint="right">
+            <Property name="width">5%</Property>
+            <Container layout="native">
+              <Button>
+                <Property name="style">
+                  <Property name="background-color">#FFFFFF</Property>
+                </Property>
+                <Property name="caption">${dorado.getDataProvider(&quot;yhJsglController#getCurrentUserName&quot;).getResult()}</Property>
+              </Button>
+            </Container>
+          </HtmlContainer>
         </HtmlContainer>
       </Children>
       <Tools/>
     </Panel>
     <SplitPanel id="splitPanel">
-      <Property name="position">300</Property>
+      <Property name="position">220</Property>
       <MainControl>
         <TabControl id="tabControlWorkspace">
           <ClientEvent name="onReady">var panel = view.get(&quot;#panelHeader&quot;);&#xD;
@@ -258,7 +273,7 @@ if(data.get('url')!=null){&#xD;
                         <Property name="labelProperty">menu_Name</Property>
                         <Property name="childrenProperty">childMenus</Property>
                         <Property name="recursive">true</Property>
-                        <Property name="expandLevel">1</Property>
+                        <Property name="expandLevel">3</Property>
                       </BindingConfig>
                     </BindingConfigs>
                   </DataTree>

@@ -23,6 +23,10 @@ public class YhJsglController {
 	private YhJsglService yhglService;
 	
 	@DataProvider
+	public String getCurrentUserName(){
+		return yhglService.getCurrentUserName();
+	}
+	@DataProvider
 	public void getUserInfo(Page page,Map<String,Object> para){
 		 yhglService.getUserInfo(para,page);
 		
