@@ -166,4 +166,10 @@ public class YhJsglServiceImpl implements YhJsglService {
 		return yhglDao.checkRoleName(param);
 	}
 
+	@Override
+	public String getCurrentUserName() {
+		// TODO Auto-generated method stub
+		return yhglDao.getCurrentUserName();
+	}
+
 }

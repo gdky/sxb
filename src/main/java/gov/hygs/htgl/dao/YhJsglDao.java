@@ -62,4 +62,6 @@ public interface YhJsglDao {
 
 	String checkRoleName(String param);
 
+	String getCurrentUserName();
+
 }

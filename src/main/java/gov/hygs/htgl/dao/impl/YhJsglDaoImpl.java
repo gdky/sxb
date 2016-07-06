@@ -4,6 +4,7 @@ import gov.hygs.htgl.dao.YhJsglDao;
 import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.security.Md5Utils;
 
 import java.text.SimpleDateFormat;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.bstek.dorado.data.provider.Page;
@@ -354,6 +356,15 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				new Object[] { param });
 		return list.size() > 0 ? "角色名'" + param + "'已存在" : null;
+	}
+
+	@Override
+	public String getCurrentUserName() {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		return userDetails.getUser_Name();
 	}
 
 }
