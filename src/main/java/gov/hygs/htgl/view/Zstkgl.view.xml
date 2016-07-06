@@ -91,6 +91,30 @@
         <Property name="dataType">[tmlyType]</Property>
       </Reference>
       <PropertyDef name="mode">
+        <ClientEvent name="onSet">view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
+var yxtk = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
+if(yxtk.get(&quot;id&quot;) == undefined){&#xD;
+	if(arg.value == 0){&#xD;
+		view.get(&quot;#newxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({id:1,tkId:0,xzKey:&quot;A&quot;,content:&quot;对&quot;});&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({id:0,tkId:0,xzKey:&quot;B&quot;,content:&quot;错&quot;});&#xD;
+		view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+	}else{&#xD;
+		view.get(&quot;#newxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;A&quot;});&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;B&quot;});&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;C&quot;});&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;D&quot;});&#xD;
+		view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;E&quot;});&#xD;
+		if(arg.value == 1){&#xD;
+			view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+		}else if(arg.value == 2){&#xD;
+			view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+	view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+</ClientEvent>
         <Property></Property>
         <Property name="label">选择类型</Property>
         <Property name="mapping">
@@ -171,9 +195,6 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
-        <Validator name="validator1" type="required">
-          <Property name="resultMessage">内容不能为空</Property>
-        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="tkdaType">
@@ -235,6 +256,7 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
+        <Property name="label">内容</Property>
       </PropertyDef>
     </DataType>
     <DataType name="tkflType">
@@ -344,6 +366,10 @@ if(datas.getLast() != null){&#xD;
                 <Property name="key">1</Property>
                 <Property name="value">进阶型</Property>
               </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">非税收业务类</Property>
+              </Entity>
             </Collection>
           </Property>
         </Property>
@@ -385,6 +411,33 @@ if(datas.getLast() != null){&#xD;
         <Property></Property>
       </PropertyDef>
     </DataType>
+    <DataType name="tkfxtsjlInfoType">
+      <PropertyDef name="tsrq">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupname">
+        <Property name="label">群组名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="groupType">
+      <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <Container id="datasets">
@@ -416,6 +469,18 @@ if(datas.getLast() != null){&#xD;
         <Property name="dataType">[yxtkType]</Property>
         <Property name="dataProvider">zstkglController#getYxtkInfo</Property>
         <Property name="pageSize">10</Property>
+      </DataSet>
+      <DataSet id="dsTkfxtsjlInfo">
+        <Property name="dataType">[tkfxtsjlInfoType]</Property>
+      </DataSet>
+      <DataSet id="dsGroupt">
+        <Property name="dataProvider">qzBmCdglController#getGrouptableInfo</Property>
+        <Property name="dataType">[groupType]</Property>
+      </DataSet>
+      <DataSet id="dsTktmFilter">
+        <Property name="dataType">[tktmType]</Property>
+        <Property name="dataProvider">zstkglController#getRandomTktmFilter</Property>
+        <Property name="pageSize">5</Property>
       </DataSet>
     </Container>
     <Container id="dropDowns">
@@ -513,7 +578,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
-      <DataSetDropDown id="tmlyDropDown">
+      <DataSetDropDown id="tmlyDropDown1">
         <ClientEvent name="onClose">var tmly = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
 if(tmly != undefined){&#xD;
 	view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
@@ -523,6 +588,28 @@ if(tmly != undefined){&#xD;
         <Property name="height">500</Property>
         <Property name="property">title</Property>
       </DataSetDropDown>
+      <CustomDropDown id="tmlyDropDown">
+        <Property name="height">500</Property>
+        <DataGrid id="tmlyDataGrid">
+          <ClientEvent name="onDataRowClick">var tmly = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
+if(tmly != undefined){&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
+	var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+	dropDown.close(&#xD;
+		tmly.get(&quot;title&quot;)&#xD;
+	);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsTmly</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn name="title">
+            <Property name="property">title</Property>
+          </DataColumn>
+          <DataColumn name="content">
+            <Property name="property">content</Property>
+          </DataColumn>
+        </DataGrid>
+      </CustomDropDown>
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
@@ -624,6 +711,14 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="property">user_Name</Property>
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
+      </DataSetDropDown>
+      <DataSetDropDown id="groupDropDown">
+        <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
+if(group != undefined){&#xD;
+	view.get(&quot;#dsTkfxtsjlInfo&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dsGroupt</Property>
+        <Property name="property">groupName</Property>
       </DataSetDropDown>
     </Container>
     <Container id="dialogs">
@@ -877,8 +972,29 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
         <Property name="width">700</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+            <ClientEvent name="onClick">var entity = view.get('#newtkxzxGrid.selection');&#xD;
+var data = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
+var mode = data.get(&quot;mode&quot;);&#xD;
+if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
+	if(data.get(&quot;id&quot;) == undefined){&#xD;
+		var da = view.get(&quot;#dsZstk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+		if(mode == 1 || mode == 0){&#xD;
+			da.clear();&#xD;
+			da.insert({//id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
+					xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
+		}else if(mode == 2){&#xD;
+			da.clear();&#xD;
+			entity.each(function(e){&#xD;
+				da.insert({//id:e.get(&quot;id&quot;),tkId:e.get(&quot;tkId&quot;),&#xD;
+					xzKey:e.get(&quot;xzKey&quot;),content:e.get(&quot;content&quot;)});&#xD;
+			});&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxtkDialog&quot;).close();&#xD;
+	view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#dsZstk&quot;).flush();//可能与查询有 冲突&#xD;
 });&#xD;
 </ClientEvent>
@@ -888,7 +1004,9 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).cancel();&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept&quot;).cancel();&#xD;
+view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
 view.get(&quot;#dsZstk&quot;).getData().cancel();&#xD;
+view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
 view.get(&quot;#yxtkDialog&quot;).close();&#xD;
 &#xD;
 </ClientEvent>
@@ -921,15 +1039,15 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
+                  <Property name="name">mode</Property>
+                  <Property name="property">mode</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="dataPath">#.tmly</Property>
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
                   <Property name="trigger">tmlyDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
@@ -940,6 +1058,27 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   </Editor>
                 </AutoFormElement>
               </AutoForm>
+              <GroupBox id="tkxzxGroup">
+                <Property name="caption">题目选择项</Property>
+                <Property name="visible">false</Property>
+                <Buttons/>
+                <Children>
+                  <DataGrid id="newtkxzxGrid">
+                    <Property name="dataSet">dsZstk</Property>
+                    <Property name="dataPath">#.tkxzx</Property>
+                    <Property name="hideMode">visibility</Property>
+                    <RowSelectorColumn/>
+                    <DataColumn id="newxzKey" name="xzKey">
+                      <Property name="property">xzKey</Property>
+                      <Property name="caption">选项</Property>
+                    </DataColumn>
+                    <DataColumn name="content">
+                      <Property name="property">content</Property>
+                      <Property name="caption">选项内容</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+              </GroupBox>
             </Children>
           </GroupBox>
         </Children>
@@ -1064,7 +1203,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-view.get(&quot;#dsYxtk&quot;).flush();&#xD;
+view.get(&quot;#yxtkGrid&quot;).unselectAll();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -1115,16 +1254,143 @@ view.get(&quot;#dsYxtk&quot;).flush();&#xD;
         </Children>
         <Tools/>
       </Dialog>
+      <Dialog id="tkfxtsDialog">
+        <Property name="width">400</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">查看推送题目</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#tkfxtsDialog&quot;).close();&#xD;
+view.get(&quot;#dsTkfxtsjlInfo&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="tkfxtsForm">
+                <Property name="dataSet">dsTkfxtsjlInfo</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">groupname</Property>
+                  <Property name="property">groupname</Property>
+                  <Property name="trigger">groupDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="tktmDialog">
+        <Property name="height">500</Property>
+        <Property name="width">700</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送题目</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsTkfxtsjlInfo&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+var id = [];&#xD;
+view.get(&quot;#dsTktmFilter&quot;).getData().each(function(entity){&#xD;
+	id.push(entity.get(&quot;id&quot;));&#xD;
+});&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:id,&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#tkfxtsDialog&quot;).close();&#xD;
+	view.get(&quot;#tktmDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).close();&#xD;
+&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataGrid>
+                <Property name="dataSet">dsTktmFilter</Property>
+                <DataColumn name="tkfl">
+                  <Property name="property">tkfl.tkmc</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly.title</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
     </Container>
-    <UpdateAction id="updateAction">
-      <Property name="alwaysExecute">true</Property>
-      <Property name="executingMessage">正在执行...</Property>
-      <Property name="successMessage">执行成功</Property>
-      <Property name="dataResolver">zstkglController#updateZstk</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsZstk</Property>
-      </UpdateItem>
-    </UpdateAction>
+    <Container id="actions">
+      <UpdateAction id="updateAction">
+        <Property name="alwaysExecute">true</Property>
+        <Property name="executingMessage">正在执行...</Property>
+        <Property name="successMessage">执行成功</Property>
+        <Property name="dataResolver">zstkglController#updateZstk</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsZstk</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <AjaxAction id="tsAction">
+        <Property name="service">zstkglController#updateTkfxtsInfo</Property>
+      </AjaxAction>
+    </Container>
     <Container>
       <GroupBox>
         <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
@@ -1229,9 +1495,11 @@ if(data != undefined){&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#tkfxtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;DeptAdmin&quot;){&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#tkfxtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 }&#xD;
 </ClientEvent>
@@ -1282,7 +1550,9 @@ if(current != undefined){&#xD;
 		});&#xD;
 		*/&#xD;
 		current.remove();&#xD;
-		view.get(&quot;#updateAction&quot;).execute();&#xD;
+		view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+			view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+		});&#xD;
 	});&#xD;
 }&#xD;
 </ClientEvent>
@@ -1374,6 +1644,14 @@ if(mode ==1 || mode == 2){&#xD;
 </ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
+              <Property name="hideMode">display</Property>
+            </Button>
+            <Button id="tkfxtsbutton">
+              <ClientEvent name="onClick">view.get(&quot;#dsTkfxtsjlInfo&quot;).insert();&#xD;
+view.get(&quot;#tkfxtsDialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">题库复习推送</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
               <Property name="hideMode">display</Property>
             </Button>
             <DataPilot>
