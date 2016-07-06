@@ -36,7 +36,8 @@ public class YhJsglServiceImpl implements YhJsglService {
 		for (User user : users) {
 			if (EntityUtils.getState(user).equals(EntityState.NEW)) {
 				user.setId_(yhglDao.insertUser(user));
-				yhglDao.insertUserByRole(user, 14);
+				int roleId = yhglDao.getRoleIdByRoleName("USER");
+				yhglDao.insertUserByRole(user,roleId);
 			}
 			if (EntityUtils.getState(user).equals(EntityState.MODIFIED)) {
 				yhglDao.updateUser(user);
@@ -47,6 +48,20 @@ public class YhJsglServiceImpl implements YhJsglService {
 		}
 	}
 
+	
+	@Override
+	public void saveUserPwd(List<User> users) {
+		// TODO Auto-generated method stub
+		for (User user : users) {
+			
+			if (EntityUtils.getState(user).equals(EntityState.MODIFIED)) {
+				yhglDao.updateUserPwd(user);
+			}
+			
+		}
+	}
+	
+	
 	@Override
 	public void getRoleInfo(Page page) {
 		// TODO Auto-generated method stub

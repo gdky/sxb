@@ -227,15 +227,16 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).insert();&#xD;
 view.get(&quot;#DialogUser&quot;).show();&#xD;
-</ClientEvent>
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,fals)</ClientEvent>
             <Property name="caption">增加</Property>
             <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
 </ClientEvent>
             <Property name="caption">修改</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
@@ -244,6 +245,13 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
 });&#xD;
 </ClientEvent>
             <Property name="caption">删除</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
+view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
+</ClientEvent>
+            <Property name="caption">修改密码</Property>
             <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
           </ToolBarButton>
         </ToolBar>
@@ -292,6 +300,7 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
               <ClientEvent name="onClick">//view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).validate();&#xD;
 view.get(&quot;#updateActionUser&quot;).execute(function(){&#xD;
 	view.get(&quot;#DialogUser&quot;).hide();&#xD;
+	view.get(&quot;#dsUser&quot;).flushAsync();&#xD;
 });</ClientEvent>
               <Property name="caption">确定</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
@@ -335,6 +344,7 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
               <AutoFormElement>
                 <Property name="name">pwd</Property>
                 <Property name="property">pwd</Property>
+                <Property name="tags">pwd</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
@@ -454,5 +464,70 @@ dropDown.close(&#xD;
         <Tools/>
       </Panel>
     </CustomDropDown>
+    <Dialog id="DialogUserPwd">
+      <Property name="width">600</Property>
+      <Property name="height">300</Property>
+      <Buttons/>
+      <Children>
+        <GroupBox>
+          <Property name="caption">添加用户信息</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">//view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).validate();&#xD;
+view.get(&quot;#updateActionUserPwd&quot;).execute(function(){&#xD;
+	view.get(&quot;#DialogUserPwd&quot;).hide();&#xD;
+	view.get(&quot;#dsUser&quot;).flushAsync();&#xD;
+});</ClientEvent>
+              <Property name="caption">确定</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).cancel(); &#xD;
+view.get(&quot;#DialogUserPwd&quot;).hide();&#xD;
+view.get(&quot;#dsUser&quot;).flushAsync();</ClientEvent>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm>
+              <Property name="dataSet">dsUser</Property>
+              <AutoFormElement>
+                <Property name="name">login_Name</Property>
+                <Property name="property">login_Name</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">user_Name</Property>
+                <Property name="property">user_Name</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">pwd</Property>
+                <Property name="property">pwd</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">deptMc</Property>
+                <Property name="property">deptMc</Property>
+                <Property name="trigger">BmDropDown</Property>
+                <Property name="readOnly">true</Property>
+                <Editor/>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+        </GroupBox>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <UpdateAction id="updateActionUserPwd">
+      <Property name="dataResolver">yhJsglController#saveUserPwd</Property>
+      <Property name="successMessage">保存成功</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsUser</Property>
+      </UpdateItem>
+    </UpdateAction>
   </View>
 </ViewConfig>
