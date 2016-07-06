@@ -91,6 +91,30 @@
         <Property name="dataType">[tmlyType]</Property>
       </Reference>
       <PropertyDef name="mode">
+        <ClientEvent name="onSet">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
+var yxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+if(yxtk.get(&quot;id&quot;) == undefined){&#xD;
+	if(arg.value == 0){&#xD;
+		view.get(&quot;#newxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({id:1,tkId:0,xzKey:&quot;A&quot;,content:&quot;对&quot;});&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({id:0,tkId:0,xzKey:&quot;B&quot;,content:&quot;错&quot;});&#xD;
+		view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+	}else{&#xD;
+		view.get(&quot;#newxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;A&quot;});&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;B&quot;});&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;C&quot;});&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;D&quot;});&#xD;
+		view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({xzKey:&quot;E&quot;});&#xD;
+		if(arg.value == 1){&#xD;
+			view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+		}else if(arg.value == 2){&#xD;
+			view.get(&quot;#newtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+	view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+</ClientEvent>
         <Property></Property>
         <Property name="label">选择类型</Property>
         <Property name="mapping">
@@ -115,7 +139,7 @@
           <Property name="resultMessage">模式不能为空</Property>
         </Validator>
       </PropertyDef>
-      <Reference name="yxtkxzx">
+      <Reference name="tkxzx">
         <Property name="dataType">[tkzxzType]</Property>
         <Property name="dataProvider">zstkglController#getTkzxzInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
@@ -160,7 +184,7 @@
         <Property></Property>
       </PropertyDef>
       <PropertyDef name="xzKey">
-        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+        <ClientEvent name="onSet">var datas = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
 if(datas.getLast() != null){&#xD;
 	if(datas.getLast().get(&quot;xzKey&quot;) == undefined){&#xD;
 		datas.each(function(entity){&#xD;
@@ -245,6 +269,7 @@ if(datas.getLast() != null){&#xD;
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
+        <Property name="label">内容</Property>
       </PropertyDef>
     </DataType>
     <DataType name="tkflType">
@@ -616,7 +641,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
-      <DataSetDropDown id="tmlyDropDown">
+      <DataSetDropDown id="tmlyDropDown1">
         <ClientEvent name="onClose">var tmly = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
 if(tmly != undefined){&#xD;
 	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
@@ -626,11 +651,32 @@ if(tmly != undefined){&#xD;
         <Property name="height">500</Property>
         <Property name="property">title</Property>
       </DataSetDropDown>
+      <CustomDropDown id="tmlyDropDown">
+        <Property name="height">500</Property>
+        <DataGrid id="tmlyDataGrid">
+          <ClientEvent name="onDataRowClick">var tmly = view.get(&quot;#dsTmly&quot;).getData(&quot;#&quot;);&#xD;
+if(tmly != undefined){&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).set({tmlyId:tmly.get(&quot;id&quot;)});&#xD;
+	var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+	dropDown.close(&#xD;
+		tmly.get(&quot;title&quot;)&#xD;
+	);&#xD;
+}&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsTmly</Property>
+          <Property name="readOnly">true</Property>
+          <DataColumn name="title">
+            <Property name="property">title</Property>
+          </DataColumn>
+          <DataColumn name="content">
+            <Property name="property">content</Property>
+          </DataColumn>
+        </DataGrid>
+      </CustomDropDown>
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
           <ClientEvent name="onDataRowClick">var tkfl = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;);&#xD;
-alert(tkfl);&#xD;
 var user = tkfl.current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
@@ -829,7 +875,7 @@ if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
 //action.execute&#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
-	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).flush();&#xD;
+	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).flush();&#xD;
 	view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).flush();&#xD;
 });&#xD;
 </ClientEvent>
@@ -837,7 +883,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
           </Button>
           <Button>
-            <ClientEvent name="onClick">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).cancel();&#xD;
+            <ClientEvent name="onClick">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
 view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
 view.get(&quot;#dialog&quot;).close();</ClientEvent>
             <Property name="caption">取消</Property>
@@ -861,13 +907,13 @@ view.get(&quot;#dialog&quot;).close();</ClientEvent>
               <ToolBar>
                 <Button>
                   <ClientEvent name="onClick">var id = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).insert({tkId:id});&#xD;
+view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).insert({tkId:id});&#xD;
 </ClientEvent>
                   <Property name="caption">添加</Property>
                   <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
                 </Button>
                 <Button>
-                  <ClientEvent name="onClick">var current = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;).current;&#xD;
+                  <ClientEvent name="onClick">var current = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).current;&#xD;
 if(current != undefined){&#xD;
 	//daxzx&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
@@ -959,7 +1005,7 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
               </ToolBar>
               <DataGrid id="yxtkxzxGrid">
                 <Property name="dataSet">dsYxtk</Property>
-                <Property name="dataPath">#.yxtkxzx</Property>
+                <Property name="dataPath">#.tkxzx</Property>
                 <Property name="height">200</Property>
                 <Property name="highlightSelectedRow">false</Property>
                 <Property name="highlightCurrentRow">false</Property>
@@ -1004,8 +1050,30 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
         <Property name="width">700</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+            <ClientEvent name="onClick">var entity = view.get('#newtkxzxGrid.selection');&#xD;
+var data = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+var mode = data.get(&quot;mode&quot;);&#xD;
+if(entity != undefined &amp;&amp; entity != &quot;&quot;){&#xD;
+	if(data.get(&quot;id&quot;) == undefined){&#xD;
+		var da = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+		if(mode == 1 || mode == 0){&#xD;
+			da.clear();&#xD;
+			da.insert({//id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
+					xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
+		}else if(mode == 2){&#xD;
+			da.clear();&#xD;
+			entity.each(function(e){&#xD;
+				da.insert({//id:e.get(&quot;id&quot;),tkId:e.get(&quot;tkId&quot;),&#xD;
+					xzKey:e.get(&quot;xzKey&quot;),content:e.get(&quot;content&quot;)});&#xD;
+			});&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+//action.execute&#xD;
+&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#yxtkDialog&quot;).close();&#xD;
+	view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#dsYxtk&quot;).flush();//可能与查询有 冲突&#xD;
 });&#xD;
 </ClientEvent>
@@ -1015,9 +1083,11 @@ view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.user&quot;).cancel();&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept&quot;).cancel();&#xD;
+view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tof&quot;).cancel();&#xD;
+view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
 view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
+view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
 view.get(&quot;#yxtkDialog&quot;).close();&#xD;
-&#xD;
 </ClientEvent>
             <Property name="caption">取消</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -1048,15 +1118,15 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
+                  <Property name="name">mode</Property>
+                  <Property name="property">mode</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="dataPath">#.tmly</Property>
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
                   <Property name="trigger">tmlyDropDown</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
@@ -1067,6 +1137,27 @@ view.get(&quot;#yxtkDialog&quot;).close();&#xD;
                   </Editor>
                 </AutoFormElement>
               </AutoForm>
+              <GroupBox id="tkxzxGroup">
+                <Property name="caption">题目选择项</Property>
+                <Property name="visible">false</Property>
+                <Buttons/>
+                <Children>
+                  <DataGrid id="newtkxzxGrid">
+                    <Property name="dataSet">dsYxtk</Property>
+                    <Property name="dataPath">#.tkxzx</Property>
+                    <Property name="hideMode">visibility</Property>
+                    <RowSelectorColumn/>
+                    <DataColumn id="newxzKey" name="xzKey">
+                      <Property name="property">xzKey</Property>
+                      <Property name="caption">选项</Property>
+                    </DataColumn>
+                    <DataColumn name="content">
+                      <Property name="property">content</Property>
+                      <Property name="caption">选项内容</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+              </GroupBox>
             </Children>
           </GroupBox>
         </Children>
@@ -1191,8 +1282,7 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
-view.get(&quot;#dsYxtk&quot;).flush();&#xD;
-</ClientEvent>
+view.get(&quot;#yxtkGrid&quot;).unselectAll();</ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
@@ -1483,7 +1573,8 @@ if(yxtks.current == null){&#xD;
 view.get(&quot;#dsYxtk&quot;).insert();&#xD;
 view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tmly&quot;).insert();&#xD;
 view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).insert();&#xD;
-view.get(&quot;#yxtkDialog&quot;).show();</ClientEvent>
+view.get(&quot;#yxtkDialog&quot;).show();&#xD;
+</ClientEvent>
               <Property name="caption">增加</Property>
               <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
             </Button>
@@ -1493,7 +1584,7 @@ if(current != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 		/*&#xD;
 		var das = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
 		das.each(function(da){&#xD;
 			da.remove();&#xD;
 		});&#xD;
@@ -1510,8 +1601,9 @@ if(current != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">//view.get(&quot;#updateDialog&quot;).show();&#xD;
+              <ClientEvent name="onClick">//view.get(&quot;#updateDialog&quot;).show();//&#xD;
 view.get(&quot;#yxtkDialog&quot;).show();&#xD;
+&#xD;
 </ClientEvent>
               <Property name="caption">修改</Property>
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
@@ -1546,7 +1638,7 @@ if(mode ==1 || mode == 2){&#xD;
 	}else{&#xD;
 		view.get(&quot;#daGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
 		entity.each(function(da){&#xD;
 			xzs.each(function(xz){&#xD;
 				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
@@ -1590,7 +1682,8 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -100px -20px</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();</ClientEvent>
+              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
+</ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
               <Property name="hideMode">display</Property>
