@@ -265,7 +265,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		 */
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String sql = "insert into zstk values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
 				sdf.format(zstk.getCreateDate()), zstk.getSpDate(),
 				zstk.getSprId(), zstk.getDeptid(), zstk.getContent(),

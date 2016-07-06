@@ -35,6 +35,7 @@ import com.bstek.dorado.data.provider.Page;
 public class YxtkglServiceImpl implements YxtkglService {
 	@Resource
 	YxtkglDao yxtkglDao;
+	String tkid;
 
 	private List<Tkxzx> yxtkNew = new ArrayList<Tkxzx>();
 
@@ -67,7 +68,8 @@ public class YxtkglServiceImpl implements YxtkglService {
 						.getContext().getAuthentication().getPrincipal();
 				yxtk.setUserId(userDetails.getId());
 				yxtk.setDeptid(userDetails.getDeptid());
-				yxtk.setId(getUUID());
+				tkid = getUUID();
+				yxtk.setId(tkid);
 				yxtk.setDrbz("N");
 				yxtkglDao.addYxtk(yxtk);
 				yxtkglDao.addGrDeptGxJl(yxtk);
@@ -86,9 +88,14 @@ public class YxtkglServiceImpl implements YxtkglService {
 			if (xzs != null) {
 				for (Tkxzx xz : xzs) {
 					if (EntityUtils.getState(xz).equals(EntityState.NEW)) {
-						xz.setId(this.getUUID());
+						if(!"0".equals(xz.getTkId())){
+							xz.setId(this.getUUID());
+							if (xz.getTkId() == null) {
+								xz.setTkId(tkid);
+							}
+							yxtkglDao.addYxtkxzx(xz);
+						}
 						yxtkNew.add(xz);
-						yxtkglDao.addYxtkxzx(xz);
 					}
 					if (EntityUtils.getState(xz).equals(EntityState.MODIFIED)) {
 						yxtkglDao.updateYxtkxzx(xz);
@@ -105,6 +112,9 @@ public class YxtkglServiceImpl implements YxtkglService {
 							for (Tkxzx xz : yxtkNew) {
 								if (da.getXzKey().equals(xz.getXzKey())) {
 									da.setId(xz.getId());
+									if (da.getTkId() == null) {
+										da.setTkId(tkid);
+									}
 								}
 							}
 						}
@@ -202,32 +212,33 @@ public class YxtkglServiceImpl implements YxtkglService {
 						Tktm tktm = new Tktm();
 						tktm.setDrbz("Y");
 
-						if (deptChack.get(tkcj.getDeptName()) == null || deptid == 0) {
+						if (deptChack.get(tkcj.getDeptName()) == null
+								|| deptid == 0) {
 							deptid = yxtkglDao.getDeptIdByDeptName(tkcj
 									.getDeptName());
 							deptChack.put(tkcj.getDeptName(),
 									tkcj.getDeptName());
 						}
-						if(deptid == 0){
-							errMassage.add(tkcj);//记录当前行数
+						if (deptid == 0) {
+							errMassage.add(tkcj);// 记录当前行数
 							deptChack.put(tkcj.getDeptName(), null);
 							continue;
 						}
 						tktm.setDeptid(deptid);
 
-						if (userChack.get(tkcj.getUserName()) == null || userid == 0) {
+						if (userChack.get(tkcj.getUserName()) == null
+								|| userid == 0) {
 							userid = yxtkglDao.getUserIdByDeptIdAndUserName(
 									deptid, tkcj.getUserName());
 							userChack.put(tkcj.getUserName(),
 									tkcj.getUserName());
 						}
-						if(userid == 0){
-							errMassage.add(tkcj);//记录当前行数
+						if (userid == 0) {
+							errMassage.add(tkcj);// 记录当前行数
 							userChack.put(tkcj.getUserName(), null);
 							continue;
 						}
 						tktm.setUserId(userid);
-
 
 						if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
 							tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
@@ -236,7 +247,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 									tkcj.getTmlyContent());
 						}
 						tktm.setTmlyId(tmlyId);
-						
+
 						if (flIdChack.get(tkcj.getTkflTkmc()) == null) {
 							flId = yxtkglDao.getTkflInfoOrAddTkfl(tkcj
 									.getTkflTkmc());
@@ -320,7 +331,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 			}
 		}
 		yxtkglDao.batchInsertTk(tktms, tkxzxs, tkdas);
-		return errMassage==null?null:errMassage;
+		return errMassage == null ? null : errMassage;
 	}
 
 }

@@ -25,6 +25,7 @@ import com.bstek.dorado.data.provider.Page;
 public class ZstkglServiceImpl implements ZstkglService {
 	@Resource
 	ZstkglDao zstkglDao;
+	String tkid;
 
 	private List<Tkxzx> zstkNew = new ArrayList<Tkxzx>();
 
@@ -64,7 +65,8 @@ public class ZstkglServiceImpl implements ZstkglService {
 							.getContext().getAuthentication().getPrincipal();
 					zstk.setUserId(userDetails.getId());
 					zstk.setDeptid(userDetails.getDeptid());
-					zstk.setId(getUUID());
+					tkid = getUUID();
+					zstk.setId(tkid);
 					zstk.setDrbz("N");
 					zstkglDao.addZstk(zstk);
 				} else {
@@ -90,9 +92,14 @@ public class ZstkglServiceImpl implements ZstkglService {
 			if (xzs != null) {
 				for (Tkxzx xz : xzs) {
 					if (EntityUtils.getState(xz).equals(EntityState.NEW)) {
-						xz.setId(getUUID());
+						if(!"0".equals(xz.getTkId())){
+							xz.setId(getUUID());
+							if(xz.getTkId() == null){
+								xz.setTkId(tkid);
+							}
+							zstkglDao.addTkxzx(xz);
+						}
 						zstkNew.add(xz);
-						zstkglDao.addTkxzx(xz);
 					}
 					if (EntityUtils.getState(xz).equals(EntityState.MODIFIED)) {
 						zstkglDao.updateTkxzx(xz);
@@ -109,6 +116,9 @@ public class ZstkglServiceImpl implements ZstkglService {
 							for (Tkxzx xz : zstkNew) {
 								if (da.getXzKey().equals(xz.getXzKey())) {
 									da.setId(xz.getId());
+									if(da.getTkId() == null){
+										da.setTkId(tkid);
+									}
 								}
 							}
 						}
