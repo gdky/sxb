@@ -259,4 +259,14 @@ public class QzBmCdglController {
 		qzBmCdglService.updateSystemPropsInfo(list);
 	}
 	
+	/**
+	 * 修改子节点信息
+	 * @param record
+	 */
+	@Transactional
+	@Expose
+	public void updateChildNode(Record record){
+		qzBmCdglService.updateNodeInfo(record);
+	}
+	
 }

@@ -59,7 +59,7 @@
       <Property name="dataType">[menuType]</Property>
     </DataSet>
     <SplitPanel>
-      <Property name="position">25%</Property>
+      <Property name="position">15%</Property>
       <MainControl>
         <Container>
           <Container id="dialogCont">
@@ -136,6 +136,7 @@ if(node != undefined){&#xD;
                   <Children>
                     <AutoForm id="addNodeForm">
                       <Property name="dataSet">addNodeDataSet</Property>
+                      <Property name="cols">*</Property>
                       <AutoFormElement>
                         <Property name="name">menu_Name</Property>
                         <Property name="property">menu_Name</Property>
@@ -143,11 +144,6 @@ if(node != undefined){&#xD;
                         <Editor/>
                       </AutoFormElement>
                       <AutoFormElement>
-                        <Property name="name">yxbz</Property>
-                        <Property name="property">yxbz</Property>
-                        <Editor/>
-                      </AutoFormElement>
-                      <AutoFormElement layoutConstraint="colSpan:2">
                         <Property name="name">url</Property>
                         <Property name="property">url</Property>
                         <Property name="labelWidth">85</Property>
@@ -219,6 +215,7 @@ child.each(function(entity){&#xD;
                   <Children>
                     <AutoForm id="addChildForm">
                       <Property name="dataSet">addNodeDataSet</Property>
+                      <Property name="cols">*</Property>
                       <AutoFormElement>
                         <Property name="name">menu_Name</Property>
                         <Property name="property">menu_Name</Property>
@@ -228,11 +225,6 @@ child.each(function(entity){&#xD;
                         <Editor/>
                       </AutoFormElement>
                       <AutoFormElement>
-                        <Property name="name">yxbz</Property>
-                        <Property name="property">yxbz</Property>
-                        <Editor/>
-                      </AutoFormElement>
-                      <AutoFormElement layoutConstraint="colSpan:2">
                         <Property name="name">url</Property>
                         <Property name="property">url</Property>
                         <Property name="labelWidth">85</Property>
@@ -274,6 +266,7 @@ view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&
                       <Property name="dataSet">menuDataSet</Property>
                       <Property name="dataPath">!current_Node</Property>
                       <Property name="readOnly">false</Property>
+                      <Property name="cols">*</Property>
                       <AutoFormElement>
                         <Property name="name">menu_Name</Property>
                         <Property name="property">menu_Name</Property>
@@ -281,14 +274,59 @@ view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&
                         <Editor/>
                       </AutoFormElement>
                       <AutoFormElement>
-                        <Property name="name">yxbz</Property>
-                        <Property name="property">yxbz</Property>
-                        <Editor/>
-                      </AutoFormElement>
-                      <AutoFormElement layoutConstraint="colSpan:2">
                         <Property name="name">url</Property>
                         <Property name="property">url</Property>
                         <Property name="labelWidth">85</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                    </AutoForm>
+                  </Children>
+                </GroupBox>
+              </Children>
+              <Tools/>
+            </Dialog>
+            <Dialog id="updateChildDialog">
+              <Property name="width">400</Property>
+              <Buttons/>
+              <Children>
+                <GroupBox>
+                  <Property name="caption">修改所属菜单信息</Property>
+                  <Buttons>
+                    <Button>
+                      <ClientEvent name="onClick">var menu = view.get(&quot;#childForm&quot;).get(&quot;entity&quot;);&#xD;
+view.get(&quot;#updateChildAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
+view.get(&quot;#updateChildAction&quot;).execute(function(){&#xD;
+	//view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.get(&quot;#updateChildDialog&quot;).close();&#xD;
+	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+	var entitys =  view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
+	entitys.each(function(entity){&#xD;
+		if(entity.get(&quot;id_&quot;) == menu.get(&quot;id_&quot;)){&#xD;
+			entity.set({menu_Name:menu.get(&quot;menu_Name&quot;),&#xD;
+						url:menu.get(&quot;url&quot;)});&#xD;
+		}&#xD;
+	});&#xD;
+});&#xD;
+</ClientEvent>
+                      <Property name="caption">提交</Property>
+                    </Button>
+                    <Button>
+                      <ClientEvent name="onClick">view.get(&quot;#updateChildDialog&quot;).close();</ClientEvent>
+                      <Property name="caption">取消</Property>
+                    </Button>
+                  </Buttons>
+                  <Children>
+                    <AutoForm id="childForm">
+                      <Property name="createPrivateDataSet">true</Property>
+                      <Property name="cols">*</Property>
+                      <AutoFormElement>
+                        <Property name="name">menu_Name</Property>
+                        <Property name="property">menu_Name</Property>
+                        <Editor/>
+                      </AutoFormElement>
+                      <AutoFormElement>
+                        <Property name="name">url</Property>
+                        <Property name="property">url</Property>
                         <Editor/>
                       </AutoFormElement>
                     </AutoForm>
@@ -311,11 +349,6 @@ view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&
                   <Property name="name">menu_Name</Property>
                   <Property name="property">menu_Name</Property>
                   <Property name="labelWidth">85</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">yxbz</Property>
-                  <Property name="property">yxbz</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
@@ -372,6 +405,21 @@ if(menu != undefined){&#xD;
                   <Property name="caption">删除子节点</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
                 </Button>
+                <Button>
+                  <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).current;&#xD;
+if(menu != undefined){&#xD;
+	view.get(&quot;#childForm&quot;).get(&quot;entity&quot;).set({&#xD;
+				id_:menu.get(&quot;id_&quot;),&#xD;
+				parent_Id:menu.get(&quot;parent_Id&quot;),&#xD;
+				menu_Name:menu.get(&quot;menu_Name&quot;),&#xD;
+				url:menu.get(&quot;url&quot;),&#xD;
+				yxbz:menu.get(&quot;yxbz&quot;)&#xD;
+	});&#xD;
+	view.get(&quot;#updateChildDialog&quot;).show();&#xD;
+}&#xD;
+</ClientEvent>
+                  <Property name="caption">修改子节点</Property>
+                </Button>
                 <DataPilot>
                   <Property name="itemCodes">pages</Property>
                   <Property name="dataSet">menuDataSet</Property>
@@ -387,9 +435,6 @@ if(menu != undefined){&#xD;
                 </DataColumn>
                 <DataColumn name="url">
                   <Property name="property">url</Property>
-                </DataColumn>
-                <DataColumn name="yxbz">
-                  <Property name="property">yxbz</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -421,7 +466,7 @@ if (currentNode != null) {&#xD;
 &#xD;
 view.get(&quot;#addNode&quot;).show();&#xD;
 </ClientEvent>
-                <Property name="caption">添加同级节点</Property>
+                <Property name="caption">添加</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
               </Button>
               <Button>
@@ -436,18 +481,18 @@ dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,funct
 	view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
 	view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
 		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).parent.parent.get(&quot;childDataGrid&quot;).flush();&#xD;
 	});&#xD;
 });&#xD;
 &#xD;
 &#xD;
 &#xD;
 </ClientEvent>
-                <Property name="caption">删除节点</Property>
+                <Property name="caption">删除</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
               </Button>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).show();&#xD;
-</ClientEvent>
+                <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).show();</ClientEvent>
                 <Property name="caption">修改</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
               </Button>
@@ -492,5 +537,8 @@ dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,funct
         <Property name="dataSet">menuDataSet</Property>
       </UpdateItem>
     </UpdateAction>
+    <AjaxAction id="updateChildAction">
+      <Property name="service">qzBmCdglController#updateChildNode</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>
