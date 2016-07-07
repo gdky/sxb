@@ -386,4 +386,16 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		return this.jdbcTemplate.queryForObject(sql,new Object[]{roleName}, Integer.class);
 	}
 
+	@Override
+	public Map<String, Object> getCurrentUserInfo() {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		
+		String sql = "select * from user where id_ = ? ";
+		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sql,new Object[]{userDetails.getId()});
+		return ls.get(0);
+	}
+
 }

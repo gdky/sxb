@@ -68,4 +68,6 @@ public interface YhJsglDao {
 
 	void updateUserPwd(User user);
 
+	Map<String, Object> getCurrentUserInfo();
+
 }

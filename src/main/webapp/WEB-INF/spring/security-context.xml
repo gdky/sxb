@@ -31,6 +31,9 @@
 			authentication-failure-url="/gov.hygs.htgl.login.Login.d?error=true"  username-parameter="username"
             password-parameter="password"  login-processing-url="/j_spring_security_check" 
 			default-target-url="/gov.hygs.htgl.view.Main.d"/>
+		<logout logout-url="/j_spring_security_logout"   
+            logout-success-url="/gov.hygs.htgl.login.Login.d"   
+            invalidate-session="true" />  
 		<csrf disabled="true"/>
 		<headers defaults-disabled="true">
    			<cache-control/>

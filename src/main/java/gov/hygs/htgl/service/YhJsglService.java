@@ -44,4 +44,6 @@ public interface YhJsglService {
 
 	void saveUserPwd(List<User> users);
 
+	Map<String, Object> getCurrentUserInfo();
+
 }
