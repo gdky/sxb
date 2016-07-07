@@ -20,6 +20,8 @@ public interface MainDao {
 
 	User getUser(String username);
 
+	String UpdatePassword(Map<String, Object> para);
+
 	
 
 }

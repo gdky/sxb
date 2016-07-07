@@ -187,4 +187,10 @@ public class YhJsglServiceImpl implements YhJsglService {
 		return yhglDao.getCurrentUserName();
 	}
 
+	@Override
+	public Map<String, Object> getCurrentUserInfo() {
+		// TODO Auto-generated method stub
+		return yhglDao.getCurrentUserInfo();
+	}
+
 }

@@ -67,5 +67,11 @@ public class MainServiceImpl implements MainService {
 		return mainDao.getChildMenus(id);
 	}
 
+	@Override
+	public String UpdatePassword(Map<String, Object> para) {
+		// TODO Auto-generated method stub
+		return mainDao.UpdatePassword(para);
+	}
+
 	
 }
