@@ -117,7 +117,7 @@ public class ZstkglServiceImpl implements ZstkglService {
 								if (da.getXzKey().equals(xz.getXzKey())) {
 									da.setId(xz.getId());
 									if(da.getTkId() == null){
-										da.setTkId(tkid);
+										da.setTkId(tkid==null?xz.getTkId():tkid);
 									}
 								}
 							}

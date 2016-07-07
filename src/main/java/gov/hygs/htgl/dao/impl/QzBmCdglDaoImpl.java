@@ -165,7 +165,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		String sql = "insert into menu values(?,?,?,?,?)";
 		Object[] objs = { menu.getId_(), menu.getParent_Id(),
-				menu.getMenu_Name(), menu.getUrl(), menu.getYxbz() };
+				menu.getMenu_Name(), menu.getUrl(), "Y" };
 		this.jdbcTemplate.update(sql, objs);
 	}
 

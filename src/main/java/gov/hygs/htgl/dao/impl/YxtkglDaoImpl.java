@@ -83,6 +83,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		String user = (String) param.get("user");
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
+		String tktmcontent = (String) param.get("tktmcontent");
 		if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				// sql.append(" and deptid=" + deptid);
@@ -111,6 +112,9 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			sql.append(" and tmly_id in "
 					+ "(select id_ from tmly where title like '%" + content
 					+ "%' or content like '%" + content + "%') ");
+		}
+		if(tktmcontent != null){
+			sql.append(" and content like '%"+tktmcontent+"%' ");
 		}
 		// return null;
 	}

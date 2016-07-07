@@ -216,7 +216,7 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 			if (obj instanceof Record) {
 				record = (Record) obj;
 				menu.setId_((Integer) record.get("id_"));
-				menu.setMenu_Name((String) record.get("menu_name"));
+				menu.setMenu_Name((String) record.get("menu_Name"));
 				menu.setParent_Id((Integer) record.get("parent_id"));
 				menu.setUrl((String) record.get("url"));
 				menu.setYxbz((String) record.get("yxbz"));
