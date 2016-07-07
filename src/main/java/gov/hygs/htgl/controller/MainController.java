@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.bstek.dorado.annotation.DataProvider;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.common.event.DefaultClientEvent;
 import com.bstek.dorado.uploader.UploadFile;
 import com.bstek.dorado.uploader.annotation.FileResolver;
@@ -83,5 +84,8 @@ public class MainController {
 	public List<Menu> getChildMenus(int id){
 		return mainService.getChildMenus(id);
 	}
-	
+	@Expose
+	public String UpdatePassword(Map<String,Object> para){
+		return mainService.UpdatePassword(para);
+	}
 }

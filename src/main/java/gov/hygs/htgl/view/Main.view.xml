@@ -26,6 +26,92 @@
         <Property name="parameter">$${this.id_}</Property>
       </Reference>
     </DataType>
+    <DataType name="dtUser">
+      <Property name="creationType">gov.hygs.htgl.entity.User</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="login_Name">
+        <Property></Property>
+        <Property name="label">登录名</Property>
+        <Validator type="ajax">
+          <Property name="async">false</Property>
+          <Property name="revalidateOldValue">false</Property>
+          <Property name="executingMessage">正在检查登陆账号...</Property>
+          <Property name="service">yhJsglController#checkLoginName</Property>
+        </Validator>
+        <Validator type="regExp">
+          <Property name="whiteRegExp">^[0-9]{11,11}$</Property>
+          <Property name="resultMessage">登陆账号长度必须11位</Property>
+          <Property name="name">validator2</Property>
+        </Validator>
+        <Validator name="validator2" type="required">
+          <Property name="resultMessage">登陆账号不能为空，请输入内容</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="user_Name">
+        <Property></Property>
+        <Property name="label">用户名</Property>
+        <Validator type="ajax">
+          <Property name="executingMessage">正在检查用户名名...</Property>
+          <Property name="async">false</Property>
+          <Property name="revalidateOldValue">false</Property>
+          <Property name="service">yhJsglController#checkUserName</Property>
+        </Validator>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">用户名不能为空，请输入内容</Property>
+        </Validator>
+        <Validator name="validator2" type="regExp">
+          <Property name="whiteRegExp">^[a-zA-Z\d\u4e00-\u9fa5]+$</Property>
+          <Property name="resultMessage">用户名必须是汉字、字母、数字的组合</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="phone">
+        <Property></Property>
+        <Property name="label">电话号码</Property>
+      </PropertyDef>
+      <PropertyDef name="rzsj">
+        <Property name="dataType">Date</Property>
+        <Property name="label">入职日期</Property>
+      </PropertyDef>
+      <PropertyDef name="zw">
+        <Property></Property>
+        <Property name="label">职位</Property>
+      </PropertyDef>
+      <PropertyDef name="pwd">
+        <Property></Property>
+        <Property name="label">密码</Property>
+      </PropertyDef>
+      <PropertyDef name="photo">
+        <Property></Property>
+        <Property name="label">头像</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">所在科室</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请下拉选择</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="deptMc">
+        <Property name="label">所在科室</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请下拉选择</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="birthday">
+        <Property name="dataType">Date</Property>
+        <Property name="label">生日</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtPassword">
+      <PropertyDef name="oldPassword">
+        <Property name="label">原密码</Property>
+      </PropertyDef>
+      <PropertyDef name="newPassword">
+        <Property name="label">新密码</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <ClientEvent name="onCreate">&#xD;
@@ -168,6 +254,18 @@ self.$getOpenTabMode = function(){&#xD;
       <Property name="dataType">[dtMenu]</Property>
       <Property name="dataProvider">mainController#getUserMenu</Property>
     </DataSet>
+    <DataSet id="dsUserInfo">
+      <Property name="dataProvider">yhJsglController#getCurrentUserInfo</Property>
+      <Property name="dataType">dtUser</Property>
+    </DataSet>
+    <DataSet id="dsPassword">
+      <ClientEvent name="onReady">self.insert();&#xD;
+</ClientEvent>
+      <Property name="dataType">dtPassword</Property>
+    </DataSet>
+    <AjaxAction id="ajaxActionUpdatePassword">
+      <Property name="service">mainController#UpdatePassword</Property>
+    </AjaxAction>
     <Panel id="panelHeader">
       <Property name="height">80</Property>
       <Buttons/>
@@ -182,14 +280,154 @@ self.$getOpenTabMode = function(){&#xD;
             <Property name="height">60</Property>
           </HtmlContainer>
           <HtmlContainer layoutConstraint="right">
-            <Property name="width">5%</Property>
+            <Property name="width">110</Property>
             <Container layout="native">
-              <Button>
+              <Button id="userInfo">
                 <Property name="style">
-                  <Property name="background-color">#FFFFFF</Property>
+                  <Property name="background-color"></Property>
                 </Property>
                 <Property name="caption">${dorado.getDataProvider(&quot;yhJsglController#getCurrentUserName&quot;).getResult()}</Property>
+                <Property name="icon">${configure.getString('fsds.login.backgroundImageFolder')}/sxb-backend/icons/user.png</Property>
+                <Property name="menu">menuUserInfo</Property>
+                <Property name="width">100</Property>
               </Button>
+              <Menu id="menuUserInfo">
+                <MenuItem>
+                  <ClientEvent name="onClick">view.get(&quot;#dialogUserInfo&quot;).show();&#xD;
+</ClientEvent>
+                  <Property name="caption">用户信息</Property>
+                  <Property name="icon">${configure.getString('fsds.login.backgroundImageFolder')}/sxb-backend/icons/user.png</Property>
+                </MenuItem>
+                <MenuItem>
+                  <ClientEvent name="onClick">view.get(&quot;#dialogPassword&quot;).show();&#xD;
+</ClientEvent>
+                  <Property name="caption">修改密码</Property>
+                  <Property name="icon">${configure.getString('fsds.login.backgroundImageFolder')}/sxb-backend/icons/building_edit.png</Property>
+                </MenuItem>
+                <MenuItem>
+                  <ClientEvent name="onClick">var contextPath = '${request.getContextPath()}/'&#xD;
+var springsecurity =jQuery(&quot;&lt;iframe style='width:0,height:0;display:none;'>&lt;/iframe>&quot;).appendTo(jQuery(document.body));&#xD;
+	springsecurity.prop(&quot;src&quot;, contextPath+&quot;j_spring_security_logout&quot;);&#xD;
+location.reload()</ClientEvent>
+                  <Property name="caption">退出登录</Property>
+                  <Property name="icon">${configure.getString('fsds.login.backgroundImageFolder')}/sxb-backend/icons/ico_tag_close_h.gif</Property>
+                </MenuItem>
+              </Menu>
+              <Dialog id="dialogUserInfo">
+                <Property name="width">500</Property>
+                <Property name="height">260</Property>
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">view.get(&quot;#dialogUserInfo&quot;).hide();&#xD;
+</ClientEvent>
+                    <Property name="caption">关闭</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <AutoForm>
+                    <Property name="readOnly">true</Property>
+                    <Property name="dataSet">dsUserInfo</Property>
+                    <AutoFormElement>
+                      <Property name="name">login_Name</Property>
+                      <Property name="property">login_Name</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">user_Name</Property>
+                      <Property name="property">user_Name</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">phone</Property>
+                      <Property name="property">phone</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">rzsj</Property>
+                      <Property name="property">rzsj</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">zw</Property>
+                      <Property name="property">zw</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">photo</Property>
+                      <Property name="property">photo</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">deptid</Property>
+                      <Property name="property">deptid</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">birthday</Property>
+                      <Property name="property">birthday</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </Children>
+                <Tools/>
+              </Dialog>
+              <Dialog id="dialogPassword">
+                <Buttons>
+                  <Button>
+                    <ClientEvent name="onClick">var ajaxActionUpdatePassword = view.get(&quot;#ajaxActionUpdatePassword&quot;);&#xD;
+var dsPassword = view.get(&quot;#dsPassword&quot;).getData(&quot;#&quot;);&#xD;
+var oldPassword=dsPassword.get(&quot;oldPassword&quot;);&#xD;
+var	newPassword=dsPassword.get(&quot;newPassword&quot;);&#xD;
+&#xD;
+if(newPassword==null||oldPassword==null||newPassword==&quot;&quot;||oldPassword==&quot;&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;原密码或者新密码不能为空！&quot;);&#xD;
+&#xD;
+}else{&#xD;
+	ajaxActionUpdatePassword.set(&quot;parameter&quot;,{&#xD;
+	oldPassword:oldPassword,&#xD;
+	newPassword:newPassword&#xD;
+})&#xD;
+	ajaxActionUpdatePassword.execute(function(returnValue){&#xD;
+		if(returnValue==&quot;1&quot;){&#xD;
+			dorado.MessageBox.alert(&quot;修改成功！&quot;);&#xD;
+			view.get(&quot;#dialogPassword&quot;).hide();&#xD;
+		}else{&#xD;
+			dorado.MessageBox.alert(&quot;原密码错误！&quot;);&#xD;
+		}&#xD;
+		&#xD;
+	})&#xD;
+	&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                    <Property name="caption">确定</Property>
+                  </Button>
+                  <Button>
+                    <ClientEvent name="onClick">view.get(&quot;#dialogPassword&quot;).hide();&#xD;
+</ClientEvent>
+                    <Property name="caption">取消</Property>
+                  </Button>
+                </Buttons>
+                <Children>
+                  <AutoForm>
+                    <Property name="dataSet">dsPassword</Property>
+                    <Property name="cols">*</Property>
+                    <AutoFormElement>
+                      <Property name="name">oldPassword</Property>
+                      <Property name="property">oldPassword</Property>
+                      <Property name="editorType">PasswordEditor</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement>
+                      <Property name="name">newPassword</Property>
+                      <Property name="property">newPassword</Property>
+                      <Property name="editorType">PasswordEditor</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </Children>
+                <Tools/>
+              </Dialog>
             </Container>
           </HtmlContainer>
         </HtmlContainer>

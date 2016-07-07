@@ -101,13 +101,25 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	@Override
 	public void updateUser(User user) {
 		// TODO Auto-generated method stub
-		String sql = "update USER set login_Name=?,user_Name=?,phone=?,rzsj=?,zw=?,pwd=?,photo=?,deptid=?,birthday=? where id_=? ";
+		String sql = "update USER set login_Name=?,user_Name=?,phone=?,rzsj=?,zw=?,photo=?,deptid=?,birthday=? where id_=? ";
 		this.jdbcTemplate.update(
 				sql,
 				new Object[] { user.getLogin_Name(), user.getLogin_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
-						Md5Utils.encodeMd5(user.getPwd()), user.getPhoto(), user.getDeptid(),
+						 user.getPhoto(), user.getDeptid(),
 						user.getBirthday(), user.getId_()
+
+				});
+
+	}
+	
+	@Override
+	public void updateUserPwd(User user) {
+		// TODO Auto-generated method stub
+		String sql = "update USER set pwd=? where id_=? ";
+		this.jdbcTemplate.update(
+				sql,
+				new Object[] {Md5Utils.encodeMd5(user.getPwd()), user.getId_()
 
 				});
 
@@ -365,6 +377,25 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 			    .getAuthentication()
 			    .getPrincipal();
 		return userDetails.getUser_Name();
+	}
+
+	@Override
+	public int getRoleIdByRoleName(String roleName) {
+		// TODO Auto-generated method stub
+		String sql = "select id_ from Role where role_name=?";
+		return this.jdbcTemplate.queryForObject(sql,new Object[]{roleName}, Integer.class);
+	}
+
+	@Override
+	public Map<String, Object> getCurrentUserInfo() {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		
+		String sql = "select * from user where id_ = ? ";
+		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sql,new Object[]{userDetails.getId()});
+		return ls.get(0);
 	}
 
 }

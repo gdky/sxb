@@ -42,4 +42,8 @@ public interface YhJsglService {
 
 	String getCurrentUserName();
 
+	void saveUserPwd(List<User> users);
+
+	Map<String, Object> getCurrentUserInfo();
+
 }

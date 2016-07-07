@@ -18,6 +18,7 @@ import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.security.Md5Utils;
 @Repository
 public class MainDaoImpl extends BaseJdbcDao  implements MainDao {
 
@@ -111,6 +112,27 @@ public class MainDaoImpl extends BaseJdbcDao  implements MainDao {
 		List<User> users= this.jdbcTemplate.query(sql.toString(), new Object[] {username  },
 				new UserRowMapper());
 		return users.get(0);
+	}
+
+
+	@Override
+	public String UpdatePassword(Map<String, Object> para) {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		String oldPassword = (String) para.get("oldPassword");
+		String newPassword = (String) para.get("newPassword");
+		String sql = " update user set pwd = ? where id_ = ?";
+		if(userDetails.getPassword().equals(Md5Utils.encodeMd5(oldPassword))){
+			this.jdbcTemplate.update(sql,new Object[]{Md5Utils.encodeMd5(newPassword),userDetails.getId()});
+			return "1";
+		}else{
+			return "0";
+		}
+		
+		
+		
 	}
 
 

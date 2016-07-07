@@ -13,4 +13,6 @@ public interface MainService {
 
 	List<Menu> getChildMenus(int id);
 
+	String UpdatePassword(Map<String, Object> para);
+
 }

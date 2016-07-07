@@ -32,9 +32,20 @@ public class YhJsglController {
 		
 	}
 	
+	@DataProvider
+	public Map<String,Object> getCurrentUserInfo(){
+		return yhglService.getCurrentUserInfo();
+	}
+	
+	
 	@DataResolver
 	public void saveUserInfo(List<User> users){
 		yhglService.saveUserInfo(users);
+	}
+	
+	@DataResolver
+	public void saveUserPwd(List<User> users){
+		yhglService.saveUserPwd(users);
 	}
 	
 	@DataProvider
