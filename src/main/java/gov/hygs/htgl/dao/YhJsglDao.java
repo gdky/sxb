@@ -70,4 +70,6 @@ public interface YhJsglDao {
 
 	Map<String, Object> getCurrentUserInfo();
 
+	String importImage(Map<String, Object> para);
+
 }

@@ -86,13 +86,13 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	@Override
 	public Integer insertUser(User user) {
 		// TODO Auto-generated method stub
-
+		String imagePath ="images/mr.jpg";
 		String sql = "insert into USER (login_Name,user_Name, phone,rzsj,zw,pwd,photo,deptid,birthday) values(?,?,?,?,?,?,?,?,?) ";
 		return this.insertAndGetKeyByJdbc(
 				sql,
 				new Object[] { user.getLogin_Name(), user.getUser_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
-						Md5Utils.encodeMd5(user.getPwd()), user.getPhoto(), user.getDeptid(),
+						Md5Utils.encodeMd5(user.getPwd()), imagePath, user.getDeptid(),
 						user.getBirthday()
 
 				}, new String[] { "id_" }).intValue();
@@ -396,6 +396,16 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		String sql = "select * from user where id_ = ? ";
 		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sql,new Object[]{userDetails.getId()});
 		return ls.get(0);
+	}
+
+	@Override
+	public String importImage(Map<String, Object> para) {
+		// TODO Auto-generated method stub
+		String path = (String)para.get("path");
+		String id = (String)para.get("id");
+		String sql="update user set photo = ? where id_ = ? ";
+		this.jdbcTemplate.update(sql,new Object[]{path,id});
+		return null;
 	}
 
 }

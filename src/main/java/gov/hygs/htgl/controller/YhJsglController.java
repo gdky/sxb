@@ -4,6 +4,7 @@ import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.service.YhJsglService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
 import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.UploadFile;
+import com.bstek.dorado.uploader.annotation.FileResolver;
 
 @Component
 public class YhJsglController {
@@ -109,5 +112,10 @@ public class YhJsglController {
 	@Expose
 	public String checkRoleName(String param){
 		return yhglService.checkRoleName(param);
+	}
+	
+	@FileResolver
+	public String importImage(UploadFile file, Map<String, Object> para) throws IOException{
+		return yhglService.importImage(file,para);
 	}
 }
