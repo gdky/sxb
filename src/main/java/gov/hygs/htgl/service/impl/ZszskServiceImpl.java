@@ -2,9 +2,11 @@ package gov.hygs.htgl.service.impl;
 
 import gov.hygs.htgl.dao.ZszskDao;
 import gov.hygs.htgl.entity.ZskJl;
+import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.service.ZszskService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -69,6 +71,43 @@ public class ZszskServiceImpl implements ZszskService {
 	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		zszskDao.getYxzskInfo(page, param);
+	}
+
+	@Override
+	public void getRandomdsZszskFilter(Page<ZskJl> page,
+			Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zszskDao.getRandomdsZszskFilter(page, param);
+	}
+
+	@Override
+	public void updateZsdtsInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		zszskDao.updateZsdtsInfo(param, userDetails);
+	}
+
+	@Override
+	public Collection<Zskly> getZsklyInfo() {
+		// TODO Auto-generated method stub
+		return zszskDao.getZsklyInfo();
+	}
+
+	@Override
+	public void updateZskly(List<Zskly> zsklys) {
+		// TODO Auto-generated method stub
+		for(Zskly zskly : zsklys){
+			if(EntityUtils.getState(zskly).equals(EntityState.NEW)){
+				zszskDao.addZskly(zskly);
+			}
+			if(EntityUtils.getState(zskly).equals(EntityState.MODIFIED)){
+				zszskDao.updateZskly(zskly);
+			}
+			if(EntityUtils.getState(zskly).equals(EntityState.DELETED)){
+				zszskDao.deleteZskly(zskly);
+			}
+		}
 	}
 
 }

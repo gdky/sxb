@@ -4,12 +4,16 @@ import gov.hygs.htgl.dao.ZszskDao;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Yxzsk;
 import gov.hygs.htgl.entity.ZskJl;
+import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.entity.Zszsk;
 import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -288,9 +292,14 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	}
 
 	private List<ZskJl> getYxzskInfo(int begin, int offest) {
-		String sql = "select * from zsk_jl where yxbz='Y' and xybz='N' limit ?,?";
-		List<ZskJl> list = this.jdbcTemplate.query(sql, new Object[] { begin,
-				offest }, new RowMapper<ZskJl>() {
+		//String sql = "select * from zsk_jl where yxbz='Y' and xybz='N' limit ?,?";
+		StringBuilder sql = new StringBuilder("select * from zsk_jl where yxbz='Y'");
+		if (offest == -1 && begin == -1) {
+			sql.append(" and xybz='Y' ");
+		} else {
+			sql.append(" and xybz='N' limit " + begin + "," + offest);
+		}
+		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(), new RowMapper<ZskJl>() {
 
 			@Override
 			public ZskJl mapRow(ResultSet result, int i) throws SQLException {
@@ -312,6 +321,90 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 
 		});
 		return list;
+	}
+
+	@Override
+	public void getRandomdsZszskFilter(Page<ZskJl> page,
+			Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageSize = page.getPageSize();
+		List<ZskJl> list = this.getYxzskInfo(-1, -1);
+		if(list.size() > 0){
+			Collections.shuffle(list);
+			List<ZskJl> randomList = new ArrayList<ZskJl>();
+			for (int i = 0; i < (pageSize > list.size() ? list.size()
+					: pageSize); i++) {
+				randomList.add(list.get(i));
+			}
+			page.setEntityCount(pageSize);
+			page.setEntities(randomList);
+		}
+	}
+
+	@Override
+	public void updateZsdtsInfo(Map<String, Object> param,
+			CustomUserDetails userDetails) {
+		// TODO Auto-generated method stub
+		List<String> ids = (List<String>) param.get("id");
+		if (ids.size() > 0) {
+			Integer groupId = (Integer) param.get("groupId");
+			String ms = (String) param.get("ms");
+			Date begin = (Date) param.get("begin");
+			Date end = (Date) param.get("end");
+			
+			String sql = "insert into zsdtsjl values(?,?,?,?)";
+			int jlId = this.insertAndGetKeyByJdbc(sql,
+					new Object[] { null, userDetails.getId(), new Date(), ms },
+					new String[] { "id_" }).intValue();
+			sql = "insert into zsktsqz values(?,?,?)";
+			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
+			for (String id : ids) {
+				sql = "insert into zsktsnr values(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, jlId, id });
+			}
+		}
+	}
+
+	@Override
+	public Collection<Zskly> getZsklyInfo() {
+		// TODO Auto-generated method stub
+		String sql = "select * from zskly order by id_ desc";
+		List<Zskly> list = this.jdbcTemplate.query(sql, new RowMapper<Zskly>(){
+
+			@Override
+			public Zskly mapRow(ResultSet result, int i) throws SQLException {
+				// TODO Auto-generated method stub
+				Zskly zskly = new Zskly();
+				zskly.setId(result.getInt("id_"));
+				zskly.setTitle(result.getString("title"));
+				zskly.setContent(result.getString("content"));
+				zskly.setAttachment(result.getString("attachment"));
+				return zskly;
+			}
+			
+		});
+		return list;
+	}
+
+	@Override
+	public void addZskly(Zskly zskly) {
+		// TODO Auto-generated method stub
+		String sql = "insert into zskly values(?,?,?,?)";
+		this.jdbcTemplate.update(sql, new Object[]{null,zskly.getTitle(),zskly.getContent(),zskly.getAttachment()});
+	}
+
+	@Override
+	public void updateZskly(Zskly zskly) {
+		// TODO Auto-generated method stub
+		String sql = "update zskly set title=?,content=?,attachment=? where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{zskly.getTitle(),zskly.getContent(),zskly.getAttachment(),zskly.getId()});
+	}
+
+	@Override
+	public void deleteZskly(Zskly zskly) {
+		// TODO Auto-generated method stub
+		String sql = "delete from zskly where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{zskly.getId()});
 	}
 
 }

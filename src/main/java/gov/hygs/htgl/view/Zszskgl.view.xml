@@ -184,6 +184,33 @@
         <Property></Property>
       </PropertyDef>
     </DataType>
+    <DataType name="zsdtsjlInfoType">
+      <PropertyDef name="tsrq">
+        <Property name="dataType">Date</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+        <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="groupId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupname">
+        <Property name="label">群组名称</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="groupType">
+      <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <Container id="datasets">
@@ -211,6 +238,18 @@
         <Property name="dataType">[yxzskType]</Property>
         <Property name="pageSize">10</Property>
         <Property name="dataProvider">zszskController#getYxzskInfo</Property>
+      </DataSet>
+      <DataSet id="dsZsdtsjlInfo">
+        <Property name="dataType">[zsdtsjlInfoType]</Property>
+      </DataSet>
+      <DataSet id="dsGroupt">
+        <Property name="dataProvider">qzBmCdglController#getGrouptableInfo</Property>
+        <Property name="dataType">[groupType]</Property>
+      </DataSet>
+      <DataSet id="dsZszskFilter">
+        <Property name="dataType">[zszskType]</Property>
+        <Property name="pageSize">5</Property>
+        <Property name="dataProvider">zszskController#getRandomdsZszskFilter</Property>
       </DataSet>
     </Container>
     <Container id="dropdowns">
@@ -267,6 +306,14 @@ if(zskly != undefined){&#xD;
 </ClientEvent>
         <Property name="dataSet">dsZskly</Property>
         <Property name="property">title</Property>
+      </DataSetDropDown>
+      <DataSetDropDown id="groupDropDown">
+        <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
+if(group != undefined){&#xD;
+	view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
+}</ClientEvent>
+        <Property name="dataSet">dsGroupt</Property>
+        <Property name="property">groupName</Property>
       </DataSetDropDown>
     </Container>
     <Container id="dialogs">
@@ -395,13 +442,130 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
         </Children>
         <Tools/>
       </Dialog>
+      <Dialog id="zsdtsDialog">
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#zskDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">查看推送题目</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#zsdtsDialog&quot;).close();&#xD;
+view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#dsZszskFilter&quot;).flush();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="conditonForm">
+                <Property name="dataSet">dsZsdtsjlInfo</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">groupname</Property>
+                  <Property name="property">groupname</Property>
+                  <Property name="trigger">groupDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="zskDialog">
+        <Property name="height">500</Property>
+        <Property name="width">700</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">推送题目</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+var id = [];&#xD;
+view.get(&quot;#dsZszskFilter&quot;).getData().each(function(entity){&#xD;
+	id.push(entity.get(&quot;id&quot;));&#xD;
+});&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:id,&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#zsdtsDialog&quot;).close();&#xD;
+	view.get(&quot;#zskDialog&quot;).close();&#xD;
+	view.get(&quot;#dsZszskFilter&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#zskDialog&quot;).close();&#xD;
+&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataGrid>
+                <Property name="dataSet">dsZszskFilter</Property>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                </DataColumn>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
+                </DataColumn>
+                <DataColumn name="zskly">
+                  <Property name="property">zskly.title</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user.user_Name</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept.dept_name</Property>
+                </DataColumn>
+                <DataColumn name="title">
+                  <Property name="property">title</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
     </Container>
-    <UpdateAction id="updateAction">
-      <Property name="dataResolver">zszskController#updateZszsk</Property>
-      <UpdateItem>
-        <Property name="dataSet">dsZszsk</Property>
-      </UpdateItem>
-    </UpdateAction>
+    <Container id="actions">
+      <UpdateAction id="updateAction">
+        <Property name="dataResolver">zszskController#updateZszsk</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsZszsk</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <AjaxAction id="tsAction">
+        <Property name="service">zszskController#updateZsdtsInfo</Property>
+      </AjaxAction>
+    </Container>
     <Container>
       <GroupBox>
         <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
@@ -500,8 +664,14 @@ if(data != undefined){&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
-}</ClientEvent>
+	if(data.get(&quot;rolename&quot;) == &quot;DeptAdmin&quot;){&#xD;
+		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+	}&#xD;
+}&#xD;
+</ClientEvent>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).insert();&#xD;
 view.get(&quot;#dsZszsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
@@ -534,6 +704,14 @@ if(data != undefined){&#xD;
               <Property name="caption">选题入库</Property>
               <Property name="hideMode">display</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
+            </Button>
+            <Button id="zsdtsbutton">
+              <ClientEvent name="onClick">view.get(&quot;#dsZsdtsjlInfo&quot;).insert();&#xD;
+view.get(&quot;#zsdtsDialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">知识点推送</Property>
+              <Property name="hideMode">display</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
             </Button>
             <DataPilot>
               <Property name="dataSet">dsZszsk</Property>
