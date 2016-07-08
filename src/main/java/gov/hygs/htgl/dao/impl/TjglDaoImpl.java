@@ -19,6 +19,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
 		String content = (String) param.get("content");
@@ -30,13 +32,19 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		sql.append("(select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou ");
 		sql.append("from tk_gxjl a , tktm b ");
 		sql.append("where a.tk_id=b.id_ ");
-		if (deptid != null) {
+		/*if (deptid != null) {
 			sql.append("and a.dept_id=" + deptid + " ");
 			if (userId != null) {
 				if (userId != 0) {
 					sql.append("and a.user_id=" + userId + " ");
 				}
 
+			}
+		}*/
+		if(dept != null){
+			sql.append("and a.dept_id in (select id_ from dept where dept_name like '%" + dept + "%') ");
+			if(user != null){
+				sql.append("and a.user_id in (select id_ from user where user_name like '%" + user + "%') ");
 			}
 		}
 		if (begin != null) {
@@ -67,6 +75,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
+		String dept =  param == null?null : (String)param.get("dept");
 		Date begin = param == null ? null : (Date) param.get("begin");
 		Date end = param == null ? null : (Date) param.get("end");
 		String content = param == null ? null : (String) param.get("content");
@@ -78,10 +87,13 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				+ "from dept pt where pt.id_ in(" + " select d.id_"
 				+ " from dept d,tk_gxjl a ," + " tktm b"
 				+ " where a.tk_id=b.id_" + " and d.id_ = a.dept_id");
-		if (deptid == null || param == null) {
+		/*if (deptid == null || param == null) {
 			// sql.append(" and d.parent_id is null");
 		} else {
 			sql.append(" and a.dept_id =" + deptid);
+		}*/
+		if(dept != null){
+			sql.append(" and a.dept_id in (select id_ from dept where dept_name like '%" + dept+"%') ");
 		}
 		if (begin != null) {
 			sql.append(" and a.gx_date >= date_format('"
@@ -128,9 +140,9 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 						sql.append(" and a.gx_date <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
 					}
 					if(content != null){
-						sql.append("and b.zskly_id in ( select t.id_ from zskly t ");
-						sql.append("where t.title like '%"+content+"%' ");
-						sql.append("or t.content like '%"+content+"%')");
+						sql.append(" and b.zskly_id in ( select t.id_ from zskly t ");
+						sql.append(" where t.title like '%"+content+"%' ");
+						sql.append(" or t.content like '%"+content+"%')");
 					}
 					sql.append(" group by a.dept_id,a.user_id )t,user u,dept d ");
 					sql.append(" where t.did=d.id_ and u.id_=t.uid");
@@ -154,7 +166,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id),0)as cou,");
 				sql.append("pt.dept_name as deptname from dept pt where pt.id_ in( select d.id_ ");
 				sql.append("from dept d,zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_ and d.id_ = a.dept_id ");
-				if(dept != null && param != null){
+				//if(dept != null && param != null){
+				if(dept != null){
 					sql.append("and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 				}
 				if (begin != null) {
