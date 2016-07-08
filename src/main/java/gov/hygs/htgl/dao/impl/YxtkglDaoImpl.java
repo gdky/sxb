@@ -473,54 +473,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	}
 
 	@Override
-	public List countGxjl(Map<String, Object> param) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Integer deptid = (Integer) param.get("deptid");
-		Integer userId = (Integer) param.get("userid");
-		Date begin = (Date) param.get("begin");
-		Date end = (Date) param.get("end");
-		String content = (String) param.get("content");
-		StringBuffer sql = new StringBuffer("select d.dept_name as deptname,");
-		if (userId == null || userId != 0) {
-			sql.append("u.user_name as username,");
-		}
-		sql.append("cou from ");
-		sql.append("(select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou ");
-		sql.append("from tk_gxjl a , tktm b ");
-		sql.append("where a.tk_id=b.id_ ");
-		if (deptid != null) {
-			sql.append("and a.dept_id=" + deptid + " ");
-			if (userId != null) {
-				if (userId != 0) {
-					sql.append("and a.user_id=" + userId + " ");
-				}
-
-			}
-		}
-		if (begin != null) {
-			sql.append("and a.gx_date >= date_format('"
-					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
-		}
-		if (end != null) {
-			sql.append("and a.gx_date <= date_format('"
-					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
-		}
-		sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
-		if (content != null) {
-			sql.append("where t.title like '%" + content + "%' ");
-			sql.append("or t.content like '%" + content + "%' ");
-		}
-		sql.append(") group by a.dept_id");
-		if (userId == null || userId != 0) {
-			sql.append(",a.user_id ");
-		}
-		sql.append(")t, ");
-		sql.append("user u,dept d where t.did=d.id_ and u.id_=t.uid");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
-		return list;
-	}
-
-	@Override
 	public List<Map<String, Object>> getLoginUserInfo(
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
@@ -535,45 +487,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		map.put("rolename", role.getRole_Name());
 		map.put("ms", role.getMs());
 		list.add(map);
-		return list;
-	}
-
-	@Override
-	public List countDeptGxjl(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Integer deptid = param == null ? null : (Integer) param.get("deptid");
-		Date begin = param == null ? null : (Date) param.get("begin");
-		Date end = param == null ? null : (Date) param.get("end");
-		String content = param == null ? null : (String) param.get("content");
-		StringBuffer sql = new StringBuffer("select ifnull("
-				+ "(select sum(b.gxz) " + "from dept a, tk_gxjl b "
-				+ "where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) "
-				+ "and a.id_=b.dept_id),0)"
-				+ "as cou,pt.dept_name as deptname "
-				+ "from dept pt where pt.id_ in(" + " select d.id_"
-				+ " from dept d,tk_gxjl a ," + " tktm b"
-				+ " where a.tk_id=b.id_" + " and d.id_ = a.dept_id");
-		if (deptid == null || param == null) {
-			// sql.append(" and d.parent_id is null");
-		} else {
-			sql.append(" and a.dept_id =" + deptid);
-		}
-		if (begin != null) {
-			sql.append("and a.gx_date >= date_format('"
-					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
-		}
-		if (end != null) {
-			sql.append("and a.gx_date <= date_format('"
-					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
-		}
-		if (content != null) {
-			sql.append("and b.tmly_id in (" + " select t.id_ "
-					+ " from tmly t " + " where t.title like '%" + content
-					+ "%' " + " or t.content like '%" + content + "%') ");
-		}
-		sql.append(")");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
 		return list;
 	}
 

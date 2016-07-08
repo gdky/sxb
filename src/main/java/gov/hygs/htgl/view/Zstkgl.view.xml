@@ -1156,6 +1156,7 @@ view.get(&quot;#yxtkGrid&quot;).unselectAll();&#xD;
                 <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).show();&#xD;
 </ClientEvent>
                 <Property name="caption">查看推送题目</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#tkfxtsDialog&quot;).close();&#xD;
@@ -1163,6 +1164,7 @@ view.get(&quot;#dsTkfxtsjlInfo&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -1223,12 +1225,14 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).close();&#xD;
 &#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>

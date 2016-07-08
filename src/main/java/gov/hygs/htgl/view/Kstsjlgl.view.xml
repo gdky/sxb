@@ -306,6 +306,7 @@ if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
 view.get(&quot;#optDialog&quot;).show();&#xD;
 </ClientEvent>
                 <Property name="caption">选择推送</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -80px -60px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
@@ -319,6 +320,7 @@ if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
 view.get(&quot;#tktmDialog&quot;).show();&#xD;
 </ClientEvent>
                 <Property name="caption">随机推送</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#conditionDialog&quot;).close();&#xD;
@@ -326,6 +328,7 @@ view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -396,12 +399,14 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).close();&#xD;
 &#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -484,11 +489,13 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#optDialog&quot;).close();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -552,6 +559,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 view.get(&quot;#conditionDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">考试题目推送</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
             </Button>
           </ToolBar>
           <DataGrid>

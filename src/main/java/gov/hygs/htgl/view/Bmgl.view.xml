@@ -42,7 +42,7 @@
         <Property name="dataType">[SELF]</Property>
         <Property name="parameter">$${this.id_}</Property>
         <Property name="dataProvider">qzBmCdglController#getCurrentDeptPageById</Property>
-        <Property name="pageSize">1</Property>
+        <Property name="pageSize">10</Property>
       </Reference>
     </DataType>
   </Model>
@@ -55,7 +55,7 @@
       <Property name="dataType">[deptType]</Property>
     </DataSet>
     <SplitPanel>
-      <Property name="position">20%</Property>
+      <Property name="position">16%</Property>
       <MainControl>
         <Container>
           <Container id="dialogCont">
@@ -440,7 +440,7 @@ if (currentNode != null) {&#xD;
 &#xD;
 view.get(&quot;#addNode&quot;).show();&#xD;
 </ClientEvent>
-                <Property name="caption">添加同级节点</Property>
+                <Property name="caption">添加</Property>
                 <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
               </Button>
               <Button>
@@ -461,7 +461,7 @@ dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,funct
 &#xD;
 &#xD;
 </ClientEvent>
-                <Property name="caption">删除节点</Property>
+                <Property name="caption">删除</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
               </Button>
               <Button>

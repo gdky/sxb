@@ -156,23 +156,11 @@ public class YxtkglServiceImpl implements YxtkglService {
 	}
 
 	@Override
-	public List countGxjl(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return yxtkglDao.countGxjl(param);
-	}
-
-	@Override
 	public List<Map<String, Object>> getLoginUserInfo() {
 		// TODO Auto-generated method stub
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
 		return yxtkglDao.getLoginUserInfo(userDetails);
-	}
-
-	@Override
-	public List countDeptGxjl(Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		return yxtkglDao.countDeptGxjl(param);
 	}
 
 	@Override

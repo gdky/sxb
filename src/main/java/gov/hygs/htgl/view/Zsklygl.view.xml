@@ -9,15 +9,15 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="title">
-        <Property/>
+        <Property></Property>
         <Property name="label">题目</Property>
       </PropertyDef>
       <PropertyDef name="content">
-        <Property/>
+        <Property></Property>
         <Property name="label">内容</Property>
       </PropertyDef>
       <PropertyDef name="attachment">
-        <Property/>
+        <Property></Property>
         <Property name="label">附件</Property>
       </PropertyDef>
     </DataType>
@@ -29,6 +29,7 @@
     </DataSet>
     <Container>
       <Dialog id="dialog">
+        <Property name="width">500</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -41,12 +42,14 @@
 });&#xD;
 </ClientEvent>
                 <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dialog&quot;).close();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>
@@ -80,6 +83,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
               <ClientEvent name="onClick">view.get(&quot;#dsZskly&quot;).insert();	&#xD;
 view.get(&quot;#dialog&quot;).show();</ClientEvent>
               <Property name="caption">增加</Property>
+              <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">var data = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
@@ -90,11 +94,13 @@ if(data != undefined){&#xD;
 	});&#xD;
 }</ClientEvent>
               <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
           </ToolBar>
           <AutoForm>

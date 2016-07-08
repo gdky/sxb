@@ -52,11 +52,7 @@ public interface YxtkglDao {
 
 	public void deleteGrDeptGxJl(Tktm yxtk);
 
-	public List countGxjl(Map<String, Object> param);
-
 	public List<Map<String,Object>> getLoginUserInfo(CustomUserDetails userDetails);
-
-	public List countDeptGxjl(Map<String, Object> param);
 
 	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent);
 
