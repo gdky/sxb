@@ -12,5 +12,9 @@ public interface TjglDao {
 	public List countZskgxjl(Map<String, Object> param);
 
 	public List countDeptZskgxjl(Map<String, Object> param);
+
+	public List countLaudRecord(Map<String, Object> param);
+
+	public List countDeptLaudRecord(Map<String, Object> param);
 	
 }
