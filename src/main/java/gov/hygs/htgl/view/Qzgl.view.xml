@@ -90,7 +90,7 @@ self.flush();</ClientEvent>
       <Property name="pageSize">10</Property>
     </DataSet>
     <SplitPanel>
-      <Property name="position">20%</Property>
+      <Property name="position">16%</Property>
       <MainControl>
         <Container>
           <GroupBox>

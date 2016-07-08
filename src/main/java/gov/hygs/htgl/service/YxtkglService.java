@@ -29,11 +29,7 @@ public interface YxtkglService {
 
 	public Collection<Tkfl> getTkflInfoByflId(String id);
 
-	public List countGxjl(Map<String, Object> param);
-
 	public List<Map<String,Object>> getLoginUserInfo();
-
-	public List countDeptGxjl(Map<String, Object> param);
 
 	public List<TkcjTable> ImportTkcjTableExcel(List<Map<String, Object>> list);
 
