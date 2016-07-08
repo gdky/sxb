@@ -97,24 +97,6 @@ public class YxtkglController {
 	}
 	
 	/**
-	 * 统计贡献记录
-	 * @param param
-	 * @return
-	 */
-	@DataProvider
-	public List countGxjl(Map<String,Object> param){
-		if(param == null){
-			return null;
-		}
-		return yxtkglService.countGxjl(param);
-	}
-	
-	@DataProvider
-	public List countDeptGxjl(Map<String,Object> param){
-		return yxtkglService.countDeptGxjl(param);
-	}
-	
-	/**
 	 * 获取当前登录用户信息
 	 * @return
 	 */

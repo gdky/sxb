@@ -59,7 +59,7 @@
       <Property name="dataType">[menuType]</Property>
     </DataSet>
     <SplitPanel>
-      <Property name="position">15%</Property>
+      <Property name="position">16%</Property>
       <MainControl>
         <Container>
           <Container id="dialogCont">
@@ -309,10 +309,12 @@ view.get(&quot;#updateChildAction&quot;).execute(function(){&#xD;
 });&#xD;
 </ClientEvent>
                       <Property name="caption">提交</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
                     </Button>
                     <Button>
                       <ClientEvent name="onClick">view.get(&quot;#updateChildDialog&quot;).close();</ClientEvent>
                       <Property name="caption">取消</Property>
+                      <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
                     </Button>
                   </Buttons>
                   <Children>
@@ -419,6 +421,7 @@ if(menu != undefined){&#xD;
 }&#xD;
 </ClientEvent>
                   <Property name="caption">修改子节点</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
                 </Button>
                 <DataPilot>
                   <Property name="itemCodes">pages</Property>
