@@ -2,9 +2,12 @@ package gov.hygs.htgl.dao;
 
 import gov.hygs.htgl.entity.Yxzsk;
 import gov.hygs.htgl.entity.ZskJl;
+import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.entity.Zszsk;
 import gov.hygs.htgl.security.CustomUserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.bstek.dorado.data.provider.Page;
@@ -29,5 +32,19 @@ public interface ZszskDao {
 	public void deleteGrDeptGxJl(ZskJl zszsk);
 
 	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param);
-	
+
+	public void getRandomdsZszskFilter(Page<ZskJl> page,
+			Map<String, Object> param);
+
+	public void updateZsdtsInfo(Map<String, Object> param,
+			CustomUserDetails userDetails);
+
+	public Collection<Zskly> getZsklyInfo();
+
+	public void addZskly(Zskly zskly);
+
+	public void updateZskly(Zskly zskly);
+
+	public void deleteZskly(Zskly zskly);
+
 }

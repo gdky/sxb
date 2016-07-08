@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="zsklyType">
+      <Property name="creationType">gov.hygs.htgl.entity.Zskly</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property/>
+        <Property name="label">题目</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property/>
+        <Property name="label">内容</Property>
+      </PropertyDef>
+      <PropertyDef name="attachment">
+        <Property/>
+        <Property name="label">附件</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsZskly">
+      <Property name="dataType">[zsklyType]</Property>
+      <Property name="dataProvider">zszskController#getZsklyInfo</Property>
+    </DataSet>
+    <Container>
+      <Dialog id="dialog">
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">知识库来源信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	view.get(&quot;#dsZskly&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#dialog&quot;).close();&#xD;
+</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsZskly</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">content</Property>
+                  <Property name="property">content</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <GroupBox>
+        <Property name="caption">知识库来源信息</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsZskly&quot;).insert();	&#xD;
+view.get(&quot;#dialog&quot;).show();</ClientEvent>
+              <Property name="caption">增加</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		data.remove();&#xD;
+		view.get(&quot;#updateAction&quot;).execute();&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+            </Button>
+          </ToolBar>
+          <AutoForm>
+            <Property name="dataSet">dsZskly</Property>
+            <Property name="cols">*</Property>
+            <Property name="readOnly">true</Property>
+            <AutoFormElement>
+              <Property name="name">title</Property>
+              <Property name="property">title</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">content</Property>
+              <Property name="property">content</Property>
+              <Editor>
+                <TextArea/>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">知识库来源信息表</Property>
+        <Buttons/>
+        <Children>
+          <DataGrid>
+            <Property name="dataSet">dsZskly</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="title">
+              <Property name="property">title</Property>
+            </DataColumn>
+            <DataColumn name="content">
+              <Property name="property">content</Property>
+            </DataColumn>
+            <DataColumn name="attachment">
+              <Property name="property">attachment</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+    </Container>
+    <UpdateAction id="updateAction">
+      <Property name="dataResolver">zszskController#updateZskly</Property>
+      <UpdateItem>
+        <Property name="dataSet">dsZskly</Property>
+      </UpdateItem>
+    </UpdateAction>
+  </View>
+</ViewConfig>
