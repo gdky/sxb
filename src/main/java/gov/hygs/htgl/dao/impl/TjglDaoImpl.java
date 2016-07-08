@@ -154,13 +154,11 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	public List countDeptZskgxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Integer deptid = (Integer) param.get("deptid");
-		Integer userId = (Integer) param.get("userid");
-		String dept = (String) param.get("dept");
-		String user = (String) param.get("user");
-		Date begin = (Date) param.get("begin");
-		Date end = (Date) param.get("end");
-		String content = (String) param.get("content");
+		Integer deptid = param == null ? null : (Integer) param.get("deptid");
+		String dept =  param == null?null : (String)param.get("dept");
+		Date begin = param == null ? null : (Date) param.get("begin");
+		Date end = param == null ? null : (Date) param.get("end");
+		String content = param == null ? null : (String) param.get("content");
 		
 		StringBuilder sql = new StringBuilder("select ifnull((select sum(b.gxz) from dept a, zsk_gxjl b ");
 				sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id),0)as cou,");
@@ -168,7 +166,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				sql.append("from dept d,zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_ and d.id_ = a.dept_id ");
 				//if(dept != null && param != null){
 				if(dept != null){
-					sql.append("and deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
+					sql.append("and b.deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 				}
 				if (begin != null) {
 					sql.append(" and a.gx_date >= date_format('"
@@ -186,6 +184,76 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				sql.append(")");
 			List list = this.jdbcTemplate.queryForList(sql.toString());
 			return list;
+	}
+
+	@Override
+	public List countLaudRecord(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = (Integer) param.get("deptid");
+		Integer userId = (Integer) param.get("userid");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
+		Date begin = (Date) param.get("begin");
+		Date end = (Date) param.get("end");
+		String content = (String) param.get("content");
+		
+		StringBuilder sql = new StringBuilder("select d.dept_name as deptname,u.user_name as username,");
+					sql.append("cou from (select a.dept_id as did,a.user_id uid ,count(a.id_) as cou ");
+					sql.append("from laud_record a ,tktm b where a.zstk_id=b.id_ ");
+					if(dept != null){
+						sql.append(" and a.dept_id in (select id_ from dept where dept_name like '%"+dept+"%') ");
+					}
+					if(user != null){
+						sql.append(" and a.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+					}
+					if(begin != null){
+						sql.append(" and b.create_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+					}
+					if(end != null){
+						sql.append(" and b.create_date <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+					}
+					if(content != null){
+						sql.append(" and b.tmly_id in (select t.id_ from tmly t ");
+						sql.append(" where t.title like '%"+content+"%' ");
+						sql.append(" or t.content like '%"+content+"%') ");
+					}
+					sql.append("group by a.dept_id,a.user_id )t,user u,dept d where t.did=d.id_ and u.id_=t.uid");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
+
+	@Override
+	public List countDeptLaudRecord(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = param == null ? null : (Integer) param.get("deptid");
+		String dept =  param == null?null : (String)param.get("dept");
+		Date begin = param == null ? null : (Date) param.get("begin");
+		Date end = param == null ? null : (Date) param.get("end");
+		String content = param == null ? null : (String) param.get("content");
+		
+		StringBuilder sql = new StringBuilder("select ifnull((select count(b.id_)from dept a, laud_record b ");
+			sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id),0 )as cou,");
+			sql.append("pt.dept_name as deptname from dept pt where pt.id_ in( ");
+			sql.append("select d.id_ from dept d,laud_record  a ,tktm b where a.zstk_id=b.id_ and d.id_ = a.dept_id ");
+			if(dept != null){
+				sql.append(" and a.dept_id in (select id_ from dept where dept_name like '%"+dept+"%') ");
+			}
+			if(begin != null){
+				sql.append(" and b.create_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+			}
+			if(end != null){
+				sql.append(" and b.create_date <= date_format('"+end+"','%Y%m%d')   ");
+			}
+			if(content != null){
+				sql.append(" and b.tmly_id in (select t.id_ from tmly t ");
+				sql.append(" where t.title like '%"+content+"%' ");
+				sql.append(" or t.content like '%"+content+"%') ");
+			}
+			sql.append(")");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
 	}
 	
 }

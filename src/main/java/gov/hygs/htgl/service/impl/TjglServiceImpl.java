@@ -22,6 +22,8 @@ public class TjglServiceImpl implements TjglService {
 			return tjglDao.countGxjl(param);
 		}else if("1".equals(type)){
 			return tjglDao.countZskgxjl(param);
+		}else if("2".equals(type)){
+			return tjglDao.countLaudRecord(param);
 		}
 		return null;
 	}
@@ -34,6 +36,8 @@ public class TjglServiceImpl implements TjglService {
 			return tjglDao.countDeptGxjl(param);
 		}else if("1".equals(type)){
 			return tjglDao.countDeptZskgxjl(param);
+		}else if("2".equals(type)){
+			return tjglDao.countDeptLaudRecord(param);
 		}
 		return null;
 	}
