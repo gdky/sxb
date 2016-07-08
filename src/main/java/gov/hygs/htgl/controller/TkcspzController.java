@@ -45,6 +45,7 @@ public class TkcspzController {
 		return tkcspzService.getTmlyInfo();
 	}
 	
+	@Transactional
 	@DataResolver
 	public void updateTmly(List<Tmly> tmlys){
 		tkcspzService.updateTmly(tmlys);

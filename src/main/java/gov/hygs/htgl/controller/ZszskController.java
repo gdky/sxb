@@ -1,9 +1,10 @@
 package gov.hygs.htgl.controller;
 
 import gov.hygs.htgl.entity.ZskJl;
-import gov.hygs.htgl.entity.Zszsk;
+import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.service.ZszskService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bstek.dorado.annotation.DataProvider;
 import com.bstek.dorado.annotation.DataResolver;
+import com.bstek.dorado.annotation.Expose;
 import com.bstek.dorado.data.provider.Page;
 
 @Component
@@ -35,5 +37,27 @@ public class ZszskController {
 	@DataResolver
 	public void updateZszsk(List<ZskJl> zszsk) {
 		zszskService.updateZszsk(zszsk);
+	}
+
+	@DataProvider
+	public void getRandomdsZszskFilter(Page<ZskJl> page, Map<String, Object> param) {
+		zszskService.getRandomdsZszskFilter(page, param);
+	}
+	
+	@Transactional
+	@Expose
+	public void updateZsdtsInfo(Map<String,Object> param){
+		zszskService.updateZsdtsInfo(param);
+	}
+	
+	@DataProvider
+	public Collection<Zskly> getZsklyInfo(){
+		return zszskService.getZsklyInfo();
+	}
+	
+	@Transactional
+	@DataResolver
+	public void updateZskly(List<Zskly> zskly){
+		zszskService.updateZskly(zskly);
 	}
 }
