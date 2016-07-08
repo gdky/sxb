@@ -227,15 +227,47 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).insert();&#xD;
 view.get(&quot;#DialogUser&quot;).show();&#xD;
-view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,fals)</ClientEvent>
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false);&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
+</ClientEvent>
             <Property name="caption">增加</Property>
             <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
 view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false)&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false)&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
 </ClientEvent>
             <Property name="caption">修改</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
+var url = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).get(&quot;photo&quot;);&#xD;
+&#xD;
+view.get(&quot;#imagePhoto&quot;).set(&quot;image&quot;,url);&#xD;
+&#xD;
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,true)&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,false);&#xD;
+</ClientEvent>
+            <Property name="caption">查看信息</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <Property name="caption">上传头像</Property>
+            <Property name="action">uploadActionImage</Property>
+          </ToolBarButton>
+          <ToolBarButton>
+            <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
+view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
+</ClientEvent>
+            <Property name="caption">修改密码</Property>
             <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
           </ToolBarButton>
           <ToolBarButton>
@@ -246,13 +278,6 @@ view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
 </ClientEvent>
             <Property name="caption">删除</Property>
             <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
-view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
-</ClientEvent>
-            <Property name="caption">修改密码</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
           </ToolBarButton>
         </ToolBar>
         <DataGrid>
@@ -273,28 +298,19 @@ view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&
           <DataColumn name="zw">
             <Property name="property">zw</Property>
           </DataColumn>
-          <DataColumn name="pwd">
-            <Property name="property">pwd</Property>
-          </DataColumn>
-          <DataColumn name="photo">
-            <Property name="property">photo</Property>
-          </DataColumn>
           <DataColumn name="deptMc">
             <Property name="property">deptMc</Property>
-          </DataColumn>
-          <DataColumn name="birthday">
-            <Property name="property">birthday</Property>
           </DataColumn>
         </DataGrid>
       </Children>
     </GroupBox>
     <Dialog id="DialogUser">
       <Property name="width">600</Property>
-      <Property name="height">300</Property>
+      <Property name="height">350</Property>
       <Buttons/>
       <Children>
         <GroupBox>
-          <Property name="caption">添加用户信息</Property>
+          <Property name="caption">用户信息</Property>
           <Buttons>
             <Button>
               <ClientEvent name="onClick">//view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).validate();&#xD;
@@ -304,6 +320,7 @@ view.get(&quot;#updateActionUser&quot;).execute(function(){&#xD;
 });</ClientEvent>
               <Property name="caption">确定</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              <Property name="tags">zx</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).cancel(); &#xD;
@@ -311,6 +328,13 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
 </ClientEvent>
               <Property name="caption">取消</Property>
               <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              <Property name="tags">zx</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).hide();&#xD;
+</ClientEvent>
+              <Property name="caption">关闭</Property>
+              <Property name="tags">photo</Property>
             </Button>
           </Buttons>
           <Children>
@@ -319,26 +343,42 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
               <AutoFormElement>
                 <Property name="name">login_Name</Property>
                 <Property name="property">login_Name</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
+              </AutoFormElement>
+              <AutoFormElement layoutConstraint="rowSpan:2">
+                <Property name="name">photo</Property>
+                <Property name="property">photo</Property>
+                <Property name="tags">photo</Property>
+                <Editor>
+                  <Image id="imagePhoto">
+                    <Property name="width">80</Property>
+                    <Property name="height">80</Property>
+                  </Image>
+                </Editor>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">user_Name</Property>
                 <Property name="property">user_Name</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">phone</Property>
                 <Property name="property">phone</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">rzsj</Property>
                 <Property name="property">rzsj</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">zw</Property>
                 <Property name="property">zw</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
@@ -348,19 +388,16 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
-                <Property name="name">photo</Property>
-                <Property name="property">photo</Property>
-                <Editor/>
-              </AutoFormElement>
-              <AutoFormElement>
                 <Property name="name">deptMc</Property>
                 <Property name="property">deptMc</Property>
                 <Property name="trigger">BmDropDown</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">birthday</Property>
                 <Property name="property">birthday</Property>
+                <Property name="tags">jcx</Property>
                 <Editor/>
               </AutoFormElement>
             </AutoForm>
@@ -529,5 +566,16 @@ view.get(&quot;#dsUser&quot;).flushAsync();</ClientEvent>
         <Property name="dataSet">dsUser</Property>
       </UpdateItem>
     </UpdateAction>
+    <UploadAction id="uploadActionImage">
+      <ClientEvent name="beforeFileUpload">self.set(&quot;parameter&quot;,{&#xD;
+	id: view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).get(&quot;id_&quot;)&#xD;
+})&#xD;
+</ClientEvent>
+      <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;)&#xD;
+view.get(&quot;#dsUser&quot;).flushAsync();</ClientEvent>
+      <Property name="fileResolver">yhJsglController#importImage</Property>
+      <Property name="maxFileSize">10MB</Property>
+      <Filters/>
+    </UploadAction>
   </View>
 </ViewConfig>

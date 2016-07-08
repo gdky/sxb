@@ -266,6 +266,18 @@ self.$getOpenTabMode = function(){&#xD;
     <AjaxAction id="ajaxActionUpdatePassword">
       <Property name="service">mainController#UpdatePassword</Property>
     </AjaxAction>
+    <UploadAction id="uploadActionImage">
+      <ClientEvent name="beforeFileUpload">self.set(&quot;parameter&quot;,{&#xD;
+	id: view.get(&quot;#dsUserInfo&quot;).getData(&quot;#&quot;).get(&quot;id_&quot;)&#xD;
+})&#xD;
+</ClientEvent>
+      <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;)&#xD;
+&#xD;
+view.get(&quot;#dsUserInfo&quot;).flushAsync();</ClientEvent>
+      <Property name="fileResolver">yhJsglController#importImage</Property>
+      <Property name="maxFileSize">10MB</Property>
+      <Filters/>
+    </UploadAction>
     <Panel id="panelHeader">
       <Property name="height">80</Property>
       <Buttons/>
@@ -315,8 +327,12 @@ location.reload()</ClientEvent>
               </Menu>
               <Dialog id="dialogUserInfo">
                 <Property name="width">500</Property>
-                <Property name="height">260</Property>
+                <Property name="height">350</Property>
                 <Buttons>
+                  <Button>
+                    <Property name="caption">上传头像</Property>
+                    <Property name="action">uploadActionImage</Property>
+                  </Button>
                   <Button>
                     <ClientEvent name="onClick">view.get(&quot;#dialogUserInfo&quot;).hide();&#xD;
 </ClientEvent>
@@ -325,46 +341,74 @@ location.reload()</ClientEvent>
                 </Buttons>
                 <Children>
                   <AutoForm>
-                    <Property name="readOnly">true</Property>
                     <Property name="dataSet">dsUserInfo</Property>
                     <AutoFormElement>
                       <Property name="name">login_Name</Property>
                       <Property name="property">login_Name</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement layoutConstraint="rowSpan:2">
+                      <Property name="name">photo</Property>
+                      <Property name="property">photo</Property>
+                      <Property name="tags">photo</Property>
+                      <Property name="readOnly">true</Property>
+                      <Editor>
+                        <Image id="imagePhoto">
+                          <Property name="width">80</Property>
+                          <Property name="height">80</Property>
+                        </Image>
+                      </Editor>
                     </AutoFormElement>
                     <AutoFormElement>
                       <Property name="name">user_Name</Property>
                       <Property name="property">user_Name</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
                       <Property name="name">phone</Property>
                       <Property name="property">phone</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
                       <Property name="name">rzsj</Property>
                       <Property name="property">rzsj</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
                       <Property name="name">zw</Property>
                       <Property name="property">zw</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
-                      <Property name="name">photo</Property>
-                      <Property name="property">photo</Property>
+                      <Property name="name">pwd</Property>
+                      <Property name="property">pwd</Property>
+                      <Property name="tags">pwd</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
-                      <Property name="name">deptid</Property>
-                      <Property name="property">deptid</Property>
+                      <Property name="name">deptMc</Property>
+                      <Property name="property">deptMc</Property>
+                      <Property name="trigger">BmDropDown</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                     <AutoFormElement>
                       <Property name="name">birthday</Property>
                       <Property name="property">birthday</Property>
+                      <Property name="tags">jcx</Property>
+                      <Property name="readOnly">true</Property>
                       <Editor/>
                     </AutoFormElement>
                   </AutoForm>
