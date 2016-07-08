@@ -167,13 +167,10 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Buttons/>
         <Children>
           <AutoForm id="conditionForm">
+            <ClientEvent name="onReady">self.get(&quot;entity&quot;).set({type:&quot;0&quot;});&#xD;
+</ClientEvent>
             <Property name="dataType">conditionType</Property>
             <Property name="createPrivateDataSet">true</Property>
-            <AutoFormElement>
-              <Property name="name">type</Property>
-              <Property name="property">type</Property>
-              <Editor/>
-            </AutoFormElement>
             <AutoFormElement>
               <Property name="name">begin</Property>
               <Property name="property">begin</Property>
@@ -195,6 +192,11 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
               <Property name="property">user</Property>
               <Property name="readOnly">true</Property>
               <Property name="trigger">dsConditionDropDown</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">type</Property>
+              <Property name="property">type</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
@@ -243,7 +245,9 @@ view.get(&quot;#dsDeptResult&quot;).set(&quot;parameter&quot;,{&#xD;
 	begin:entity.get(&quot;begin&quot;),&#xD;
 	end:entity.get(&quot;end&quot;),&#xD;
 	deptid:entity.get(&quot;deptid&quot;),&#xD;
+	dept:dept,&#xD;
 	userid:0,&#xD;
+	user:user,&#xD;
 	content:entity.get(&quot;content&quot;)&#xD;
 });&#xD;
 view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
