@@ -6,7 +6,7 @@ public class AttachmentOpt {
 	public static String getAttachmentPath(){
 		//String path = "/user/local/tomcat/app/";
 		//return "E:\\user\\local\\tomcat\\app\\";
-		return "/user/local/tomcat/app/";
+		return "/user/local/tomcat/upload/";
 	}
 	
 	public static boolean deleteAttachmentFile(String param){
