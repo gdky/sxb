@@ -86,13 +86,5 @@ public class ZszskController {
 		zszskService.cancelUploadAttachmentFile(param);
 	}
 	
-	@FileProvider
-	public DownloadFile downloadAttachment(Map<String,String> param) throws IOException{
-		if(!"".equals(param.get("file"))){
-			String fileName = AttachmentOpt.getAttachmentPath()+param.get("file");
-			DownloadFile file = new DownloadFile(new File(fileName));
-			return file;
-		}
-		return null;
-	}
+
 }
