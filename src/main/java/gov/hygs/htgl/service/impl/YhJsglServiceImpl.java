@@ -4,8 +4,11 @@ import gov.hygs.htgl.dao.YhJsglDao;
 import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.security.DrawImage;
 import gov.hygs.htgl.service.YhJsglService;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -199,20 +203,30 @@ public class YhJsglServiceImpl implements YhJsglService {
 	@Override
 	public String importImage(UploadFile file, Map<String, Object> para) throws IOException {
 		// TODO Auto-generated method stub
-		MultipartFile mufile = file.getMultipartFile();
+		/*MultipartFile mufile = file.getMultipartFile();
 		String path=Thread.currentThread().getContextClassLoader().getResource("").toString();
 		 path=path.replace('/', '\\'); // 将/换成\  
 	      path=path.replace("file:", ""); //去掉file:  
 	      path=path.replace("WEB-INF\\classes\\", ""); //去掉class\  
 	      
 	      path=path.substring(1); //去掉第一个\,如 \D:\JavaWeb...  
-	        path+="images";  
+	        path+="images/";  */
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+			    .getAuthentication()
+			    .getPrincipal();
+		String path = "/usr/local/tomcat/app/images/";
+		path=path+userDetails.getUser_Name();
+		File outfile = new File(path);
+		outfile.mkdirs();
+		path = path +"/avatar.jpg";
 	//	FileOutputStream out=new FileOutputStream(System.getProperty("user.home")+"/"+file.getFileName());		
-		FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());		
+		//FileOutputStream out=new FileOutputStream(path+"/"+"test.jpg");		
+		DrawImage.createResizeFix(file.getInputStream(), path);
+		//out.write(mufile.getBytes());
+		//out.close();
+		para.put("path","../"+userDetails.getUser_Name()+"/avatar.jpg" );
+		//para.put("path","images/"+userDetails.getUser_Name()+"/avatar.jpg" );
 
-		out.write(mufile.getBytes());
-		out.close();
-		para.put("path","images/"+file.getFileName() );
 		return yhglDao.importImage(para);
 	}
 
