@@ -7,6 +7,7 @@ import gov.hygs.htgl.entity.ZskJl;
 import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.entity.Zszsk;
 import gov.hygs.htgl.security.CustomUserDetails;
+import gov.hygs.htgl.utils.AttachmentOpt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -396,7 +397,12 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	@Override
 	public void updateZskly(Zskly zskly) {
 		// TODO Auto-generated method stub
-		String sql = "update zskly set title=?,content=?,attachment=? where id_=?";
+		String sql = "select attachment from zskly where id_=?";
+		String attachment = this.jdbcTemplate.queryForObject(sql, new Object[]{zskly.getId()}, String.class);
+		if(attachment != null && !attachment.equals(zskly.getAttachment())){
+			AttachmentOpt.deleteAttachmentFile(attachment);
+		}
+		sql = "update zskly set title=?,content=?,attachment=? where id_=?";
 		this.jdbcTemplate.update(sql, new Object[]{zskly.getTitle(),zskly.getContent(),zskly.getAttachment(),zskly.getId()});
 	}
 
@@ -405,6 +411,32 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		// TODO Auto-generated method stub
 		String sql = "delete from zskly where id_=?";
 		this.jdbcTemplate.update(sql, new Object[]{zskly.getId()});
+	}
+
+	@Override
+	public String importAttachment(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		
+		String path = (String) param.get("path");
+		String id = (String) param.get("id");
+		String sql = "select attachment from zskly where id_=?";
+		String attachment = this.jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
+		if(attachment != null){
+			AttachmentOpt.deleteAttachmentFile(attachment);
+		}
+		sql = "update zskly set attachment=? where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{path,id});
+		return null;
+	}
+
+	@Override
+	public void cancelUploadAttachmentFile(String param) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),1,0) from zskly where attachment=?";
+		int count = this.jdbcTemplate.queryForObject(sql, new Object[]{param}, Integer.class);
+		if(count == 0){
+			AttachmentOpt.deleteAttachmentFile(param);
+		}
 	}
 
 }

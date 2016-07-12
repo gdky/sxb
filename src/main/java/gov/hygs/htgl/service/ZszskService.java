@@ -3,11 +3,13 @@ package gov.hygs.htgl.service;
 import gov.hygs.htgl.entity.ZskJl;
 import gov.hygs.htgl.entity.Zskly;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.UploadFile;
 
 public interface ZszskService {
 
@@ -25,5 +27,11 @@ public interface ZszskService {
 	public Collection<Zskly> getZsklyInfo();
 
 	public void updateZskly(List<Zskly> zskly);
+
+	public String importAttachment(UploadFile file, Map<String, Object> param) throws IOException;
+
+	public void cancelUploadAttachmentFile(String param);
+
+	public String importAttachmentImmediately(UploadFile file, Map<String, Object> param) throws IOException;
 	
 }

@@ -317,9 +317,13 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public Collection<User> getUserByDeptId(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select * from user where deptid=?";
-		List<User> users = this.jdbcTemplate.query(sql, new Object[] { id },
-				new RowMapper<User>() {
+		
+		//String sql = "select * from user where deptid="+id;
+		StringBuilder sql = new StringBuilder("select * from user ");
+		if(!"0".equals(id)){
+			sql.append("where deptid="+id);
+		}
+		List<User> users = this.jdbcTemplate.query(sql.toString(),new RowMapper<User>() {
 
 					@Override
 					public User mapRow(ResultSet result, int i)

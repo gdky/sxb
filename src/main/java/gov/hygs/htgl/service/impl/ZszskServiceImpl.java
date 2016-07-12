@@ -5,8 +5,14 @@ import gov.hygs.htgl.entity.ZskJl;
 import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.service.ZszskService;
+import gov.hygs.htgl.utils.AttachmentOpt;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -15,10 +21,12 @@ import javax.annotation.Resource;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bstek.dorado.data.entity.EntityState;
 import com.bstek.dorado.data.entity.EntityUtils;
 import com.bstek.dorado.data.provider.Page;
+import com.bstek.dorado.uploader.UploadFile;
 
 @Service
 public class ZszskServiceImpl implements ZszskService {
@@ -106,8 +114,56 @@ public class ZszskServiceImpl implements ZszskService {
 			}
 			if(EntityUtils.getState(zskly).equals(EntityState.DELETED)){
 				zszskDao.deleteZskly(zskly);
+				AttachmentOpt.deleteAttachmentFile(zskly.getAttachment());
 			}
 		}
+	}
+
+	@Override
+	public String importAttachment(UploadFile file, Map<String, Object> param) throws IOException {
+		// TODO Auto-generated method stub
+		MultipartFile mufile = file.getMultipartFile();
+		String path = AttachmentOpt.getAttachmentPath();
+		path+="attachments"; 
+		
+		//FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());
+		FileOutputStream out=new FileOutputStream(path+"/"+this.rebulidFileName(file.getFileName()));
+		out.write(mufile.getBytes());
+		out.close();
+		//param.put("path","attachments/"+file.getFileName() );
+		//return "attachments/"+file.getFileName();
+		//return path;
+		return "attachments/"+this.rebulidFileName(file.getFileName());
+	}
+
+	@Override
+	public void cancelUploadAttachmentFile(String param) {
+		// TODO Auto-generated method stub
+		zszskDao.cancelUploadAttachmentFile(param);
+	}
+
+	@Override
+	public String importAttachmentImmediately(UploadFile file,
+			Map<String, Object> param) throws IOException {
+		// TODO Auto-generated method stub
+		MultipartFile mufile = file.getMultipartFile();
+		String path = AttachmentOpt.getAttachmentPath();
+		path+="attachments"; 
+		//FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());
+		FileOutputStream out=new FileOutputStream(path+"/"+this.rebulidFileName(file.getFileName()));
+		out.write(mufile.getBytes());
+		out.close();
+		//param.put("path","attachments/"+file.getFileName());
+		param.put("path","attachments/"+this.rebulidFileName(file.getFileName()));
+		zszskDao.importAttachment(param);
+		return null;
+	}
+	
+	private String rebulidFileName(String fileName){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+		String filePostfix = fileName.substring(fileName.lastIndexOf("."));
+		String newFileName = fileName.substring(0, fileName.lastIndexOf(filePostfix))+"_"+sdf.format(new Date())+filePostfix;
+		return newFileName;
 	}
 
 }
