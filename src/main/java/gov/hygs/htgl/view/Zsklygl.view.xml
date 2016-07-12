@@ -70,9 +70,6 @@ view.get(&quot;#dsZskly&quot;).flushAsync();</ClientEvent>
       <AjaxAction id="cancelUploadAction">
         <Property name="service">zszskController#cancelUploadAttachmentFile</Property>
       </AjaxAction>
-      <DownloadAction id="downloadAction">
-        <Property name="fileProvider">zszskController#downloadAttachment</Property>
-      </DownloadAction>
     </Container>
     <Container>
       <Dialog id="dialog">
@@ -184,21 +181,15 @@ if(data != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
             <Button>
-              <Property name="caption">上传</Property>
+              <Property name="caption">上传附件</Property>
               <Property name="action">uploadImmediately</Property>
               <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">var download = view.get(&quot;#downloadAction&quot;);&#xD;
+              <ClientEvent name="onClick">&#xD;
 var attachment = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;attachment&quot;);&#xD;
-if(attachment != null){&#xD;
-	download.set(&quot;parameter&quot;,{&quot;file&quot;:attachment});&#xD;
-	download.execute(function(){&#xD;
-		view.get(&quot;#dialog&quot;).close();&#xD;
-	});&#xD;
-}&#xD;
-</ClientEvent>
-              <Property name="caption">下载</Property>
+window.open ('dorado/ndp/res/'+attachment) ;</ClientEvent>
+              <Property name="caption">下载附件</Property>
               <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
             </Button>
           </ToolBar>

@@ -7,6 +7,7 @@ import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.service.ZszskService;
 import gov.hygs.htgl.utils.AttachmentOpt;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -149,12 +150,14 @@ public class ZszskServiceImpl implements ZszskService {
 		MultipartFile mufile = file.getMultipartFile();
 		String path = AttachmentOpt.getAttachmentPath();
 		path+="attachments"; 
+		File outfile = new File(path);
+		outfile.mkdirs();
 		//FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());
 		FileOutputStream out=new FileOutputStream(path+"/"+this.rebulidFileName(file.getFileName()));
 		out.write(mufile.getBytes());
 		out.close();
 		//param.put("path","attachments/"+file.getFileName());
-		param.put("path","attachments/"+this.rebulidFileName(file.getFileName()));
+		param.put("path",""+this.rebulidFileName(file.getFileName()));
 		zszskDao.importAttachment(param);
 		return null;
 	}
