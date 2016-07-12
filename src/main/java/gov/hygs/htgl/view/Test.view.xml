@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model/>
+  <View>
+    <UploadAction id="uploadAction1">
+      <Property name="fileResolver">mainController#process1</Property>
+      <Filters/>
+    </UploadAction>
+    <Button>
+      <Property name="caption">asddas</Property>
+      <Property name="action">uploadAction1</Property>
+    </Button>
+  </View>
+</ViewConfig>
