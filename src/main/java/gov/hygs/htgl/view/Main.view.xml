@@ -272,8 +272,10 @@ self.$getOpenTabMode = function(){&#xD;
 })&#xD;
 </ClientEvent>
       <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;)&#xD;
+view.get(&quot;#dsUserInfo&quot;).getData(&quot;#&quot;).set(&quot;photo&quot;,&quot;&quot;);&#xD;
+view.get(&quot;#dsUserInfo&quot;).flush();&#xD;
 &#xD;
-view.get(&quot;#dsUserInfo&quot;).flushAsync();</ClientEvent>
+</ClientEvent>
       <Property name="fileResolver">yhJsglController#importImage</Property>
       <Property name="maxFileSize">10MB</Property>
       <Filters/>
