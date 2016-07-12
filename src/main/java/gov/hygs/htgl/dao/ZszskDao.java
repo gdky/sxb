@@ -47,4 +47,8 @@ public interface ZszskDao {
 
 	public void deleteZskly(Zskly zskly);
 
+	public String importAttachment(Map<String, Object> param);
+
+	public void cancelUploadAttachmentFile(String param);
+
 }

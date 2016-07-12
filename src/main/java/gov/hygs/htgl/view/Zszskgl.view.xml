@@ -315,6 +315,46 @@ if(group != undefined){&#xD;
         <Property name="dataSet">dsGroupt</Property>
         <Property name="property">groupName</Property>
       </DataSetDropDown>
+      <CustomDropDown id="deptDropDown">
+        <Property name="autoOpen">true</Property>
+        <Property name="height">500</Property>
+        <DataTree id="depttree">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsDept</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">dept</Property>
+              <Property name="name">dept_name</Property>
+              <Property name="labelProperty">dept_name</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
+      <DataSetDropDown id="userDropDown">
+        <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
+if(user != undefined){&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+        <ClientEvent name="beforeExecute">//var deptId = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;);&#xD;
+//view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,deptId);&#xD;
+view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,&quot;0&quot;);&#xD;
+view.get(&quot;#dsUser&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="autoOpen">true</Property>
+        <Property name="property">user_Name</Property>
+        <Property name="height">500</Property>
+        <Property name="dataSet">dsUser</Property>
+      </DataSetDropDown>
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
@@ -607,14 +647,13 @@ if(data != undefined){&#xD;
             <AutoFormElement id="deptInfo">
               <Property name="name">dept</Property>
               <Property name="property">dept</Property>
-              <Property name="trigger">conditionDropDown</Property>
+              <Property name="trigger">deptDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement id="userInfoName">
               <Property name="name">user</Property>
               <Property name="property">user</Property>
-              <Property name="readOnly">true</Property>
-              <Property name="trigger">dsConditionDropDown</Property>
+              <Property name="trigger">userDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
@@ -634,11 +673,12 @@ if(end &lt; begin &amp;&amp; end != null){&#xD;
 if(dept == &quot;&quot;){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		dept:null,&#xD;
-		deptid:null,&#xD;
-		user:null,&#xD;
-		userid:null&#xD;
+		deptid:null&#xD;
+		//user:null,&#xD;
+		//userid:null&#xD;
 	});&#xD;
-}else if(user == &quot;&quot;){&#xD;
+}&#xD;
+if(user == &quot;&quot;){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		user:null,&#xD;
 		userid:null&#xD;
