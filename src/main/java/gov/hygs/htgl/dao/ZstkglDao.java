@@ -52,4 +52,6 @@ public interface ZstkglDao {
 	public void updateKstsjlInfo(Map<String, Object> param,
 			CustomUserDetails userDetails);
 
+	public Integer getKstsInfoFromSystemProps();
+
 }

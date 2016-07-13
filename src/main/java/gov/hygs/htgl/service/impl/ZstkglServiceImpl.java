@@ -168,4 +168,10 @@ public class ZstkglServiceImpl implements ZstkglService {
 		zstkglDao.updateKstsjlInfo(param, userDetails);
 	}
 
+	@Override
+	public Integer getKstsInfoFromSystemProps() {
+		// TODO Auto-generated method stub
+		return zstkglDao.getKstsInfoFromSystemProps();
+	}
+
 }
