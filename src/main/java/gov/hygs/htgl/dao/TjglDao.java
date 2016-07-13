@@ -16,5 +16,7 @@ public interface TjglDao {
 	public List countLaudRecord(Map<String, Object> param);
 
 	public List countDeptLaudRecord(Map<String, Object> param);
+
+	public List countTktmLaudRecord(Map<String, Object> param);
 	
 }

@@ -23,9 +23,9 @@ public class TjglController {
 	 */
 	@DataProvider
 	public List countGxjl(Map<String,Object> param){
-		if(param == null){
+		/*if(param == null){
 			return null;
-		}
+		}*/
 		return tjglService.countGxjl(param);
 	}
 	
