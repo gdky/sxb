@@ -49,16 +49,48 @@
       <PropertyDef name="cou">
         <Property name="label">贡献统计</Property>
       </PropertyDef>
+      <PropertyDef name="tmname">
+        <Property name="label">题目名称</Property>
+      </PropertyDef>
+      <PropertyDef name="laudCount">
+        <Property name="label">题目点赞统计</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="conditionType">
       <PropertyDef name="type">
-        <ClientEvent name="onSet">if(arg.value == 2){&#xD;
+        <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
+	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
+}&#xD;
+if(arg.value == 6){&#xD;
+	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.get(&quot;#tm&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#laud&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
+}else{&#xD;
+	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	view.get(&quot;#tm&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#laud&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#count&quot;).set(&quot;visible&quot;,true);&#xD;
+}&#xD;
+if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6){&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
+}else{&#xD;
+	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+}&#xD;
+if(arg.value > 3){&#xD;
 	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
 }else{&#xD;
 	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
 }&#xD;
+&#xD;
 </ClientEvent>
         <Property name="label">统计类型</Property>
         <Property name="mapping">
@@ -66,15 +98,31 @@
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">题库统计</Property>
+                <Property name="value">部门出题贡献值</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">知识库统计</Property>
+                <Property name="value">个人出题贡献值</Property>
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
-                <Property name="value">点赞数统计</Property>
+                <Property name="value">部门知识要点贡献值</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">3</Property>
+                <Property name="value">个人知识要点贡献值</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">4</Property>
+                <Property name="value">部门被点赞数</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">5</Property>
+                <Property name="value">个人被点赞数</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">6</Property>
+                <Property name="value">题目被点赞数</Property>
               </Entity>
             </Collection>
           </Property>
@@ -231,16 +279,17 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
               <Property name="hideMode">display</Property>
               <Editor/>
             </AutoFormElement>
-            <AutoFormElement>
+            <AutoFormElement id="dept">
               <Property name="name">dept</Property>
               <Property name="property">dept</Property>
               <Property name="trigger">deptDropDown</Property>
               <Editor/>
             </AutoFormElement>
-            <AutoFormElement>
+            <AutoFormElement id="user">
               <Property name="name">user</Property>
               <Property name="property">user</Property>
               <Property name="trigger">userDropDown</Property>
+              <Property name="hideMode">display</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
@@ -282,7 +331,7 @@ view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#condit
 view.get(&quot;#dsResult&quot;).flush();&#xD;
 &#xD;
 &#xD;
-&#xD;
+/*&#xD;
 var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
 view.get(&quot;#dsDeptResult&quot;).set(&quot;parameter&quot;,{&#xD;
 	type:entity.get(&quot;type&quot;),&#xD;
@@ -295,14 +344,14 @@ view.get(&quot;#dsDeptResult&quot;).set(&quot;parameter&quot;,{&#xD;
 	content:entity.get(&quot;content&quot;)&#xD;
 });&#xD;
 view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
-</ClientEvent>
+*/</ClientEvent>
               <Property name="caption">查找</Property>
             </Button>
           </AutoForm>
         </Children>
       </GroupBox>
       <GroupBox>
-        <Property name="caption">用户贡献统计</Property>
+        <Property name="caption">统计</Property>
         <Buttons/>
         <Children>
           <DataGrid>
@@ -312,17 +361,25 @@ view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
             <DataColumn id="userName" name="username">
               <Property name="property">username</Property>
             </DataColumn>
-            <DataColumn name="deptname">
+            <DataColumn id="deptName" name="deptname">
               <Property name="property">deptname</Property>
             </DataColumn>
-            <DataColumn name="cou">
+            <DataColumn id="count" name="cou">
               <Property name="property">cou</Property>
+            </DataColumn>
+            <DataColumn id="tm" name="tmname">
+              <Property name="property">tmname</Property>
+            </DataColumn>
+            <DataColumn id="laud" name="laudCount">
+              <Property name="property">laudCount</Property>
             </DataColumn>
           </DataGrid>
         </Children>
       </GroupBox>
       <GroupBox>
         <Property name="caption">部门贡献统计</Property>
+        <Property name="hideMode">display</Property>
+        <Property name="visible">false</Property>
         <Buttons/>
         <Children>
           <DataGrid id="deptGrid">

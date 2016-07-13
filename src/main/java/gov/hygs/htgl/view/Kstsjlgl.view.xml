@@ -3,45 +3,6 @@
   <Arguments/>
   <Context/>
   <Model>
-    <DataType name="tkfxtsjlType">
-      <Property name="creationType">gov.hygs.htgl.entity.Tkfxtsjl</Property>
-      <PropertyDef name="id">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tsr">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tsrq">
-        <Property name="dataType">Date</Property>
-      </PropertyDef>
-      <PropertyDef name="ms">
-        <Property></Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="tktsnrType">
-      <Property name="creationType">gov.hygs.htgl.entity.Tktsnr</Property>
-      <PropertyDef name="id">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tsjlid">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tmid">
-        <Property></Property>
-      </PropertyDef>
-    </DataType>
-    <DataType name="tktsqzType">
-      <Property name="creationType">gov.hygs.htgl.entity.Tktsqz</Property>
-      <PropertyDef name="id">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="groupId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-      <PropertyDef name="tsjlid">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
-    </DataType>
     <DataType name="tktmType">
       <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
       <PropertyDef name="id">
@@ -251,6 +212,26 @@
       <PropertyDef name="groupname">
         <Property name="label">群组名称</Property>
       </PropertyDef>
+      <PropertyDef name="title">
+        <Property name="label">考试主题</Property>
+      </PropertyDef>
+      <PropertyDef name="type">
+        <Property name="mapping">
+          <Property name="mapValues">
+            <Collection>
+              <Entity>
+                <Property name="key">0</Property>
+                <Property name="value">正式考试</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">1</Property>
+                <Property name="value">抢答</Property>
+              </Entity>
+            </Collection>
+          </Property>
+        </Property>
+        <Property name="label">考试类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="groupType">
       <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
@@ -287,8 +268,8 @@
     </Container>
     <Container id="dialogs">
       <Dialog id="conditionDialog">
-        <Property name="width">600</Property>
-        <Property name="height">300</Property>
+        <Property name="width">650</Property>
+        <Property name="height">350</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -350,6 +331,16 @@ view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
                   <Property name="trigger">groupDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">type</Property>
+                  <Property name="property">type</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Editor/>
+                </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
@@ -389,8 +380,11 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
 	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
-	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
+	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
+	&quot;type&quot;:condition.get(&quot;type&quot;)&#xD;
 });&#xD;
+&#xD;
 &#xD;
 view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#conditionDialog&quot;).close();&#xD;
@@ -412,6 +406,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
             <Children>
               <DataGrid>
                 <Property name="dataSet">dsTktmFilter</Property>
+                <RowNumColumn/>
                 <DataColumn name="tkfl">
                   <Property name="property">tkfl.tkmc</Property>
                 </DataColumn>
@@ -479,7 +474,9 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;end&quot;:condition.get(&quot;end&quot;),&#xD;
 	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
-	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
+	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
+	&quot;type&quot;:condition.get(&quot;type&quot;)&#xD;
 });&#xD;
 &#xD;
 view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
@@ -510,6 +507,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <Property name="readOnly">true</Property>
                 <Property name="selectionMode">multiRows</Property>
                 <RowSelectorColumn/>
+                <RowNumColumn/>
                 <DataColumn name="tkfl">
                   <Property name="property">tkfl.tkmc</Property>
                 </DataColumn>
@@ -565,6 +563,7 @@ view.get(&quot;#conditionDialog&quot;).show();&#xD;
           <DataGrid>
             <Property name="dataSet">dsTktm</Property>
             <Property name="readOnly">true</Property>
+            <RowNumColumn/>
             <DataColumn name="tkfl">
               <Property name="property">tkfl.tkmc</Property>
             </DataColumn>
