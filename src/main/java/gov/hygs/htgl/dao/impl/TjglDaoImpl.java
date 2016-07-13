@@ -255,5 +255,14 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		List list = this.jdbcTemplate.queryForList(sql.toString());
 		return list;
 	}
+
+	@Override
+	public List countTktmLaudRecord(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		String sql = "select t.content as tmname,count(r.zstk_id) as laudCount "
+				+ "from laud_record r,tktm t where t.id_ = r.zstk_id group by r.zstk_id";
+		List list =  this.jdbcTemplate.queryForList(sql);
+		return list;
+	}
 	
 }

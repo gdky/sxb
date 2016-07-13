@@ -195,8 +195,8 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 					+ "(select id_ from tmly where title like '%" + content
 					+ "%' or content like '%" + content + "%') ");
 		}
-		if(tktmcontent != null){
-			sql.append(" and content like '%"+tktmcontent+"%' ");
+		if (tktmcontent != null) {
+			sql.append(" and content like '%" + tktmcontent + "%' ");
 		}
 		// return null;
 	}
@@ -490,17 +490,30 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			String ms = (String) param.get("ms");
 			Date begin = (Date) param.get("begin");
 			Date end = (Date) param.get("end");
+			String title = (String) param.get("title");
+			String tpye = (String) param.get("type");
 
-			String sql = "insert into kstsjl values(?,?,?,?,?,?)";
+			/*
+			 * String sql = "insert into kstsjl values(?,?,?,?,?,?)"; int jlId =
+			 * this.insertAndGetKeyByJdbc( sql, new Object[] { null,
+			 * userDetails.getId(), new Date(), ms, begin, end }, new String[] {
+			 * "id_" }).intValue(); sql = "insert into kstsqz value(?,?,?)";
+			 * this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId
+			 * }); for (String id : ids) { sql =
+			 * "insert into kstsnr values(?,?,?)"; this.jdbcTemplate.update(sql,
+			 * new Object[] { null, jlId, id }); }
+			 */
+			String sql = "insert into exam values(?,?,?,?,?,?)";
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
-					new Object[] { null, userDetails.getId(), new Date(), ms,
-							begin, end }, new String[] { "id_" }).intValue();
-			sql = "insert into kstsqz value(?,?,?)";
-			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
-			for (String id : ids) {
-				sql = "insert into kstsnr values(?,?,?)";
-				this.jdbcTemplate.update(sql, new Object[] { null, jlId, id });
+					new Object[] { null, begin, end, title, tpye,
+							userDetails.getId() }, new String[] { "id_" })
+					.intValue();
+			sql = "insert into exam_tsqz value(?,?,?)";
+			this.jdbcTemplate.update(sql, new Object[]{null,groupId,jlId});
+			for(int i = 0; i < ids.size(); i++){
+				sql = "insert into exam_detail values(?,?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[]{null,i+1,jlId,ids.get(i)});
 			}
 		}
 	}
