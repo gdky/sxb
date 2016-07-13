@@ -18,5 +18,13 @@ public interface TjglDao {
 	public List countDeptLaudRecord(Map<String, Object> param);
 
 	public List countTktmLaudRecord(Map<String, Object> param);
+
+	public List countUserAnswerCount(Map<String, Object> param);
+
+	public List countUserAnswerScore(Map<String, Object> param);
+
+	public List countUserRushAnswerScore(Map<String, Object> param);
+
+	public List countUserExamScore(Map<String, Object> param);
 	
 }

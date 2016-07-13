@@ -219,6 +219,7 @@ if(datas.getLast() != null){&#xD;
 &#xD;
 </ClientEvent>
         <Property></Property>
+        <Property name="readOnly">true</Property>
         <Validator name="validator1" type="required">
           <Property name="resultMessage">选项不能为空</Property>
         </Validator>
@@ -801,7 +802,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
     </Container>
     <Container id="dialogs">
       <Dialog id="addyxtkDialog">
-        <Property name="height">700</Property>
+        <Property name="height">667</Property>
         <Property name="width">900</Property>
         <Buttons>
           <Button>
@@ -916,7 +917,7 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="updateyxtkDialog">
-        <Property name="height">700</Property>
+        <Property name="height">667</Property>
         <Property name="width">900</Property>
         <Buttons>
           <Button>

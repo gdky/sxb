@@ -29,4 +29,6 @@ public interface ZstkglService {
 
 	public void updateKstsjlInfo(Map<String, Object> param);
 
+	public Integer getKstsInfoFromSystemProps();
+
 }
