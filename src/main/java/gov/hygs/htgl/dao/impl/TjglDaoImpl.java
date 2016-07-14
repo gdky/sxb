@@ -264,5 +264,68 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		List list =  this.jdbcTemplate.queryForList(sql);
 		return list;
 	}
+
+	@Override
+	public List countUserAnswerCount(Map<String, Object> param) {//answerCount
+		// TODO Auto-generated method stub
+		String user = (String) param.get("user");
+		
+		StringBuilder sql = new StringBuilder("select d.dept_name as dept,u.user_name as user,count(r.user_id) as answerCount "
+				+ "from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_");
+			if(user != null){
+				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			}
+			sql.append(" group by r.user_id ");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
+
+	@Override
+	public List countUserAnswerScore(Map<String, Object> param) {//answerScore
+		// TODO Auto-generated method stub
+		String user = (String) param.get("user");
+		
+		StringBuilder sql = new StringBuilder("select d.dept_name as dept,u.user_name as user,sum(r.result_score) as answerScore "
+				+ "from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_");
+			if(user != null){
+				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			}
+			sql.append(" group by r.user_id ");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
+
+	@Override
+	public List countUserRushAnswerScore(Map<String, Object> param) {//rushAnswerScore
+		// TODO Auto-generated method stub
+		//user_result 通过tm_id关联exam_detail,在通过tm_id关联exam,筛选出考试类型为抢答的结果
+		//问题：假如user_result的一条应该是"正式"的题目刚好在exam表中存在对应该题目且考试类型为"正式"和"抢答"两条记录，查询是否会出错？
+		String user = (String) param.get("user");
+		
+		StringBuilder sql = new StringBuilder("select d.dept_name as dept,u.user_name as user,sum(r.exam_score) as rushAnswerScore "+
+					"from exam_user_result r, user u, dept d, exam_detail ed, exam e "+
+					"where r.user_id = u.id_ and u.deptid=d.id_ and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ and e.exam_type='2'");
+			if(user != null){
+				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			}
+			sql.append(" group by r.user_id");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
+
+	@Override
+	public List countUserExamScore(Map<String, Object> param) {//examScore
+		// TODO Auto-generated method stub
+		String user = (String) param.get("user");
+		
+		StringBuilder sql = new StringBuilder("select d.dept_name as dept,u.user_name as user,sum(r.exam_score) as examScore "
+				+ "from exam_user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_");
+			if(user != null){
+				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			}
+			sql.append(" group by r.user_id ");
+		List list = this.jdbcTemplate.queryForList(sql.toString());
+		return list;
+	}
 	
 }

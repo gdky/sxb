@@ -60,36 +60,65 @@
       <PropertyDef name="type">
         <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
 	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
+	view.get(&quot;#dsScore&quot;).getData().clear();&#xD;
 }&#xD;
-if(arg.value == 6){&#xD;
-	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
-	view.get(&quot;#tm&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#laud&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
+if(arg.value &lt; 7){&#xD;
+	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#scoreGrid&quot;).set(&quot;visible&quot;,false);&#xD;
+	if(arg.value == 6){&#xD;
+		view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.get(&quot;#tm&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#laud&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else{&#xD;
+		view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.get(&quot;#tm&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#laud&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#count&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6){&#xD;
+		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	}else{&#xD;
+		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	}&#xD;
+	if(arg.value > 3){&#xD;
+		view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else{&#xD;
+		view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
+	}	&#xD;
 }else{&#xD;
-	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
-	view.get(&quot;#tm&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#laud&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#count&quot;).set(&quot;visible&quot;,true);&#xD;
-}&#xD;
-if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6){&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
-}else{&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
-}&#xD;
-if(arg.value > 3){&#xD;
+	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#scoreGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
-}else{&#xD;
-	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	view.get(&quot;#answerCount&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#answerScore&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#rushAnswerScore&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,false);&#xD;
+	if(arg.value == 7){&#xD;
+		view.get(&quot;#answerCount&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+	if(arg.value == 8){&#xD;
+		view.get(&quot;#answerScore&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+	if(arg.value == 9){&#xD;
+		view.get(&quot;#rushAnswerScore&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+	if(arg.value == 10){&#xD;
+		view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
 }&#xD;
+&#xD;
 &#xD;
 </ClientEvent>
         <Property name="label">统计类型</Property>
@@ -124,6 +153,22 @@ if(arg.value > 3){&#xD;
                 <Property name="key">6</Property>
                 <Property name="value">题目被点赞数</Property>
               </Entity>
+              <Entity>
+                <Property name="key">7</Property>
+                <Property name="value">用户答题数量</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">8</Property>
+                <Property name="value">用户答题得分</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">9</Property>
+                <Property name="value">用户抢答答题得分</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">10</Property>
+                <Property name="value">用户考试分数</Property>
+              </Entity>
             </Collection>
           </Property>
         </Property>
@@ -148,6 +193,26 @@ if(arg.value > 3){&#xD;
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
     </DataType>
+    <DataType name="scoreType">
+      <PropertyDef name="dept">
+        <Property name="label">部门</Property>
+      </PropertyDef>
+      <PropertyDef name="user">
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="answerCount">
+        <Property name="label">答题数量</Property>
+      </PropertyDef>
+      <PropertyDef name="answerScore">
+        <Property name="label">答题得分</Property>
+      </PropertyDef>
+      <PropertyDef name="rushAnswerScore">
+        <Property name="label">答题抢答答案得分</Property>
+      </PropertyDef>
+      <PropertyDef name="examScore">
+        <Property name="label">考试分数</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <Container id="datasets">
@@ -163,9 +228,9 @@ if(arg.value > 3){&#xD;
         <Property name="dataType">[resultType]</Property>
         <Property name="dataProvider">tjglController#countGxjl</Property>
       </DataSet>
-      <DataSet id="dsDeptResult">
-        <Property name="dataProvider">tjglController#countDeptGxjl</Property>
-        <Property name="dataType">[resultType]</Property>
+      <DataSet id="dsScore">
+        <Property name="dataType">[scoreType]</Property>
+        <Property name="dataProvider">tjglController#countGxjl</Property>
       </DataSet>
     </Container>
     <Container id="dropDowns">
@@ -299,6 +364,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
             </AutoFormElement>
             <Button>
               <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var type = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;);&#xD;
 var dept = entity.get(&quot;dept&quot;);&#xD;
 var user = entity.get(&quot;user&quot;);&#xD;
 var begin = entity.get(&quot;begin&quot;);&#xD;
@@ -320,32 +386,18 @@ if(user == &quot;&quot; || user == undefined){&#xD;
 		userid:null&#xD;
 	});&#xD;
 }&#xD;
-/*&#xD;
-if(entity.get(&quot;userid&quot;)==undefined || entity.get(&quot;userid&quot;)==&quot;&quot;){&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
+&#xD;
+if(type &lt; 7){&#xD;
+	view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+	view.get(&quot;#dsResult&quot;).flush();&#xD;
 }else{&#xD;
-	view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#dsScore&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+	view.get(&quot;#dsScore&quot;).flush();&#xD;
 }&#xD;
-*/&#xD;
-view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
-view.get(&quot;#dsResult&quot;).flush();&#xD;
 &#xD;
-&#xD;
-/*&#xD;
-var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
-view.get(&quot;#dsDeptResult&quot;).set(&quot;parameter&quot;,{&#xD;
-	type:entity.get(&quot;type&quot;),&#xD;
-	begin:entity.get(&quot;begin&quot;),&#xD;
-	end:entity.get(&quot;end&quot;),&#xD;
-	deptid:entity.get(&quot;deptid&quot;),&#xD;
-	dept:dept,&#xD;
-	userid:0,&#xD;
-	user:user,&#xD;
-	content:entity.get(&quot;content&quot;)&#xD;
-});&#xD;
-view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
-*/</ClientEvent>
+</ClientEvent>
               <Property name="caption">查找</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
             </Button>
           </AutoForm>
         </Children>
@@ -354,10 +406,11 @@ view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
         <Property name="caption">统计</Property>
         <Buttons/>
         <Children>
-          <DataGrid>
+          <DataGrid id="countGrid">
             <Property name="dataSet">dsResult</Property>
             <Property name="height">300</Property>
             <Property name="readOnly">true</Property>
+            <Property name="hideMode">display</Property>
             <DataColumn id="userName" name="username">
               <Property name="property">username</Property>
             </DataColumn>
@@ -374,22 +427,27 @@ view.get(&quot;#dsDeptResult&quot;).flush();&#xD;
               <Property name="property">laudCount</Property>
             </DataColumn>
           </DataGrid>
-        </Children>
-      </GroupBox>
-      <GroupBox>
-        <Property name="caption">部门贡献统计</Property>
-        <Property name="hideMode">display</Property>
-        <Property name="visible">false</Property>
-        <Buttons/>
-        <Children>
-          <DataGrid id="deptGrid">
-            <Property name="dataSet">dsDeptResult</Property>
+          <DataGrid id="scoreGrid">
+            <Property name="hideMode">display</Property>
+            <Property name="dataSet">dsScore</Property>
             <Property name="readOnly">true</Property>
-            <DataColumn name="deptname">
-              <Property name="property">deptname</Property>
+            <DataColumn name="dept">
+              <Property name="property">dept</Property>
             </DataColumn>
-            <DataColumn name="cou">
-              <Property name="property">cou</Property>
+            <DataColumn name="user">
+              <Property name="property">user</Property>
+            </DataColumn>
+            <DataColumn id="answerCount" name="answerCount">
+              <Property name="property">answerCount</Property>
+            </DataColumn>
+            <DataColumn id="answerScore" name="answerScore">
+              <Property name="property">answerScore</Property>
+            </DataColumn>
+            <DataColumn id="rushAnswerScore" name="rushAnswerScore">
+              <Property name="property">rushAnswerScore</Property>
+            </DataColumn>
+            <DataColumn id="examScore" name="examScore">
+              <Property name="property">examScore</Property>
             </DataColumn>
           </DataGrid>
         </Children>

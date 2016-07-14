@@ -443,12 +443,14 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
+		Integer value = this.getKstsInfoFromSystemProps();
 		List<Tktm> list = this.getYxtkInfo(-1, -1);
 		if (list.size() > 0) {
 			Collections.shuffle(list);
 			List<Tktm> randomList = new ArrayList<Tktm>();
-			for (int i = 0; i < (pageSize > list.size() ? list.size()
-					: pageSize); i++) {
+			//for (int i = 0; i < (pageSize > list.size() ? list.size()
+				//	: pageSize); i++) {
+			for(int i = 0; i < (value > list.size() ? list.size():value); i++){
 				randomList.add(list.get(i));
 			}
 			page.setEntityCount(pageSize);
@@ -516,6 +518,14 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				this.jdbcTemplate.update(sql, new Object[]{null,i+1,jlId,ids.get(i)});
 			}
 		}
+	}
+
+	@Override
+	public Integer getKstsInfoFromSystemProps() {
+		// TODO Auto-generated method stub
+		String sql = "select value from system_props where key_='ksts'";
+		Integer value = Integer.parseInt(this.jdbcTemplate.queryForObject(sql, String.class));
+		return value;
 	}
 
 }

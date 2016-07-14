@@ -71,4 +71,9 @@ public class ZstkglController {
 		zstkglService.updateKstsjlInfo(param);
 	}
 	
+	@DataProvider
+	public Integer getKstsInfoFromSystemProps(){
+		return zstkglService.getKstsInfoFromSystemProps();
+	}
+	
 }

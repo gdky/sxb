@@ -40,6 +40,14 @@ public class TjglServiceImpl implements TjglService {
 			return tjglDao.countLaudRecord(param);
 		}else if("6".equals(type)){//题目点赞数
 			return tjglDao.countTktmLaudRecord(param);
+		}else if("7".equals(type)){//用户答题数量
+			return tjglDao.countUserAnswerCount(param);
+		}else if("8".equals(type)){//用户答题得分
+			return tjglDao.countUserAnswerScore(param);
+		}else if("9".equals(type)){//用户抢答答题得分
+			return tjglDao.countUserRushAnswerScore(param);
+		}else if("10".equals(type)){//用户考试分数
+			return tjglDao.countUserExamScore(param);
 		}
 		return null;
 	}
