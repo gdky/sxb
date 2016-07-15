@@ -61,11 +61,11 @@
             <Collection>
               <Entity>
                 <Property name="key">N</Property>
-                <Property name="value">未选上</Property>
+                <Property name="value">未选中</Property>
               </Entity>
               <Entity>
                 <Property name="key">Y</Property>
-                <Property name="value">已选上</Property>
+                <Property name="value">选中</Property>
               </Entity>
             </Collection>
           </Property>
@@ -127,17 +127,17 @@
     <DataType name="conditionType">
       <PropertyDef name="begin">
         <Property name="dataType">Date</Property>
-        <Property name="label">起始时间</Property>
+        <Property name="label">创建时间起</Property>
       </PropertyDef>
       <PropertyDef name="end">
         <Property name="dataType">Date</Property>
-        <Property name="label">终止时间</Property>
+        <Property name="label">创建时间止</Property>
       </PropertyDef>
       <PropertyDef name="dept">
         <Property name="label">部门名称</Property>
       </PropertyDef>
       <PropertyDef name="user">
-        <Property name="label">用户名</Property>
+        <Property name="label">录入人</Property>
       </PropertyDef>
       <PropertyDef name="content">
         <Property name="label">来源</Property>
@@ -244,7 +244,7 @@
       <DataSet id="dsYxzsk">
         <Property name="dataType">[yxzskType]</Property>
         <Property name="dataProvider">yxzskController#getYxzskInfo</Property>
-        <Property name="pageSize">10</Property>
+        <Property name="pageSize">20</Property>
       </DataSet>
       <DataSet id="dsZskly">
         <Property name="dataType">[zsklyType]</Property>
@@ -368,14 +368,14 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
-        <Property name="height">500</Property>
+        <Property name="height">350</Property>
         <Property name="width">700</Property>
         <Buttons/>
         <Children>
           <GroupBox>
             <Property name="caption">知识库信息</Property>
             <Buttons>
-              <Button>
+              <Button id="submitButton">
                 <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
@@ -407,7 +407,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="trigger">dsZsklyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
                   <Editor/>
@@ -416,7 +416,9 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
                   <Editor>
-                    <TextArea/>
+                    <TextArea>
+                      <Property name="height">100</Property>
+                    </TextArea>
                   </Editor>
                 </AutoFormElement>
               </AutoForm>
@@ -610,6 +612,8 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).insert();&#xD;
 view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">增加</Property>
@@ -628,11 +632,23 @@ if(data != undefined){&#xD;
             </Button>
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
 </ClientEvent>
               <Property name="caption">修改</Property>
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">if(view.get(&quot;#dsYxzsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.get(&quot;#dialog&quot;).show();&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">查看题目</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
             </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
@@ -649,6 +665,7 @@ if(data != undefined){&#xD;
           <DataGrid>
             <Property name="dataSet">dsYxzsk</Property>
             <Property name="readOnly">true</Property>
+            <RowNumColumn/>
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
             </DataColumn>

@@ -149,7 +149,7 @@ public class ZstkglServiceImpl implements ZstkglService {
 	@Override
 	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		zstkglDao.getRandomTktmFilter(page, param);
+		zstkglDao.getRandomTktmFilter(page, param, "ksts");
 	}
 
 	@Override
@@ -169,9 +169,22 @@ public class ZstkglServiceImpl implements ZstkglService {
 	}
 
 	@Override
-	public Integer getKstsInfoFromSystemProps() {
+	public Integer getSomeInfoBySystemPropsKey(String param) {
 		// TODO Auto-generated method stub
-		return zstkglDao.getKstsInfoFromSystemProps();
+		return zstkglDao.getSomeInfoBySystemPropsKey(param);
 	}
 
+	@Override
+	public void getRandomFxtsTktmFilter(Page<Tktm> page,
+			Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.getRandomTktmFilter(page, param, "fxts");
+	}
+
+	@Override
+	public Integer getFxtsInfoFromSystemProps() {
+		// TODO Auto-generated method stub
+		return zstkglDao.getSomeInfoBySystemPropsKey("fxts");
+	}
+//ksts
 }

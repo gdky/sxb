@@ -33,5 +33,7 @@ public interface ZszskService {
 	public void cancelUploadAttachmentFile(String param);
 
 	public String importAttachmentImmediately(UploadFile file, Map<String, Object> param) throws IOException;
+
+	public Integer getZsdtsInfoFromSystemProps();
 	
 }

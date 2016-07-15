@@ -307,7 +307,9 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
             <Children>
               <ToolBar>
                 <ToolBarButton>
-                  <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).insert();</ClientEvent>
+                  <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).insert();&#xD;
+view.get(&quot;#DialogRole&quot;).show();&#xD;
+</ClientEvent>
                   <Property name="caption">增加</Property>
                   <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
                 </ToolBarButton>
@@ -319,13 +321,14 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
                   <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
                 </ToolBarButton>
                 <ToolBarButton>
-                  <Property name="caption">保存</Property>
-                  <Property name="action">updateActionRole</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+                  <ClientEvent name="onClick">view.get(&quot;#DialogRole&quot;).show();</ClientEvent>
+                  <Property name="caption">修改</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
                 </ToolBarButton>
               </ToolBar>
               <DataGrid id="dataGridRole">
                 <Property name="dataSet">dsRole</Property>
+                <Property name="readOnly">true</Property>
                 <DataColumn name="role_Name">
                   <Property name="property">role_Name</Property>
                 </DataColumn>
@@ -500,6 +503,50 @@ view.get(&quot;#validateMenuAjaxAction&quot;).set(&quot;parameter&quot;,{&#xD;
                 </BindingConfig>
               </BindingConfigs>
             </DataTree>
+          </Children>
+        </GroupBox>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="DialogRole">
+      <Property name="width">400</Property>
+      <Buttons/>
+      <Children>
+        <GroupBox>
+          <Property name="caption">角色信息</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#updateActionRole&quot;).execute(function(){&#xD;
+	view.get(&quot;#DialogRole&quot;).close();&#xD;
+	view.get(&quot;#dsRole&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">提交</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsRole&quot;).getData().cancel();&#xD;
+view.get(&quot;#DialogRole&quot;).close();&#xD;
+</ClientEvent>
+              <Property name="caption">取消</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm>
+              <Property name="dataSet">dsRole</Property>
+              <Property name="cols">*</Property>
+              <AutoFormElement>
+                <Property name="name">role_Name</Property>
+                <Property name="property">role_Name</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">ms</Property>
+                <Property name="property">ms</Property>
+                <Editor>
+                  <TextArea/>
+                </Editor>
+              </AutoFormElement>
+            </AutoForm>
           </Children>
         </GroupBox>
       </Children>

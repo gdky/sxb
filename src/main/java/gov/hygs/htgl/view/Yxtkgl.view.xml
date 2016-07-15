@@ -200,11 +200,11 @@ if(yxtk.get(&quot;id&quot;) == undefined){&#xD;
             <Collection>
               <Entity>
                 <Property name="key">N</Property>
-                <Property name="value">未选上</Property>
+                <Property name="value">未选中</Property>
               </Entity>
               <Entity>
                 <Property name="key">Y</Property>
-                <Property name="value">已选上</Property>
+                <Property name="value">选中</Property>
               </Entity>
             </Collection>
           </Property>
@@ -333,17 +333,17 @@ if(datas.getLast() != null){&#xD;
     <DataType name="conditionType">
       <PropertyDef name="begin">
         <Property name="dataType">Date</Property>
-        <Property name="label">起始时间</Property>
+        <Property name="label">创建时间起</Property>
       </PropertyDef>
       <PropertyDef name="end">
         <Property name="dataType">Date</Property>
-        <Property name="label">终止时间</Property>
+        <Property name="label">创建时间止</Property>
       </PropertyDef>
       <PropertyDef name="dept">
         <Property name="label">部门名称</Property>
       </PropertyDef>
       <PropertyDef name="user">
-        <Property name="label">用户名</Property>
+        <Property name="label">录入人</Property>
       </PropertyDef>
       <PropertyDef name="content">
         <Property name="label">来源</Property>
@@ -553,7 +553,7 @@ if(datas.getLast() != null){&#xD;
       <DataSet id="dsYxtk">
         <Property name="dataType">[tktmType]</Property>
         <Property name="dataProvider">yxtkglController#getYxtkInfo</Property>
-        <Property name="pageSize">10</Property>
+        <Property name="pageSize">20</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -1004,7 +1004,7 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
         <Property name="height">667</Property>
         <Property name="width">900</Property>
         <Buttons>
-          <Button>
+          <Button id="submitButton">
             <ClientEvent name="onClick">var data = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
 var mode = data.get(&quot;mode&quot;);&#xD;
 var da = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
@@ -1173,7 +1173,7 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                     <Property name="hideMode">visibility</Property>
                     <Property name="highlightCurrentRow">false</Property>
                     <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn/>
+                    <RowSelectorColumn id="tmSelect"/>
                     <DataColumn id="updatexzKey" name="xzKey">
                       <Property name="property">xzKey</Property>
                       <Property name="caption">选项</Property>
@@ -1196,7 +1196,8 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                     <Property name="height">200</Property>
                     <Property name="highlightCurrentRow">false</Property>
                     <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn/>
+                    <Property name="readOnly">true</Property>
+                    <RowSelectorColumn id="tofselect"/>
                     <DataColumn name="content">
                       <Property name="property">content</Property>
                       <Property name="caption">选项</Property>
@@ -1214,7 +1215,6 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                     <Property name="dataPath">#.daxzx</Property>
                     <Property name="highlightCurrentRow">false</Property>
                     <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
                     <DataColumn id="daxzKey" name="xzKey">
                       <Property name="property">xzKey</Property>
                       <Property name="caption">答案选项</Property>
@@ -1581,6 +1581,11 @@ if(current != undefined){&#xD;
             </Button>
             <Button>
               <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+view.get(&quot;#tmSelect&quot;).set(&quot;visible&quot;,true);&#xD;
+view.get(&quot;#tofselect&quot;).set(&quot;visible&quot;,true);&#xD;
 if(dsYxtk == undefined){&#xD;
 	return;&#xD;
 }&#xD;
@@ -1661,6 +1666,93 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="caption">修改</Property>
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
             </Button>
+            <Button>
+              <ClientEvent name="onClick">var dsYxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
+view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
+view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
+view.get(&quot;#tmSelect&quot;).set(&quot;visible&quot;,false);&#xD;
+view.get(&quot;#tofselect&quot;).set(&quot;visible&quot;,false);&#xD;
+if(dsYxtk == undefined){&#xD;
+	return;&#xD;
+}&#xD;
+//var content = dsYxtk.get(&quot;content&quot;);&#xD;
+var mode = dsYxtk.get(&quot;mode&quot;);&#xD;
+&#xD;
+if(mode == 1){&#xD;
+	//content = content + &quot;(单选题)&quot;;&#xD;
+	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+}else if(mode == 2){&#xD;
+	//content = content + &quot;(多选题)&quot;;&#xD;
+	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
+}else if(mode == 0){&#xD;
+	//content = content + &quot;(判断题)&quot;;&#xD;
+	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
+}&#xD;
+&#xD;
+var entity = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+&#xD;
+if(mode ==1 || mode == 2){&#xD;
+	//单选或多选题&#xD;
+&#xD;
+	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
+	if(entity.current == undefined){&#xD;
+		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
+		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
+		view.get(&quot;#updateyxtkDialog&quot;).show();&#xD;
+	}else{&#xD;
+		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+		var selects = [];&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
+		entity.each(function(da){&#xD;
+			xzs.each(function(xz){&#xD;
+				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
+					selects.push(xz);&#xD;
+				}&#xD;
+			});&#xD;
+		});&#xD;
+		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
+		view.get(&quot;#updateyxtkDialog&quot;).show();&#xD;
+		if(mode == 1){&#xD;
+			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
+		}else if(mode == 2){&#xD;
+			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
+		}&#xD;
+	}&#xD;
+	&#xD;
+}else{&#xD;
+	//判断题&#xD;
+	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
+	&#xD;
+	if(entity.current == undefined){&#xD;
+		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
+	}else{&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tof&quot;);//============&#xD;
+		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
+		var select = null;&#xD;
+		entity.each(function(da){&#xD;
+			xzs.each(function(xz){&#xD;
+				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
+					select = xz;&#xD;
+					da.set({tkId:view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
+				}&#xD;
+			});&#xD;
+		});&#xD;
+				&#xD;
+	}&#xD;
+	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
+	view.get(&quot;#updateyxtkDialog&quot;).show();&#xD;
+	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+              <Property name="caption">查看题目</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
+            </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
 </ClientEvent>
@@ -1683,6 +1775,7 @@ if(mode ==1 || mode == 2){&#xD;
           <DataGrid>
             <Property name="dataSet">dsYxtk</Property>
             <Property name="readOnly">true</Property>
+            <RowNumColumn/>
             <DataColumn name="tkfl">
               <Property name="property">tkfl.tkmc</Property>
             </DataColumn>
