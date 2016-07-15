@@ -324,11 +324,15 @@ view.get(&quot;#updateChildAction&quot;).execute(function(){&#xD;
                       <AutoFormElement>
                         <Property name="name">menu_Name</Property>
                         <Property name="property">menu_Name</Property>
+                        <Property name="label">菜单名称</Property>
+                        <Property name="labelWidth">85</Property>
                         <Editor/>
                       </AutoFormElement>
                       <AutoFormElement>
                         <Property name="name">url</Property>
                         <Property name="property">url</Property>
+                        <Property name="label">功能访问地址</Property>
+                        <Property name="labelWidth">85</Property>
                         <Editor/>
                       </AutoFormElement>
                     </AutoForm>
@@ -340,7 +344,7 @@ view.get(&quot;#updateChildAction&quot;).execute(function(){&#xD;
           </Container>
           <GroupBox>
             <Property name="caption">当前菜单信息</Property>
-            <Property name="height">150</Property>
+            <Property name="height">100</Property>
             <Buttons/>
             <Children>
               <AutoForm id="currentNodeForm">

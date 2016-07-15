@@ -44,14 +44,15 @@ public interface ZstkglDao {
 
 	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param);
 
-	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param);
-
 	public void updateTkfxtsInfo(Map<String, Object> param,
 			CustomUserDetails userDetails);
 
 	public void updateKstsjlInfo(Map<String, Object> param,
 			CustomUserDetails userDetails);
 
-	public Integer getKstsInfoFromSystemProps();
+	public Integer getSomeInfoBySystemPropsKey(String systemPropsKey);
+
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param,
+			String systemPropsKey);
 
 }

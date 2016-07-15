@@ -29,6 +29,11 @@ public interface ZstkglService {
 
 	public void updateKstsjlInfo(Map<String, Object> param);
 
-	public Integer getKstsInfoFromSystemProps();
+	public Integer getSomeInfoBySystemPropsKey(String param);
+
+	public void getRandomFxtsTktmFilter(Page<Tktm> page,
+			Map<String, Object> param);
+
+	public Integer getFxtsInfoFromSystemProps();
 
 }

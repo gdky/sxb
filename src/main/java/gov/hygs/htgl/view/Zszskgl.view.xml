@@ -112,17 +112,17 @@
     <DataType name="conditionType">
       <PropertyDef name="begin">
         <Property name="dataType">Date</Property>
-        <Property name="label">起始时间</Property>
+        <Property name="label">创建时间起</Property>
       </PropertyDef>
       <PropertyDef name="end">
         <Property name="dataType">Date</Property>
-        <Property name="label">终止时间</Property>
+        <Property name="label">创建时间止</Property>
       </PropertyDef>
       <PropertyDef name="dept">
         <Property name="label">部门名称</Property>
       </PropertyDef>
       <PropertyDef name="user">
-        <Property name="label">用户名</Property>
+        <Property name="label">录入人</Property>
       </PropertyDef>
       <PropertyDef name="content">
         <Property name="label">来源</Property>
@@ -216,7 +216,7 @@
     <Container id="datasets">
       <DataSet id="dsZszsk">
         <Property name="dataType">[zszskType]</Property>
-        <Property name="pageSize">10</Property>
+        <Property name="pageSize">20</Property>
         <Property name="dataProvider">zszskController#getZszskInfo</Property>
       </DataSet>
       <DataSet id="dsZskly">
@@ -248,8 +248,11 @@
       </DataSet>
       <DataSet id="dsZszskFilter">
         <Property name="dataType">[zszskType]</Property>
-        <Property name="pageSize">5</Property>
+        <Property name="pageSize">10</Property>
         <Property name="dataProvider">zszskController#getRandomdsZszskFilter</Property>
+      </DataSet>
+      <DataSet id="dsZsdtsValue">
+        <Property name="dataProvider">zszskController#getZsdtsInfoFromSystemProps</Property>
       </DataSet>
     </Container>
     <Container id="dropdowns">
@@ -358,14 +361,14 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
-        <Property name="height">500</Property>
+        <Property name="height">350</Property>
         <Property name="width">700</Property>
         <Buttons/>
         <Children>
           <GroupBox>
             <Property name="caption">知识库信息</Property>
             <Buttons>
-              <Button>
+              <Button id="submitButton">
                 <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	view.get(&quot;#dsZszsk&quot;).flush();&#xD;
@@ -397,7 +400,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="trigger">dsZsklyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
                   <Editor/>
@@ -406,7 +409,9 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
                   <Editor>
-                    <TextArea/>
+                    <TextArea>
+                      <Property name="height">100</Property>
+                    </TextArea>
                   </Editor>
                 </AutoFormElement>
               </AutoForm>
@@ -573,6 +578,12 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
               </Button>
             </Buttons>
             <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dsZszskFilter</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+              </ToolBar>
               <DataGrid>
                 <Property name="dataSet">dsZszskFilter</Property>
                 <DataColumn name="createDate">
@@ -720,6 +731,8 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).insert();&#xD;
 view.get(&quot;#dsZszsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">增加</Property>
@@ -738,11 +751,23 @@ if(data != undefined){&#xD;
             </Button>
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
 </ClientEvent>
               <Property name="caption">修改</Property>
               <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,true);		&#xD;
+	view.get(&quot;#dialog&quot;).show();&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">查看题目</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
             </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();</ClientEvent>
@@ -766,6 +791,7 @@ view.get(&quot;#zsdtsDialog&quot;).show();&#xD;
           <DataGrid>
             <Property name="dataSet">dsZszsk</Property>
             <Property name="readOnly">true</Property>
+            <RowNumColumn/>
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
             </DataColumn>

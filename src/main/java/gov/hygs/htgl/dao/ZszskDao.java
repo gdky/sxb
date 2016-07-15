@@ -51,4 +51,6 @@ public interface ZszskDao {
 
 	public void cancelUploadAttachmentFile(String param);
 
+	public Integer getZsdtsInfoFromSystemProps();
+
 }

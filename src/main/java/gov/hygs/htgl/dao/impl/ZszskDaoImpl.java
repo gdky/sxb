@@ -324,10 +324,12 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		return list;
 	}
 
+	List<ZskJl> randomList = new ArrayList<ZskJl>();
 	@Override
 	public void getRandomdsZszskFilter(Page<ZskJl> page,
 			Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		/*
 		int pageSize = page.getPageSize();
 		List<ZskJl> list = this.getYxzskInfo(-1, -1);
 		if(list.size() > 0){
@@ -340,6 +342,28 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			page.setEntityCount(pageSize);
 			page.setEntities(randomList);
 		}
+		*/
+		int pageSize = page.getPageSize();
+		int pageNow = page.getPageNo();
+		if(pageNow == 1){
+			Integer value = this.getZsdtsInfoFromSystemProps();
+			List<ZskJl> list = this.getYxzskInfo(-1, -1);
+			if(list.size() > 0){
+				Collections.shuffle(list);
+				randomList = new ArrayList<ZskJl>();
+				for (int i = 0; i < (value > list.size() ? list.size() : value); i++) {
+					randomList.add(list.get(i));
+				}
+			}
+		}
+		List<ZskJl> pageList = new ArrayList<ZskJl>();
+		for (int i = (pageNow - 1) * pageSize; i < (pageNow * pageSize > randomList
+				.size() ? randomList.size() : pageNow * pageSize); i++) {
+			pageList.add(randomList.get(i));
+		}
+
+		page.setEntityCount(randomList.size());
+		page.setEntities(pageList);
 	}
 
 	@Override
@@ -437,6 +461,15 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		if(count == 0){
 			AttachmentOpt.deleteAttachmentFile(param);
 		}
+	}
+
+	@Override
+	public Integer getZsdtsInfoFromSystemProps() {
+		// TODO Auto-generated method stub
+		String sql = "select value from system_props where key_='zsdts'";
+		Integer value = Integer.parseInt(this.jdbcTemplate.queryForObject(sql,
+				String.class));
+		return value;
 	}
 
 }
