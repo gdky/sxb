@@ -86,5 +86,9 @@ public class ZszskController {
 		zszskService.cancelUploadAttachmentFile(param);
 	}
 	
+	@DataProvider
+	public Integer getZsdtsInfoFromSystemProps(){
+		return zszskService.getZsdtsInfoFromSystemProps();
+	}
 
 }

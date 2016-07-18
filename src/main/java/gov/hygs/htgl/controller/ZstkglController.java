@@ -58,6 +58,11 @@ public class ZstkglController {
 	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
 		zstkglService.getRandomTktmFilter(page, param);
 	}
+	
+	@DataProvider
+	public void getRandomFxtsTktmFilter(Page<Tktm> page, Map<String, Object> param) {
+		zstkglService.getRandomFxtsTktmFilter(page, param);
+	}
 
 	@Transactional
 	@Expose
@@ -72,8 +77,13 @@ public class ZstkglController {
 	}
 	
 	@DataProvider
-	public Integer getKstsInfoFromSystemProps(){
-		return zstkglService.getKstsInfoFromSystemProps();
+	public Integer getSomeInfoBySystemPropsKey(String param){
+		return zstkglService.getSomeInfoBySystemPropsKey(param);
+	}
+	
+	@DataProvider
+	public Integer getFxtsInfoFromSystemProps(){
+		return zstkglService.getFxtsInfoFromSystemProps();
 	}
 	
 }

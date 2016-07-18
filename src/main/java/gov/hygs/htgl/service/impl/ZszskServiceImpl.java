@@ -166,4 +166,10 @@ public class ZszskServiceImpl implements ZszskService {
 		return newFileName;
 	}
 
+	@Override
+	public Integer getZsdtsInfoFromSystemProps() {
+		// TODO Auto-generated method stub
+		return zszskDao.getZsdtsInfoFromSystemProps();
+	}
+
 }

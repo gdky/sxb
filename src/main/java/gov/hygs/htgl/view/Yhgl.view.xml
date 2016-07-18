@@ -116,11 +116,11 @@
     <DataType name="conditionType">
       <PropertyDef name="begin">
         <Property name="dataType">Date</Property>
-        <Property name="label">起始时间</Property>
+        <Property name="label">入职时间起</Property>
       </PropertyDef>
       <PropertyDef name="end">
         <Property name="dataType">Date</Property>
-        <Property name="label">终止时间</Property>
+        <Property name="label">入职时间止</Property>
       </PropertyDef>
       <PropertyDef name="loginName">
         <Property name="label">登录名</Property>
@@ -243,7 +243,7 @@ view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false)&#xD;
 view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
 </ClientEvent>
             <Property name="caption">修改</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
@@ -257,18 +257,19 @@ view.get(&quot;^photo&quot;).set(&quot;visible&quot;,true)&#xD;
 view.get(&quot;^zx&quot;).set(&quot;visible&quot;,false);&#xD;
 </ClientEvent>
             <Property name="caption">查看信息</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <Property name="caption">上传头像</Property>
             <Property name="action">uploadActionImage</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
 view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
 </ClientEvent>
             <Property name="caption">修改密码</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -60px -0px</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -60px -20px</Property>
           </ToolBarButton>
           <ToolBarButton>
             <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;

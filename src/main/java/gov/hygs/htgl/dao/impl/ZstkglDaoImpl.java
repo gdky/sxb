@@ -6,6 +6,7 @@ import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -440,25 +441,6 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param) {
-		// TODO Auto-generated method stub
-		int pageSize = page.getPageSize();
-		Integer value = this.getKstsInfoFromSystemProps();
-		List<Tktm> list = this.getYxtkInfo(-1, -1);
-		if (list.size() > 0) {
-			Collections.shuffle(list);
-			List<Tktm> randomList = new ArrayList<Tktm>();
-			//for (int i = 0; i < (pageSize > list.size() ? list.size()
-				//	: pageSize); i++) {
-			for(int i = 0; i < (value > list.size() ? list.size():value); i++){
-				randomList.add(list.get(i));
-			}
-			page.setEntityCount(pageSize);
-			page.setEntities(randomList);
-		}
-	}
-
-	@Override
 	public void updateTkfxtsInfo(Map<String, Object> param,
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
@@ -512,20 +494,68 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 							userDetails.getId() }, new String[] { "id_" })
 					.intValue();
 			sql = "insert into exam_tsqz value(?,?,?)";
-			this.jdbcTemplate.update(sql, new Object[]{null,groupId,jlId});
-			for(int i = 0; i < ids.size(); i++){
+			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
+			for (int i = 0; i < ids.size(); i++) {
 				sql = "insert into exam_detail values(?,?,?,?)";
-				this.jdbcTemplate.update(sql, new Object[]{null,i+1,jlId,ids.get(i)});
+				this.jdbcTemplate.update(sql, new Object[] { null, i + 1, jlId,
+						ids.get(i) });
 			}
 		}
 	}
 
 	@Override
-	public Integer getKstsInfoFromSystemProps() {
+	public Integer getSomeInfoBySystemPropsKey(String systemPropsKey) {
 		// TODO Auto-generated method stub
-		String sql = "select value from system_props where key_='ksts'";
-		Integer value = Integer.parseInt(this.jdbcTemplate.queryForObject(sql, String.class));
+		String sql = "select value from system_props where key_='"+systemPropsKey+"'";
+		Integer value = Integer.parseInt(this.jdbcTemplate.queryForObject(sql,
+				String.class));
 		return value;
+	}
+
+	List<Tktm> randomList = new ArrayList<Tktm>();
+
+	@Override
+	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param, String systemPropsKey) {
+		// TODO Auto-generated method stub
+		/*
+		 * int pageSize = page.getPageSize(); Integer value =
+		 * this.getKstsInfoFromSystemProps(); List<Tktm> list =
+		 * this.getYxtkInfo(-1, -1); if (list.size() > 0) {
+		 * Collections.shuffle(list); List<Tktm> randomList = new
+		 * ArrayList<Tktm>(); //for (int i = 0; i < (pageSize > list.size() ?
+		 * list.size() // : pageSize); i++) { for(int i = 0; i < (value >
+		 * list.size() ? list.size():value); i++){ randomList.add(list.get(i));
+		 * } page.setEntityCount(pageSize); page.setEntities(randomList); }
+		 */
+		int pageSize = page.getPageSize();
+		int pageNow = page.getPageNo();
+		if (pageNow == 1) {
+			if(param != null){
+				if(param.get("table") != null){
+					systemPropsKey = (String) param.get("table");
+				}
+			}
+			Integer value = this.getSomeInfoBySystemPropsKey(systemPropsKey);
+			List<Tktm> list = this.getYxtkInfo(-1, -1);
+			if (list.size() > 0) {
+				Collections.shuffle(list);
+				randomList = new ArrayList<Tktm>();
+				// for (int i = 0; i < (pageSize > list.size() ? list.size()
+				// : pageSize); i++) {
+				for (int i = 0; i < (value > list.size() ? list.size() : value); i++) {
+					randomList.add(list.get(i));
+				}
+			}
+		}
+		List<Tktm> pageList = new ArrayList<Tktm>();
+		for (int i = (pageNow - 1) * pageSize; i < (pageNow * pageSize > randomList
+				.size() ? randomList.size() : pageNow * pageSize); i++) {
+			pageList.add(randomList.get(i));
+		}
+
+		page.setEntityCount(randomList.size());
+		page.setEntities(pageList);
+
 	}
 
 }
