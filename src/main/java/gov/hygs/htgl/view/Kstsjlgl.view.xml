@@ -255,7 +255,7 @@ view.get(&quot;#dsTktmFilter&quot;).flush();</ClientEvent>
       <DataSet id="dsTktm">
         <Property name="dataType">[tktmType]</Property>
         <Property name="dataProvider">zstkglController#getZstkInfo</Property>
-        <Property name="pageSize">10</Property>
+        <Property name="pageSize">20</Property>
       </DataSet>
       <DataSet id="dsTktmShow">
         <Property name="dataProvider">zstkglController#getZstkInfo</Property>
