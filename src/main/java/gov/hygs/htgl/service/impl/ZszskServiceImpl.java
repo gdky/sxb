@@ -126,7 +126,6 @@ public class ZszskServiceImpl implements ZszskService {
 		MultipartFile mufile = file.getMultipartFile();
 		String path = AttachmentOpt.getAttachmentPath();
 		path+="attachments"; 
-		
 		//FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());
 		FileOutputStream out=new FileOutputStream(path+"/"+this.rebulidFileName(file.getFileName()));
 		out.write(mufile.getBytes());
@@ -134,7 +133,7 @@ public class ZszskServiceImpl implements ZszskService {
 		//param.put("path","attachments/"+file.getFileName() );
 		//return "attachments/"+file.getFileName();
 		//return path;
-		return "attachments/"+this.rebulidFileName(file.getFileName());
+		return ""+this.rebulidFileName(file.getFileName());
 	}
 
 	@Override
@@ -150,8 +149,6 @@ public class ZszskServiceImpl implements ZszskService {
 		MultipartFile mufile = file.getMultipartFile();
 		String path = AttachmentOpt.getAttachmentPath();
 		path+="attachments"; 
-		File outfile = new File(path);
-		outfile.mkdirs();
 		//FileOutputStream out=new FileOutputStream(path+"/"+file.getFileName());
 		FileOutputStream out=new FileOutputStream(path+"/"+this.rebulidFileName(file.getFileName()));
 		out.write(mufile.getBytes());
