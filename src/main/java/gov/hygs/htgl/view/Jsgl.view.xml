@@ -280,12 +280,6 @@ view.get(&quot;#DialogUser&quot;).show();&#xD;
                     <DataColumn name="zw">
                       <Property name="property">zw</Property>
                     </DataColumn>
-                    <DataColumn name="pwd">
-                      <Property name="property">pwd</Property>
-                    </DataColumn>
-                    <DataColumn name="photo">
-                      <Property name="property">photo</Property>
-                    </DataColumn>
                     <DataColumn name="deptid">
                       <Property name="property">deptid</Property>
                     </DataColumn>
