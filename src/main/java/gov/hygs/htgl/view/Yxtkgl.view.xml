@@ -1448,7 +1448,7 @@ if(data != undefined){&#xD;
               <Property name="trigger">deptDropDown</Property>
               <Editor/>
             </AutoFormElement>
-            <AutoFormElement>
+            <AutoFormElement id="userInfoName">
               <Property name="name">user</Property>
               <Property name="property">user</Property>
               <Property name="trigger">userDropDown</Property>
