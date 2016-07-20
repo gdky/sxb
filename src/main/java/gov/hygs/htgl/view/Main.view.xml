@@ -269,7 +269,7 @@ self.$getOpenTabMode = function(){&#xD;
     <UploadAction id="uploadActionImage">
       <ClientEvent name="beforeFileUpload">self.set(&quot;parameter&quot;,{&#xD;
 	id: view.get(&quot;#dsUserInfo&quot;).getData(&quot;#&quot;).get(&quot;id_&quot;),&#xD;
-	username:view.get(&quot;#dsUserInfo&quot;).getData(&quot;#&quot;).get(&quot;user_Name&quot;)&#xD;
+	loginname:view.get(&quot;#dsUserInfo&quot;).getData(&quot;#&quot;).get(&quot;login_Name&quot;)&#xD;
 })&#xD;
 </ClientEvent>
       <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;)&#xD;

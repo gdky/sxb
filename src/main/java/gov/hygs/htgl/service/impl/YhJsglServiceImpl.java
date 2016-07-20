@@ -211,12 +211,12 @@ public class YhJsglServiceImpl implements YhJsglService {
 	      
 	      path=path.substring(1); //去掉第一个\,如 \D:\JavaWeb...  
 	        path+="images/";  */
-		String username = (String)para.get("username");
+		String loginname = (String)para.get("loginname");
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal();
 		String path = "/usr/local/tomcat/app/images/";
-		path=path+username;
+		path=path+loginname;
 		File outfile = new File(path);
 		outfile.mkdirs();
 		path = path +"/avatar.jpg";
@@ -225,7 +225,7 @@ public class YhJsglServiceImpl implements YhJsglService {
 		DrawImage.createResizeFix(file.getInputStream(), path);
 		//out.write(mufile.getBytes());
 		//out.close();
-		para.put("path","../"+username+"/avatar.jpg" );
+		para.put("path","../"+loginname+"/avatar.jpg" );
 		//para.put("path","images/"+userDetails.getUser_Name()+"/avatar.jpg" );
 
 		return yhglDao.importImage(para);
