@@ -70,4 +70,6 @@ public interface QzBmCdglDao {
 
 	public void deleteSystemProps(SystemProps sp);
 
+	public void addUserInfoToGroup(Map<String, Object> param);
+
 }

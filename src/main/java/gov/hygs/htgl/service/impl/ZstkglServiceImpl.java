@@ -1,6 +1,7 @@
 package gov.hygs.htgl.service.impl;
 
 import gov.hygs.htgl.dao.ZstkglDao;
+import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
@@ -77,12 +78,12 @@ public class ZstkglServiceImpl implements ZstkglService {
 				zstkglDao.addGrDeptGxJl(zstk);
 			}
 			if (EntityUtils.getState(zstk).equals(EntityState.MODIFIED)) {
-				zstkglDao.updateZstk(zstk); // 把yxbz和xybz都设置
+				zstkglDao.updateZstk(zstk); // 鎶妝xbz鍜寈ybz閮借缃�
 			}
 			if (EntityUtils.getState(zstk).equals(EntityState.DELETED)) {
 				// zstkglDao.deleteYxtkFromZstk(zstk);
-				// zstkglDao.updateZstk(zstk); 删除调用该方法，前台把xybz设置为n
-				zstkglDao.deleteZstk(zstk);// 前台不需要这是xybz，该方法会把xybz设置为n
+				// zstkglDao.updateZstk(zstk); 鍒犻櫎璋冪敤璇ユ柟娉曪紝鍓嶅彴鎶妜ybz璁剧疆涓簄
+				zstkglDao.deleteZstk(zstk);// 鍓嶅彴涓嶉渶瑕佽繖鏄痻ybz锛岃鏂规硶浼氭妸xybz璁剧疆涓簄
 				zstkglDao.deleteGrDeptGxJl(zstk);
 			}
 
@@ -187,4 +188,16 @@ public class ZstkglServiceImpl implements ZstkglService {
 		return zstkglDao.getSomeInfoBySystemPropsKey("fxts");
 	}
 //ksts
+
+	@Override
+	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.getExamInfo(page,param);
+	}
+
+	@Override
+	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.getExamDetailInfo(page,param);
+	}
 }
