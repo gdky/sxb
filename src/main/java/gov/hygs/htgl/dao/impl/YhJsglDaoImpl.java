@@ -104,7 +104,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		String sql = "update USER set login_Name=?,user_Name=?,phone=?,rzsj=?,zw=?,photo=?,deptid=?,birthday=? where id_=? ";
 		this.jdbcTemplate.update(
 				sql,
-				new Object[] { user.getLogin_Name(), user.getLogin_Name(),
+				new Object[] { user.getLogin_Name(), user.getUser_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
 						 user.getPhoto(), user.getDeptid(),
 						user.getBirthday(), user.getId_()

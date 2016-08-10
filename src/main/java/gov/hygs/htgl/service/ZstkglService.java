@@ -1,5 +1,6 @@
 package gov.hygs.htgl.service;
 
+import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 
@@ -35,5 +36,9 @@ public interface ZstkglService {
 			Map<String, Object> param);
 
 	public Integer getFxtsInfoFromSystemProps();
+
+	public void getExamInfo(Page<Exam> page, Map<String, Object> param);
+
+	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
 }

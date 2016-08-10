@@ -217,6 +217,16 @@ public class QzBmCdglController {
 	public void updateGroupInfo(List<Grouptable> groups) {
 		qzBmCdglService.updateGroupInfo(groups);
 	}
+	
+	/**
+	 * 添加用户信息到群组中
+	 * @param param
+	 */
+	@Transactional
+	@Expose
+	public void addUserInfoToGroup(Map<String,Object> param){
+		qzBmCdglService.addUserInfoToGroup(param);
+	}
 
 	/**
 	 * 更新用户信息

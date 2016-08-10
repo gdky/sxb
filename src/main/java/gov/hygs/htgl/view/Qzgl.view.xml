@@ -255,6 +255,9 @@ user.flush();&#xD;
         <Property name="dataSet">userDataSet</Property>
       </UpdateItem>
     </UpdateAction>
+    <AjaxAction id="addAction">
+      <Property name="service">qzBmCdglController#addUserInfoToGroup</Property>
+    </AjaxAction>
     <Dialog id="groupDialog" layout="hbox" layoutConstraint="center">
       <Property name="width">500</Property>
       <Property name="height">260</Property>
@@ -324,7 +327,8 @@ view.get(&quot;#groupDialog&quot;).close();&#xD;
           <Property name="caption">用户管理</Property>
           <Buttons>
             <Button>
-              <ClientEvent name="onClick">var entity = view.get('#userDataGrid.selection');&#xD;
+              <ClientEvent name="onClick">/*&#xD;
+var entity = view.get('#userDataGrid.selection');&#xD;
 var users = view.get(&quot;#userDataSet&quot;).getData();&#xD;
 users.each(function(o){&#xD;
 	if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
@@ -343,13 +347,44 @@ view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
 	user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 	user.flush();&#xD;
 });&#xD;
+*/&#xD;
+var entitys = view.get('#userDataGrid.selection');&#xD;
+var users = view.get(&quot;#userDataSet&quot;).getData();&#xD;
+&#xD;
+var id = [];&#xD;
+entitys.each(function(entity){&#xD;
+	var i = 0;&#xD;
+	users.each(function(o){&#xD;
+		if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+			i++;&#xD;
+		}&#xD;
+	});&#xD;
+	if(i == 0){&#xD;
+		id.push(entity.get(&quot;id_&quot;));&#xD;
+	}&#xD;
+})&#xD;
+if(id == &quot;&quot;){&#xD;
+	throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+	return false;&#xD;
+}&#xD;
+var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+view.get(&quot;#addAction&quot;).set(&quot;parameter&quot;,{&quot;groupId&quot;:groupId,&quot;ids&quot;:id});&#xD;
+view.get(&quot;#addAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#userDialog&quot;).close();&#xD;
+	view.get('#userDataGrid').unselectAll();&#xD;
+	var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+	var user = view.get(&quot;#userDataSet&quot;);&#xD;
+	user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+	user.flush();&#xD;
+});&#xD;
 </ClientEvent>
               <Property name="caption">提交</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
             </Button>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
-view.get(&quot;#userDialog&quot;).close();</ClientEvent>
+view.get(&quot;#userDialog&quot;).close();&#xD;
+view.get('#userDataGrid').unselectAll();</ClientEvent>
               <Property name="caption">取消</Property>
               <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
             </Button>
@@ -364,7 +399,7 @@ view.get(&quot;#userDialog&quot;).close();</ClientEvent>
             <DataGrid id="userDataGrid">
               <Property name="dataSet">dsUser</Property>
               <Property name="readOnly">true</Property>
-              <Property name="selectionMode">singleRow</Property>
+              <Property name="selectionMode">multiRows</Property>
               <RowSelectorColumn/>
               <DataColumn name="login_Name">
                 <Property name="property">login_Name</Property>

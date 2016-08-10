@@ -58,4 +58,6 @@ public interface QzBmCdglService {
 	public void getSystemPropsInfo(Page page, Map<String, Object> param);
 
 	public void updateSystemPropsInfo(List<SystemProps> list);
+
+	public void addUserInfoToGroup(Map<String, Object> param);
 }

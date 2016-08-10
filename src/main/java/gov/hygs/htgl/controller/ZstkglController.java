@@ -1,5 +1,6 @@
 package gov.hygs.htgl.controller;
 
+import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.service.ZstkglService;
@@ -85,5 +86,16 @@ public class ZstkglController {
 	public Integer getFxtsInfoFromSystemProps(){
 		return zstkglService.getFxtsInfoFromSystemProps();
 	}
+
+	@DataProvider
+	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+		zstkglService.getExamInfo(page,param);
+	}
 	
+	@DataProvider
+	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param) {
+		if(param != null){
+			zstkglService.getExamDetailInfo(page,param);
+		}
+	}
 }
