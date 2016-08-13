@@ -90,6 +90,11 @@
       <PropertyDef name="pwd">
         <Property></Property>
         <Property name="label">密码</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">密码不能为空，请输入内容</Property>
+          <Property name="defaultResultState">error</Property>
+          <Property name="revalidateOldValue">false</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="photo">
         <Property></Property>
@@ -386,7 +391,9 @@ view.get(&quot;#DialogUser&quot;).hide();&#xD;
                 <Property name="name">pwd</Property>
                 <Property name="property">pwd</Property>
                 <Property name="tags">pwd</Property>
-                <Editor/>
+                <Editor>
+                  <PasswordEditor/>
+                </Editor>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">deptMc</Property>
@@ -545,7 +552,9 @@ view.get(&quot;#dsUser&quot;).flushAsync();</ClientEvent>
               <AutoFormElement>
                 <Property name="name">pwd</Property>
                 <Property name="property">pwd</Property>
-                <Editor/>
+                <Editor>
+                  <PasswordEditor/>
+                </Editor>
               </AutoFormElement>
               <AutoFormElement>
                 <Property name="name">deptMc</Property>

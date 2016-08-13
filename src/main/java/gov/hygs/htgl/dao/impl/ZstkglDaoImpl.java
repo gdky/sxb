@@ -1,12 +1,12 @@
 package gov.hygs.htgl.dao.impl;
 
 import gov.hygs.htgl.dao.ZstkglDao;
+import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -35,18 +35,18 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		String roleName = this.getRoleInfoByUserId(userDetails.getId())
 				.getRole_Name();
 		StringBuilder count = new StringBuilder("");
-		if ("SuAdmin".equals(roleName)) {// 超级用户
+		if ("SuAdmin".equals(roleName)) {// 瓒呯骇鐢ㄦ埛
 			count.append("select count(*) from tktm where xybz='Y'");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
-		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
+		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
 			count.append("select count(*) from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
 			count.append("select count(*) from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId());
@@ -63,18 +63,18 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 		StringBuilder sql = new StringBuilder("");
-		if ("SuAdmin".equals(roleName)) {// 超级管理员
+		if ("SuAdmin".equals(roleName)) {// 瓒呯骇绠＄悊鍛�
 			sql.append("select * from tktm where xybz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
-		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
+		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
 			sql.append("select * from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
 			sql.append("select * from tktm where xybz='Y' and deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId() + " ");
@@ -133,21 +133,21 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		Role aRole = null;
 		if (aRole == null) {
 			for (Role role : roles) {
-				if ("SuAdmin".equals(role.getRole_Name())) {// 超级管理员
+				if ("SuAdmin".equals(role.getRole_Name())) {// 瓒呯骇绠＄悊鍛�
 					aRole = role;
 				}
 			}
 		}
 		if (aRole == null) {
 			for (Role role : roles) {
-				if ("DeptAdmin".equals(role.getRole_Name())) {// 部门管理员
+				if ("DeptAdmin".equals(role.getRole_Name())) {// 閮ㄩ棬绠＄悊鍛�
 					aRole = role;
 				}
 			}
 		}
 		if (aRole == null) {
 			for (Role role : roles) {
-				if ("USER".equals(role.getRole_Name())) {// 普通用户
+				if ("USER".equals(role.getRole_Name())) {// 鏅�氱敤鎴�
 					aRole = role;
 				}
 			}
@@ -556,6 +556,73 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		page.setEntityCount(randomList.size());
 		page.setEntities(pageList);
 
+	}
+
+	@Override
+	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageSize = page.getPageSize();
+		int pageNow = page.getPageNo();
+		String sql = "select count(*) from exam";
+		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		sql = "select * from exam limit ?,?";
+		List<Exam> list = this.jdbcTemplate.query(sql, new Object[]{pageSize * (pageNow - 1), pageSize}, new RowMapper<Exam>(){
+
+			@Override
+			public Exam mapRow(ResultSet result, int i) throws SQLException {
+				// TODO Auto-generated method stub
+				Exam exam = new Exam();
+				exam.setId(result.getInt("id_"));
+				exam.setStartTime(result.getDate("start_time"));
+				exam.setEndTime(result.getDate("end_time"));
+				exam.setTitle(result.getString("title"));
+				exam.setExamType(result.getString("exam_type"));
+				exam.setFqrId(result.getInt("fqr_id"));
+				return exam;
+			}
+			
+		});
+		page.setEntityCount(count);
+		page.setEntities(list);
+	}
+
+	@Override
+	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageSize = page.getPageSize();
+		int pageNow = page.getPageNo();
+		int id = (int) param.get("id");
+		StringBuffer sb = new StringBuffer("from tktm where id_ in (select distinct tm_id from exam_detail where exam_id="+id+")");
+		StringBuffer sqlCount = new StringBuffer("select count(*) ").append(sb);
+		StringBuffer sql = new StringBuffer("select * ").append(sb).append(" limit "+(pageNow - 1) * pageSize+","+pageSize);
+		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(), Integer.class);
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(), new RowMapper<Tktm>(){
+
+			@Override
+			public Tktm mapRow(ResultSet result, int i) throws SQLException {
+				// TODO Auto-generated method stub
+				Tktm tktm = new Tktm();
+				tktm.setId(result.getString("id_"));
+				tktm.setFlId(result.getInt("fl_id"));
+				tktm.setUserId(result.getInt("user_id"));
+				tktm.setCreateDate(result.getDate("create_date"));
+				tktm.setSpDate(result.getDate("sp_date"));
+				tktm.setSprId(result.getInt("spr_id"));
+				tktm.setDeptid(result.getInt("deptid"));
+				tktm.setContent(result.getString("content"));
+				tktm.setTmfz(result.getDouble("tmfz"));
+				tktm.setTmnd(result.getInt("tmnd"));
+				tktm.setTmlyId(result.getInt("tmly_id"));
+				tktm.setMode(result.getString("mode"));
+				tktm.setYxbz(result.getString("yxbz"));
+				tktm.setXybz(result.getString("xybz"));
+				tktm.setDrbz(result.getString("drbz"));
+				return tktm;
+			}
+			
+		});
+		page.setEntityCount(count);
+		page.setEntities(list);
 	}
 
 }

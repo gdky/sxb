@@ -447,4 +447,22 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		this.jdbcTemplate.update(sql, new Object[] { sp.getId() });
 	}
 
+	@Override
+	public void addUserInfoToGroup(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		/*
+		int userId = user.getId_();
+		int groupId = user.getDeptid();
+		String sql = "insert into user_group values(?,?,?)";
+		Object[] objs = new Object[] { null, userId, groupId };
+		this.jdbcTemplate.update(sql, objs);
+		*/
+		int groupId = (int) param.get("groupId");
+		List<Integer> ids = (List<Integer>) param.get("ids");
+		for(Integer userId : ids){
+			String sql = "insert into user_group values(?,?,?)";
+			this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
+		}
+	}
+
 }

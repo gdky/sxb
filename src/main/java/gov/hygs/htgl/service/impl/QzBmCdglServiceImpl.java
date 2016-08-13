@@ -264,4 +264,10 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		}
 	}
 
+	@Override
+	public void addUserInfoToGroup(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		qzBmCdglDao.addUserInfoToGroup(param);
+	}
+
 }

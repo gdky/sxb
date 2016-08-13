@@ -1,5 +1,6 @@
 package gov.hygs.htgl.dao;
 
+import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.security.CustomUserDetails;
@@ -54,5 +55,9 @@ public interface ZstkglDao {
 
 	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param,
 			String systemPropsKey);
+
+	public void getExamInfo(Page<Exam> page, Map<String, Object> param);
+
+	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
 }
