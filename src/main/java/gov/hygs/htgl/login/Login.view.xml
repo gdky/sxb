@@ -6,6 +6,8 @@
   <View>
     <ClientEvent name="onReady">var useCaptcha=false;&#xD;
 var useRemember=false;&#xD;
+&#xD;
+&#xD;
 window.checkForm=function(){&#xD;
 	var errorInfo=$(&quot;#errorInfo&quot;);&#xD;
 	var username=$(&quot;#username_&quot;).attr(&quot;value&quot;);&#xD;
@@ -100,9 +102,9 @@ $(document).ready(function(){&#xD;
 	}else{&#xD;
 		container.fadeIn(500);&#xD;
 	}&#xD;
-	var error=&quot;${authenticationExceptionMessage}&quot;;&#xD;
+	var error = '${request.getParameter(&quot;error&quot;)}';&#xD;
 	if(error &amp;&amp; error!=&quot;&quot;){&#xD;
-		if(error==&quot;Bad credentials&quot;)error=&quot;用户名或密码不正确&quot;;&#xD;
+		if(error==&quot;true&quot;)error=&quot;用户名或密码不正确&quot;;&#xD;
 		$(&quot;#errorInfo&quot;).html(error);&#xD;
 	}&#xD;
 	$(&quot;#username_&quot;).focus();&#xD;
