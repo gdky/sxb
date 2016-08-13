@@ -28,6 +28,10 @@ public class ZstkglController {
 	public void getZstkInfo(Page<Tktm> page, Map<String, Object> param) {
 		zstkglService.getZstkInfo(page, param);
 	}
+	@DataProvider
+	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param) {
+		zstkglService.getZstkInfoByKsts(page, param);
+	}
 
 	@DataProvider
 	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id) {

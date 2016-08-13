@@ -39,6 +39,14 @@ public class ZstkglServiceImpl implements ZstkglService {
 	}
 
 	@Override
+	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
+				.getContext().getAuthentication().getPrincipal();
+		zstkglDao.getZstkInfoByKsts(page, param, userDetails);
+	}
+	
+	@Override
 	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id) {
 		// TODO Auto-generated method stub
 		return zstkglDao.getTkzxzInfoByZstkId(id);

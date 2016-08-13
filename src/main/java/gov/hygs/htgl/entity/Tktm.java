@@ -60,6 +60,15 @@ public class Tktm implements Serializable {
 	/** 导入标志.  */
 	private String drbz;
 	
+	/** 题干内容. */
+	private String tkfl;
+	/** 题干内容. */
+	private String user;
+	/** 题干内容. */
+	private String dept;
+	/** 题干内容. */
+	private String tmly;
+	
 	private Collection<Tkxzx> tkxzx;
 	private Collection<Tkxzx> daxzx;
 
@@ -91,6 +100,38 @@ public class Tktm implements Serializable {
 	 * Constructor.
 	 */
 	public Tktm() {
+	}
+
+	public String getTkfl() {
+		return tkfl;
+	}
+
+	public void setTkfl(String tkfl) {
+		this.tkfl = tkfl;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	public String getTmly() {
+		return tmly;
+	}
+
+	public void setTmly(String tmly) {
+		this.tmly = tmly;
 	}
 
 	/**

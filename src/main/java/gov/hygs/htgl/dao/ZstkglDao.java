@@ -60,4 +60,7 @@ public interface ZstkglDao {
 
 	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
+	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param,
+			CustomUserDetails userDetails);
+
 }
