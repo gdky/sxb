@@ -536,7 +536,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				}
 			}
 			Integer value = this.getSomeInfoBySystemPropsKey(systemPropsKey);
-			List<Tktm> list = this.getYxtkInfo(-1, -1);
+			List<Tktm> list = this.getYxtkInfoByKsts(-1, -1,param);
 			if (list.size() > 0) {
 				Collections.shuffle(list);
 				randomList = new ArrayList<Tktm>();
@@ -545,6 +545,8 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				for (int i = 0; i < (value > list.size() ? list.size() : value); i++) {
 					randomList.add(list.get(i));
 				}
+			}else{
+				randomList = new ArrayList<Tktm>();
 			}
 		}
 		List<Tktm> pageList = new ArrayList<Tktm>();
@@ -556,6 +558,56 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		page.setEntityCount(randomList.size());
 		page.setEntities(pageList);
 
+	}
+
+	private List<Tktm> getYxtkInfoByKsts(int begin, int offest, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		String flids = null;
+		if(param!=null&&param.get("flids")!=null){
+			flids  = ((String)param.get("flids"));
+		}
+		List<Object> args = new ArrayList<>();
+		
+		StringBuilder sql = new StringBuilder("select  b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*   ");
+		sql.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
+		sql.append(" WHERE a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ AND a.yxbz='Y' ");
+		if(flids!=null){
+			sql.append(" and fl_id in ( ");
+			sql.append(flids+"'' )");
+			
+		}
+		if (offest == -1 && begin == -1) {
+			sql.append(" and xybz='Y' ");
+		} else {
+			sql.append(" and xybz='N' limit " + begin + "," + offest);
+		}
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
+				new RowMapper<Tktm>() {
+
+					@Override
+					public Tktm mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tktm yxtk = new Tktm();
+						yxtk.setId(result.getString("id_"));
+						yxtk.setTkfl(result.getString("TKMC"));
+						yxtk.setUser(result.getString("USER_NAME"));
+						yxtk.setCreateDate(result.getDate("create_date"));
+						yxtk.setSpDate(result.getDate("sp_date"));
+						yxtk.setSprId(result.getInt("spr_id"));
+						yxtk.setDept(result.getString("DEPT_NAME"));
+						yxtk.setContent(result.getString("content"));
+						yxtk.setTmfz(result.getDouble("tmfz"));
+						yxtk.setTmnd(result.getInt("tmnd"));
+						yxtk.setTmly(result.getString("TITLE"));
+						yxtk.setMode(result.getString("mode"));
+						yxtk.setYxbz(result.getString("yxbz"));
+						yxtk.setXybz(result.getString("xybz"));
+						return yxtk;
+					}
+
+				});
+		return list;
 	}
 
 	@Override
@@ -592,27 +644,34 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
 		int id = (int) param.get("id");
-		StringBuffer sb = new StringBuffer("from tktm where id_ in (select distinct tm_id from exam_detail where exam_id="+id+")");
+		StringBuffer sb=new StringBuffer("");
+		sb.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
+		sb.append(" WHERE a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ AND a.id_ IN ( ");
+		sb.append(" SELECT DISTINCT tm_id ");
+		sb.append(" FROM exam_detail ");
+		sb.append(" WHERE exam_id= ?) ");
+
+		//StringBuffer sb = new StringBuffer("from tktm where id_ in (select distinct tm_id from exam_detail where exam_id="+id+")");
 		StringBuffer sqlCount = new StringBuffer("select count(*) ").append(sb);
-		StringBuffer sql = new StringBuffer("select * ").append(sb).append(" limit "+(pageNow - 1) * pageSize+","+pageSize);
-		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(), Integer.class);
-		List<Tktm> list = this.jdbcTemplate.query(sql.toString(), new RowMapper<Tktm>(){
+		StringBuffer sql = new StringBuffer(" SELECT b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  ").append(sb).append(" limit "+(pageNow - 1) * pageSize+","+pageSize);
+		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),new Object[]{id}, Integer.class);
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),new Object[]{id}, new RowMapper<Tktm>(){
 
 			@Override
 			public Tktm mapRow(ResultSet result, int i) throws SQLException {
 				// TODO Auto-generated method stub
 				Tktm tktm = new Tktm();
 				tktm.setId(result.getString("id_"));
-				tktm.setFlId(result.getInt("fl_id"));
-				tktm.setUserId(result.getInt("user_id"));
+				tktm.setTkfl(result.getString("TKMC"));
+				tktm.setUser(result.getString("USER_NAME"));
 				tktm.setCreateDate(result.getDate("create_date"));
 				tktm.setSpDate(result.getDate("sp_date"));
 				tktm.setSprId(result.getInt("spr_id"));
-				tktm.setDeptid(result.getInt("deptid"));
+				tktm.setDept(result.getString("DEPT_NAME"));
 				tktm.setContent(result.getString("content"));
 				tktm.setTmfz(result.getDouble("tmfz"));
 				tktm.setTmnd(result.getInt("tmnd"));
-				tktm.setTmlyId(result.getInt("tmly_id"));
+				tktm.setTmly(result.getString("TITLE"));
 				tktm.setMode(result.getString("mode"));
 				tktm.setYxbz(result.getString("yxbz"));
 				tktm.setXybz(result.getString("xybz"));
@@ -625,4 +684,95 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		page.setEntities(list);
 	}
 
+	
+	@Override
+	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param,
+			CustomUserDetails userDetails) {
+		// TODO Auto-generated method stub
+		Integer flid = (Integer)param.get("flid");
+		int pageSize = page.getPageSize();
+		int pageNow = page.getPageNo();
+		String roleName = this.getRoleInfoByUserId(userDetails.getId())
+				.getRole_Name();
+		StringBuilder count = new StringBuilder("");
+		if ("SuAdmin".equals(roleName)) {// 瓒呯骇鐢ㄦ埛
+			count.append("select count(*) from tktm where xybz='Y' and fl_id= ? ");
+			
+		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
+			count.append("select count(*) from tktm where xybz='Y' and fl_id= ?  and deptid="
+					+ userDetails.getDeptid());
+			
+		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
+			count.append("select count(*) from tktm where xybz='Y' and fl_id= ?  and deptid="
+					+ userDetails.getDeptid() + " and user_id="
+					+ userDetails.getId());
+		}
+		int entityCount = this.jdbcTemplate.queryForObject(count.toString(),new Object[]{flid},
+				Integer.class);
+		List<Tktm> list = this.getZstkInfoByKsts(pageSize * (pageNow - 1), pageSize,
+				userDetails, roleName, param);
+		page.setEntityCount(entityCount);
+		page.setEntities(list);
+	}
+
+	private List<Tktm> getZstkInfoByKsts(int begin, int offest,
+			CustomUserDetails userDetails, String roleName,
+			Map<String, Object> param) {
+		Integer flid = (Integer)param.get("flid");
+		StringBuilder sql = new StringBuilder("");
+		if ("SuAdmin".equals(roleName)) {// 瓒呯骇绠＄悊鍛�
+			sql.append("select  b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*   ");
+			sql.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
+			sql.append(" WHERE a.xybz='Y' and a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ and a.fl_id = ?  ");
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(sql, param);
+			}
+		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
+			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  " );
+			sql.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
+			sql.append(" WHERE a.xybz='Y' and a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ and a.fl_id = ?  ");
+			sql.append(" and a.xybz='Y' and a.deptid= ");
+			sql.append(		 userDetails.getDeptid() + " ");
+			if (param != null) {
+				this.rebuileSqlByConditionAndRole(sql, param);
+			}
+		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
+			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  " );
+			sql.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
+			sql.append(" WHERE a.xybz='Y' and a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ and a.fl_id = ?  ");
+			sql.append(" and a.xybz='Y' and a.deptid= ");
+			sql.append(	userDetails.getDeptid() + " and a.user_id= ");
+			sql.append(	userDetails.getId() + " ");
+		}
+		sql.append(" order by a.create_date desc limit " + begin + "," + offest);
+		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),new Object[]{flid},
+				new RowMapper<Tktm>() {
+
+					@Override
+					public Tktm mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tktm zstk = new Tktm();
+						zstk.setId(result.getString("id_"));
+						zstk.setTkfl(result.getString("TKMC"));
+						zstk.setUser(result.getString("USER_NAME"));
+						zstk.setCreateDate(result.getDate("create_date"));
+						zstk.setSpDate(result.getDate("sp_date"));
+						zstk.setSprId(result.getInt("spr_id"));
+						zstk.setDept(result.getString("DEPT_NAME"));
+						zstk.setContent(result.getString("content"));
+						zstk.setTmfz(result.getDouble("tmfz"));
+						zstk.setTmnd(result.getInt("tmnd"));
+						zstk.setTmly(result.getString("TITLE"));
+						zstk.setMode(result.getString("mode"));
+						zstk.setYxbz(result.getString("yxbz"));
+						zstk.setXybz(result.getString("xybz"));
+						return zstk;
+					}
+
+				});
+		return list;
+	}
+	
+	
 }

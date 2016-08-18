@@ -41,4 +41,6 @@ public interface ZstkglService {
 
 	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
+	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param);
+
 }
