@@ -56,9 +56,9 @@ public interface YxtkglDao {
 
 	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent);
 
-	public int getUserIdByDeptIdAndUserName(int deptid, String userName);
+	//public int getUserIdByDeptIdAndUserName(int deptid, String userName);
 
-	public int getDeptIdByDeptName(String deptName);
+	//public int getDeptIdByDeptName(String deptName);
 
 	public int getTkflInfoOrAddTkfl(String tkflTkmc);
 
@@ -66,5 +66,8 @@ public interface YxtkglDao {
 
 	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
 			List<Tkxzx> tkdas);
+
+	public List<Map<String, Object>> getUserIdByDeptIdAndTheyName(
+			String userName, String deptName);
 
 }

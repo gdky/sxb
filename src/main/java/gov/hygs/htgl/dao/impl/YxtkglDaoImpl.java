@@ -514,19 +514,18 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	}
 
 	@Override
-	public int getDeptIdByDeptName(String deptName) {
+	public List<Map<String, Object>> getUserIdByDeptIdAndTheyName(
+			String userName, String deptName) {
 		// TODO Auto-generated method stub
-		String sql = "select if(count(*),id_,0) from dept where dept_name=?";
-		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptName },
-				Integer.class);
-	}
-
-	@Override
-	public int getUserIdByDeptIdAndUserName(int deptid, String userName) {
-		// TODO Auto-generated method stub
-		String sql = "select if(count(*),id_,0) from user where deptid=? and user_name=?";
-		return this.jdbcTemplate.queryForObject(sql, new Object[] { deptid,
-				userName }, Integer.class);
+		String sql = "select if(count(*),id_,0) userid,deptid "
+				+ "from user where user_name like '%"+userName+"%' "
+				+ "and deptid in (select id_ from dept where dept_name like '%"+deptName+"%');";
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
+		String userid = String.valueOf(list.get(0).get("userid"));
+		if("0".equals(userid)){
+			return new ArrayList<Map<String, Object>>();
+		}
+		return list;
 	}
 
 	@Override
@@ -577,7 +576,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
 					yxtk.getDrbz() });
 			gxjlBatchArgs.add(new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-					yxtk.getId(), 1, 1, yxtk.getCreateDate()});
+					yxtk.getId(), 1, 1, yxtk.getCreateDate()});	
+
 		}
 		
 		if (batchArgs.size() > 0) {
@@ -609,4 +609,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		}
 
 	}
+
+	
 }
