@@ -150,7 +150,7 @@
       <PropertyDef name="ms">
         <Property name="label">描述</Property>
       </PropertyDef>
-      <PropertyDef name="tsrid"/>
+      <PropertyDef name="jlid"/>
     </DataType>
     <DataType name="detialType">
       <PropertyDef name="create_date">
@@ -428,7 +428,7 @@ view.get(&quot;#zsdtsDialog&quot;).show();&#xD;
             <Button>
               <ClientEvent name="onClick">var data = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
-	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;tsrid&quot;)});&#xD;
+	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;jlid&quot;)});&#xD;
 	view.get(&quot;#tsxxDialog&quot;).show();&#xD;
 	view.get(&quot;#dsDetail&quot;).flushAsync();&#xD;
 }&#xD;
@@ -439,6 +439,7 @@ if(data != undefined){&#xD;
           </ToolBar>
           <DataGrid>
             <Property name="dataSet">dsTsxx</Property>
+            <Property name="readOnly">true</Property>
             <DataColumn name="tsr">
               <Property name="property">tsr</Property>
             </DataColumn>
