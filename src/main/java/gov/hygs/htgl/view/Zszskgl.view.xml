@@ -313,7 +313,8 @@ if(zskly != undefined){&#xD;
       <DataSetDropDown id="groupDropDown">
         <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
 if(group != undefined){&#xD;
-	view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
+	//view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
+	view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
 }</ClientEvent>
         <Property name="dataSet">dsGroupt</Property>
         <Property name="property">groupName</Property>
@@ -586,6 +587,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
               </ToolBar>
               <DataGrid>
                 <Property name="dataSet">dsZszskFilter</Property>
+                <Property name="readOnly">true</Property>
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
                 </DataColumn>
@@ -720,11 +722,11 @@ if(data != undefined){&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
-		view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		//view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 	if(data.get(&quot;rolename&quot;) == &quot;DeptAdmin&quot;){&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
-		view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
+		//view.get(&quot;#zsdtsbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 }&#xD;
 </ClientEvent>
@@ -782,6 +784,7 @@ view.get(&quot;#zsdtsDialog&quot;).show();&#xD;
               <Property name="caption">知识点推送</Property>
               <Property name="hideMode">display</Property>
               <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
+              <Property name="visible">false</Property>
             </Button>
             <DataPilot>
               <Property name="dataSet">dsZszsk</Property>

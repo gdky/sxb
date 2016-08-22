@@ -172,4 +172,16 @@ public class ZszskServiceImpl implements ZszskService {
 		return zszskDao.getZsdtsInfoFromSystemProps();
 	}
 
+	@Override
+	public void getTsxxInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zszskDao.getTsxxInfo(page, param);
+	}
+
+	@Override
+	public void getZsdDetailInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zszskDao.getZsdDetailInfo(page, param);
+	}
+
 }
