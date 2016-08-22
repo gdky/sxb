@@ -35,5 +35,9 @@ public interface ZszskService {
 	public String importAttachmentImmediately(UploadFile file, Map<String, Object> param) throws IOException;
 
 	public Integer getZsdtsInfoFromSystemProps();
+
+	public void getTsxxInfo(Page page, Map<String, Object> param);
+
+	public void getZsdDetailInfo(Page page, Map<String, Object> param);
 	
 }
