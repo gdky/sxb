@@ -33,8 +33,6 @@ public interface QzBmCdglService {
 
 	public Collection<User> getUserByGroupInfo(Record record);
 
-	public void updateGroupInfo(List<Grouptable> groups);
-
 	public void updateUserInfo(List<User> users);
 
 	public String checkGroupName(String param);
@@ -60,4 +58,8 @@ public interface QzBmCdglService {
 	public void updateSystemPropsInfo(List<SystemProps> list);
 
 	public void addUserInfoToGroup(Map<String, Object> param);
+
+	public Collection<Grouptable> getCurrentGroupById(String id);
+
+	public void updateGroup(List<Grouptable> groups);
 }

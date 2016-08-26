@@ -1,6 +1,7 @@
 package gov.hygs.htgl.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Model class of 群组.
@@ -21,12 +22,42 @@ public class Grouptable implements Serializable {
 
 	/** 描述. */
 	private String ms;
+	
+	private Integer parentId;
+	
+	private Collection<Grouptable> child;
+
+	public Collection<Grouptable> getChild() {
+		return child;
+	}
+
+
+
+	public void setChild(Collection<Grouptable> child) {
+		this.child = child;
+	}
+
+
 
 	/**
 	 * Constructor.
 	 */
 	public Grouptable() {
 	}
+	
+	
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
+
 
 	/**
 	 * Set the ID_.
