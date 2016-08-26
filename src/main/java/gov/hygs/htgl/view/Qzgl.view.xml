@@ -30,6 +30,19 @@
         <Property></Property>
         <Property name="label">描述</Property>
       </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentGroupById</Property>
+      </Reference>
+      <Reference name="oChild">
+        <Property name="dataProvider">qzBmCdglController#getCurrentGroupById</Property>
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
     </DataType>
     <DataType name="userType">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>
@@ -84,13 +97,16 @@ self.flush();</ClientEvent>
       <Property name="dataProvider">qzBmCdglController#getUserByGroupInfo</Property>
       <Property name="dataType">[userType]</Property>
     </DataSet>
+    <DataSet id="dsCondition">
+      <Property name="dataType">[groupType]</Property>
+    </DataSet>
     <DataSet id="dsUser">
       <Property name="dataType">[userType]</Property>
       <Property name="dataProvider">qzBmCdglController#getUserInfo</Property>
       <Property name="pageSize">10</Property>
     </DataSet>
     <SplitPanel>
-      <Property name="position">16%</Property>
+      <Property name="position">26%</Property>
       <MainControl>
         <Container>
           <GroupBox>
@@ -102,6 +118,7 @@ self.flush();</ClientEvent>
                 <Property name="dataSet">groupDataSet</Property>
                 <Property name="readOnly">true</Property>
                 <Property name="cols">*</Property>
+                <Property name="dataPath">!current_Node</Property>
                 <AutoFormElement>
                   <Property name="name">groupName</Property>
                   <Property name="property">groupName</Property>
@@ -123,7 +140,8 @@ self.flush();</ClientEvent>
             <Children>
               <ToolBar>
                 <Button>
-                  <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+                  <ClientEvent name="onClick">//var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;);&#xD;
 if(group != undefined){&#xD;
 	//view.get(&quot;#userDataSet&quot;).insert({id_:group.get(&quot;id&quot;)});&#xD;
 	view.get(&quot;#userDialog&quot;).show();&#xD;
@@ -137,12 +155,17 @@ if(group != undefined){&#xD;
                   <ClientEvent name="onClick">var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
-		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+		//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+		&#xD;
 		user.set({deptid:groupId});&#xD;
 		user.remove();&#xD;
 		view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
 			view.get(&quot;#userDialog&quot;).close();&#xD;
-			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+			&#xD;
+			//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+			&#xD;
 			var user = view.get(&quot;#userDataSet&quot;);&#xD;
 			user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 			user.flush();&#xD;
@@ -189,31 +212,42 @@ if(user != undefined){&#xD;
             <Children>
               <ToolBar>
                 <Button>
-                  <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).insert();&#xD;
-view.get(&quot;#groupDialog&quot;).show();&#xD;
-</ClientEvent>
-                  <Property name="caption">添加</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
+                  <ClientEvent name="onClick">var datatree = view.get(&quot;#datatree&quot;);&#xD;
+var currentNode = datatree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	//throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+	view.get(&quot;#groupDataSet&quot;).insert({parentId:0});&#xD;
+	view.get(&quot;#dsCondition&quot;).insert({parentId:0});&#xD;
+}else{&#xD;
+	var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	var newEntity = currentEntity.createBrother({&#xD;
+		parentId:currentEntity.get('parentId')&#xD;
+	});&#xD;
+	view.get(&quot;#dsCondition&quot;).insert({parentId:currentEntity.get('parentId')});&#xD;
+	datatree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+}&#xD;
+view.get(&quot;#dialog&quot;).show();</ClientEvent>
+                  <Property name="caption">添加同级节点</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -280px -100px</Property>
                 </Button>
                 <Button>
-                  <ClientEvent name="onClick">var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
-if(group != undefined){&#xD;
-	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
-		group.remove();&#xD;
-		view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
-			var currentGroup = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
-			if(currentGroup != undefined){&#xD;
-				var user = view.get(&quot;#userDataSet&quot;);&#xD;
-				user.set(&quot;parameter&quot;,{&quot;id&quot;:currentGroup.get(&quot;id&quot;)});&#xD;
-				user.flush();&#xD;
-			}&#xD;
-		});&#xD;
-	});&#xD;
+                  <ClientEvent name="onClick">var datatree = view.get(&quot;#datatree&quot;);&#xD;
+var currentNode = datatree.get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.MessageBox.alert(&quot;请先选中一个父节点&quot;);&#xD;
+	return;&#xD;
 }&#xD;
-&#xD;
+var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+var newEntity = currentEntity.createChild(&quot;child&quot;,{&#xD;
+	parentId:currentEntity.get(&quot;id&quot;)&#xD;
+});&#xD;
+currentNode.expand();&#xD;
+datatree.set(&quot;currentEntity&quot;,newEntity);&#xD;
+view.get(&quot;#dsCondition&quot;).insert({parentId:currentEntity.get(&quot;id&quot;)});&#xD;
+view.get(&quot;#dialog&quot;).show();&#xD;
 </ClientEvent>
-                  <Property name="caption">删除</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                  <Property name="caption">添加子节点</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
                 </Button>
                 <Button>
                   <ClientEvent name="onClick">view.get(&quot;#updateZzxxDialog&quot;).show();&#xD;
@@ -221,26 +255,46 @@ if(group != undefined){&#xD;
                   <Property name="caption">修改</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
                 </Button>
+                <Button>
+                  <ClientEvent name="onClick">var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+if(!currentNode){&#xD;
+	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
+}&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){	&#xD;
+	var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	currentEntity.remove();&#xD;
+	view.get(&quot;#updateGroup&quot;).execute();&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">删除节点</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </Button>
               </ToolBar>
-              <DataGrid id="groupGrid">
-                <ClientEvent name="onDataRowClick">var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+              <DataTree id="datatree">
+                <ClientEvent name="onDataRowClick">var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
 var user = view.get(&quot;#userDataSet&quot;);&#xD;
 user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 user.flush();&#xD;
 </ClientEvent>
                 <Property name="dataSet">groupDataSet</Property>
-                <Property name="readOnly">true</Property>
-                <DataColumn name="groupName">
-                  <Property name="property">groupName</Property>
-                </DataColumn>
-              </DataGrid>
+                <Property name="currentNodeDataPath">current_Node</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="childrenProperty">child</Property>
+                    <Property name="recursive">true</Property>
+                    <Property name="labelProperty">groupName</Property>
+                    <Property name="name">groupName</Property>
+                    <Property name="expandLevel">2</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+              </DataTree>
             </Children>
           </GroupBox>
         </Container>
       </SideControl>
     </SplitPanel>
-    <UpdateAction id="groupUpdate">
-      <Property name="dataResolver">qzBmCdglController#updateGroupInfo</Property>
+    <UpdateAction id="updateGroup">
+      <Property name="dataResolver">qzBmCdglController#updateGroup</Property>
       <Property name="executingMessage">正在执行...</Property>
       <Property name="successMessage">执行成功</Property>
       <UpdateItem>
@@ -258,66 +312,6 @@ user.flush();&#xD;
     <AjaxAction id="addAction">
       <Property name="service">qzBmCdglController#addUserInfoToGroup</Property>
     </AjaxAction>
-    <Dialog id="groupDialog" layout="hbox" layoutConstraint="center">
-      <Property name="width">500</Property>
-      <Property name="height">260</Property>
-      <Buttons/>
-      <Children>
-        <GroupBox layout="hbox">
-          <Property name="caption">群主管理</Property>
-          <Property name="width">470</Property>
-          <Buttons>
-            <Button>
-              <ClientEvent name="onClick">var autoEntity = view.get(&quot;#groupAutoForm&quot;).get(&quot;entity&quot;);&#xD;
-view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
-	view.get(&quot;#groupDialog&quot;).close();&#xD;
-	view.get(&quot;#groupDataSet&quot;).flush();&#xD;
-	var entityList = view.get(&quot;#groupDataSet&quot;).getData();&#xD;
-	entityList.each(function(entity){&#xD;
-		if(autoEntity.get(&quot;groupName&quot;) == entity.get(&quot;groupName&quot;)){&#xD;
-			entityList.setCurrent(entity);&#xD;
-			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-			var user = view.get(&quot;#userDataSet&quot;);&#xD;
-			user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
-			user.flush();&#xD;
-		}&#xD;
-	});	&#xD;
-});&#xD;
-</ClientEvent>
-              <Property name="caption">提交</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
-            </Button>
-            <Button>
-              <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
-view.get(&quot;#groupDialog&quot;).close();&#xD;
-</ClientEvent>
-              <Property name="caption">取消</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-            </Button>
-          </Buttons>
-          <Children>
-            <AutoForm id="groupAutoForm">
-              <Property name="dataSet">groupDataSet</Property>
-              <Property name="cols">*</Property>
-              <Property name="width">468</Property>
-              <AutoFormElement>
-                <Property name="name">groupName</Property>
-                <Property name="property">groupName</Property>
-                <Editor/>
-              </AutoFormElement>
-              <AutoFormElement>
-                <Property name="name">ms</Property>
-                <Property name="property">ms</Property>
-                <Editor>
-                  <TextArea/>
-                </Editor>
-              </AutoFormElement>
-            </AutoForm>
-          </Children>
-        </GroupBox>
-      </Children>
-      <Tools/>
-    </Dialog>
     <Dialog id="userDialog">
       <Property name="width">700</Property>
       <Property name="height">500</Property>
@@ -367,12 +361,17 @@ if(id == &quot;&quot;){&#xD;
 	throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
 	return false;&#xD;
 }&#xD;
-var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+&#xD;
 view.get(&quot;#addAction&quot;).set(&quot;parameter&quot;,{&quot;groupId&quot;:groupId,&quot;ids&quot;:id});&#xD;
 view.get(&quot;#addAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#userDialog&quot;).close();&#xD;
 	view.get('#userDataGrid').unselectAll();&#xD;
-	var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+	&#xD;
+	//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+	var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+	&#xD;
 	var user = view.get(&quot;#userDataSet&quot;);&#xD;
 	user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 	user.flush();&#xD;
@@ -382,7 +381,7 @@ view.get(&quot;#addAction&quot;).execute(function(){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
+              <ClientEvent name="onClick">//view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#userDialog&quot;).close();&#xD;
 view.get('#userDataGrid').unselectAll();</ClientEvent>
               <Property name="caption">取消</Property>
@@ -440,10 +439,14 @@ view.get('#userDataGrid').unselectAll();</ClientEvent>
             <Button>
               <ClientEvent name="onClick">//groupUpdate&#xD;
 //updateZzxxDialog&#xD;
+/*&#xD;
 view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
-	view.get(&quot;#groupUpdate&quot;).close();&#xD;
+	view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
 });&#xD;
-</ClientEvent>
+*/&#xD;
+view.get(&quot;#updateGroup&quot;).execute(function(){&#xD;
+	view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
+});</ClientEvent>
               <Property name="caption">提交</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
             </Button>
@@ -459,6 +462,74 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
           <Children>
             <AutoForm>
               <Property name="dataSet">groupDataSet</Property>
+              <Property name="cols">*</Property>
+              <Property name="width">468</Property>
+              <Property name="dataPath">!current_Node</Property>
+              <AutoFormElement>
+                <Property name="name">groupName</Property>
+                <Property name="property">groupName</Property>
+                <Editor/>
+              </AutoFormElement>
+              <AutoFormElement>
+                <Property name="name">ms</Property>
+                <Property name="property">ms</Property>
+                <Editor>
+                  <TextArea/>
+                </Editor>
+              </AutoFormElement>
+            </AutoForm>
+          </Children>
+        </GroupBox>
+      </Children>
+      <Tools/>
+    </Dialog>
+    <Dialog id="dialog">
+      <Property name="height">260</Property>
+      <Property name="width">500</Property>
+      <Buttons/>
+      <Children>
+        <GroupBox>
+          <Property name="width">470</Property>
+          <Property name="caption">添加群组节点</Property>
+          <Buttons>
+            <Button>
+              <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
+currentEntity.set({groupName:data.get(&quot;groupName&quot;),ms:data.get(&quot;ms&quot;)});&#xD;
+view.get(&quot;#updateGroup&quot;).execute(function(){ &#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	var current = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+	var currentData = current.parent.parent;&#xD;
+	if(currentData != undefined){&#xD;
+		currentData.get(&quot;oChild&quot;).flush();&#xD;
+		var newNode = currentData.get(&quot;oChild&quot;).getLast();&#xD;
+		current.set({&#xD;
+			id:newNode.get(&quot;id&quot;),&#xD;
+			groupName:newNode.get(&quot;groupName&quot;),&#xD;
+			parentId:newNode.get(&quot;parentId&quot;),&#xD;
+			ms:newNode.get(&quot;ms&quot;)&#xD;
+			});&#xD;
+	}else{&#xD;
+		view.get(&quot;#groupDataSet&quot;).flush();&#xD;
+	}&#xD;
+	&#xD;
+});&#xD;
+</ClientEvent>
+              <Property name="caption">提交</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+currentEntity.cancel();&#xD;
+view.get(&quot;#dialog&quot;).close();&#xD;
+</ClientEvent>
+              <Property name="caption">取消</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+            </Button>
+          </Buttons>
+          <Children>
+            <AutoForm>
+              <Property name="dataSet">dsCondition</Property>
               <Property name="cols">*</Property>
               <Property name="width">468</Property>
               <AutoFormElement>

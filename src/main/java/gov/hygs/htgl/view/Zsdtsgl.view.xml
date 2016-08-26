@@ -29,6 +29,11 @@
       <PropertyDef name="ms">
         <Property></Property>
       </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentGroupById</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
     </DataType>
     <DataType name="zszskType">
       <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
@@ -216,15 +221,27 @@
       </DataSet>
     </Container>
     <Container id="dropdowns">
-      <DataSetDropDown id="groupDropDown">
-        <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
-if(group != undefined){&#xD;
-	//view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
-	view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
-}</ClientEvent>
-        <Property name="dataSet">dsGroupt</Property>
-        <Property name="property">groupName</Property>
-      </DataSetDropDown>
+      <CustomDropDown id="groupDropDown">
+        <DataTree>
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var id = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;groupName&quot;)&#xD;
+);&#xD;
+view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
+          <Property name="dataSet">dsGroupt</Property>
+          <Property name="height">200</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="recursive">true</Property>
+              <Property name="name">groupName</Property>
+              <Property name="labelProperty">groupName</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
     </Container>
     <Container id="dialogs">
       <Dialog id="zsdtsDialog">
