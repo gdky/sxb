@@ -170,16 +170,25 @@ public class YxtkglServiceImpl implements YxtkglService {
 		List<String> xzKeys = new ArrayList<String>();
 		int tmlyId = 0;
 		int flId = 0;
-		int deptid = 0;
-		int userid = 0;
+		//int deptid = 0;
+		//int userid = 0;
 		Map<String, String> tmlyChack = new HashMap<String, String>();
 		Map<String, String> flIdChack = new HashMap<String, String>();
-		Map<String, String> deptChack = new HashMap<String, String>();
-		Map<String, String> userChack = new HashMap<String, String>();
+		//Map<String, String> deptChack = new HashMap<String, String>();
+		//Map<String, String> userChack = new HashMap<String, String>();
 
 		List<Tktm> tktms = new ArrayList<Tktm>();
 		List<Tkxzx> tkxzxs = new ArrayList<Tkxzx>();
 		List<Tkxzx> tkdas = new ArrayList<Tkxzx>();
+		
+		
+		
+		List<Map<String, Object>> deptUser = null;//new ArrayList<Map<String, Object>>();
+		Map<String, Map<String, List<Map<String, Object>>>> deptChack = new HashMap<String, Map<String, List<Map<String, Object>>>>();
+		Map<String, List<Map<String, Object>>> userChack = new HashMap<String, List<Map<String, Object>>>();
+		
+		
+		
 
 		Pattern p = Pattern.compile("[A-Z]");
 		for (Map<String, Object> rowInfo : list) {
@@ -200,33 +209,29 @@ public class YxtkglServiceImpl implements YxtkglService {
 						Tktm tktm = new Tktm();
 						tktm.setDrbz("Y");
 
-						if (deptChack.get(tkcj.getDeptName()) == null
-								|| deptid == 0) {
-							deptid = yxtkglDao.getDeptIdByDeptName(tkcj
-									.getDeptName());
-							deptChack.put(tkcj.getDeptName(),
-									tkcj.getDeptName());
+						
+						userChack = deptChack.get(tkcj.getDeptName());
+						if(userChack == null){
+							deptUser = yxtkglDao.getUserIdByDeptIdAndTheyName(tkcj.getUserName(),tkcj.getDeptName());
+							userChack = new HashMap<String, List<Map<String, Object>>>();
+							userChack.put(tkcj.getUserName(),deptUser);
+							deptChack.put(tkcj.getDeptName(),userChack);
+							
+						}else{
+							deptUser = userChack.get(tkcj.getUserName());
+							if(deptUser == null){
+								deptUser = yxtkglDao.getUserIdByDeptIdAndTheyName(tkcj.getUserName(),tkcj.getDeptName());
+								userChack.put(tkcj.getUserName(),deptUser);
+							}
 						}
-						if (deptid == 0) {
+						if(!deptUser.isEmpty()){
+							tktm.setDeptid( Integer.parseInt(String.valueOf(deptUser.get(0).get("deptid"))));
+							tktm.setUserId( Integer.parseInt(String.valueOf(deptUser.get(0).get("userid"))) );
+							
+						}else{
 							errMassage.add(tkcj);// 记录当前行数
-							deptChack.put(tkcj.getDeptName(), null);
 							continue;
 						}
-						tktm.setDeptid(deptid);
-
-						if (userChack.get(tkcj.getUserName()) == null
-								|| userid == 0) {
-							userid = yxtkglDao.getUserIdByDeptIdAndUserName(
-									deptid, tkcj.getUserName());
-							userChack.put(tkcj.getUserName(),
-									tkcj.getUserName());
-						}
-						if (userid == 0) {
-							errMassage.add(tkcj);// 记录当前行数
-							userChack.put(tkcj.getUserName(), null);
-							continue;
-						}
-						tktm.setUserId(userid);
 
 						if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
 							tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
@@ -244,12 +249,15 @@ public class YxtkglServiceImpl implements YxtkglService {
 						}
 						tktm.setFlId(flId);
 
-						if ("基础题".equals(tkcj.getTktmTmnd())) {
+						if ("税收业务类基础题".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(0);
-						} else if ("进阶题".equals(tkcj.getTktmTmnd())) {
+						} else if ("税收业务类进阶题".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(1);
 						} else if ("非税收业务类".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(2);
+						} else {
+							errMassage.add(tkcj);// 记录当前行数
+							continue;
 						}
 
 						tktm.setContent(tkcj.getTktmContent());

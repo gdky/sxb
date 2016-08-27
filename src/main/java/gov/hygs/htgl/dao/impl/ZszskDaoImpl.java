@@ -472,4 +472,36 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		return value;
 	}
 
+	@Override
+	public void getTsxxInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageNow = page.getPageNo();
+		int pageSize = page.getPageSize();
+		StringBuffer sqlWhere = new StringBuffer(" from zsdtsjl jl,zsktsqz qz,grouptable g,user u "
+				+ "where jl.id_ = qz.tsjlid and qz.group_id = g.id_ and jl.tsrid = u.id_ ");
+		StringBuffer sql = new StringBuffer("select u.user_name tsr,jl.tsrq,g.group_name groupname,jl.ms,jl.id_ jlid ");
+		StringBuffer sqlCount = new StringBuffer("select count(*)");
+		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
+		page.setEntityCount(count);
+		page.setEntities(list);
+	}
+
+	@Override
+	public void getZsdDetailInfo(Page page, Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		int pageNow = page.getPageNo();
+		int pageSize = page.getPageSize();
+		int id = (int) param.get("id");
+		StringBuffer sqlWhere = new StringBuffer(" from zsk_jl jl, zskly ly, dept d, user u ,zsktsnr nr, zsdtsjl z "
+				+ "where jl.zskly_id = ly.id_ and jl.user_id = u.id_ and jl.deptid = d.id_ "
+				+ "and nr.zskid = jl.id_ and z.id_ = nr.tsjlid and z.id_ = "+id+" ");
+		StringBuffer sql = new StringBuffer("select jl.create_date,jl.content,ly.title zsklyname,u.user_name username,d.dept_name deptname,jl.title");
+		StringBuffer sqlCount = new StringBuffer("select count(*)");
+		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
+		page.setEntityCount(count);
+		page.setEntities(list);
+	}
+
 }

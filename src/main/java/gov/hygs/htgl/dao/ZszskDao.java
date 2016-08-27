@@ -53,4 +53,8 @@ public interface ZszskDao {
 
 	public Integer getZsdtsInfoFromSystemProps();
 
+	public void getTsxxInfo(Page page, Map<String, Object> param);
+
+	public void getZsdDetailInfo(Page page, Map<String, Object> param);
+
 }

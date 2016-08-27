@@ -91,4 +91,15 @@ public class ZszskController {
 		return zszskService.getZsdtsInfoFromSystemProps();
 	}
 
+	@DataProvider
+	public void getTsxxInfo(Page page, Map<String,Object> param){
+		zszskService.getTsxxInfo(page, param);
+	}
+	
+	@DataProvider
+	public void getZsdDetailInfo(Page page, Map<String, Object> param){
+		if(param != null){
+			zszskService.getZsdDetailInfo(page, param);
+		}
+	}
 }
