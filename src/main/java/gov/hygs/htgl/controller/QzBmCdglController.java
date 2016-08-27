@@ -180,6 +180,16 @@ public class QzBmCdglController {
 	public Collection<Grouptable> getGrouptableInfo() {
 		return qzBmCdglService.getGrouptableInfo();
 	}
+	
+	/**
+	 * 获取群组当前节点信息
+	 * @param id
+	 * @return
+	 */
+	@DataProvider
+	public Collection<Grouptable> getCurrentGroupById(String id){
+		return qzBmCdglService.getCurrentGroupById(id);
+	}
 
 	/**
 	 * 获取所有用户信息
@@ -214,8 +224,8 @@ public class QzBmCdglController {
 	 */
 	@DataResolver
 	@Transactional
-	public void updateGroupInfo(List<Grouptable> groups) {
-		qzBmCdglService.updateGroupInfo(groups);
+	public void updateGroup(List<Grouptable> groups){
+		qzBmCdglService.updateGroup(groups);
 	}
 	
 	/**

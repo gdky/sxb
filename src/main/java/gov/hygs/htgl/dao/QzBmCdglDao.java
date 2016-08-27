@@ -72,4 +72,6 @@ public interface QzBmCdglDao {
 
 	public void addUserInfoToGroup(Map<String, Object> param);
 
+	public Collection<Grouptable> getCurrentGroupById(String id);
+
 }

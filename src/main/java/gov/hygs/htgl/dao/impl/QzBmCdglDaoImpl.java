@@ -244,7 +244,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Grouptable> getGrouptableInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select * from grouptable";
+		String sql = "select id_,group_name,ms,parent_id from grouptable where parent_id=0";
 		List<Grouptable> groups = this.jdbcTemplate.query(sql,
 				new RowMapper<Grouptable>() {
 
@@ -256,6 +256,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 						group.setId(result.getInt("id_"));
 						group.setGroupName(result.getString("group_name"));
 						group.setMs(result.getString("ms"));
+						group.setParentId(result.getInt("parent_id"));
 						return group;
 					}
 
@@ -362,26 +363,30 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void addGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "insert into grouptable values(?,?,?)";
-		Object[] objs = { group.getId(), group.getGroupName(), group.getMs() };
+		String sql = "insert into grouptable values(?,?,?,?)";
+		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
 	public void updataGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "update grouptable g set g.group_name=?,g.ms=? where g.id_=?";
-		Object[] objs = { group.getGroupName(), group.getMs(), group.getId() };
+		String sql = "update grouptable g set g.group_name=?,g.ms=?,g.parent_id=? where g.id_=?";
+		Object[] objs = { group.getGroupName(), group.getMs(), group.getParentId(), group.getId() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
 	public void deleteGroup(Grouptable group) {
+		List<Grouptable> list = (List<Grouptable>) this.getCurrentGroupById(group.getId().toString());
 		String sql = "delete from grouptable where id_=?";
 		Object[] objs = { group.getId() };
 		this.jdbcTemplate.update(sql, objs);
 		sql = "delete from user_group where group_id=?";
 		this.jdbcTemplate.update(sql, objs);
+		for(Grouptable child : list){
+			this.deleteGroup(child);
+		}
 	}
 
 	@Override
@@ -463,6 +468,27 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 			String sql = "insert into user_group values(?,?,?)";
 			this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
 		}
+	}
+
+	@Override
+	public Collection<Grouptable> getCurrentGroupById(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select id_,group_name,parent_id from grouptable where parent_id=?";
+		List<Grouptable> list = this.jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Grouptable>(){
+
+			@Override
+			public Grouptable mapRow(ResultSet result, int i)
+					throws SQLException {
+				// TODO Auto-generated method stub
+				Grouptable grouptable = new Grouptable();
+				grouptable.setId(result.getInt("id_"));
+				grouptable.setGroupName(result.getString("group_name"));
+				grouptable.setParentId(result.getInt("parent_id"));
+				return grouptable;
+			}
+			
+		});
+		return list;
 	}
 
 }

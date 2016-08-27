@@ -142,23 +142,6 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	}
 
 	@Override
-	public void updateGroupInfo(List<Grouptable> groups) {
-		// TODO Auto-generated method stub
-		for (Grouptable group : groups) {
-			if (EntityUtils.getState(group).equals(EntityState.NEW)) {
-				qzBmCdglDao.addGroup(group);
-			}
-			if (EntityUtils.getState(group).equals(EntityState.MODIFIED)) {
-				qzBmCdglDao.updataGroup(group);
-			}
-			if (EntityUtils.getState(group).equals(EntityState.DELETED)) {
-				qzBmCdglDao.deleteGroup(group);
-			}
-		}
-
-	}
-
-	@Override
 	public String checkGroupName(String param) {
 		// TODO Auto-generated method stub
 		return qzBmCdglDao.checkGroupName(param);
@@ -268,6 +251,31 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	public void addUserInfoToGroup(Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		qzBmCdglDao.addUserInfoToGroup(param);
+	}
+
+	@Override
+	public Collection<Grouptable> getCurrentGroupById(String id) {
+		// TODO Auto-generated method stub
+		return qzBmCdglDao.getCurrentGroupById(id);
+	}
+
+	@Override
+	public void updateGroup(List<Grouptable> groups) {
+		// TODO Auto-generated method stub
+		if(groups != null){
+			for(Grouptable group : groups){
+				if(EntityUtils.getState(group).equals(EntityState.NEW)){
+					qzBmCdglDao.addGroup(group);
+				}
+				if(EntityUtils.getState(group).equals(EntityState.MODIFIED)){
+					qzBmCdglDao.updataGroup(group);
+				}
+				if(EntityUtils.getState(group).equals(EntityState.DELETED)){
+					qzBmCdglDao.deleteGroup(group);
+				}
+				this.updateGroup((List<Grouptable>) group.getChild());
+			}
+		}
 	}
 
 }
