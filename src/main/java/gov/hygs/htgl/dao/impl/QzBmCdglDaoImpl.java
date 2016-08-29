@@ -26,7 +26,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public List<Dept> getDeptRoot() {
 		// TODO Auto-generated method stub
-		String sql = "select * from dept t where t.parent_id is null";
+		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null";
 
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
 		return this.mapToDeptList(list);
@@ -34,7 +34,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
 	public List<Dept> getCurrentDeptById(String id_) {
-		String sql = "select * from dept t where t.parent_id=?";
+		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id=?";
 		Object[] objs = { id_ };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				objs);
@@ -135,7 +135,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Menu> getMenuRoot() {
 		// TODO Auto-generated method stub
-		String sql = "select * from menu m where m.parent_id is null";
+		String sql = "select ID_,PARENT_ID,MENU_NAME,URL,YXBZ from menu m where m.parent_id is null";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
 		return this.mapToObject(list);
 	}
@@ -143,7 +143,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Menu> getCurrentMenuById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select * from menu m where m.parent_id=?";
+		String sql = "select ID_,PARENT_ID,MENU_NAME,URL,YXBZ from menu m where m.parent_id=?";
 		Object[] obs = { id };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				obs);
@@ -405,7 +405,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		String sqlCount = "select count(*) from system_props";
 		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
 				Integer.class);
-		String sql = "select * from system_props limit ?,?";
+		String sql = "select ID_,KEY_,VALUE,MS from system_props limit ?,?";
 
 		List<SystemProps> list = this.jdbcTemplate.query(sql,
 				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
