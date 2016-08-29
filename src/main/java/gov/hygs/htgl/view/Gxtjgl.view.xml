@@ -23,11 +23,6 @@
         <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
         <Property name="parameter">$${this.id_}</Property>
       </Reference>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.id_}</Property>
-        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
-      </Reference>
     </DataType>
     <DataType name="userType">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>

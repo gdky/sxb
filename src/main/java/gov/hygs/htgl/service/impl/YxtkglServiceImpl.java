@@ -172,7 +172,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 		int flId = 0;
 		//int deptid = 0;
 		//int userid = 0;
-		Map<String, String> tmlyChack = new HashMap<String, String>();
+		Map<String, Integer> tmlyChack = new HashMap<String, Integer>();
 		Map<String, String> flIdChack = new HashMap<String, String>();
 		//Map<String, String> deptChack = new HashMap<String, String>();
 		//Map<String, String> userChack = new HashMap<String, String>();
@@ -232,14 +232,23 @@ public class YxtkglServiceImpl implements YxtkglService {
 							errMassage.add(tkcj);// 记录当前行数
 							continue;
 						}
-
-						if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
-							tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
-									tkcj.getTmlyTitle(), tkcj.getTmlyContent());
-							tmlyChack.put(tkcj.getTmlyTitle(),
-									tkcj.getTmlyContent());
+						
+						if(tkcj.getTmlyTitle() == null){
+							tmlyId = 0;
+						}else{
+							if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
+								tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
+										tkcj.getTmlyTitle(), tkcj.getTmlyContent());
+								/*if(tkcj.getTmlyContent() == null){
+									tmlyChack.put(tkcj.getTmlyTitle(),"");
+								}else{
+									tmlyChack.put(tkcj.getTmlyTitle(),
+											tkcj.getTmlyContent());
+								}*/
+								tmlyChack.put(tkcj.getTmlyTitle(),tmlyId);
+							}
 						}
-						tktm.setTmlyId(tmlyId);
+						tktm.setTmlyId(tmlyChack.get(tkcj.getTmlyTitle()));
 
 						if (flIdChack.get(tkcj.getTkflTkmc()) == null) {
 							flId = yxtkglDao.getTkflInfoOrAddTkfl(tkcj
@@ -247,7 +256,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 							flIdChack.put(tkcj.getTkflTkmc(),
 									tkcj.getTkflTkmc());
 						}
-						tktm.setFlId(flId);
+						tktm.setFlId(flId);//一个title对应一个content
 
 						if ("税收业务类基础题".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(0);

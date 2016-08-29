@@ -497,9 +497,11 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent) {
 		// TODO Auto-generated method stub
-		String sql = "select if(count(*),id_,0) from tmly where title=? and content=?";
-		int tmlyid = this.jdbcTemplate.queryForObject(sql, new Object[] {
-				tmlyTitle, tmlyContent }, Integer.class);
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from tmly where title="+tmlyTitle);
+		if("null".equals(tmlyContent)){
+			sql.append(" and content="+tmlyContent);
+		}
+		int tmlyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
 		if (tmlyid == 0) {
 			tmlyid = this.addTmly(tmlyTitle, tmlyContent);
 		}
