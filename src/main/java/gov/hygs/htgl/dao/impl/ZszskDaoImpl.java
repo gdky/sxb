@@ -393,7 +393,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	@Override
 	public Collection<Zskly> getZsklyInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select * from zskly order by id_ desc";
+		String sql = "select id_,title,content,attachment from zskly order by id_ desc";
 		List<Zskly> list = this.jdbcTemplate.query(sql, new RowMapper<Zskly>(){
 
 			@Override

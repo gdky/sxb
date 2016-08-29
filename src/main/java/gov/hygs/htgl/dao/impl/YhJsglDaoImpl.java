@@ -393,7 +393,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 			    .getAuthentication()
 			    .getPrincipal();
 		
-		String sql = "select * from user where id_ = ? ";
+		String sql = "select ID_,LOGIN_NAME,USER_NAME,PHONE,RZSJ,ZW,PWD,PHOTO,DEPTID,BIRTHDAY from user where id_ = ? ";
 		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sql,new Object[]{userDetails.getId()});
 		return ls.get(0);
 	}
