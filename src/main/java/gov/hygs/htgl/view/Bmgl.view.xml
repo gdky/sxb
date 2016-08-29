@@ -11,12 +11,6 @@
       <PropertyDef name="dept_name">
         <Property></Property>
         <Property name="label">部门名称</Property>
-        <Validator type="ajax">
-          <Property name="service">qzBmCdglController#checkDeptName</Property>
-          <Property name="executingMessage">正在检查部门名...</Property>
-          <Property name="async">false</Property>
-          <Property name="revalidateOldValue">false</Property>
-        </Validator>
         <Validator name="validator1" type="length">
           <Property name="minLength">1</Property>
           <Property name="resultMessage">部门名称不能为空，请输入内容</Property>
