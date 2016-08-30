@@ -96,9 +96,11 @@ self.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 self.flush();</ClientEvent>
       <Property name="dataProvider">qzBmCdglController#getUserByGroupInfo</Property>
       <Property name="dataType">[userType]</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="dsCondition">
       <Property name="dataType">[groupType]</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="dsUser">
       <Property name="dataType">[userType]</Property>

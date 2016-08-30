@@ -39,6 +39,7 @@
       </DataSet>
       <DataSet id="dsCondition">
         <Property name="dataType">[tkflType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
     </Container>
     <Container>

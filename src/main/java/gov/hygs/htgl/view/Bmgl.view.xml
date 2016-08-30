@@ -47,6 +47,7 @@
     </DataSet>
     <DataSet id="addNodeDataSet">
       <Property name="dataType">[deptType]</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">16%</Property>
