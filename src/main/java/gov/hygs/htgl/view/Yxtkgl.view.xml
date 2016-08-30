@@ -550,6 +550,7 @@ if(datas.getLast() != null){&#xD;
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsTmly">
         <Property name="dataType">[tmlyType]</Property>

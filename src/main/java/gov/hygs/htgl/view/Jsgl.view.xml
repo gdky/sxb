@@ -161,10 +161,12 @@
       <Property name="dataProvider">yhJsglController#getUserInfo</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataType">[dtUser]</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="menuDataSet">
       <Property name="dataType">[menuType]</Property>
       <Property name="dataProvider">qzBmCdglController#getMenuRoot</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">200</Property>
