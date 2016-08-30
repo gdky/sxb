@@ -197,6 +197,7 @@
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsTsxx">
         <Property name="dataType">[tsxxType]</Property>
