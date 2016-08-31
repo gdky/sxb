@@ -21,11 +21,22 @@ public class Tmly implements Serializable {
 
 	/** 内容. */
 	private String content;
+	
+	/** 状态。 */
+	private String state;
 
 	/**
 	 * Constructor.
 	 */
 	public Tmly() {
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	/**

@@ -136,8 +136,8 @@ public class QzBmCdglController {
 	 */
 	@DataResolver
 	@Transactional
-	public void saveMenuNodeInfo(List<Menu> menus) {
-		qzBmCdglService.saveMenuNodeInfo(menus);
+	public String saveMenuNodeInfo(List<Menu> menus) {
+		return qzBmCdglService.saveMenuNodeInfo(menus);
 	}
 
 	/**
@@ -156,8 +156,8 @@ public class QzBmCdglController {
 	 */
 	@DataResolver
 	@Transactional
-	public void updateNodeInfo(Record record) {
-		qzBmCdglService.updateNodeInfo(record);
+	public String updateNodeInfo(Record record) {
+		return qzBmCdglService.updateNodeInfo(record);
 	}
 
 	/**
@@ -285,8 +285,8 @@ public class QzBmCdglController {
 	 */
 	@Transactional
 	@Expose
-	public void updateChildNode(Record record){
-		qzBmCdglService.updateNodeInfo(record);
+	public String updateChildNode(Record record){
+		return qzBmCdglService.updateNodeInfo(record);
 	}
 	
 }

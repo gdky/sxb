@@ -422,14 +422,15 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public void deleteYxtk(Tktm yxtk) {
 		// TODO Auto-generated method stub
-		String sql = "update tktm set yxbz='N' where id_=?";
+		String sql = "update tktm set yxbz='N',xybz='N' where id_=?";
 		this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
 	}
 
 	@Override
 	public void deleteGrDeptGxJl(Tktm yxtk) {
-		String sql = "delete from tk_gxjl where tk_id=? and gxly=?";
-		Object[] objs = { yxtk.getId(), 1 };
+		//String sql = "delete from tk_gxjl where tk_id=? and gxly=?";
+		String sql = "delete from tk_gxjl where tk_id=?";
+		Object[] objs = { yxtk.getId() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
