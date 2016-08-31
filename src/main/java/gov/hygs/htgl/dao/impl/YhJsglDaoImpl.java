@@ -130,7 +130,8 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		// TODO Auto-generated method stub
 		String sql = "delete from USER WHERE id_ = ?";
 		this.jdbcTemplate.update(sql, new Object[] { user.getId_() });
-
+		sql = "delete from user_role where user_id = ?";
+		this.jdbcTemplate.update(sql, new Object[] { user.getId_() });
 	}
 
 	@Override
@@ -205,7 +206,12 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	@Override
 	public void deleteRole(Role role) {
 		// TODO Auto-generated method stub
-		String sql = " delete from ROLE where ID_ =? ";
+		String sql = " delete from ROLE where ID_ = ?";
+		this.jdbcTemplate.update(sql, new Object[] { role.getId_() });
+		
+		sql = "delete from role_menu where role_id = ?";
+		this.jdbcTemplate.update(sql, new Object[] { role.getId_() });
+		sql = "delete from user_role where role_id = ?";
 		this.jdbcTemplate.update(sql, new Object[] { role.getId_() });
 	}
 

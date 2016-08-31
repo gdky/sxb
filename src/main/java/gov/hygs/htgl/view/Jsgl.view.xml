@@ -161,12 +161,10 @@
       <Property name="dataProvider">yhJsglController#getUserInfo</Property>
       <Property name="pageSize">20</Property>
       <Property name="dataType">[dtUser]</Property>
-      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="menuDataSet">
       <Property name="dataType">[menuType]</Property>
       <Property name="dataProvider">qzBmCdglController#getMenuRoot</Property>
-      <Property name="loadMode">manual</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">200</Property>
@@ -312,6 +310,7 @@ view.get(&quot;#DialogRole&quot;).show();&#xD;
                 <ToolBarButton>
                   <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 	view.get(&quot;#dsRole&quot;).getData(&quot;#&quot;).remove();&#xD;
+	view.get(&quot;#updateActionRole&quot;).execute();&#xD;
 });</ClientEvent>
                   <Property name="caption">删除</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
