@@ -52,9 +52,9 @@ public interface QzBmCdglDao {
 
 	public void getCurrentMenuPageById(Page<Menu> page, String id_);
 
-	public void saveMenuNodeInfo(Menu menu);
+	public String saveMenuNodeInfo(Menu menu);
 
-	public void updateMenuNodeInfo(Menu menu);
+	public String updateMenuNodeInfo(Menu menu);
 
 	public void deleteMenuNodeInfo(String id);
 

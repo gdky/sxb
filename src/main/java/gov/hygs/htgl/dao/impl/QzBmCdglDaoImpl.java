@@ -161,21 +161,32 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	}
 
 	@Override
-	public void saveMenuNodeInfo(Menu menu) {
+	public String saveMenuNodeInfo(Menu menu) {
 		// TODO Auto-generated method stub
-		String sql = "insert into menu values(?,?,?,?,?)";
-		Object[] objs = { menu.getId_(), menu.getParent_Id(),
-				menu.getMenu_Name(), menu.getUrl(), "Y" };
-		this.jdbcTemplate.update(sql, objs);
+		String result = this.checkMenuName(menu.getMenu_Name());
+		if(result == null){
+			String sql = "insert into menu values(?,?,?,?,?)";
+			Object[] objs = { menu.getId_(), menu.getParent_Id(),
+					menu.getMenu_Name(), menu.getUrl(), "Y" };
+			this.jdbcTemplate.update(sql, objs);
+		}
+		return result;
 	}
 
 	@Override
-	public void updateMenuNodeInfo(Menu menu) {
+	public String updateMenuNodeInfo(Menu menu) {
 		// TODO Auto-generated method stub
-		String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=? where id_=?";
-		Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz(),
-				menu.getId_() };
-		this.jdbcTemplate.update(sql, objs);
+		String chackMenuName = "select if(count(*),id_,0) from menu where menu_name = ?";
+		Integer id = this.jdbcTemplate.queryForObject(chackMenuName, Integer.class, new Object[]{ menu.getMenu_Name() });
+		if(id == 0 || id == menu.getId_()){
+			String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=? where id_=?";
+			Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz(),
+					menu.getId_() };
+			this.jdbcTemplate.update(sql, objs);
+			return null;
+		}else{
+			return "部门名称'" + menu.getMenu_Name() + "'已存在";
+		}
 	}
 
 	@Override

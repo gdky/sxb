@@ -56,6 +56,9 @@
         <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
 	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
 	view.get(&quot;#dsScore&quot;).getData().clear();&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,user:null,begin:null,end:null&#xD;
+	});&#xD;
 }&#xD;
 if(arg.value &lt; 7){&#xD;
 	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,true);&#xD;

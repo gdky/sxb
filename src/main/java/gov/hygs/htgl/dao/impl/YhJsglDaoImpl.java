@@ -130,7 +130,8 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		// TODO Auto-generated method stub
 		String sql = "delete from USER WHERE id_ = ?";
 		this.jdbcTemplate.update(sql, new Object[] { user.getId_() });
-
+		sql = "delete from user_role where user_id = ?";
+		this.jdbcTemplate.update(sql, new Object[] { user.getId_() });
 	}
 
 	@Override

@@ -116,7 +116,7 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public void addTmly(Tmly tmly) {
 		// TODO Auto-generated method stub
-		String sql = "insert into tmly values(?,?,?)";
+		String sql = "insert into tmly(id_,title,content) values(?,?,?)";
 		this.jdbcTemplate
 				.update(sql,
 						new Object[] { tmly.getId(), tmly.getTitle(),

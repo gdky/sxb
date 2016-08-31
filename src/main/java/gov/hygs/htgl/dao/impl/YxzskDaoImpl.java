@@ -255,8 +255,8 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	@Override
 	public void deleteGrDeptGxJl(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "delete from zsk_gxjl where zsk_id=? and gxly=?";
-		Object[] objs = { yxzsk.getId(), 1 };
+		String sql = "delete from zsk_gxjl where zsk_id=?";
+		Object[] objs = { yxzsk.getId() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 

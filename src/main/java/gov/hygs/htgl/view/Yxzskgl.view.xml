@@ -634,7 +634,8 @@ if(data != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
+              <ClientEvent name="onClick">view.get(&quot;#dsYxTzszsk&quot;).flush();&#xD;
+view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="hideMode">display</Property>
