@@ -202,6 +202,11 @@
       <PropertyDef name="ms">
         <Property></Property>
       </PropertyDef>
+      <Reference name="child">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentGroupById</Property>
+        <Property name="parameter">$${this.id}</Property>
+      </Reference>
     </DataType>
     <DataType name="examType">
       <Property name="creationType">gov.hygs.htgl.entity.Exam</Property>
@@ -414,6 +419,7 @@
         <Property name="dataType">[tktmType]</Property>
         <Property name="dataProvider">zstkglController#getRandomTktmFilter</Property>
         <Property name="pageSize">200</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsGroupt">
         <Property name="dataProvider">qzBmCdglController#getGrouptableInfo</Property>
@@ -440,6 +446,7 @@
         <Property name="dataType">[detialType]</Property>
         <Property name="pageSize">10</Property>
         <Property name="dataProvider">zstkglController#getExamDetailInfo</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsTkfl">
         <Property name="dataType">[tkflType]</Property>
@@ -1162,13 +1169,26 @@ if(data != undefined){&#xD;
     <AjaxAction id="tsAction">
       <Property name="service">zstkglController#updateKstsjlInfo</Property>
     </AjaxAction>
-    <DataSetDropDown id="groupDropDown">
-      <ClientEvent name="onClose">var group = view.get(&quot;#dsGroupt&quot;).getData(&quot;#&quot;);&#xD;
-if(group != undefined){&#xD;
-	view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:group.get(&quot;id&quot;)});&#xD;
-}</ClientEvent>
-      <Property name="dataSet">dsGroupt</Property>
-      <Property name="property">groupName</Property>
-    </DataSetDropDown>
+    <CustomDropDown id="groupDropDown">
+      <DataTree>
+        <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var id = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;groupName&quot;)&#xD;
+);&#xD;
+view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
+        <Property name="dataSet">dsGroupt</Property>
+        <Property name="height">200</Property>
+        <BindingConfigs>
+          <BindingConfig>
+            <Property name="childrenProperty">child</Property>
+            <Property name="recursive">true</Property>
+            <Property name="name">groupName</Property>
+            <Property name="labelProperty">groupName</Property>
+          </BindingConfig>
+        </BindingConfigs>
+      </DataTree>
+    </CustomDropDown>
   </View>
 </ViewConfig>

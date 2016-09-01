@@ -96,6 +96,7 @@ self.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
 self.flush();</ClientEvent>
       <Property name="dataProvider">qzBmCdglController#getUserByGroupInfo</Property>
       <Property name="dataType">[userType]</Property>
+      <Property name="loadMode">manual</Property>
     </DataSet>
     <DataSet id="dsCondition">
       <Property name="dataType">[groupType]</Property>
@@ -312,6 +313,9 @@ user.flush();&#xD;
     <AjaxAction id="addAction">
       <Property name="service">qzBmCdglController#addUserInfoToGroup</Property>
     </AjaxAction>
+    <AjaxAction id="updateAction">
+      <Property name="service">qzBmCdglController#checkGroupName</Property>
+    </AjaxAction>
     <Dialog id="userDialog">
       <Property name="width">700</Property>
       <Property name="height">500</Property>
@@ -444,14 +448,20 @@ view.get(&quot;#groupUpdate&quot;).execute(function(){&#xD;
 	view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
 });&#xD;
 */&#xD;
-view.get(&quot;#updateGroup&quot;).execute(function(){&#xD;
-	view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
-});</ClientEvent>
+&#xD;
+var entity = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+if(entity.validate() == &quot;ok&quot;){&#xD;
+		view.get(&quot;#updateGroup&quot;).execute(function(){&#xD;
+		view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
               <Property name="caption">提交</Property>
               <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
+              <ClientEvent name="onClick">//view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
+view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&#xD;
 view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
 &#xD;
 </ClientEvent>

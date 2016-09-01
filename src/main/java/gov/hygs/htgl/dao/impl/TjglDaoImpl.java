@@ -43,9 +43,9 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		}*/
 		if(dept != null){
 			sql.append("and a.dept_id in (select id_ from dept where dept_name like '%" + dept + "%') ");
-			if(user != null){
-				sql.append("and a.user_id in (select id_ from user where user_name like '%" + user + "%') ");
-			}
+		}
+		if(user != null){
+			sql.append("and a.user_id in (select id_ from user where user_name like '%" + user + "%') ");
 		}
 		if (begin != null) {
 			sql.append("and a.gx_date >= date_format('"

@@ -38,20 +38,20 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 				.getRole_Name();
 		StringBuilder sqlCount = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			sqlCount.append("select count(*) from zsk_jl where xybz='Y' ");
+			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sqlCount.append("select count(*) from zsk_jl where xybz='Y' and deptid="
+			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			sqlCount.append("select count(*) from zsk_jl where xybz='Y' and deptid="
+			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid()
-					+ " and user_id="
+					+ " and a.user_id="
 					+ userDetails.getId());
 		}
 		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),
@@ -66,22 +66,24 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 
-		StringBuilder sql = new StringBuilder("");
-		sql.append("select * from zsk_jl where xybz='Y' ");
+		StringBuilder sql = new StringBuilder(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.* ");
+			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
+			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
+			sql.append(" and a.xybz='Y' ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sql.append("and deptid=" + userDetails.getDeptid() + " ");
+			sql.append("and a.deptid=" + userDetails.getDeptid() + " ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			sql.append("and deptid=" + userDetails.getDeptid()
-					+ " and user_id=" + userDetails.getId() + " ");
+			sql.append("and a.deptid=" + userDetails.getDeptid()
+					+ " and a.user_id=" + userDetails.getId() + " ");
 		}
-		sql.append(" order by create_date desc limit " + begin + "," + offest);
+		sql.append(" order by a.create_date desc limit " + begin + "," + offest);
 		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),
 				new RowMapper<ZskJl>() {
 
@@ -90,6 +92,9 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 							throws SQLException {
 						// TODO Auto-generated method stub
 						ZskJl zszsk = new ZskJl();
+						zszsk.setZskly(result.getString("zsktitle"));
+						zszsk.setDept(result.getString("DEPT_NAME"));
+						zszsk.setUser(result.getString("USER_NAME"));
 						zszsk.setId(result.getString("id_"));
 						zszsk.setUserId(result.getInt("user_id"));
 						zszsk.setCreateDate(result.getDate("create_date"));
@@ -167,25 +172,25 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				// sql.append(" and deptid=" + deptid);
-				sql.append(" and deptid in (select id_ from dept where dept_name like '%"
+				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
 						+ dept + "%') ");
 			}
 		}
 		if (userId != null || user != null) {
 			// sql.append(" and user_id=" + userId);
-			sql.append(" and user_id in (select id_ from user where user_name like '%"
+			sql.append(" and a.user_id in (select id_ from user where user_name like '%"
 					+ user + "%') ");
 		}
 		if (begin != null) {
-			sql.append(" and create_date >= date_format('" + sdf.format(begin)
+			sql.append(" and a.create_date >= date_format('" + sdf.format(begin)
 					+ "','%Y%m%d')");
 		}
 		if (end != null) {
-			sql.append(" and create_date <= date_format('" + sdf.format(end)
+			sql.append(" and a.create_date <= date_format('" + sdf.format(end)
 					+ "','%Y%m%d')");
 		}
 		if (content != null) {
-			sql.append(" and zskly_id in "
+			sql.append(" and a.zskly_id in "
 					+ "(select id_ from zskly where title like '%" + content
 					+ "%' or content like '%" + content + "%') ");
 		}
@@ -294,11 +299,15 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 
 	private List<ZskJl> getYxzskInfo(int begin, int offest) {
 		//String sql = "select * from zsk_jl where yxbz='Y' and xybz='N' limit ?,?";
-		StringBuilder sql = new StringBuilder("select * from zsk_jl where yxbz='Y'");
+		//StringBuilder sql = new StringBuilder("select * from zsk_jl where yxbz='Y'");
+		StringBuffer sql = new StringBuffer(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.* ");
+			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
+			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
+			sql.append(" and a.yxbz='Y' ");
 		if (offest == -1 && begin == -1) {
-			sql.append(" and xybz='Y' ");
+			sql.append(" and a.xybz='Y' ");
 		} else {
-			sql.append(" and xybz='N' limit " + begin + "," + offest);
+			sql.append(" and a.xybz='N' limit " + begin + "," + offest);
 		}
 		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(), new RowMapper<ZskJl>() {
 
@@ -306,6 +315,9 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			public ZskJl mapRow(ResultSet result, int i) throws SQLException {
 				// TODO Auto-generated method stub
 				ZskJl yxzsk = new ZskJl();
+				yxzsk.setZskly(result.getString("zsktitle"));
+				yxzsk.setDept(result.getString("DEPT_NAME"));
+				yxzsk.setUser(result.getString("USER_NAME"));
 				yxzsk.setId(result.getString("id_"));
 				yxzsk.setUserId(result.getInt("user_id"));
 				yxzsk.setCreateDate(result.getDate("create_date"));
@@ -393,7 +405,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	@Override
 	public Collection<Zskly> getZsklyInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select * from zskly order by id_ desc";
+		String sql = "select id_,title,content,attachment from zskly order by id_ desc";
 		List<Zskly> list = this.jdbcTemplate.query(sql, new RowMapper<Zskly>(){
 
 			@Override

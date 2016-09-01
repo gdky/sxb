@@ -8,10 +8,10 @@ import gov.hygs.htgl.entity.SystemProps;
 import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.service.QzBmCdglService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -166,16 +166,25 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	}
 
 	@Override
-	public void saveMenuNodeInfo(List<Menu> menus) {
+	public String saveMenuNodeInfo(List<Menu> menus) {
 		// TODO Auto-generated method stub
-		for (Menu menu : menus) {
-			if (EntityUtils.getState(menu).equals(EntityState.NEW)) {
-				qzBmCdglDao.saveMenuNodeInfo(menu);
-			}/*
-			 * if (EntityUtils.getState(menu).equals(EntityState.MODIFIED)) {
-			 * qzBmCdglDao.updateMenuNodeInfo(menu); }
-			 */
+		String result = null;
+		if(menus != null){
+			for (Menu menu : menus) {
+				if (EntityUtils.getState(menu).equals(EntityState.NEW)) {
+					result = qzBmCdglDao.saveMenuNodeInfo(menu);
+				}
+				if (EntityUtils.getState(menu).equals(EntityState.MODIFIED)) {
+					result = qzBmCdglDao.updateMenuNodeInfo(menu);	
+				}
+				if(result != null){
+					return result;
+				}
+				this.saveMenuNodeInfo(menu.getMenus()); 
+			}
 		}
+		return null;
+		//return qzBmCdglDao.saveMenuNodeInfo(menus.get(0));
 	}
 
 	@Override
@@ -191,7 +200,7 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	}
 
 	@Override
-	public void updateNodeInfo(Record record) {
+	public String updateNodeInfo(Record record) {
 		// TODO Auto-generated method stub
 		if (record != null) {
 			Menu menu = new Menu();
@@ -203,9 +212,10 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 				menu.setParent_Id((Integer) record.get("parent_id"));
 				menu.setUrl((String) record.get("url"));
 				menu.setYxbz((String) record.get("yxbz"));
-				qzBmCdglDao.updateMenuNodeInfo(menu);
+				return qzBmCdglDao.updateMenuNodeInfo(menu);
 			} else if (obj instanceof List) {
 				List list = (List) obj;
+				List<String> message = new ArrayList<String>();
 				for (int i = 0; i < list.size(); i++) {
 					record = (Record) list.get(i);
 					menu.setId_((Integer) record.get("id_"));
@@ -213,10 +223,20 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 					menu.setParent_Id((Integer) record.get("parent_id"));
 					menu.setUrl((String) record.get("url"));
 					menu.setYxbz((String) record.get("yxbz"));
-					qzBmCdglDao.updateMenuNodeInfo(menu);
+					message.add(qzBmCdglDao.updateMenuNodeInfo(menu));
 				}
+				return message.size()>1?message.get(0):null;
+			} else if(obj instanceof Menu){
+				menu = (Menu) obj;
+				//menu.setId_((Integer) record.get("id_"));
+				//menu.setMenu_Name((String) record.get("menu_Name"));
+				//menu.setParent_Id((Integer) record.get("parent_id"));
+				//menu.setUrl((String) record.get("url"));
+				//menu.setYxbz((String) record.get("yxbz"));
+				return qzBmCdglDao.updateMenuNodeInfo(menu);
 			}
 		}
+		return null;
 	}
 
 	@Override

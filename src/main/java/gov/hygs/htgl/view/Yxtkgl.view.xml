@@ -11,19 +11,15 @@
       <PropertyDef name="flId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="tkfl">
-        <Property name="parameter">$${this.flId}</Property>
-        <Property name="dataProvider">yxtkglController#getTkflInfoByflId</Property>
-        <Property name="dataType">[tkflType]</Property>
-      </Reference>
+      <PropertyDef name="tkfl">
+        <Property name="label">所属分类</Property>
+      </PropertyDef>
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
+      <PropertyDef name="user">
+        <Property name="label">录入人</Property>
+      </PropertyDef>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
         <Property name="label">创建日期</Property>
@@ -40,11 +36,9 @@
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
         <Property name="label">提干内容</Property>
@@ -64,11 +58,11 @@
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">基础型</Property>
+                <Property name="value">税收业务类基础题</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">进阶型</Property>
+                <Property name="value">税收业务类进阶题</Property>
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
@@ -85,11 +79,9 @@
       <PropertyDef name="tmlyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="tmly">
-        <Property name="parameter">$${this.tmlyId}</Property>
-        <Property name="dataProvider">yxtkglController#getTmlyInfoByTmlyId</Property>
-        <Property name="dataType">[tmlyType]</Property>
-      </Reference>
+      <PropertyDef name="tmly">
+        <Property name="label">题目来源</Property>
+      </PropertyDef>
       <PropertyDef name="mode">
         <ClientEvent name="onSet">view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
 var yxtk = view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;);&#xD;
@@ -411,19 +403,15 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="flId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="tkfl">
-        <Property name="parameter">$${this.flId}</Property>
-        <Property name="dataProvider">yxtkglController#getTkflInfoByflId</Property>
-        <Property name="dataType">[tkflType]</Property>
-      </Reference>
+      <PropertyDef name="tkfl">
+        <Property name="label">所属分类</Property>
+      </PropertyDef>
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
+      <PropertyDef name="user">
+        <Property name="label">录入人</Property>
+      </PropertyDef>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
         <Property name="label">创建时间</Property>
@@ -437,11 +425,9 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
         <Property name="label">提干内容</Property>
@@ -475,11 +461,9 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="tmlyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="tmly">
-        <Property name="parameter">$${this.tmlyId}</Property>
-        <Property name="dataProvider">yxtkglController#getTmlyInfoByTmlyId</Property>
-        <Property name="dataType">[tmlyType]</Property>
-      </Reference>
+      <PropertyDef name="tmly">
+        <Property name="label">题目来源</Property>
+      </PropertyDef>
       <PropertyDef name="mode">
         <Property></Property>
         <Property name="label">选择类型</Property>
@@ -566,6 +550,7 @@ if(datas.getLast() != null){&#xD;
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsTmly">
         <Property name="dataType">[tmlyType]</Property>
@@ -721,8 +706,8 @@ if(tmly != undefined){&#xD;
       <CustomDropDown id="tkflDropDown">
         <Property name="height">500</Property>
         <DataTree id="tkfltree">
-          <ClientEvent name="onDataRowClick">var tkfl = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;);&#xD;
-var user = tkfl.current;&#xD;
+          <ClientEvent name="onDataRowClick">//var tkfl = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;);&#xD;
+//var user = tkfl.current;&#xD;
 var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var tkflId = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
@@ -945,9 +930,8 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="dataPath">#.tkfl</Property>
-                  <Property name="name">tkmc</Property>
-                  <Property name="property">tkmc</Property>
+                  <Property name="name">tkfl</Property>
+                  <Property name="property">tkfl</Property>
                   <Property name="trigger">tkflDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
@@ -962,9 +946,8 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="dataPath">#.tmly</Property>
-                  <Property name="name">title</Property>
-                  <Property name="property">title</Property>
+                  <Property name="name">tmly</Property>
+                  <Property name="property">tmly</Property>
                   <Property name="trigger">tmlyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
@@ -1038,7 +1021,7 @@ if(mode == 0){&#xD;
 	da.each(function(d){&#xD;
 		d.remove();&#xD;
 	});&#xD;
-	da.insert({//id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
+	da.insert({id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
 			xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
 	&#xD;
 }else if(mode == 2){&#xD;
@@ -1135,9 +1118,8 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="dataPath">#.tkfl</Property>
-                  <Property name="name">tkmc</Property>
-                  <Property name="property">tkmc</Property>
+                  <Property name="name">tkfl</Property>
+                  <Property name="property">tkfl</Property>
                   <Property name="trigger">tkflDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
@@ -1152,9 +1134,8 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="dataPath">#.tmly</Property>
-                  <Property name="name">title</Property>
-                  <Property name="property">title</Property>
+                  <Property name="name">tmly</Property>
+                  <Property name="property">tmly</Property>
                   <Property name="trigger">tmlyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
@@ -1278,7 +1259,7 @@ view.get(&quot;#yxtkGrid&quot;).unselectAll();</ClientEvent>
                 <Property name="selectionMode">multiRows</Property>
                 <RowSelectorColumn/>
                 <DataColumn name="tkfl">
-                  <Property name="property">tkfl.tkmc</Property>
+                  <Property name="property">tkfl</Property>
                 </DataColumn>
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
@@ -1293,16 +1274,16 @@ view.get(&quot;#yxtkGrid&quot;).unselectAll();</ClientEvent>
                   <Property name="property">tmnd</Property>
                 </DataColumn>
                 <DataColumn name="tmly">
-                  <Property name="property">tmly.title</Property>
+                  <Property name="property">tmly</Property>
                 </DataColumn>
                 <DataColumn name="mode">
                   <Property name="property">mode</Property>
                 </DataColumn>
                 <DataColumn name="user">
-                  <Property name="property">user.user_Name</Property>
+                  <Property name="property">user</Property>
                 </DataColumn>
                 <DataColumn name="dept">
-                  <Property name="property">dept.dept_name</Property>
+                  <Property name="property">dept</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -1554,8 +1535,8 @@ if(yxtks.current == null){&#xD;
 */&#xD;
 //view.get(&quot;#dsYxtk&quot;).getData(&quot;#.dept&quot;).insert();&#xD;
 view.get(&quot;#dsYxtk&quot;).insert();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tmly&quot;).insert();&#xD;
-view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).insert();&#xD;
+//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tmly&quot;).insert();&#xD;
+//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkfl&quot;).insert();&#xD;
 view.get(&quot;#addyxtkDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">增加</Property>
@@ -1781,7 +1762,7 @@ if(mode ==1 || mode == 2){&#xD;
             <Property name="readOnly">true</Property>
             <RowNumColumn/>
             <DataColumn name="tkfl">
-              <Property name="property">tkfl.tkmc</Property>
+              <Property name="property">tkfl</Property>
             </DataColumn>
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
@@ -1796,16 +1777,16 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="property">tmnd</Property>
             </DataColumn>
             <DataColumn name="tmly">
-              <Property name="property">tmly.title</Property>
+              <Property name="property">tmly</Property>
             </DataColumn>
             <DataColumn name="mode">
               <Property name="property">mode</Property>
             </DataColumn>
             <DataColumn name="user">
-              <Property name="property">user.user_Name</Property>
+              <Property name="property">user</Property>
             </DataColumn>
             <DataColumn name="dept">
-              <Property name="property">dept.dept_name</Property>
+              <Property name="property">dept</Property>
             </DataColumn>
             <DataColumn name="xybz">
               <Property name="property">xybz</Property>

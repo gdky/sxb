@@ -46,11 +46,44 @@ public class ZskJl implements Serializable {
 
 	/** 选用标志. */
 	private String xybz;
+	
+	/** 来源. */
+	private String zskly;
+
+	/** 部门名称. */
+	private String dept;
+	
+	/** 录入人. */
+	private String user;
 
 	/**
 	 * Constructor.
 	 */
 	public ZskJl() {
+	}
+
+	public String getZskly() {
+		return zskly;
+	}
+
+	public void setZskly(String zskly) {
+		this.zskly = zskly;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 
 	/**
