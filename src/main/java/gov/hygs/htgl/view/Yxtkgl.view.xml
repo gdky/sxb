@@ -1021,7 +1021,7 @@ if(mode == 0){&#xD;
 	da.each(function(d){&#xD;
 		d.remove();&#xD;
 	});&#xD;
-	da.insert({//id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
+	da.insert({id:entity.get(&quot;id&quot;),tkId:entity.get(&quot;tkId&quot;),&#xD;
 			xzKey:entity.get(&quot;xzKey&quot;),content:entity.get(&quot;content&quot;)});&#xD;
 	&#xD;
 }else if(mode == 2){&#xD;
