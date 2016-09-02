@@ -1170,7 +1170,7 @@ if(data != undefined){&#xD;
       <Property name="service">zstkglController#updateKstsjlInfo</Property>
     </AjaxAction>
     <CustomDropDown id="groupDropDown">
-      <DataTree>
+      <DataTreeGrid>
         <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var id = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
@@ -1179,16 +1179,24 @@ dropDown.close(&#xD;
 );&#xD;
 view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
         <Property name="dataSet">dsGroupt</Property>
+        <Property name="readOnly">true</Property>
+        <Property name="treeColumn">groupName</Property>
         <Property name="height">200</Property>
         <BindingConfigs>
           <BindingConfig>
             <Property name="childrenProperty">child</Property>
-            <Property name="recursive">true</Property>
             <Property name="name">groupName</Property>
             <Property name="labelProperty">groupName</Property>
+            <Property name="recursive">true</Property>
           </BindingConfig>
         </BindingConfigs>
-      </DataTree>
+        <Columns>
+          <DataColumn>
+            <Property name="name">groupName</Property>
+            <Editor/>
+          </DataColumn>
+        </Columns>
+      </DataTreeGrid>
     </CustomDropDown>
   </View>
 </ViewConfig>
