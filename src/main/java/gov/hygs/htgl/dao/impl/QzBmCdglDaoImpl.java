@@ -277,11 +277,27 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
 	public void getUserInfo(Page page, Map<String, Object> param) {
-		String sqlCount = "select count(*) from user";
-		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
+		//String sqlCount = "select count(*) from user";
+		StringBuffer sqlCount = new StringBuffer("select count(*) from user where 1=1 ");
+		//String sql = "select * from user limit ?,? ";
+		StringBuffer sql = new StringBuffer("select * from user where 1=1 ");
+		if(param != null){
+			Integer deptid = (Integer) param.get("deptid");
+			String username = (String) param.get("username");
+			if(deptid != null){
+				sqlCount.append(" and deptid="+deptid+" ");
+				sql.append(" and deptid="+deptid+" ");
+			}
+			if(username != null){
+				sqlCount.append(" and user_name like '%"+username+"%' ");
+				sql.append(" and user_name like '%"+username+"%' ");
+			}
+		}
+		
+		sql.append(" limit ?,? ");
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),
 				Integer.class);
-		String sql = "select * from user limit ?,? ";
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString(),
 				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
 						page.getPageSize() });
 		page.setEntityCount(entityCount);
