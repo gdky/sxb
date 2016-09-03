@@ -371,8 +371,13 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// yxtk.getId(), value, 104, yxtk.getCreateDate() };
 		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-				yxtk.getId(), 1, 1, yxtk.getCreateDate() };
+				yxtk.getId(), this.getGxjlValueByKey("GxzA"), 1, yxtk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
+	}
+	
+	private String getGxjlValueByKey(String key){
+		String sql = "select value from system_props where key_=?";
+		return this.jdbcTemplate.queryForObject(sql, new Object[]{key}, String.class);
 	}
 
 	@Override
@@ -570,6 +575,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		List<Map<String, Object>> list = null;
 		List<Object[]> batchArgs = new ArrayList<Object[]>();
 		List<Object[]> gxjlBatchArgs = new ArrayList<Object[]>();
+		String gxz = this.getGxjlValueByKey("GxzA");
 		for (Tktm yxtk : tktms) {
 			if (chackTmnd.get(yxtk.getTmnd()) == null) {
 				list = this.getSysPropValueByTmnd(yxtk);
@@ -581,7 +587,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
 					yxtk.getDrbz() });
 			gxjlBatchArgs.add(new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-					yxtk.getId(), 1, 1, yxtk.getCreateDate()});	
+					yxtk.getId(), gxz, 1, yxtk.getCreateDate()});	
 
 		}
 		

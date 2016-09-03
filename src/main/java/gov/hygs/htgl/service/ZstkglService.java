@@ -43,4 +43,6 @@ public interface ZstkglService {
 
 	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param);
 
+	public Map<String, Object> getGroupByExamId(String param);
+
 }
