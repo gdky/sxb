@@ -78,6 +78,8 @@ public class ZstkglServiceImpl implements ZstkglService {
 					zstk.setId(tkid);
 					zstk.setDrbz("N");
 					zstkglDao.addZstk(zstk);
+					zstk.setContent(getUUID());
+					zstkglDao.addGxJl(zstk);
 				} else {
 					// zstkglDao.addYxtkToZstk(zstk);
 					zstkglDao.updateZstk(zstk);
@@ -207,5 +209,11 @@ public class ZstkglServiceImpl implements ZstkglService {
 	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		zstkglDao.getExamDetailInfo(page,param);
+	}
+
+	@Override
+	public Map<String, Object> getGroupByExamId(String param) {
+		// TODO Auto-generated method stub
+		return zstkglDao.getGroupByExamId(param);
 	}
 }

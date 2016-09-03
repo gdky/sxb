@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -299,6 +300,15 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
+	public void addGxJl(Tktm zstk) {
+		// TODO Auto-generated method stub
+		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		Object[] objs = { zstk.getContent(), zstk.getDeptid(),
+				zstk.getUserId(), zstk.getId(), this.getGxjlValueByKey("GxzA"), 1, zstk.getCreateDate() };
+		this.jdbcTemplate.update(sql, objs);
+	}
+
+	@Override
 	public void addGrDeptGxJl(Tktm zstk) {
 		// TODO Auto-generated method stub
 		// String sql = "select value from system_props where id_=105";
@@ -309,8 +319,13 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// zstk.getCreateDate() };
 		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { zstk.getContent(), zstk.getDeptid(),
-				zstk.getUserId(), zstk.getId(), 3, 2, zstk.getCreateDate() };
+				zstk.getUserId(), zstk.getId(), this.getGxjlValueByKey("GxzB"), 2, zstk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
+	}
+	
+	private String getGxjlValueByKey(String key){
+		String sql = "select value from system_props where key_=?";
+		return this.jdbcTemplate.queryForObject(sql, new Object[]{key}, String.class);
 	}
 
 	@Override
@@ -488,7 +503,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// TODO Auto-generated method stub
 		List<String> ids = (List<String>) param.get("id");
 		if (ids.size() > 0) {
-			Integer groupId = (Integer) param.get("groupId");
+			List<String> groupId = (List<String>) param.get("groupId");
 			String ms = (String) param.get("ms");
 			Date begin = (Date) param.get("begin");
 			Date end = (Date) param.get("end");
@@ -511,8 +526,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 					new Object[] { null, begin, end, title, tpye,
 							userDetails.getId() }, new String[] { "id_" })
 					.intValue();
-			sql = "insert into exam_tsqz value(?,?,?)";
-			this.jdbcTemplate.update(sql, new Object[] { null, groupId, jlId });
+			for(int j = 0; j < groupId.size(); j++){
+				sql = "insert into exam_tsqz value(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, groupId.get(j), jlId });
+			}
 			for (int i = 0; i < ids.size(); i++) {
 				sql = "insert into exam_detail values(?,?,?,?)";
 				this.jdbcTemplate.update(sql, new Object[] { null, i + 1, jlId,
@@ -791,6 +808,26 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				});
 		return list;
 	}
+
+	@Override
+	public Map<String, Object> getGroupByExamId(String param) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = null;
+		if(param != null){
+			String sql = "select g.group_name from exam_tsqz qz, exam e, grouptable g where e.id_=qz.exam_id and qz.group_id=g.id_ and e.id_=?";
+			List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{ param });
+			if(list != null){
+				map = new HashMap<String, Object>();
+				String groupnames = "";
+				for(Map<String,Object> groupname : list){
+					groupnames += (String)groupname.get("group_name")+",";
+				}
+				map.put("groupName", groupnames.substring(0, groupnames.length()-1));
+			}
+		}
+		return map;
+	}
+
 	
 	
 }
