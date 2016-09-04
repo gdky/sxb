@@ -102,4 +102,9 @@ public class ZstkglController {
 			zstkglService.getExamDetailInfo(page,param);
 		}
 	}
+	
+	@DataProvider
+	public Map<String,Object> getGroupByExamId(String param){
+		return zstkglService.getGroupByExamId(param);
+	}
 }
