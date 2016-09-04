@@ -43,11 +43,11 @@ public interface QzBmCdglService {
 
 	public void getCurrentMenuPageById(Page<Menu> page, String id_);
 
-	public void saveMenuNodeInfo(List<Menu> menus);
+	public String saveMenuNodeInfo(List<Menu> menus);
 
 	public void deleteMenuNodeInfo(String id);
 
-	public void updateNodeInfo(Record record);
+	public String updateNodeInfo(Record record);
 
 	public String checkMenuName(String param);
 

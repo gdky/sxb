@@ -14,12 +14,6 @@
       <PropertyDef name="menu_Name">
         <Property></Property>
         <Property name="label">菜单名称</Property>
-        <Validator type="ajax">
-          <Property name="async">false</Property>
-          <Property name="executingMessage">正在检查菜单名...</Property>
-          <Property name="service">qzBmCdglController#checkMenuName</Property>
-          <Property name="revalidateOldValue">false</Property>
-        </Validator>
         <Validator name="validator1" type="length">
           <Property name="minLength">1</Property>
           <Property name="resultMessage">菜单名称不能为空，请输入内容</Property>
@@ -73,37 +67,40 @@
                     <Button>
                       <ClientEvent name="onClick">var entity = view.get(&quot;#addNodeForm&quot;).get(&quot;entity&quot;);&#xD;
 &#xD;
-view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#addNode&quot;).close();&#xD;
-	&#xD;
-	if(entity==undefined || !entity.get(&quot;parent_Id&quot;)){&#xD;
-		view.get(&quot;#menuDataSet&quot;).flush();&#xD;
-	}else{&#xD;
-		var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
-		childs.each(function(entity){&#xD;
-				&#xD;
-		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
-			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
-			var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
-			entity.set({&#xD;
-				id_:newNode.get(&quot;id_&quot;),&#xD;
-				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
-				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
-				url:newNode.get(&quot;url&quot;),&#xD;
-				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
-				});&#xD;
-			}&#xD;
-		});&#xD;
-		&#xD;
-		var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
-			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
-				id_:newNode.get(&quot;id_&quot;),&#xD;
-				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
-				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
-				url:newNode.get(&quot;url&quot;),&#xD;
-				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+view.get(&quot;#addNodeAction&quot;).execute(function(returnValue){&#xD;
+	if(returnValue == null){&#xD;
+		view.get(&quot;#addNode&quot;).close();&#xD;
+		if(entity==undefined || !entity.get(&quot;parent_Id&quot;)){&#xD;
+			view.get(&quot;#menuDataSet&quot;).flush();&#xD;
+		}else{&#xD;
+			var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+			childs.each(function(entity){&#xD;
+					&#xD;
+			if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+				view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+				var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+				entity.set({&#xD;
+					id_:newNode.get(&quot;id_&quot;),&#xD;
+					menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+					parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+					url:newNode.get(&quot;url&quot;),&#xD;
+					yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+					});&#xD;
+				}&#xD;
 			});&#xD;
-		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+			&#xD;
+			var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+				view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+					id_:newNode.get(&quot;id_&quot;),&#xD;
+					menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+					parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+					url:newNode.get(&quot;url&quot;),&#xD;
+					yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+				});&#xD;
+			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+		}&#xD;
+	}else{&#xD;
+		throw new dorado.Exception(returnValue);&#xD;
 	}&#xD;
 });&#xD;
 </ClientEvent>
@@ -165,34 +162,38 @@ if(node != undefined){&#xD;
                     <Button>
                       <ClientEvent name="onClick">var entity = view.get(&quot;#addChildForm&quot;).get(&quot;entity&quot;);&#xD;
 	&#xD;
-view.get(&quot;#addNodeAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#addChild&quot;).close();&#xD;
-&#xD;
-	var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
-	childs.each(function(entity){&#xD;
-		if(undefined == entity.get(&quot;id_&quot;)){&#xD;
-			view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
-			var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
-			entity.set({&#xD;
-				id_:newNode.get(&quot;id_&quot;),&#xD;
-				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
-				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
-				url:newNode.get(&quot;url&quot;),&#xD;
-				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
-				});&#xD;
-		}&#xD;
-	});&#xD;
-	&#xD;
-	&#xD;
-	var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
-	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
-				id_:newNode.get(&quot;id_&quot;),&#xD;
-				menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
-				parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
-				url:newNode.get(&quot;url&quot;),&#xD;
-				yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+view.get(&quot;#addNodeAction&quot;).execute(function(returnValue){&#xD;
+	if(returnValue == null){&#xD;
+		view.get(&quot;#addChild&quot;).close();&#xD;
+		var childs = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;).get(&quot;child&quot;);&#xD;
+		childs.each(function(entity){&#xD;
+			if(undefined == entity.get(&quot;id_&quot;)){&#xD;
+				view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flush();&#xD;
+				var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+				entity.set({&#xD;
+					id_:newNode.get(&quot;id_&quot;),&#xD;
+					menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+					parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+					url:newNode.get(&quot;url&quot;),&#xD;
+					yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+					});&#xD;
+			}&#xD;
 		});&#xD;
-	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+		&#xD;
+		&#xD;
+		var newNode = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).getLast();&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).insert({&#xD;
+					id_:newNode.get(&quot;id_&quot;),&#xD;
+					menu_Name:newNode.get(&quot;menu_Name&quot;),&#xD;
+					parent_Id:newNode.get(&quot;parent_Id&quot;),&#xD;
+					url:newNode.get(&quot;url&quot;),&#xD;
+					yxbz:newNode.get(&quot;yxbz&quot;)&#xD;
+			});&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+		&#xD;
+	}else{&#xD;
+		throw new dorado.Exception(returnValue);&#xD;
+	}&#xD;
 });&#xD;
 </ClientEvent>
                       <Property name="caption">提交</Property>
@@ -244,25 +245,52 @@ child.each(function(entity){&#xD;
                   <Property name="caption">修改当前菜单信息</Property>
                   <Buttons>
                     <Button>
-                      <ClientEvent name="onClick">var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+                      <ClientEvent name="onClick">/*&#xD;
+var menu = view.get(&quot;#currentForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
 view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
-view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+view.get(&quot;#updateAction&quot;).execute(function(returnValue){&#xD;
+	&#xD;
+*/	&#xD;
+	&#xD;
+//var menu = view.get(&quot;#childForm&quot;).get(&quot;entity&quot;);&#xD;
+&#xD;
+var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+view.get(&quot;#updateChildAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
+view.get(&quot;#updateChildAction&quot;).execute(function(returnValue){&#xD;
+&#xD;
 	//view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-	view.get(&quot;#updateDialog&quot;).close();&#xD;
-});</ClientEvent>
+	if(returnValue == null){&#xD;
+		view.get(&quot;#updateDialog&quot;).close();&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+	}else{&#xD;
+		throw new dorado.Exception(returnValue);&#xD;
+	}&#xD;
+});&#xD;
+</ClientEvent>
                       <Property name="caption">提交</Property>
                       <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
                     </Button>
                     <Button>
-                      <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).close();&#xD;
-view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&#xD;
-</ClientEvent>
+                      <ClientEvent name="onClick">view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&#xD;
+view.get(&quot;#updateDialog&quot;).close();&#xD;
+/*&#xD;
+var menu = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
+var childGrid = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.#&quot;).parent.parent.get(&quot;childDataGrid&quot;);&#xD;
+var oldEntity;&#xD;
+childGrid.each(function(entity){&#xD;
+	if(menu.get(&quot;id_&quot;) == entity.get(&quot;id_&quot;)){&#xD;
+		oldEntity = entity.get(&quot;menu_Name&quot;);&#xD;
+	}&#xD;
+	&#xD;
+});&#xD;
+*/</ClientEvent>
                       <Property name="caption">取消</Property>
                       <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
                     </Button>
                   </Buttons>
                   <Children>
-                    <AutoForm>
+                    <AutoForm id="currentForm">
                       <Property name="dataSet">menuDataSet</Property>
                       <Property name="dataPath">!current_Node</Property>
                       <Property name="readOnly">false</Property>
@@ -295,17 +323,23 @@ view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).cancel();&
                     <Button>
                       <ClientEvent name="onClick">var menu = view.get(&quot;#childForm&quot;).get(&quot;entity&quot;);&#xD;
 view.get(&quot;#updateChildAction&quot;).set(&quot;parameter&quot;,{&quot;menus&quot;:menu});&#xD;
-view.get(&quot;#updateChildAction&quot;).execute(function(){&#xD;
-	//view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-	view.get(&quot;#updateChildDialog&quot;).close();&#xD;
-	view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
-	var entitys =  view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
-	entitys.each(function(entity){&#xD;
-		if(entity.get(&quot;id_&quot;) == menu.get(&quot;id_&quot;)){&#xD;
-			entity.set({menu_Name:menu.get(&quot;menu_Name&quot;),&#xD;
-						url:menu.get(&quot;url&quot;)});&#xD;
-		}&#xD;
-	});&#xD;
+view.get(&quot;#updateChildAction&quot;).execute(function(returnValue){&#xD;
+	if(returnValue == null){&#xD;
+		//view.get(&quot;#currentNodeForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.get(&quot;#updateChildDialog&quot;).close();&#xD;
+		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
+		var entitys =  view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;);&#xD;
+		entitys.each(function(entity){&#xD;
+			if(entity.get(&quot;id_&quot;) == menu.get(&quot;id_&quot;)){&#xD;
+				entity.set({menu_Name:menu.get(&quot;menu_Name&quot;),&#xD;
+							url:menu.get(&quot;url&quot;)});&#xD;
+				entity.setState(dorado.Entity.STATE_NONE);&#xD;
+			}&#xD;
+		});&#xD;
+		//view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.child&quot;).flushAsync();&#xD;
+	}else{&#xD;
+		throw new dorado.Exception(returnValue);&#xD;
+	}&#xD;
 });&#xD;
 </ClientEvent>
                       <Property name="caption">提交</Property>
@@ -488,7 +522,11 @@ dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,funct
 	view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,id);&#xD;
 	view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
 		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node.childDataGrid&quot;).flush();&#xD;
-		view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).parent.parent.get(&quot;childDataGrid&quot;).flush();&#xD;
+		//view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).parent.parent.get(&quot;childDataGrid&quot;).flush();&#xD;
+		var e = view.get(&quot;#menuDataSet&quot;).getData(&quot;!current_Node&quot;).parent.parent;&#xD;
+		if(e != undefined){&#xD;
+			e.get(&quot;childDataGrid&quot;).flush();&#xD;
+		}&#xD;
 	});&#xD;
 });&#xD;
 &#xD;

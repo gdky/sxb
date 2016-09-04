@@ -36,19 +36,19 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				.getRole_Name();
 		StringBuilder count = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 瓒呯骇鐢ㄦ埛
-			count.append("select count(*) from tktm where xybz='Y'");
+			count.append("select count(*) from tktm a where a.xybz='Y'");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
-			count.append("select count(*) from tktm where xybz='Y' and deptid="
+			count.append("select count(*) from tktm a where a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
 		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
-			count.append("select count(*) from tktm where xybz='Y' and deptid="
-					+ userDetails.getDeptid() + " and user_id="
+			count.append("select count(*) from tktm a where a.xybz='Y' and a.deptid="
+					+ userDetails.getDeptid() + " and a.user_id="
 					+ userDetails.getId());
 		}
 		int entityCount = this.jdbcTemplate.queryForObject(count.toString(),
@@ -62,24 +62,32 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	private List<Tktm> getZstkInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
-		StringBuilder sql = new StringBuilder("");
+		StringBuilder sql = new StringBuilder(" select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.* ");
+			sql.append(" from tktm a,tkfl b, USER c,dept d,tmly e ");
+			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ ");
 		if ("SuAdmin".equals(roleName)) {// 瓒呯骇绠＄悊鍛�
-			sql.append("select * from tktm where xybz='Y' ");
+			//sql.append("select * from tktm where xybz='Y' ");
+			sql.append(" and a.xybz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
-			sql.append("select * from tktm where xybz='Y' and deptid="
-					+ userDetails.getDeptid() + " ");
+			//sql.append("select * from tktm where xybz='Y' and deptid="
+				//	+ userDetails.getDeptid() + " ");
+			sql.append(" and a.xybz='Y' and a.deptid="
+				+ userDetails.getDeptid() + " ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
-			sql.append("select * from tktm where xybz='Y' and deptid="
-					+ userDetails.getDeptid() + " and user_id="
+			//sql.append("select * from tktm where xybz='Y' and deptid="
+				//	+ userDetails.getDeptid() + " and user_id="
+				//	+ userDetails.getId() + " ");
+			sql.append(" a.xybz='Y' and a.deptid="
+				+ userDetails.getDeptid() + " and a.user_id="
 					+ userDetails.getId() + " ");
 		}
-		sql.append(" order by create_date desc limit " + begin + "," + offest);
+		sql.append(" order by a.create_date desc limit " + begin + "," + offest);
 		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
 				new RowMapper<Tktm>() {
 
@@ -88,6 +96,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 							throws SQLException {
 						// TODO Auto-generated method stub
 						Tktm zstk = new Tktm();
+						zstk.setUser(result.getString("USER_NAME"));
+						zstk.setDept(result.getString("DEPT_NAME"));
+						zstk.setTmly(result.getString("TITLE"));
+						zstk.setTkfl(result.getString("TKMC"));
 						zstk.setId(result.getString("id_"));
 						zstk.setFlId(result.getInt("fl_id"));
 						zstk.setUserId(result.getInt("user_id"));
@@ -170,34 +182,34 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				// sql.append(" and deptid=" + deptid);
-				sql.append(" and deptid in (select id_ from dept where dept_name like '%"
+				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
 						+ dept + "%') ");
 			}
 		}
 		if (userId != null || user != null) {
 			// sql.append(" and user_id=" + userId);
-			sql.append(" and user_id in (select id_ from user where user_name like '%"
+			sql.append(" and a.user_id in (select id_ from user where user_name like '%"
 					+ user + "%') ");
 		}
 		if (begin != null) {
-			sql.append(" and create_date >= date_format('" + sdf.format(begin)
+			sql.append(" and a.create_date >= date_format('" + sdf.format(begin)
 					+ "','%Y%m%d')");
 		}
 		if (end != null) {
-			sql.append(" and create_date <= date_format('" + sdf.format(end)
+			sql.append(" and a.create_date <= date_format('" + sdf.format(end)
 					+ "','%Y%m%d')");
 		}
 		if (tkfl != null) {
-			sql.append(" and fl_id in (select id_ from tkfl where tkmc like '%"
+			sql.append(" and a.fl_id in (select id_ from tkfl where tkmc like '%"
 					+ tkfl + "%') ");
 		}
 		if (content != null) {
-			sql.append(" and tmly_id in "
+			sql.append(" and a.tmly_id in "
 					+ "(select id_ from tmly where title like '%" + content
 					+ "%' or content like '%" + content + "%') ");
 		}
 		if (tktmcontent != null) {
-			sql.append(" and content like '%" + tktmcontent + "%' ");
+			sql.append(" and a.content like '%" + tktmcontent + "%' ");
 		}
 		// return null;
 	}
@@ -404,12 +416,14 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	private List<Tktm> getYxtkInfo(int begin, int offest) {
-		StringBuilder sql = new StringBuilder(
-				"select * from tktm where yxbz='Y'");
+		StringBuilder sql = new StringBuilder(" select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.* ");
+			sql.append(" from tktm a,tkfl b, USER c,dept d,tmly e ");
+			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ ");
+			sql.append(" and a.yxbz='Y' ");
 		if (offest == -1 && begin == -1) {
-			sql.append(" and xybz='Y' ");
+			sql.append(" and a.xybz='Y' ");
 		} else {
-			sql.append(" and xybz='N' limit " + begin + "," + offest);
+			sql.append(" and a.xybz='N' limit " + begin + "," + offest);
 		}
 		List<Tktm> list = this.jdbcTemplate.query(sql.toString(),
 				new RowMapper<Tktm>() {
@@ -419,6 +433,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 							throws SQLException {
 						// TODO Auto-generated method stub
 						Tktm yxtk = new Tktm();
+						yxtk.setTkfl(result.getString("TKMC"));
+						yxtk.setTmly(result.getString("TITLE"));
+						yxtk.setUser(result.getString("USER_NAME"));
+						yxtk.setDept(result.getString("DEPT_NAME"));
 						yxtk.setId(result.getString("id_"));
 						yxtk.setFlId(result.getInt("fl_id"));
 						yxtk.setUserId(result.getInt("user_id"));

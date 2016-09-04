@@ -23,11 +23,6 @@
         <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
         <Property name="parameter">$${this.id_}</Property>
       </Reference>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.id_}</Property>
-        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
-      </Reference>
     </DataType>
     <DataType name="userType">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>
@@ -61,6 +56,9 @@
         <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
 	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
 	view.get(&quot;#dsScore&quot;).getData().clear();&#xD;
+	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,user:null,begin:null,end:null&#xD;
+	});&#xD;
 }&#xD;
 if(arg.value &lt; 7){&#xD;
 	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,true);&#xD;
@@ -223,6 +221,7 @@ if(arg.value &lt; 7){&#xD;
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsResult">
         <Property name="dataType">[resultType]</Property>

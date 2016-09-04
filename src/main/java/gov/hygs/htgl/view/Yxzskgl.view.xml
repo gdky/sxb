@@ -11,11 +11,9 @@
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
+      <PropertyDef name="user">
+        <Property name="label">录入人</Property>
+      </PropertyDef>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
         <Property name="label">创建时间</Property>
@@ -29,11 +27,9 @@
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
         <Property name="label">内容</Property>
@@ -41,11 +37,9 @@
       <PropertyDef name="zsklyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="zskly">
-        <Property name="dataType">[zsklyType]</Property>
-        <Property name="parameter">$${this.zsklyId}</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
-      </Reference>
+      <PropertyDef name="zskly">
+        <Property name="label">来源</Property>
+      </PropertyDef>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">知识库题目</Property>
@@ -108,11 +102,6 @@
         <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
         <Property name="parameter">$${this.id_}</Property>
       </Reference>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.id_}</Property>
-        <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
-      </Reference>
     </DataType>
     <DataType name="userType">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>
@@ -153,11 +142,9 @@
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="user">
-        <Property name="dataType">[userType]</Property>
-        <Property name="parameter">$${this.userId}</Property>
-        <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
-      </Reference>
+      <PropertyDef name="user">
+        <Property name="label">录入人</Property>
+      </PropertyDef>
       <PropertyDef name="createDate">
         <Property name="dataType">Date</Property>
         <Property name="label">创建时间</Property>
@@ -171,11 +158,9 @@
       <PropertyDef name="deptid">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="dept">
-        <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">yxtkglController#getDeptInfoByDeptId</Property>
-        <Property name="parameter">$${this.deptid}</Property>
-      </Reference>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
         <Property name="label">内容</Property>
@@ -183,11 +168,9 @@
       <PropertyDef name="zsklyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <Reference name="zskly">
-        <Property name="dataType">[zsklyType]</Property>
-        <Property name="parameter">$${this.zsklyId}</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
-      </Reference>
+      <PropertyDef name="zskly">
+        <Property name="label">来源</Property>
+      </PropertyDef>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">知识库题目</Property>
@@ -257,6 +240,7 @@
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsUserName">
         <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
@@ -401,9 +385,8 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
-                  <Property name="name">title</Property>
-                  <Property name="property">title</Property>
-                  <Property name="dataPath">#.zskly</Property>
+                  <Property name="name">zskly</Property>
+                  <Property name="property">zskly</Property>
                   <Property name="trigger">dsZsklyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
@@ -477,13 +460,13 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
                   <Property name="property">content</Property>
                 </DataColumn>
                 <DataColumn name="zskly">
-                  <Property name="property">zskly.title</Property>
+                  <Property name="property">zskly</Property>
                 </DataColumn>
                 <DataColumn name="user">
-                  <Property name="property">user.user_Name</Property>
+                  <Property name="property">user</Property>
                 </DataColumn>
                 <DataColumn name="dept">
-                  <Property name="property">dept.dept_name</Property>
+                  <Property name="property">dept</Property>
                 </DataColumn>
                 <DataColumn name="title">
                   <Property name="property">title</Property>
@@ -611,7 +594,7 @@ if(data != undefined){&#xD;
 }</ClientEvent>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsYxzsk&quot;).insert();&#xD;
-view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+//view.get(&quot;#dsYxzsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
 view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
 view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
@@ -651,7 +634,8 @@ if(data != undefined){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
+              <ClientEvent name="onClick">view.get(&quot;#dsYxTzszsk&quot;).flush();&#xD;
+view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="hideMode">display</Property>
@@ -673,13 +657,13 @@ if(data != undefined){&#xD;
               <Property name="property">content</Property>
             </DataColumn>
             <DataColumn name="zskly">
-              <Property name="property">zskly.title</Property>
+              <Property name="property">zskly</Property>
             </DataColumn>
             <DataColumn name="user">
-              <Property name="property">user.user_Name</Property>
+              <Property name="property">user</Property>
             </DataColumn>
             <DataColumn name="dept">
-              <Property name="property">dept.dept_name</Property>
+              <Property name="property">dept</Property>
             </DataColumn>
             <DataColumn name="title">
               <Property name="property">title</Property>

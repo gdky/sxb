@@ -26,7 +26,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public List<Dept> getDeptRoot() {
 		// TODO Auto-generated method stub
-		String sql = "select * from dept t where t.parent_id is null";
+		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null";
 
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
 		return this.mapToDeptList(list);
@@ -34,7 +34,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
 	public List<Dept> getCurrentDeptById(String id_) {
-		String sql = "select * from dept t where t.parent_id=?";
+		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id=?";
 		Object[] objs = { id_ };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				objs);
@@ -135,7 +135,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Menu> getMenuRoot() {
 		// TODO Auto-generated method stub
-		String sql = "select * from menu m where m.parent_id is null";
+		String sql = "select ID_,PARENT_ID,MENU_NAME,URL,YXBZ from menu m where m.parent_id is null";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
 		return this.mapToObject(list);
 	}
@@ -143,7 +143,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Menu> getCurrentMenuById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select * from menu m where m.parent_id=?";
+		String sql = "select ID_,PARENT_ID,MENU_NAME,URL,YXBZ from menu m where m.parent_id=?";
 		Object[] obs = { id };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
 				obs);
@@ -161,21 +161,32 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	}
 
 	@Override
-	public void saveMenuNodeInfo(Menu menu) {
+	public String saveMenuNodeInfo(Menu menu) {
 		// TODO Auto-generated method stub
-		String sql = "insert into menu values(?,?,?,?,?)";
-		Object[] objs = { menu.getId_(), menu.getParent_Id(),
-				menu.getMenu_Name(), menu.getUrl(), "Y" };
-		this.jdbcTemplate.update(sql, objs);
+		String result = this.checkMenuName(menu.getMenu_Name());
+		if(result == null){
+			String sql = "insert into menu values(?,?,?,?,?)";
+			Object[] objs = { menu.getId_(), menu.getParent_Id(),
+					menu.getMenu_Name(), menu.getUrl(), "Y" };
+			this.jdbcTemplate.update(sql, objs);
+		}
+		return result;
 	}
 
 	@Override
-	public void updateMenuNodeInfo(Menu menu) {
+	public String updateMenuNodeInfo(Menu menu) {
 		// TODO Auto-generated method stub
-		String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=? where id_=?";
-		Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz(),
-				menu.getId_() };
-		this.jdbcTemplate.update(sql, objs);
+		String chackMenuName = "select if(count(*),id_,0) from menu where menu_name = ?";
+		Integer id = this.jdbcTemplate.queryForObject(chackMenuName, Integer.class, new Object[]{ menu.getMenu_Name() });
+		if(id == 0 || id == menu.getId_()){
+			String sql = "update menu m set m.menu_name=?,m.url=?,m.yxbz=? where id_=?";
+			Object[] objs = { menu.getMenu_Name(), menu.getUrl(), menu.getYxbz(),
+					menu.getId_() };
+			this.jdbcTemplate.update(sql, objs);
+			return null;
+		}else{
+			return "部门名称'" + menu.getMenu_Name() + "'已存在";
+		}
 	}
 
 	@Override
@@ -266,11 +277,27 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
 	public void getUserInfo(Page page, Map<String, Object> param) {
-		String sqlCount = "select count(*) from user";
-		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
+		//String sqlCount = "select count(*) from user";
+		StringBuffer sqlCount = new StringBuffer("select count(*) from user where 1=1 ");
+		//String sql = "select * from user limit ?,? ";
+		StringBuffer sql = new StringBuffer("select * from user where 1=1 ");
+		if(param != null){
+			Integer deptid = (Integer) param.get("deptid");
+			String username = (String) param.get("username");
+			if(deptid != null){
+				sqlCount.append(" and deptid="+deptid+" ");
+				sql.append(" and deptid="+deptid+" ");
+			}
+			if(username != null){
+				sqlCount.append(" and user_name like '%"+username+"%' ");
+				sql.append(" and user_name like '%"+username+"%' ");
+			}
+		}
+		
+		sql.append(" limit ?,? ");
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),
 				Integer.class);
-		String sql = "select * from user limit ?,? ";
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString(),
 				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
 						page.getPageSize() });
 		page.setEntityCount(entityCount);
@@ -405,7 +432,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		String sqlCount = "select count(*) from system_props";
 		int entityCount = this.jdbcTemplate.queryForObject(sqlCount,
 				Integer.class);
-		String sql = "select * from system_props limit ?,?";
+		String sql = "select ID_,KEY_,VALUE,MS from system_props limit ?,?";
 
 		List<SystemProps> list = this.jdbcTemplate.query(sql,
 				new Object[] { page.getPageSize() * (page.getPageNo() - 1),

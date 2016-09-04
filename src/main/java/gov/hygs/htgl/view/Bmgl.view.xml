@@ -390,7 +390,7 @@ if(dept != undefined){&#xD;
               <DataGrid id="deptGrid">
                 <Property name="dataSet">deptDataSet</Property>
                 <Property name="dataPath">!current_Node.childDataGrid</Property>
-                <Property name="readOnly">false</Property>
+                <Property name="readOnly">true</Property>
                 <DataColumn name="dept_name">
                   <Property name="property">dept_name</Property>
                 </DataColumn>

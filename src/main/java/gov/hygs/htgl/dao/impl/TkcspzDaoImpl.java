@@ -22,7 +22,7 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	public Collection<Tkfl> getTkflRoot() {
 		// TODO Auto-generated method stub
 		//String sql = "select * from tkfl where parent_id is null or parent_id = 0 order by id_ desc";
-		String sql = "select * from tkfl where parent_id = 0 order by id_ desc";
+		String sql = "select ID_,PARENT_ID,TKMC,MS from tkfl where parent_id = 0 order by id_ desc";
 		List<Tkfl> list = this.jdbcTemplate.query(sql, new RowMapper<Tkfl>() {
 
 			@Override
@@ -43,7 +43,7 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public Collection<Tkfl> getCurrentTkflById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select * from tkfl where parent_id=?";
+		String sql = "select ID_,PARENT_ID,TKMC,MS from tkfl where parent_id=?";
 		List<Tkfl> list = this.jdbcTemplate.query(sql, new Object[] { id },
 				new RowMapper<Tkfl>() {
 
@@ -96,7 +96,7 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public Collection<Tmly> getTmlyInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select * from tmly";
+		String sql = "select ID_,TITLE,CONTENT,state from tmly";
 		List<Tmly> list = this.jdbcTemplate.query(sql, new RowMapper<Tmly>() {
 
 			@Override
@@ -116,7 +116,7 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public void addTmly(Tmly tmly) {
 		// TODO Auto-generated method stub
-		String sql = "insert into tmly values(?,?,?)";
+		String sql = "insert into tmly(id_,title,content) values(?,?,?)";
 		this.jdbcTemplate
 				.update(sql,
 						new Object[] { tmly.getId(), tmly.getTitle(),
