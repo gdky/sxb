@@ -63,4 +63,8 @@ public interface ZstkglDao {
 	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param,
 			CustomUserDetails userDetails);
 
+	public Map<String, Object> getGroupByExamId(String param);
+
+	public void addGxJl(Tktm zstk);
+
 }

@@ -52,11 +52,15 @@
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">基础型</Property>
+                <Property name="value">税收业务类基础题</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">进阶型</Property>
+                <Property name="value">税收业务类进阶题</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">2</Property>
+                <Property name="value">非税收业务类</Property>
               </Entity>
             </Collection>
           </Property>
@@ -164,9 +168,7 @@
         <Property></Property>
         <Property name="label">描述</Property>
       </PropertyDef>
-      <PropertyDef name="groupId">
-        <Property name="dataType">Integer</Property>
-      </PropertyDef>
+      <PropertyDef name="groupId"/>
       <PropertyDef name="groupname">
         <Property name="label">群组名称</Property>
       </PropertyDef>
@@ -198,6 +200,7 @@
       </PropertyDef>
       <PropertyDef name="groupName">
         <Property></Property>
+        <Property name="label">群组名称</Property>
       </PropertyDef>
       <PropertyDef name="ms">
         <Property></Property>
@@ -250,6 +253,11 @@
         <Property name="dataType">[fqrType]</Property>
         <Property name="dataProvider">yxtkglController#getUserInfoByUserId</Property>
         <Property name="parameter">$${this.fqrId}</Property>
+      </Reference>
+      <Reference name="group">
+        <Property name="dataType">groupType</Property>
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">zstkglController#getGroupByExamId</Property>
       </Reference>
     </DataType>
     <DataType name="fqrType">
@@ -516,7 +524,7 @@ view.get(&quot;#sjtsflDialog&quot;).show();&#xD;
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#conditionDialog&quot;).hide();&#xD;
 view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).cancel();&#xD;
-</ClientEvent>
+view.get(&quot;#grouptree&quot;).unselectAll();</ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
@@ -609,6 +617,7 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#conditionDialog&quot;).close();&#xD;
 	view.get(&quot;#tktmDialog&quot;).close();&#xD;
+	view.get(&quot;#grouptree&quot;).unselectAll();&#xD;
 	view.get(&quot;#dsTktmFilter&quot;).flushAsync();&#xD;
 	view.get(&quot;#sjtsflDialog&quot;).hide();&#xD;
 	view.get(&quot;#dsExam&quot;).flushAsync();&#xD;
@@ -634,6 +643,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
               </ToolBar>
               <DataGrid>
                 <Property name="dataSet">dsTktmFilter</Property>
+                <Property name="readOnly">true</Property>
                 <RowNumColumn/>
                 <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
@@ -722,6 +732,7 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#conditionDialog&quot;).close();&#xD;
 	view.get(&quot;#optDialog&quot;).close();&#xD;
 	entitys.clear();&#xD;
+	view.get(&quot;#grouptree&quot;).unselectAll();&#xD;
 	view.get(&quot;#dsTktmShow&quot;).flushAsync();&#xD;
 	view.get(&quot;#dsExam&quot;).flushAsync();&#xD;
 &#xD;
@@ -1162,6 +1173,9 @@ if(data != undefined){&#xD;
             <DataColumn name="fqr">
               <Property name="property">fqr.user_Name</Property>
             </DataColumn>
+            <DataColumn name="group">
+              <Property name="property">group.groupName</Property>
+            </DataColumn>
           </DataGrid>
         </Children>
       </GroupBox>
@@ -1170,33 +1184,70 @@ if(data != undefined){&#xD;
       <Property name="service">zstkglController#updateKstsjlInfo</Property>
     </AjaxAction>
     <CustomDropDown id="groupDropDown">
-      <DataTreeGrid>
-        <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+      <Panel>
+        <Property name="height">200</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">/*&#xD;
+var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
 var node = self.get(&quot;currentNode&quot;);&#xD;
 var id = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;groupName&quot;)&#xD;
 );&#xD;
+view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:id});&#xD;
+*/&#xD;
+var grouptree = view.get(&quot;#grouptree&quot;);&#xD;
+var dropDown = dorado.widget.DropDown.findDropDown(grouptree);&#xD;
+var entity = view.get('#grouptree.selection');&#xD;
+var group=[]&#xD;
+var id=[];&#xD;
+entity.each(function(e){&#xD;
+	group.push(e.get(&quot;data&quot;).get(&quot;groupName&quot;));&#xD;
+	id.push(e.get(&quot;data&quot;).get(&quot;id&quot;))&#xD;
+});&#xD;
+dropDown.close(&#xD;
+	group&#xD;
+);&#xD;
 view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
-        <Property name="dataSet">dsGroupt</Property>
-        <Property name="readOnly">true</Property>
-        <Property name="treeColumn">groupName</Property>
-        <Property name="height">200</Property>
-        <BindingConfigs>
-          <BindingConfig>
-            <Property name="childrenProperty">child</Property>
-            <Property name="name">groupName</Property>
-            <Property name="labelProperty">groupName</Property>
-            <Property name="recursive">true</Property>
-          </BindingConfig>
-        </BindingConfigs>
-        <Columns>
-          <DataColumn>
-            <Property name="name">groupName</Property>
-            <Editor/>
-          </DataColumn>
-        </Columns>
-      </DataTreeGrid>
+                <Property name="caption">确定</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#groupDropDown&quot;).close();&#xD;
+view.get(&quot;#grouptree&quot;).unselectAll();</ClientEvent>
+                <Property name="caption">取消</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <DataTreeGrid id="grouptree">
+                <Property name="dataSet">dsGroupt</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="treeColumn">groupName</Property>
+                <Property name="selectionMode">multiRows</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="childrenProperty">child</Property>
+                    <Property name="name">groupName</Property>
+                    <Property name="labelProperty">groupName</Property>
+                    <Property name="recursive">true</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+                <Columns>
+                  <RowSelectorColumn/>
+                  <DataColumn>
+                    <Property name="name">groupName</Property>
+                    <Editor/>
+                  </DataColumn>
+                </Columns>
+              </DataTreeGrid>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Panel>
     </CustomDropDown>
   </View>
 </ViewConfig>
