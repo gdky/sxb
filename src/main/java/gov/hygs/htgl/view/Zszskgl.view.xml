@@ -40,6 +40,10 @@
       <PropertyDef name="zskly">
         <Property name="label">来源</Property>
       </PropertyDef>
+      <PropertyDef name="zsklyContent">
+        <Property></Property>
+        <Property name="label">来源内容</Property>
+      </PropertyDef>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">知识库题目</Property>
@@ -345,7 +349,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
-        <Property name="height">350</Property>
+        <Property name="height">420</Property>
         <Property name="width">700</Property>
         <Buttons/>
         <Children>
@@ -372,23 +376,32 @@ view.get(&quot;#dialog&quot;).close();&#xD;
             <Children>
               <AutoForm id="yxzskForm">
                 <Property name="dataSet">dsZszsk</Property>
+                <Property name="cols">*</Property>
                 <AutoFormElement>
                   <Property name="name">createDate</Property>
                   <Property name="property">createDate</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement>
+                <AutoFormElement id="zskly">
                   <Property name="name">zskly</Property>
                   <Property name="property">zskly</Property>
                   <Property name="trigger">dsZsklyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
+                <AutoFormElement id="zsklyContent">
+                  <Property name="name">zsklyContent</Property>
+                  <Property name="property">zsklyContent</Property>
+                  <Property name="hideMode">display</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+                <AutoFormElement>
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
+                <AutoFormElement>
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
                   <Editor>
@@ -715,6 +728,8 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).insert();&#xD;
 //view.get(&quot;#dsZszsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
+view.get(&quot;#zskly&quot;).set(&quot;editable&quot;,true);&#xD;
+view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,true);&#xD;
 view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
 view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
@@ -736,6 +751,8 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
 	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#zskly&quot;).set(&quot;editable&quot;,false);&#xD;
+	view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
@@ -746,6 +763,7 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
 	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,true);		&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;

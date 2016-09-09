@@ -102,4 +102,16 @@ public class ZszskController {
 			zszskService.getZsdDetailInfo(page, param);
 		}
 	}
+	
+	@Transactional
+	@Expose
+	public void updateZsdtsDetailInfo(Map<String,Object> param){
+		zszskService.updateZsdtsDetailInfo(param);
+	}
+	
+	@Transactional
+	@Expose
+	public void deleteZsdtsInfo(String jlid){
+		zszskService.deleteZsdtsInfo(jlid);
+	}
 }

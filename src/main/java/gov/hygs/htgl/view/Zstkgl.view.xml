@@ -14,6 +14,9 @@
       <PropertyDef name="tkfl">
         <Property></Property>
         <Property name="label">所属分类</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">所属分类不能为空</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="userId">
         <Property name="dataType">Integer</Property>
@@ -85,6 +88,13 @@
       <PropertyDef name="tmly">
         <Property></Property>
         <Property name="label">题目来源</Property>
+        <Validator type="required">
+          <Property name="name">题目来源不能为空</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="tmlyContent">
+        <Property></Property>
+        <Property name="label">来源内容</Property>
       </PropertyDef>
       <PropertyDef name="mode">
         <ClientEvent name="onSet">view.get(&quot;#dsZstk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
@@ -873,16 +883,19 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
                   <Property name="name">tkfl</Property>
                   <Property name="property">tkfl</Property>
                   <Property name="trigger">tkflDropDown</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">tmnd</Property>
                   <Property name="property">tmnd</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">mode</Property>
                   <Property name="property">mode</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
@@ -890,6 +903,13 @@ view.get(&quot;#addyxtkDialog&quot;).close();&#xD;
                   <Property name="property">tmly</Property>
                   <Property name="trigger">tmlyDropDown</Property>
                   <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">tmlyContent</Property>
+                  <Property name="property">tmlyContent</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">content</Property>
@@ -1023,22 +1043,26 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                   <Property name="name">tkfl</Property>
                   <Property name="property">tkfl</Property>
                   <Property name="trigger">tkflDropDown</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">tmnd</Property>
                   <Property name="property">tmnd</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">mode</Property>
                   <Property name="property">mode</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">tmly</Property>
                   <Property name="property">tmly</Property>
                   <Property name="trigger">tmlyDropDown</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">

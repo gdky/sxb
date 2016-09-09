@@ -200,7 +200,7 @@ public class ZstkglServiceImpl implements ZstkglService {
 //ksts
 
 	@Override
-	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+	public void getExamInfo(Page page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		zstkglDao.getExamInfo(page,param);
 	}
@@ -215,5 +215,17 @@ public class ZstkglServiceImpl implements ZstkglService {
 	public Map<String, Object> getGroupByExamId(String param) {
 		// TODO Auto-generated method stub
 		return zstkglDao.getGroupByExamId(param);
+	}
+
+	@Override
+	public void updateKstsjlDetailInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.updateKstsjlDetailInfo(param);
+	}
+
+	@Override
+	public void deleteKstsjlInfo(String examid) {
+		// TODO Auto-generated method stub
+		zstkglDao.deleteKstsjlInfo(examid);
 	}
 }

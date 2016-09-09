@@ -39,5 +39,9 @@ public interface ZszskService {
 	public void getTsxxInfo(Page page, Map<String, Object> param);
 
 	public void getZsdDetailInfo(Page page, Map<String, Object> param);
+
+	public void updateZsdtsDetailInfo(Map<String, Object> param);
+
+	public void deleteZsdtsInfo(String jlid);
 	
 }

@@ -55,6 +55,9 @@ public class ZskJl implements Serializable {
 	
 	/** 录入人. */
 	private String user;
+	
+	/** 知识库来源内容. */
+	private String zsklyContent;
 
 	/**
 	 * Constructor.
@@ -84,6 +87,14 @@ public class ZskJl implements Serializable {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public String getZsklyContent() {
+		return zsklyContent;
+	}
+
+	public void setZsklyContent(String zsklyContent) {
+		this.zsklyContent = zsklyContent;
 	}
 
 	/**

@@ -59,6 +59,17 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		String phone = (String) param.get("phone");
 		String zw = (String) param.get("zw");
 		String dept = (String) param.get("dept");
+		Integer deptid = (Integer) param.get("deptid");
+		Integer parentid = (Integer) param.get("parentid");
+		if (deptid != null) {
+			//if(parentid == null){
+				//sql.append(" and a.deptid ="+deptid+" ");
+			//}
+			if(deptid != 1){
+				sql.append(" and a.id_ in( ");
+				sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
+			}
+		}
 		if (begin != null) {
 			sql.append(" and a.rzsj >= date_format('" + sdf.format(begin) + "','%Y%m%d') ");
 		}

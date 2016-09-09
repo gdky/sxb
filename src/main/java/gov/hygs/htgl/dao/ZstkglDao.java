@@ -56,7 +56,7 @@ public interface ZstkglDao {
 	public void getRandomTktmFilter(Page<Tktm> page, Map<String, Object> param,
 			String systemPropsKey);
 
-	public void getExamInfo(Page<Exam> page, Map<String, Object> param);
+	public void getExamInfo(Page page, Map<String, Object> param);
 
 	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
@@ -66,5 +66,9 @@ public interface ZstkglDao {
 	public Map<String, Object> getGroupByExamId(String param);
 
 	public void addGxJl(Tktm zstk);
+
+	public void updateKstsjlDetailInfo(Map<String, Object> param);
+
+	public void deleteKstsjlInfo(String examid);
 
 }
