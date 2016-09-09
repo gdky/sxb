@@ -145,6 +145,7 @@
         <Property name="label">描述</Property>
       </PropertyDef>
       <PropertyDef name="jlid"/>
+      <PropertyDef name="groupId"/>
     </DataType>
     <DataType name="detialType">
       <PropertyDef name="create_date">
@@ -167,6 +168,7 @@
       <PropertyDef name="title">
         <Property name="label">知识库题目</Property>
       </PropertyDef>
+      <PropertyDef name="id"/>
     </DataType>
   </Model>
   <View>
@@ -232,6 +234,27 @@ view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).set({groupId:id});</
           </BindingConfigs>
         </DataTree>
       </CustomDropDown>
+      <CustomDropDown id="groupDropDown2">
+        <DataTree>
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var id = node.get(&quot;data&quot;).get(&quot;id&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;groupName&quot;)&#xD;
+);&#xD;
+view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
+          <Property name="dataSet">dsGroupt</Property>
+          <Property name="height">200</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">child</Property>
+              <Property name="recursive">true</Property>
+              <Property name="name">groupName</Property>
+              <Property name="labelProperty">groupName</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
     </Container>
     <Container id="dialogs">
       <Dialog id="zsdtsDialog">
@@ -264,6 +287,7 @@ view.get(&quot;#dsZszskFilter&quot;).flush();&#xD;
                   <Property name="name">groupname</Property>
                   <Property name="property">groupname</Property>
                   <Property name="trigger">groupDropDown</Property>
+                  <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
@@ -408,10 +432,324 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
         </Children>
         <Tools/>
       </Dialog>
+      <Dialog id="updateDialog">
+        <Property name="width">400</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">修改推送信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">var data = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;jlid&quot;)});&#xD;
+	view.get(&quot;#updateTsxxDialog&quot;).show();&#xD;
+	view.get(&quot;#dsDetail&quot;).flushAsync();&#xD;
+}&#xD;
+&#xD;
+</ClientEvent>
+                <Property name="caption">修改推送题目</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).close();&#xD;
+view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).cancel();</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm id="updateForm">
+                <Property name="dataSet">dsTsxx</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">groupname</Property>
+                  <Property name="property">groupname</Property>
+                  <Property name="trigger">groupDropDown2</Property>
+                  <Property name="editable">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ms</Property>
+                  <Property name="property">ms</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <Dialog id="updateTsxxDialog">
+        <Property name="height">500</Property>
+        <Property name="width">900</Property>
+        <Buttons>
+          <Button>
+            <ClientEvent name="onClick">var condition = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+var id = [];&#xD;
+view.get(&quot;#dsDetail&quot;).getData().each(function(entity){&#xD;
+	id.push(entity.get(&quot;id&quot;));&#xD;
+});&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+view.get(&quot;#updateInfoAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;id&quot;:id,&#xD;
+	&quot;jlid&quot;:condition.get(&quot;jlid&quot;),&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#updateInfoAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#updateTsxxDialog&quot;).close();&#xD;
+	view.get(&quot;#updateDialog&quot;).close();&#xD;
+	view.get(&quot;#dsTsxx&quot;).flush();&#xD;
+});</ClientEvent>
+            <Property name="caption">提交</Property>
+          </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#updateTsxxDialog&quot;).close();&#xD;
+</ClientEvent>
+            <Property name="caption">关闭</Property>
+          </Button>
+        </Buttons>
+        <Children>
+          <SplitPanel>
+            <Property name="position">45%</Property>
+            <MainControl>
+              <SplitPanel>
+                <Property name="position">13%</Property>
+                <MainControl>
+                  <Container>
+                    <GroupBox>
+                      <Property name="caption">选中推送题目</Property>
+                      <Buttons/>
+                      <Children>
+                        <ToolBar>
+                          <DataPilot>
+                            <Property name="dataSet">dsDetail</Property>
+                            <Property name="itemCodes">pages</Property>
+                          </DataPilot>
+                        </ToolBar>
+                        <DataGrid id="chosedGrid">
+                          <Property name="dataSet">dsDetail</Property>
+                          <Property name="readOnly">true</Property>
+                          <Property name="selectionMode">multiRows</Property>
+                          <RowSelectorColumn/>
+                          <DataColumn name="create_date">
+                            <Property name="property">create_date</Property>
+                          </DataColumn>
+                          <DataColumn name="content">
+                            <Property name="property">content</Property>
+                          </DataColumn>
+                          <DataColumn name="zsklyname">
+                            <Property name="property">zsklyname</Property>
+                          </DataColumn>
+                          <DataColumn name="username">
+                            <Property name="property">username</Property>
+                          </DataColumn>
+                          <DataColumn name="deptname">
+                            <Property name="property">deptname</Property>
+                          </DataColumn>
+                          <DataColumn name="title">
+                            <Property name="property">title</Property>
+                          </DataColumn>
+                        </DataGrid>
+                      </Children>
+                    </GroupBox>
+                  </Container>
+                </MainControl>
+                <SideControl>
+                  <Container layout="hbox align:center">
+                    <Property name="height">500</Property>
+                    <Container layout="vbox align:center">
+                      <Property name="height">65</Property>
+                      <Property name="width">59</Property>
+                      <Button>
+                        <ClientEvent name="onClick">/*&#xD;
+var selects = [];&#xD;
+if(arg.added != null &amp;&amp; arg.removed == null){&#xD;
+	arg.added.each(function(entity){&#xD;
+		var i = 0;&#xD;
+		if(view.get(&quot;#dsChose&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+			view.get(&quot;#dsChose&quot;).getData().each(function(c){&#xD;
+				if(entity.get(&quot;id&quot;) == c.get(&quot;id&quot;)){&#xD;
+					i++;&#xD;
+				}&#xD;
+			})&#xD;
+		}&#xD;
+		if(i == 0){&#xD;
+			view.get(&quot;#dsChose&quot;).insert({&#xD;
+				id:entity.get(&quot;id&quot;),&#xD;
+				tkfl:entity.get(&quot;tkfl&quot;),&#xD;
+				createDate:entity.get(&quot;createDate&quot;),&#xD;
+				content:entity.get(&quot;content&quot;),&#xD;
+				tmfz:entity.get(&quot;tmfz&quot;),&#xD;
+				tmnd:entity.get(&quot;tmnd&quot;),&#xD;
+				tmly:entity.get(&quot;tmly&quot;),&#xD;
+				mode:entity.get(&quot;mode&quot;),&#xD;
+				user:entity.get(&quot;user&quot;),&#xD;
+				dept:entity.get(&quot;dept&quot;)&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+if(arg.removed != null &amp;&amp; arg.added == null){&#xD;
+	arg.removed.each(function(entity){&#xD;
+		view.get(&quot;#dsChose&quot;).getData().each(function(choseEntity){&#xD;
+			if(choseEntity.get(&quot;id&quot;) == entity.get(&quot;id&quot;)){&#xD;
+				choseEntity.remove();&#xD;
+			}&#xD;
+		});&#xD;
+	});&#xD;
+	&#xD;
+}&#xD;
+*/&#xD;
+//var entity = view.get('#optGrid.selection');&#xD;
+/*&#xD;
+var entitys = view.get('#optGrid.selection');&#xD;
+if(entitys != &quot;&quot; || entitys != undefined){&#xD;
+	entitys.each(function(entity){&#xD;
+		var i = 0;&#xD;
+		if(view.get(&quot;#dsChose&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+			view.get(&quot;#dsChose&quot;).getData().each(function(c){&#xD;
+				if(entity.get(&quot;id&quot;) == c.get(&quot;id&quot;)){&#xD;
+					i++;&#xD;
+				}&#xD;
+			})&#xD;
+		}&#xD;
+		if(i == 0){&#xD;
+			view.get(&quot;#dsChose&quot;).insert({&#xD;
+				id:entity.get(&quot;id&quot;),&#xD;
+				tkfl:entity.get(&quot;tkfl&quot;),&#xD;
+				createDate:entity.get(&quot;createDate&quot;),&#xD;
+				content:entity.get(&quot;content&quot;),&#xD;
+				tmfz:entity.get(&quot;tmfz&quot;),&#xD;
+				tmnd:entity.get(&quot;tmnd&quot;),&#xD;
+				tmly:entity.get(&quot;tmly&quot;),&#xD;
+				mode:entity.get(&quot;mode&quot;),&#xD;
+				user:entity.get(&quot;user&quot;),&#xD;
+				dept:entity.get(&quot;dept&quot;)&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+	view.get('#optGrid').unselectAll();&#xD;
+}&#xD;
+*/&#xD;
+&#xD;
+&#xD;
+var entitys = view.get('#tmGrid.selection');&#xD;
+if(entitys != &quot;&quot; || entitys != undefined){&#xD;
+	entitys.each(function(entity){&#xD;
+		var i = 0;&#xD;
+		if(view.get(&quot;#dsDetail&quot;).getData(&quot;#&quot;) != undefined){&#xD;
+			view.get(&quot;#dsDetail&quot;).getData().each(function(c){&#xD;
+				if(entity.get(&quot;id&quot;) == c.get(&quot;id&quot;)){&#xD;
+					i++;&#xD;
+				}&#xD;
+			})&#xD;
+		}&#xD;
+		if(i == 0){&#xD;
+			view.get(&quot;#dsDetail&quot;).insert({&#xD;
+				id:entity.get(&quot;id&quot;),&#xD;
+				create_date:entity.get(&quot;createDate&quot;),&#xD;
+				content:entity.get(&quot;content&quot;),&#xD;
+				zsklyname:entity.get(&quot;zskly&quot;),&#xD;
+				username:entity.get(&quot;user&quot;),&#xD;
+				deptname:entity.get(&quot;dept&quot;),&#xD;
+				title:entity.get(&quot;title&quot;)&#xD;
+			});&#xD;
+		}&#xD;
+	});&#xD;
+	view.get('#tmGrid').unselectAll();&#xD;
+}</ClientEvent>
+                        <Property name="icon">url(>skin>common/icons.gif) -20px -300px</Property>
+                      </Button>
+                      <Button>
+                        <ClientEvent name="onClick">/*&#xD;
+var entitys = view.get('#choseGrid.selection');&#xD;
+if(entitys != &quot;&quot; || entitys != undefined){&#xD;
+	entitys.each(function(entity){&#xD;
+		entity.remove();&#xD;
+	});&#xD;
+}&#xD;
+*/&#xD;
+&#xD;
+//tmGrid		//dsZszskFilter&#xD;
+//chosedGrid	//dsDetail&#xD;
+var entitys = view.get('#chosedGrid.selection');&#xD;
+if(entitys != &quot;&quot; || entitys != undefined){&#xD;
+	entitys.each(function(entity){&#xD;
+		entity.remove();&#xD;
+	});&#xD;
+}</ClientEvent>
+                        <Property name="icon">url(>skin>common/icons.gif) -40px -300px</Property>
+                      </Button>
+                    </Container>
+                  </Container>
+                </SideControl>
+              </SplitPanel>
+            </MainControl>
+            <SideControl>
+              <GroupBox>
+                <Property name="caption">推送题目</Property>
+                <Buttons/>
+                <Children>
+                  <ToolBar>
+                    <DataPilot>
+                      <Property name="dataSet">dsZszskFilter</Property>
+                      <Property name="itemCodes">pages</Property>
+                    </DataPilot>
+                  </ToolBar>
+                  <DataGrid id="tmGrid">
+                    <Property name="dataSet">dsZszskFilter</Property>
+                    <Property name="readOnly">true</Property>
+                    <Property name="selectionMode">multiRows</Property>
+                    <RowSelectorColumn/>
+                    <DataColumn name="createDate">
+                      <Property name="property">createDate</Property>
+                    </DataColumn>
+                    <DataColumn name="content">
+                      <Property name="property">content</Property>
+                    </DataColumn>
+                    <DataColumn name="zskly">
+                      <Property name="property">zskly</Property>
+                    </DataColumn>
+                    <DataColumn name="user">
+                      <Property name="property">user</Property>
+                    </DataColumn>
+                    <DataColumn name="dept">
+                      <Property name="property">dept</Property>
+                    </DataColumn>
+                    <DataColumn name="title">
+                      <Property name="property">title</Property>
+                    </DataColumn>
+                  </DataGrid>
+                </Children>
+              </GroupBox>
+            </SideControl>
+          </SplitPanel>
+        </Children>
+        <Tools/>
+      </Dialog>
     </Container>
     <Container id="actions">
       <AjaxAction id="tsAction">
         <Property name="service">zszskController#updateZsdtsInfo</Property>
+      </AjaxAction>
+      <AjaxAction id="updateInfoAction">
+        <Property name="service">zszskController#updateZsdtsDetailInfo</Property>
+      </AjaxAction>
+      <AjaxAction id="deleteAction">
+        <Property name="service">zszskController#deleteZsdtsInfo</Property>
       </AjaxAction>
     </Container>
     <Container>
@@ -442,6 +780,22 @@ if(data != undefined){&#xD;
 </ClientEvent>
               <Property name="caption">查看已推送题目</Property>
               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#updateDialog&quot;).show();</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+	var jlid = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).get(&quot;jlid&quot;);&#xD;
+	view.get(&quot;#deleteAction&quot;).set(&quot;parameter&quot;,jlid);&#xD;
+	view.get(&quot;#deleteAction&quot;).execute(function(){&#xD;
+		view.get(&quot;#dsTsxx&quot;).flush();&#xD;
+	});&#xD;
+});</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
           </ToolBar>
           <DataGrid>

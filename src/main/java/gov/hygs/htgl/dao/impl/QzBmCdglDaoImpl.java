@@ -283,15 +283,25 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		StringBuffer sql = new StringBuffer("select * from user where 1=1 ");
 		if(param != null){
 			Integer deptid = (Integer) param.get("deptid");
+			Integer parentid = (Integer) param.get("parentid");
 			String username = (String) param.get("username");
-			if(deptid != null){
-				sqlCount.append(" and deptid="+deptid+" ");
-				sql.append(" and deptid="+deptid+" ");
+			if(deptid != null ){//&& parentid != null){
+				//if(parentid == null){
+					//sqlCount.append(" and deptid="+deptid+" ");
+					//sql.append(" and deptid="+deptid+" ");
+				//}
+				if(deptid != 1){
+					sqlCount.append(" and id_ in ( ");
+					sqlCount.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
+					sql.append(" and id_ in ( ");
+					sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
+				}	
 			}
 			if(username != null){
 				sqlCount.append(" and user_name like '%"+username+"%' ");
 				sql.append(" and user_name like '%"+username+"%' ");
 			}
+			
 		}
 		
 		sql.append(" limit ?,? ");
@@ -491,9 +501,33 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		*/
 		int groupId = (int) param.get("groupId");
 		List<Integer> ids = (List<Integer>) param.get("ids");
-		for(Integer userId : ids){
-			String sql = "insert into user_group values(?,?,?)";
-			this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
+		String flag = (String) param.get("add");
+		if(flag == null){
+			for(Integer userId : ids){
+				String sql = "insert into user_group values(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
+			}
+		}else{
+			this.addAllDeptToGroup(ids,groupId);
+		}
+	}
+	
+	private void addAllDeptToGroup(List<Integer> ids, Integer groupId){
+		if(ids != null){
+			for(Integer deptid : ids){
+				//String sql = "select u.id_ from dept d,user u where u.DEPTID = d.ID_ and d.id_=? and u.ID_ not in (select user_id from user_group where group_id = ?)";
+				String sql = "select u.id_ from user u where u.DEPTID = ? and u.ID_ not in (select user_id from user_group where group_id = ?)";
+				//List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{deptid,groupId});
+				List<Integer> list = this.jdbcTemplate.queryForList(sql, Integer.class, new Object[]{deptid,groupId});
+				if(list != null){
+					for(Integer userInfo : list){
+						sql = "insert into user_group values(?,?,?)";
+						this.jdbcTemplate.update(sql, new Object[]{ null, userInfo, groupId });
+					}
+				}
+				sql = "select id_ from dept where parent_id=?";
+				this.addAllDeptToGroup(this.jdbcTemplate.queryForList(sql, Integer.class, new Object[]{deptid}), groupId);
+			}
 		}
 	}
 

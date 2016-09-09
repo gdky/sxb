@@ -38,18 +38,21 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 				.getRole_Name();
 		StringBuilder sqlCount = new StringBuilder("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' ");
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d "
+					+ "where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' ");
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' and a.deptid="
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d "
+					+ "where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid());
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
 		} else if ("USER".equals(roleName)) {// 普通用户
-			sqlCount.append("select count(*) from zsk_jl a where a.xybz='Y' and a.deptid="
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
+					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid()
 					+ " and a.user_id="
 					+ userDetails.getId());
@@ -224,11 +227,31 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String sql = "insert into zsk_jl values(?,?,?,?,?,?,?,?,?,?,?)";
+		int zsklyid = this.getZsklyInfoOrAddZskly(zszsk.getZskly(), zszsk.getZsklyContent());
 		Object[] objs = { zszsk.getId(), zszsk.getUserId(),
 				sdf.format(zszsk.getCreateDate()), zszsk.getSpDate(),
 				zszsk.getSprId(), zszsk.getDeptid(), zszsk.getContent(),
-				zszsk.getZsklyId(), zszsk.getTitle(), "Y", "Y" };
+				zsklyid, zszsk.getTitle(), "Y", "Y" };//zszsk.getZsklyId()
 		this.jdbcTemplate.update(sql, objs);
+	}
+	
+	private int getZsklyInfoOrAddZskly(String title, String content){
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from zskly where title='"+title+"' ");
+		if(content != null){
+			sql.append(" and content='"+content+"' ");
+		}
+		int zsklyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
+		if(zsklyid == 0){
+			zsklyid = this.addZskly(title, content);
+		}
+		return zsklyid;
+	}
+	
+	private int addZskly(String title, String content) {
+		String sql = "insert into zskly values(?,?,?,?)";
+		return this.insertAndGetKeyByJdbc(sql,
+				new Object[] { null, title, content, null },
+				new String[] { "id_" }).intValue();
 	}
 
 	@Override
@@ -242,9 +265,24 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 				//zszsk.getCreateDate() };
 		String sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { zszsk.getContent(), zszsk.getDeptid(),
-				zszsk.getUserId(), zszsk.getId(), 3, 2,
+				zszsk.getUserId(), zszsk.getId(), this.getGxjlValueByKey("GxzB2"), 2,
 				zszsk.getCreateDate() };
 		this.jdbcTemplate.update(sql, objs);
+	}
+
+	@Override
+	public void addGxjl(ZskJl zszsk) {
+		// TODO Auto-generated method stub
+		String sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
+		Object[] objs = { zszsk.getContent(), zszsk.getDeptid(),
+				zszsk.getUserId(), zszsk.getId(), this.getGxjlValueByKey("GxzA2"), 1,
+				zszsk.getCreateDate() };
+		this.jdbcTemplate.update(sql, objs);
+	}
+	
+	private String getGxjlValueByKey(String key){
+		String sql = "select value from system_props where key_=?";
+		return this.jdbcTemplate.queryForObject(sql, new Object[]{key}, String.class);
 	}
 
 	@Override
@@ -288,7 +326,8 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
-		String count = "select count(*) from zsk_jl where yxbz='Y' and xybz='N'";
+		String count = "select count(*) from zsk_jl a,user b,dept c,zskly d"
+				+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and yxbz='Y' and xybz='N'";
 		int entityCount = this.jdbcTemplate
 				.queryForObject(count, Integer.class);
 		List<ZskJl> list = this
@@ -401,6 +440,28 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			}
 		}
 	}
+	
+	@Override
+	public void updateZsdtsDetailInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		List<String> ids = (List<String>) param.get("id");
+		if(ids.size() > 0){
+			Integer groupId = (Integer) param.get("groupId");
+			String ms = (String) param.get("ms");
+			Integer jlid = (Integer) param.get("jlid");
+			
+			String sql = "update zsdtsjl set ms=? where id_=?";
+			this.jdbcTemplate.update(sql, new Object[]{ ms, jlid });
+			sql = "update zsktsqz set group_id = ? where tsjlid=?";
+			this.jdbcTemplate.update(sql, new Object[]{ groupId, jlid });
+			sql = "delete from zsktsnr where tsjlid = ?";
+			this.jdbcTemplate.update(sql, new Object[]{ jlid });
+			for (String id : ids) {
+				sql = "insert into zsktsnr values(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, jlid, id });
+			}
+		}
+	}
 
 	@Override
 	public Collection<Zskly> getZsklyInfo() {
@@ -491,7 +552,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		int pageSize = page.getPageSize();
 		StringBuffer sqlWhere = new StringBuffer(" from zsdtsjl jl,zsktsqz qz,grouptable g,user u "
 				+ "where jl.id_ = qz.tsjlid and qz.group_id = g.id_ and jl.tsrid = u.id_ ");
-		StringBuffer sql = new StringBuffer("select u.user_name tsr,jl.tsrq,g.group_name groupname,jl.ms,jl.id_ jlid ");
+		StringBuffer sql = new StringBuffer("select u.user_name tsr,jl.tsrq,g.group_name groupname,g.id_ groupId,jl.ms,jl.id_ jlid ");
 		StringBuffer sqlCount = new StringBuffer("select count(*)");
 		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
 		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
@@ -508,12 +569,23 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		StringBuffer sqlWhere = new StringBuffer(" from zsk_jl jl, zskly ly, dept d, user u ,zsktsnr nr, zsdtsjl z "
 				+ "where jl.zskly_id = ly.id_ and jl.user_id = u.id_ and jl.deptid = d.id_ "
 				+ "and nr.zskid = jl.id_ and z.id_ = nr.tsjlid and z.id_ = "+id+" ");
-		StringBuffer sql = new StringBuffer("select jl.create_date,jl.content,ly.title zsklyname,u.user_name username,d.dept_name deptname,jl.title");
+		StringBuffer sql = new StringBuffer("select jl.id_ id,jl.create_date,jl.content,ly.title zsklyname,u.user_name username,d.dept_name deptname,jl.title");
 		StringBuffer sqlCount = new StringBuffer("select count(*)");
 		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
 		page.setEntityCount(count);
 		page.setEntities(list);
+	}
+
+	@Override
+	public void deleteZsdtsInfo(String jlid) {
+		// TODO Auto-generated method stub
+		String sql = "delete from zsdtsjl where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{jlid});
+		sql = "delete from zsktsnr where tsjlid=?";
+		this.jdbcTemplate.update(sql, new Object[]{jlid});
+		sql = "delete from zsktsqz where tsjlid=?";
+		this.jdbcTemplate.update(sql, new Object[]{jlid});
 	}
 
 }

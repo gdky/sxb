@@ -92,7 +92,7 @@ public class ZstkglController {
 	}
 
 	@DataProvider
-	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+	public void getExamInfo(Page page, Map<String, Object> param) {
 		zstkglService.getExamInfo(page,param);
 	}
 	
@@ -106,5 +106,17 @@ public class ZstkglController {
 	@DataProvider
 	public Map<String,Object> getGroupByExamId(String param){
 		return zstkglService.getGroupByExamId(param);
+	}
+	
+	@Transactional
+	@Expose
+	public void updateKstsjlDetailInfo(Map<String,Object> param){
+		zstkglService.updateKstsjlDetailInfo(param);
+	}
+	
+	@Transactional
+	@Expose
+	public void deleteKstsjlInfo(String examid){
+		zstkglService.deleteKstsjlInfo(examid);
 	}
 }

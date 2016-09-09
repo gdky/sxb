@@ -142,6 +142,8 @@
       <PropertyDef name="dept">
         <Property name="label">部门名称</Property>
       </PropertyDef>
+      <PropertyDef name="deptid"/>
+      <PropertyDef name="parentid"/>
     </DataType>
   </Model>
   <View>
@@ -161,155 +163,6 @@
         <Property name="dataSet">dsUser</Property>
       </UpdateItem>
     </UpdateAction>
-    <GroupBox>
-      <Property name="caption">条件查询</Property>
-      <Buttons/>
-      <Children>
-        <AutoForm id="conditionForm">
-          <Property name="dataType">conditionType</Property>
-          <Property name="createPrivateDataSet">true</Property>
-          <AutoFormElement>
-            <Property name="name">begin</Property>
-            <Property name="property">begin</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">end</Property>
-            <Property name="property">end</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">loginName</Property>
-            <Property name="property">loginName</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">userName</Property>
-            <Property name="property">userName</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">phone</Property>
-            <Property name="property">phone</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">zw</Property>
-            <Property name="property">zw</Property>
-            <Editor/>
-          </AutoFormElement>
-          <AutoFormElement>
-            <Property name="name">dept</Property>
-            <Property name="property">dept</Property>
-            <Property name="trigger">conditionDropDown</Property>
-            <Editor/>
-          </AutoFormElement>
-          <Button>
-            <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
-var begin = entity.get(&quot;begin&quot;);&#xD;
-var end = entity.get(&quot;end&quot;);&#xD;
-if(end &lt; begin &amp;&amp; end != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
-}&#xD;
-view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
-view.get(&quot;#dsUser&quot;).flush();&#xD;
-</ClientEvent>
-            <Property name="caption">查找</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-          </Button>
-        </AutoForm>
-      </Children>
-    </GroupBox>
-    <GroupBox>
-      <Property name="caption">用户管理</Property>
-      <Buttons/>
-      <Children>
-        <ToolBar>
-          <DataPilot>
-            <Property name="dataSet">dsUser</Property>
-            <Property name="itemCodes">pages</Property>
-          </DataPilot>
-          <ToolBarButton>
-            <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).insert();&#xD;
-view.get(&quot;#DialogUser&quot;).show();&#xD;
-view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,false);&#xD;
-view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false);&#xD;
-view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
-</ClientEvent>
-            <Property name="caption">增加</Property>
-            <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
-view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
-view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false)&#xD;
-view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false)&#xD;
-view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
-</ClientEvent>
-            <Property name="caption">修改</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
-var url = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).get(&quot;photo&quot;);&#xD;
-&#xD;
-view.get(&quot;#imagePhoto&quot;).set(&quot;image&quot;,url);&#xD;
-&#xD;
-view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
-view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,true)&#xD;
-view.get(&quot;^photo&quot;).set(&quot;visible&quot;,true)&#xD;
-view.get(&quot;^zx&quot;).set(&quot;visible&quot;,false);&#xD;
-</ClientEvent>
-            <Property name="caption">查看信息</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <Property name="caption">上传头像</Property>
-            <Property name="action">uploadActionImage</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
-view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
-</ClientEvent>
-            <Property name="caption">修改密码</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -60px -20px</Property>
-          </ToolBarButton>
-          <ToolBarButton>
-            <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
-	view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).remove();&#xD;
-	view.get(&quot;#updateActionUser&quot;).execute();&#xD;
-});&#xD;
-</ClientEvent>
-            <Property name="caption">删除</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
-          </ToolBarButton>
-        </ToolBar>
-        <DataGrid>
-          <Property name="dataSet">dsUser</Property>
-          <Property name="readOnly">true</Property>
-          <DataColumn name="login_Name">
-            <Property name="property">login_Name</Property>
-          </DataColumn>
-          <DataColumn name="user_Name">
-            <Property name="property">user_Name</Property>
-          </DataColumn>
-          <DataColumn name="phone">
-            <Property name="property">phone</Property>
-          </DataColumn>
-          <DataColumn name="rzsj">
-            <Property name="property">rzsj</Property>
-          </DataColumn>
-          <DataColumn name="zw">
-            <Property name="property">zw</Property>
-          </DataColumn>
-          <DataColumn name="deptMc">
-            <Property name="property">deptMc</Property>
-          </DataColumn>
-        </DataGrid>
-      </Children>
-    </GroupBox>
     <Dialog id="DialogUser">
       <Property name="width">600</Property>
       <Property name="height">350</Property>
@@ -588,5 +441,197 @@ view.get(&quot;#dsUser&quot;).flushAsync();</ClientEvent>
       <Property name="maxFileSize">10MB</Property>
       <Filters/>
     </UploadAction>
+    <SplitPanel>
+      <Property name="position">20%</Property>
+      <MainControl>
+        <Container>
+          <GroupBox>
+            <Property name="caption">条件查询</Property>
+            <Buttons/>
+            <Children>
+              <AutoForm id="conditionForm">
+                <Property name="dataType">conditionType</Property>
+                <Property name="createPrivateDataSet">true</Property>
+                <AutoFormElement>
+                  <Property name="name">begin</Property>
+                  <Property name="property">begin</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">end</Property>
+                  <Property name="property">end</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">loginName</Property>
+                  <Property name="property">loginName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">userName</Property>
+                  <Property name="property">userName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">phone</Property>
+                  <Property name="property">phone</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">zw</Property>
+                  <Property name="property">zw</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <Button>
+                  <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#dsUser&quot;).flush();&#xD;
+</ClientEvent>
+                  <Property name="caption">查找</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                </Button>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+          <GroupBox>
+            <Property name="caption">用户管理</Property>
+            <Buttons/>
+            <Children>
+              <ToolBar>
+                <DataPilot>
+                  <Property name="dataSet">dsUser</Property>
+                  <Property name="itemCodes">pages</Property>
+                </DataPilot>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.get(&quot;#dsUser&quot;).insert();&#xD;
+view.get(&quot;#DialogUser&quot;).show();&#xD;
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false);&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false);&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
+</ClientEvent>
+                  <Property name="caption">增加</Property>
+                  <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,false)&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,false)&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,true);&#xD;
+</ClientEvent>
+                  <Property name="caption">修改</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.get(&quot;#DialogUser&quot;).show();&#xD;
+var url = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).get(&quot;photo&quot;);&#xD;
+&#xD;
+view.get(&quot;#imagePhoto&quot;).set(&quot;image&quot;,url);&#xD;
+&#xD;
+view.get(&quot;^pwd&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^jcx&quot;).set(&quot;readOnly&quot;,true)&#xD;
+view.get(&quot;^photo&quot;).set(&quot;visible&quot;,true)&#xD;
+view.get(&quot;^zx&quot;).set(&quot;visible&quot;,false);&#xD;
+</ClientEvent>
+                  <Property name="caption">查看信息</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -120px -60px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <Property name="caption">上传头像</Property>
+                  <Property name="action">uploadActionImage</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -100px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">view.get(&quot;#DialogUserPwd&quot;).show();&#xD;
+view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&quot;);&#xD;
+</ClientEvent>
+                  <Property name="caption">修改密码</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -60px -20px</Property>
+                </ToolBarButton>
+                <ToolBarButton>
+                  <ClientEvent name="onClick">dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
+	view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).remove();&#xD;
+	view.get(&quot;#updateActionUser&quot;).execute();&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">删除</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+                </ToolBarButton>
+              </ToolBar>
+              <DataGrid>
+                <Property name="dataSet">dsUser</Property>
+                <Property name="readOnly">true</Property>
+                <DataColumn name="login_Name">
+                  <Property name="property">login_Name</Property>
+                </DataColumn>
+                <DataColumn name="user_Name">
+                  <Property name="property">user_Name</Property>
+                </DataColumn>
+                <DataColumn name="phone">
+                  <Property name="property">phone</Property>
+                </DataColumn>
+                <DataColumn name="rzsj">
+                  <Property name="property">rzsj</Property>
+                </DataColumn>
+                <DataColumn name="zw">
+                  <Property name="property">zw</Property>
+                </DataColumn>
+                <DataColumn name="deptMc">
+                  <Property name="property">deptMc</Property>
+                </DataColumn>
+              </DataGrid>
+            </Children>
+          </GroupBox>
+        </Container>
+      </MainControl>
+      <SideControl>
+        <Container>
+          <GroupBox>
+            <Property name="caption">部门信息</Property>
+            <Buttons/>
+            <Children>
+              <DataTreeGrid id="depttree">
+                <ClientEvent name="onClick">var dsUser = view.get(&quot;#dsUser&quot;);&#xD;
+var deptId = view.get(&quot;#deptDataSet&quot;).getData(&quot;!currentNode&quot;).get(&quot;id_&quot;);&#xD;
+var parentId = view.get(&quot;#deptDataSet&quot;).getData(&quot;!currentNode&quot;).get(&quot;parentId&quot;);&#xD;
+var conditionForm = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+conditionForm.set({deptid:deptId,parentid:parentId==null?0:parentId});&#xD;
+&#xD;
+dsUser.set(&quot;parameter&quot;,{&#xD;
+	deptid: deptId&#xD;
+})&#xD;
+dsUser.flushAsync();&#xD;
+</ClientEvent>
+                <Property name="dataSet">deptDataSet</Property>
+                <Property name="readOnly">true</Property>
+                <Property name="treeColumn">dept_name</Property>
+                <Property name="currentNodeDataPath">currentNode</Property>
+                <BindingConfigs>
+                  <BindingConfig>
+                    <Property name="childrenProperty">child</Property>
+                    <Property name="recursive">true</Property>
+                    <Property name="icon">url(>skin>common/icons.gif) -160px -80px</Property>
+                    <Property name="expandLevel">2</Property>
+                  </BindingConfig>
+                </BindingConfigs>
+                <Columns>
+                  <DataColumn>
+                    <Property name="name">dept_name</Property>
+                    <Property name="property">dept_name</Property>
+                    <Editor/>
+                  </DataColumn>
+                </Columns>
+              </DataTreeGrid>
+            </Children>
+          </GroupBox>
+        </Container>
+      </SideControl>
+    </SplitPanel>
   </View>
 </ViewConfig>

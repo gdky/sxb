@@ -284,12 +284,33 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(zstk);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		int tmlyid = this.getTmlyInfoOrAddTmly(zstk.getTmly(), zstk.getTmlyContent());
 		Object[] objs = { zstk.getId(), zstk.getFlId(), zstk.getUserId(),
 				sdf.format(zstk.getCreateDate()), zstk.getSpDate(),
 				zstk.getSprId(), zstk.getDeptid(), zstk.getContent(),
-				list.get(0).get("value"), zstk.getTmnd(), zstk.getTmlyId(),
+				list.get(0).get("value"), zstk.getTmnd(), tmlyid,//zstk.getTmlyId(),
 				zstk.getMode(), "Y", "Y", zstk.getDrbz() };
 		this.jdbcTemplate.update(sql, objs);
+	}
+
+	private int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from tmly where title='"+tmlyTitle+"' ");
+		if(tmlyContent != null){
+			sql.append(" and content='"+tmlyContent+"' ");
+		}
+		int tmlyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
+		if (tmlyid == 0) {
+			tmlyid = this.addTmly(tmlyTitle, tmlyContent);
+		}
+		return tmlyid;
+	}
+
+	private int addTmly(String tmlyTitle, String tmlyContent) {
+		String sql = "insert into tmly values(?,?,?,?)";
+		return this.insertAndGetKeyByJdbc(sql,
+				new Object[] { null, tmlyTitle, tmlyContent, null },
+				new String[] { "id_" }).intValue();
 	}
 
 	private List<Map<String, Object>> getSysPropValueByTmnd(Tktm zstk) {
@@ -537,6 +558,39 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			}
 		}
 	}
+	
+
+	@Override
+	public void updateKstsjlDetailInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		List<String> ids = (List<String>) param.get("id");
+		if (ids.size() > 0) {
+			List<String> groupId = (List<String>) param.get("groupId");
+			Integer examid = (Integer) param.get("examid");
+			Date begin = (Date) param.get("begin");
+			Date end = (Date) param.get("end");
+			String title = (String) param.get("title");
+			String tpye = (String) param.get("type");
+			
+			String sql = "update exam set start_time=?,end_time=?,title=? where id_=?";
+			this.jdbcTemplate.update(sql, new Object[]{ begin, end, title, examid });
+			if(groupId != null){
+				sql = "delete from exam_tsqz where exam_id = ?";
+				this.jdbcTemplate.update(sql, new Object[]{ examid });
+				for(int j = 0; j < groupId.size(); j++){
+					sql = "insert into exam_tsqz value(?,?,?)";
+					this.jdbcTemplate.update(sql, new Object[] { null, groupId.get(j), examid });
+				}
+			}
+			sql = "delete from exam_detail where exam_id=?";
+			this.jdbcTemplate.update(sql, new Object[]{ examid });
+			for (int i = 0; i < ids.size(); i++) {
+				sql = "insert into exam_detail values(?,?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, i + 1, examid,
+						ids.get(i) });
+			}
+		}
+	}
 
 	@Override
 	public Integer getSomeInfoBySystemPropsKey(String systemPropsKey) {
@@ -646,10 +700,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
-	public void getExamInfo(Page<Exam> page, Map<String, Object> param) {
+	public void getExamInfo(Page page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
+		
 		String sql = "select count(*) from exam";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
 		sql = "select * from exam limit ?,?";
@@ -669,6 +724,15 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			}
 			
 		});
+		/*
+		String sql = "select count(*) from exam";
+		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
+		sql = "select g.ID_ groupId,g.GROUP_NAME groupname,e.id_ id,e.START_TIME startTime,"
+				+ "e.END_TIME endTime,e.TITLE,e.EXAM_TYPE examType,e.FQR_ID fqrId "
+				+ "from exam e, exam_tsqz qz, grouptable g "
+				+ "where e.id_=qz.EXAM_ID and g.ID_ = qz.GROUP_ID group by id limit ?,?";
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{pageSize * (pageNow - 1), pageSize});
+		*/
 		page.setEntityCount(count);
 		page.setEntities(list);
 	}
@@ -828,6 +892,15 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		return map;
 	}
 
-	
+	@Override
+	public void deleteKstsjlInfo(String examid) {
+		// TODO Auto-generated method stub
+		String sql = "delete from exam where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{ examid });
+		sql = "delete from exam_detail where exam_id=?";
+		this.jdbcTemplate.update(sql, new Object[]{ examid });
+		sql = "delete from exam_tsqz where exam_id=?";
+		this.jdbcTemplate.update(sql, new Object[]{ examid });
+	}
 	
 }
