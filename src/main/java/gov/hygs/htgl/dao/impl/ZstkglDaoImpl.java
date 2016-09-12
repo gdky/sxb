@@ -707,7 +707,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		
 		String sql = "select count(*) from exam";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		sql = "select * from exam limit ?,?";
+		sql = "select * from exam order by start_time desc limit ?,?";
 		List<Exam> list = this.jdbcTemplate.query(sql, new Object[]{pageSize * (pageNow - 1), pageSize}, new RowMapper<Exam>(){
 
 			@Override
@@ -886,7 +886,9 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				for(Map<String,Object> groupname : list){
 					groupnames += (String)groupname.get("group_name")+",";
 				}
-				map.put("groupName", groupnames.substring(0, groupnames.length()-1));
+				if(groupnames.length() > 0){
+					map.put("groupName", groupnames.substring(0, groupnames.length()-1));
+				}
 			}
 		}
 		return map;
