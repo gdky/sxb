@@ -57,4 +57,10 @@ public interface ZszskDao {
 
 	public void getZsdDetailInfo(Page page, Map<String, Object> param);
 
+	public void addGxjl(ZskJl zszsk);
+
+	public void updateZsdtsDetailInfo(Map<String, Object> param);
+
+	public void deleteZsdtsInfo(String jlid);
+
 }

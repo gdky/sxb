@@ -68,6 +68,8 @@ public class Tktm implements Serializable {
 	private String dept;
 	/** 题干内容. */
 	private String tmly;
+	/** 题目来源来源内容 */
+	private String tmlyContent;
 	
 	private Collection<Tkxzx> tkxzx;
 	private Collection<Tkxzx> daxzx;
@@ -132,6 +134,14 @@ public class Tktm implements Serializable {
 
 	public void setTmly(String tmly) {
 		this.tmly = tmly;
+	}
+
+	public String getTmlyContent() {
+		return tmlyContent;
+	}
+
+	public void setTmlyContent(String tmlyContent) {
+		this.tmlyContent = tmlyContent;
 	}
 
 	/**

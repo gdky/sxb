@@ -37,12 +37,16 @@ public interface ZstkglService {
 
 	public Integer getFxtsInfoFromSystemProps();
 
-	public void getExamInfo(Page<Exam> page, Map<String, Object> param);
+	public void getExamInfo(Page page, Map<String, Object> param);
 
 	public void getExamDetailInfo(Page<Tktm> page, Map<String, Object> param);
 
 	public void getZstkInfoByKsts(Page<Tktm> page, Map<String, Object> param);
 
 	public Map<String, Object> getGroupByExamId(String param);
+
+	public void updateKstsjlDetailInfo(Map<String, Object> param);
+
+	public void deleteKstsjlInfo(String examid);
 
 }

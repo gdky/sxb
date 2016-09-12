@@ -106,6 +106,7 @@
       <PropertyDef name="username">
         <Property name="label">用户名</Property>
       </PropertyDef>
+      <PropertyDef name="parentid"/>
     </DataType>
   </Model>
   <View>
@@ -129,7 +130,7 @@ self.flush();</ClientEvent>
         <Property name="dataType">[userType]</Property>
         <Property name="dataProvider">qzBmCdglController#getUserInfo</Property>
         <Property name="pageSize">10</Property>
-        <Property name="loadMode">manual</Property>
+        <Property name="loadMode">lazy</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -168,40 +169,94 @@ view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
 	user.flush();&#xD;
 });&#xD;
 */&#xD;
-var entitys = view.get('#userDataGrid.selection');&#xD;
-var users = view.get(&quot;#userDataSet&quot;).getData();&#xD;
-&#xD;
-var id = [];&#xD;
+/*&#xD;
+var entitys = view.get('#depttree.selection');&#xD;
+var parent = 0;&#xD;
+var parentname;&#xD;
+var deptname=[];&#xD;
 entitys.each(function(entity){&#xD;
+	var data = entity.get(&quot;data&quot;);&#xD;
+	if(data.get(&quot;parentId&quot;) == parent){&#xD;
+		deptname.push(parentname);&#xD;
+	}&#xD;
+	parent = data.get(&quot;id_&quot;);&#xD;
+	parentname = data.get(&quot;dept_name&quot;);&#xD;
+});&#xD;
+var id = [];&#xD;
+var names=[];&#xD;
+entitys.each(function(entity){&#xD;
+	var data = entity.get(&quot;data&quot;);&#xD;
 	var i = 0;&#xD;
-	users.each(function(o){&#xD;
-		if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+	deptname.each(function(name){&#xD;
+		if(name == data.get(&quot;dept_name&quot;)){&#xD;
 			i++;&#xD;
 		}&#xD;
 	});&#xD;
 	if(i == 0){&#xD;
-		id.push(entity.get(&quot;id_&quot;));&#xD;
+		id.push(data.get(&quot;id_&quot;));&#xD;
+		names.push(data.get(&quot;dept_name&quot;));&#xD;
 	}&#xD;
-})&#xD;
-if(id == &quot;&quot;){&#xD;
-	throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
-	return false;&#xD;
-}&#xD;
-//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
-&#xD;
-view.get(&quot;#addAction&quot;).set(&quot;parameter&quot;,{&quot;groupId&quot;:groupId,&quot;ids&quot;:id});&#xD;
-view.get(&quot;#addAction&quot;).execute(function(){&#xD;
-	view.get(&quot;#userDialog&quot;).close();&#xD;
-	view.get('#userDataGrid').unselectAll();&#xD;
-	&#xD;
-	//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
-	var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
-	&#xD;
-	var user = view.get(&quot;#userDataSet&quot;);&#xD;
-	user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
-	user.flush();&#xD;
 });&#xD;
+if(id == &quot;&quot;){&#xD;
+*/&#xD;
+var entity = view.get('#depttree.selection');&#xD;
+if(entity == undefined){&#xD;
+&#xD;
+	var entitys = view.get('#userDataGrid.selection');&#xD;
+	var users = view.get(&quot;#userDataSet&quot;).getData();&#xD;
+	&#xD;
+	var id = [];&#xD;
+	entitys.each(function(entity){&#xD;
+		var i = 0;&#xD;
+		users.each(function(o){&#xD;
+			if(o.get(&quot;id_&quot;)==entity.get(&quot;id_&quot;)){&#xD;
+				i++;&#xD;
+			}&#xD;
+		});&#xD;
+		if(i == 0){&#xD;
+			id.push(entity.get(&quot;id_&quot;));&#xD;
+		}&#xD;
+	})&#xD;
+	if(id == &quot;&quot;){&#xD;
+		throw new dorado.Exception(&quot;记录已经存在，无法添加！&quot;)&#xD;
+		return false;&#xD;
+	}&#xD;
+	//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+	var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+	&#xD;
+	view.get(&quot;#addAction&quot;).set(&quot;parameter&quot;,{&quot;groupId&quot;:groupId,&quot;ids&quot;:id});&#xD;
+	view.get(&quot;#addAction&quot;).execute(function(){&#xD;
+		view.get(&quot;#userDialog&quot;).close();&#xD;
+		view.get('#userDataGrid').unselectAll();&#xD;
+		view.get(&quot;#depttree&quot;).unselectAll();&#xD;
+		//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+		var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+		&#xD;
+		var user = view.get(&quot;#userDataSet&quot;);&#xD;
+		user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+		user.flush();&#xD;
+	});&#xD;
+&#xD;
+	&#xD;
+}else{&#xD;
+		var id = [];&#xD;
+		id.push(entity.get(&quot;data&quot;).get(&quot;id_&quot;));&#xD;
+	//dorado.MessageBox.confirm(&quot;确定把'&quot;+names+&quot;'部门里所有人添加至该群组吗？&quot;,function(){&#xD;
+		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+		view.get(&quot;#addAction&quot;).set(&quot;parameter&quot;,{&quot;groupId&quot;:groupId,&quot;ids&quot;:id,&quot;add&quot;:&quot;adddept&quot;});&#xD;
+		view.get(&quot;#addAction&quot;).execute(function(){&#xD;
+			view.get(&quot;#userDialog&quot;).close();&#xD;
+			view.get('#userDataGrid').unselectAll();&#xD;
+			view.get(&quot;#depttree&quot;).unselectAll();&#xD;
+			//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+			&#xD;
+			var user = view.get(&quot;#userDataSet&quot;);&#xD;
+			user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+			user.flush();&#xD;
+		});&#xD;
+	//});&#xD;
+}&#xD;
 </ClientEvent>
             <Property name="caption">提交</Property>
             <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
@@ -209,7 +264,8 @@ view.get(&quot;#addAction&quot;).execute(function(){&#xD;
           <Button>
             <ClientEvent name="onClick">//view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#userDialog&quot;).close();&#xD;
-view.get('#userDataGrid').unselectAll();</ClientEvent>
+view.get('#userDataGrid').unselectAll();&#xD;
+view.get(&quot;#depttree&quot;).unselectAll();</ClientEvent>
             <Property name="caption">取消</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
           </Button>
@@ -290,8 +346,9 @@ dsUser.flushAsync();&#xD;
                     <DataTreeGrid id="depttree">
                       <ClientEvent name="onClick">var dsUser = view.get(&quot;#dsUser&quot;);&#xD;
 var deptId = view.get(&quot;#dsDept&quot;).getData(&quot;!currentNode&quot;).get(&quot;id_&quot;);&#xD;
+var parentId = view.get(&quot;#dsDept&quot;).getData(&quot;!currentNode&quot;).get(&quot;parentId&quot;);&#xD;
 var conditionForm = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
-conditionForm.set({deptid:deptId});&#xD;
+conditionForm.set({deptid:deptId,parentid:parentId==null?0:parentId});&#xD;
 //var condition = view.get(&quot;#conditionForm&quot;);&#xD;
 //view.get(&quot;#yxtkForm&quot;).set({userName:&quot;aaa&quot;});&#xD;
 //var condition = view.get(&quot;#conditon&quot;).getData(&quot;#&quot;);&#xD;
@@ -304,6 +361,7 @@ dsUser.flushAsync();</ClientEvent>
                       <Property name="readOnly">true</Property>
                       <Property name="treeColumn">dept_name</Property>
                       <Property name="currentNodeDataPath">currentNode</Property>
+                      <Property name="selectionMode">singleRow</Property>
                       <BindingConfigs>
                         <BindingConfig>
                           <Property name="childrenProperty">child</Property>
@@ -313,6 +371,7 @@ dsUser.flushAsync();</ClientEvent>
                         </BindingConfig>
                       </BindingConfigs>
                       <Columns>
+                        <RowSelectorColumn/>
                         <DataColumn>
                           <Property name="name">dept_name</Property>
                           <Property name="property">dept_name</Property>

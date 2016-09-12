@@ -347,10 +347,11 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
 		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		int tmlyid = getTmlyInfoOrAddTmly(yxtk.getTmly(), yxtk.getTmlyContent());
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
 				sdf.format(yxtk.getCreateDate()), yxtk.getSpDate(),
 				yxtk.getSprId(), yxtk.getDeptid(), yxtk.getContent(),
-				list.get(0).get("value"), yxtk.getTmnd(), yxtk.getTmlyId(),
+				list.get(0).get("value"), yxtk.getTmnd(), tmlyid,//yxtk.getTmlyId(),
 				yxtk.getMode(), "Y", "N", yxtk.getDrbz() };
 		this.jdbcTemplate.update(sql, obj);
 	}
@@ -505,9 +506,9 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent) {
 		// TODO Auto-generated method stub
-		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from tmly where title="+tmlyTitle);
-		if("null".equals(tmlyContent)){
-			sql.append(" and content="+tmlyContent);
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from tmly where title='"+tmlyTitle+"' ");
+		if(tmlyContent != null){
+			sql.append(" and content='"+tmlyContent+"' ");
 		}
 		int tmlyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
 		if (tmlyid == 0) {

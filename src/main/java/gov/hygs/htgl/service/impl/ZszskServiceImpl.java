@@ -54,6 +54,8 @@ public class ZszskServiceImpl implements ZszskService {
 					zszsk.setDeptid(userDetails.getDeptid());
 					zszsk.setId(getUUID());
 					zszskDao.addZszsk(zszsk);
+					zszsk.setContent(getUUID());
+					zszskDao.addGxjl(zszsk);
 				} else {
 					//zszskDao.addYxzskToZszsk(zszsk);
 					zszskDao.updateZszsk(zszsk);
@@ -182,6 +184,18 @@ public class ZszskServiceImpl implements ZszskService {
 	public void getZsdDetailInfo(Page page, Map<String, Object> param) {
 		// TODO Auto-generated method stub
 		zszskDao.getZsdDetailInfo(page, param);
+	}
+
+	@Override
+	public void updateZsdtsDetailInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zszskDao.updateZsdtsDetailInfo(param);
+	}
+
+	@Override
+	public void deleteZsdtsInfo(String jlid) {
+		// TODO Auto-generated method stub
+		zszskDao.deleteZsdtsInfo(jlid);
 	}
 
 }
