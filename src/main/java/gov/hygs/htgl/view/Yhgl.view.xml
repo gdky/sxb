@@ -603,9 +603,12 @@ var parentId = view.get(&quot;#deptDataSet&quot;).getData(&quot;!currentNode&quo
 var conditionForm = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
 conditionForm.set({deptid:deptId,parentid:parentId==null?0:parentId});&#xD;
 &#xD;
+/*&#xD;
 dsUser.set(&quot;parameter&quot;,{&#xD;
 	deptid: deptId&#xD;
 })&#xD;
+*/&#xD;
+dsUser.set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
 dsUser.flushAsync();&#xD;
 </ClientEvent>
                 <Property name="dataSet">deptDataSet</Property>
