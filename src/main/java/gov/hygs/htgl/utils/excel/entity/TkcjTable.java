@@ -11,6 +11,7 @@ public class TkcjTable {
 	private String tmlyContent;
 	private String userName;
 	private String deptName;
+	private String errMassage;
 	public String getNum() {
 		return num;
 	}
@@ -70,5 +71,11 @@ public class TkcjTable {
 	}
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+	public String getErrMassage() {
+		return errMassage;
+	}
+	public void setErrMassage(String errMassage) {
+		this.errMassage = errMassage;
 	}
 }
