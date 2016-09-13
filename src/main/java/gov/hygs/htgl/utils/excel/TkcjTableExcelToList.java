@@ -55,8 +55,8 @@ public class TkcjTableExcelToList {
 
 							Method method = clazz.getMethod("set"
 									+ fields[cellnum - i],
-									new Class[] { String.class });
-
+									new Class[] { String.class });							
+							
 							if (cell.getCellType() == cell.CELL_TYPE_STRING
 									|| cell.getCellType() == cell.CELL_TYPE_BLANK) {
 								if (cellnum == num.get(i == num.size() ? i - 1

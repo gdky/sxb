@@ -544,6 +544,10 @@ if(datas.getLast() != null){&#xD;
         <Property></Property>
         <Property name="label">出题科室</Property>
       </PropertyDef>
+      <PropertyDef name="errMassage">
+        <Property/>
+        <Property name="label">错误信息</Property>
+      </PropertyDef>
     </DataType>
   </Model>
   <View>
@@ -1360,6 +1364,9 @@ view.get(&quot;#yxtkGrid&quot;).unselectAll();</ClientEvent>
                 </DataColumn>
                 <DataColumn name="deptName">
                   <Property name="property">deptName</Property>
+                </DataColumn>
+                <DataColumn name="errMassage">
+                  <Property name="property">errMassage</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
