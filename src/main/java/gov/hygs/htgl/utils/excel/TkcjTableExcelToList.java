@@ -57,16 +57,19 @@ public class TkcjTableExcelToList {
 									+ fields[cellnum - i],
 									new Class[] { String.class });							
 							
-							if (cell.getCellType() == cell.CELL_TYPE_STRING
+							if (cell == null || cell.getCellType() == cell.CELL_TYPE_STRING
 									|| cell.getCellType() == cell.CELL_TYPE_BLANK) {
 								if (cellnum == num.get(i == num.size() ? i - 1
 										: i)) {
 									// 存储答案或选项
-									rowParam.put(
+									if(cell != null)
+										rowParam.put(
 											xzx.get(i),
 											"".equals(cell.getStringCellValue()
 													.trim()) ? null : cell
 													.getStringCellValue());
+									else
+										rowParam.put(xzx.get(i),cell);
 									i++;
 								} else {
 
