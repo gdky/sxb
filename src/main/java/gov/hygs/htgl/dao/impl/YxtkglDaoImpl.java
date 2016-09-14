@@ -123,9 +123,17 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		/*
 		StringBuilder sql = new StringBuilder("select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*");
 			sql.append(" from tktm a,tkfl b, USER c,dept d,tmly e ");
 			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ ");
+		*/
+		StringBuilder sql = new StringBuilder("select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*");
+			sql.append(" from tktm a ");
+			sql.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
+			sql.append(" left join tkfl b on a.FL_ID=b.ID_, ");
+			sql.append(" USER c,dept d ");
+			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ ");
 		Object[] objs = {};
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			sql.append(" and a.yxbz='Y' ");
