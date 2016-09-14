@@ -235,10 +235,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 						}
 						
 						if(tkcj.getTmlyTitle() == null){
-							//tmlyId = 0;
-							tkcj.setErrMassage("题目出处不能为空");
-							errMassage.add(tkcj);// 记录当前行数
-							continue;
+							tmlyId = 0;
+							//tkcj.setErrMassage("题目出处不能为空");
+							//errMassage.add(tkcj);// 记录当前行数
+							//continue;
 						}else{
 							if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
 								tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
@@ -255,10 +255,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 						tktm.setTmlyId(tmlyChack.get(tkcj.getTmlyTitle()));
 
 						if(tkcj.getTkflTkmc() == null){
-							//flId = 0;
-							tkcj.setErrMassage("入库类型不能为空");
-							errMassage.add(tkcj);// 记录当前行数
-							continue;
+							flId = 0;
+							//tkcj.setErrMassage("入库类型不能为空");
+							//errMassage.add(tkcj);// 记录当前行数
+							//continue;
 						}else{
 							if (flIdChack.get(tkcj.getTkflTkmc()) == null) {
 								flId = yxtkglDao.getTkflInfoOrAddTkfl(tkcj
