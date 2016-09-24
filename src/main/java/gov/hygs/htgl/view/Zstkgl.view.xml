@@ -64,11 +64,11 @@
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">税收业务类基础题</Property>
+                <Property name="value">基础题</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">税收业务类进阶题</Property>
+                <Property name="value">进阶题</Property>
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
@@ -399,11 +399,11 @@ if(datas.getLast() != null){&#xD;
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">基础型</Property>
+                <Property name="value">基础题</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">进阶型</Property>
+                <Property name="value">进阶题</Property>
               </Entity>
               <Entity>
                 <Property name="key">2</Property>

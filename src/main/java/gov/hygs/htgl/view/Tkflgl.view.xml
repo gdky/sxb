@@ -119,14 +119,19 @@ view.get(&quot;#dialog&quot;).close();&#xD;
             <Property name="width">470</Property>
             <Buttons>
               <Button>
+                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#updateDialog&quot;).close();&#xD;
+});&#xD;
+</ClientEvent>
                 <Property name="caption">提交</Property>
-                <Property name="action">updateAction</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#dsTkfl&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#updateDialog&quot;).close();&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
             </Buttons>
             <Children>

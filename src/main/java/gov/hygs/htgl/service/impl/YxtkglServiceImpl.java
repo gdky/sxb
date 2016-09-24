@@ -173,7 +173,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 		//int deptid = 0;
 		//int userid = 0;
 		Map<String, Integer> tmlyChack = new HashMap<String, Integer>();
-		Map<String, String> flIdChack = new HashMap<String, String>();
+		Map<String, Integer> flIdChack = new HashMap<String, Integer>();
 		//Map<String, String> deptChack = new HashMap<String, String>();
 		//Map<String, String> userChack = new HashMap<String, String>();
 
@@ -229,12 +229,16 @@ public class YxtkglServiceImpl implements YxtkglService {
 							tktm.setUserId( Integer.parseInt(String.valueOf(deptUser.get(0).get("userid"))) );
 							
 						}else{
+							tkcj.setErrMassage("出题者获出题科室不匹配");
 							errMassage.add(tkcj);// 记录当前行数
 							continue;
 						}
 						
 						if(tkcj.getTmlyTitle() == null){
 							tmlyId = 0;
+							//tkcj.setErrMassage("题目出处不能为空");
+							//errMassage.add(tkcj);// 记录当前行数
+							//continue;
 						}else{
 							if (tmlyChack.get(tkcj.getTmlyTitle()) == null) {
 								tmlyId = yxtkglDao.getTmlyInfoOrAddTmly(
@@ -250,21 +254,29 @@ public class YxtkglServiceImpl implements YxtkglService {
 						}
 						tktm.setTmlyId(tmlyChack.get(tkcj.getTmlyTitle()));
 
-						if (flIdChack.get(tkcj.getTkflTkmc()) == null) {
-							flId = yxtkglDao.getTkflInfoOrAddTkfl(tkcj
-									.getTkflTkmc());
-							flIdChack.put(tkcj.getTkflTkmc(),
-									tkcj.getTkflTkmc());
+						if(tkcj.getTkflTkmc() == null){
+							flId = 0;
+							//tkcj.setErrMassage("入库类型不能为空");
+							//errMassage.add(tkcj);// 记录当前行数
+							//continue;
+						}else{
+							if (flIdChack.get(tkcj.getTkflTkmc()) == null) {
+								flId = yxtkglDao.getTkflInfoOrAddTkfl(tkcj
+										.getTkflTkmc());
+								flIdChack.put(tkcj.getTkflTkmc(),
+										flId);
+							}
 						}
-						tktm.setFlId(flId);//一个title对应一个content
+						tktm.setFlId(flIdChack.get(tkcj.getTkflTkmc()));//一个title对应一个content
 
-						if ("税收业务类基础题".equals(tkcj.getTktmTmnd())) {
+						if ("基础题".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(0);
-						} else if ("税收业务类进阶题".equals(tkcj.getTktmTmnd())) {
+						} else if ("进阶题".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(1);
 						} else if ("非税收业务类".equals(tkcj.getTktmTmnd())) {
 							tktm.setTmnd(2);
 						} else {
+							tkcj.setErrMassage("没有匹配的题型");
 							errMassage.add(tkcj);// 记录当前行数
 							continue;
 						}
@@ -331,7 +343,15 @@ public class YxtkglServiceImpl implements YxtkglService {
 
 							}
 						}
+					}else{
+						tkcj.setErrMassage("题目内容已存在");
+						errMassage.add(tkcj);
+						continue;
 					}
+				}else{
+					tkcj.setErrMassage("题目内容不能为空");
+					errMassage.add(tkcj);
+					continue;
 				}
 			}
 		}
