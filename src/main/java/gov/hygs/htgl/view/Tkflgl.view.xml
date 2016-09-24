@@ -139,6 +139,7 @@ view.get(&quot;#updateDialog&quot;).close();&#xD;
                 <Property name="dataSet">dsTkfl</Property>
                 <Property name="cols">*</Property>
                 <Property name="width">468</Property>
+                <Property name="dataPath">!current_Node</Property>
                 <AutoFormElement>
                   <Property name="name">tkmc</Property>
                   <Property name="property">tkmc</Property>
