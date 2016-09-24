@@ -186,12 +186,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 		List<Map<String, Object>> deptUser = null;//new ArrayList<Map<String, Object>>();
 		Map<String, Map<String, List<Map<String, Object>>>> deptChack = new HashMap<String, Map<String, List<Map<String, Object>>>>();
 		Map<String, List<Map<String, Object>>> userChack = new HashMap<String, List<Map<String, Object>>>();
-		
-		
-		
-
+		Map<String, Object> contentChack = new HashMap<String,Object>();
 		Pattern p = Pattern.compile("[A-Z]");
 		for (Map<String, Object> rowInfo : list) {
+
 			TkcjTable tkcj = (TkcjTable) rowInfo.get("tkcjTable");
 			if (tkcj == null) {
 
@@ -205,7 +203,8 @@ public class YxtkglServiceImpl implements YxtkglService {
 
 			} else {
 				if (tkcj.getTktmContent() != null) {
-					if (yxtkglDao.chackTktmExistOrNot(tkcj.getTktmContent())) {
+					if (yxtkglDao.chackTktmExistOrNot(tkcj.getTktmContent()) && contentChack.get(tkcj.getTktmContent()) == null) {
+						contentChack.put(tkcj.getTktmContent(), tkcj.getTktmContent());
 						Tktm tktm = new Tktm();
 						tktm.setDrbz("Y");
 
@@ -295,8 +294,8 @@ public class YxtkglServiceImpl implements YxtkglService {
 						String tktmid = this.getUUID();
 						tktm.setId(tktmid);
 
-						// yxtkglDao.addYxtk(tktm);
-						// yxtkglDao.addGrDeptGxJl(tktm);
+						//yxtkglDao.addYxtk(tktm);
+						//yxtkglDao.addGrDeptGxJl(tktm);
 						tktms.add(tktm);
 
 						if ("0".equals(mode)) {
@@ -310,7 +309,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 								da.setId("1");
 							}
 
-							// yxtkglDao.addYxtkda(da);
+							//yxtkglDao.addYxtkda(da);
 							tkdas.add(da);
 
 						} else if ("1".equals(mode) || "2".equals(mode)) {
@@ -333,16 +332,17 @@ public class YxtkglServiceImpl implements YxtkglService {
 									da.setTkId(tktmid);
 									da.setId(tkxzxid);
 
-									// yxtkglDao.addYxtkda(da);
+									//yxtkglDao.addYxtkda(da);
 									tkdas.add(da);
 
 								}
 
-								// yxtkglDao.addYxtkxzx(xz);
+								//yxtkglDao.addYxtkxzx(xz);
 								tkxzxs.add(xz);
 
 							}
 						}
+						//yxtkglDao.batchInsertTk(tktms, tkxzxs, tkdas);
 					}else{
 						tkcj.setErrMassage("题目内容已存在");
 						errMassage.add(tkcj);
@@ -356,7 +356,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 			}
 		}
 		yxtkglDao.batchInsertTk(tktms, tkxzxs, tkdas);
-		return errMassage == null ? null : errMassage;
+		return errMassage.isEmpty() ? null : errMassage;
 	}
 
 }
