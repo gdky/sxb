@@ -574,7 +574,65 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				new Object[] { tktmContent }, Integer.class);
 		return record == 0 ? true : false;
 	}
+	/*	
+	@Override
+	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
+			List<Tkxzx> tkdas) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Map<Integer, Integer> chackTmnd = new HashMap<Integer, Integer>();
+		List<Map<String, Object>> list = null;
+		//List<Object[]> batchArgs = new ArrayList<Object[]>();
+		//List<Object[]> gxjlBatchArgs = new ArrayList<Object[]>();
+		Object[] batchArgs = null;
+		Object[] gxjlBatchArgs = null;
+		String gxz = this.getGxjlValueByKey("GxzA");
+		for (Tktm yxtk : tktms) {
+			if (chackTmnd.get(yxtk.getTmnd()) == null) {
+				list = this.getSysPropValueByTmnd(yxtk);
+			}
+			batchArgs = new Object[]{ yxtk.getId(), yxtk.getFlId(),
+					yxtk.getUserId(), sdf.format(yxtk.getCreateDate()),
+					yxtk.getSpDate(), yxtk.getSprId(), yxtk.getDeptid(),
+					yxtk.getContent(), list.get(0).get("value"),
+					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
+					yxtk.getDrbz() };
+			gxjlBatchArgs = new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
+					yxtk.getId(), gxz, 1, yxtk.getCreateDate()};	
 
+		}
+		
+		if (batchArgs != null) {
+			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			this.jdbcTemplate.update(sql, batchArgs);
+			sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+			this.jdbcTemplate.update(sql, gxjlBatchArgs);
+
+			//List<Object[]> tkxzxBatchArgs = new ArrayList<Object[]>();
+			//List<Object[]> tkdaBatchArgs = new ArrayList<Object[]>();
+			Object[] tkxzxBatchArgs = null;
+			Object[] tkdaBatchArgs = null;
+			for (Tkxzx xz : tkxzxs) {
+				tkxzxBatchArgs = new Object[] { xz.getId(), xz.getTkId(),
+						xz.getXzKey(), xz.getContent() };
+			}
+			if (tkxzxBatchArgs != null) {
+				sql = "insert into tkxzx values(?,?,?,?)";
+				this.jdbcTemplate.update(sql, tkxzxBatchArgs);
+			}
+
+			for (Tkxzx da : tkdas) {
+				tkdaBatchArgs = new Object[] { da.getContent(), da.getTkId(),
+						da.getId() };
+			}
+			if (tkdaBatchArgs != null) {
+				sql = "insert into tkda values(?,?,?)";
+				this.jdbcTemplate.update(sql, tkdaBatchArgs);
+			}
+		}
+
+	}
+*/
 	@Override
 	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
 			List<Tkxzx> tkdas) {

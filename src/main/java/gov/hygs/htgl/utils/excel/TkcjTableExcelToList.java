@@ -37,13 +37,12 @@ public class TkcjTableExcelToList {
 			String[] fields = ((String) param.get("fields")).split(",");
 			List<Integer> num = new ArrayList<Integer>();
 			List<String> xzx = new ArrayList<String>();
-
-			for (int rownum = 1; rownum < sheet.getLastRowNum(); rownum++) {
+			
+			for (int rownum = 1; rownum <= sheet.getLastRowNum(); rownum++) {
 				HSSFRow row = sheet.getRow(rownum);
 				// String xzx[] = {};
 				// int num[] = {};
-
-				if (row.getCell(row.getLastCellNum() - 1).getCellType() != Cell.CELL_TYPE_BLANK) {
+				if (row != null && row.getLastCellNum()>0 && row.getCell(row.getLastCellNum() - 1).getCellType() != Cell.CELL_TYPE_BLANK) {
 					Map<String, Object> rowParam = new HashMap<String, Object>();// 存放答案或其他信息
 					TkcjTable tkcjTable = new TkcjTable();
 					Class clazz = tkcjTable.getClass();
