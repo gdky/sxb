@@ -26,6 +26,16 @@ public class Tkfl implements Serializable {
 	/** 描述. */
 	private String ms;
 	
+	private Integer pxh;
+	
+	public Integer getPxh() {
+		return pxh;
+	}
+
+	public void setPxh(Integer pxh) {
+		this.pxh = pxh;
+	}
+
 	private Collection<Tkfl> child;
 
 	public Collection<Tkfl> getChild() {

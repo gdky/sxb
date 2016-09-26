@@ -66,10 +66,10 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public void addTkfl(Tkfl tkfl) {
 		// TODO Auto-generated method stub
-		String sql = "insert into tkfl values(?,?,?,?)";
+		String sql = "insert into tkfl values(?,?,?,?,?)";
 		this.jdbcTemplate.update(sql,
 				new Object[] { tkfl.getId(), tkfl.getParentId(),
-						tkfl.getTkmc(), tkfl.getMs() });
+						tkfl.getTkmc(), tkfl.getMs(), tkfl.getPxh() });
 	}
 
 	@Override
