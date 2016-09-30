@@ -255,7 +255,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Grouptable> getGrouptableInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select id_,group_name,ms,parent_id from grouptable where parent_id=0";
+		String sql = "select id_,group_name,ms,parent_id,pxh from grouptable where parent_id=0 order by pxh";
 		List<Grouptable> groups = this.jdbcTemplate.query(sql,
 				new RowMapper<Grouptable>() {
 
@@ -268,6 +268,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 						group.setGroupName(result.getString("group_name"));
 						group.setMs(result.getString("ms"));
 						group.setParentId(result.getInt("parent_id"));
+						group.setPxh(result.getInt("pxh"));
 						return group;
 					}
 
@@ -400,16 +401,16 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void addGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "insert into grouptable values(?,?,?,?)";
-		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId() };
+		String sql = "insert into grouptable values(?,?,?,?,?)";
+		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId(),group.getPxh() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
 	public void updataGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "update grouptable g set g.group_name=?,g.ms=?,g.parent_id=? where g.id_=?";
-		Object[] objs = { group.getGroupName(), group.getMs(), group.getParentId(), group.getId() };
+		String sql = "update grouptable g set g.group_name=?,g.ms=?,g.parent_id=?,g.pxh=? where g.id_=?";
+		Object[] objs = { group.getGroupName(), group.getMs(), group.getParentId(), group.getPxh(), group.getId() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
@@ -534,7 +535,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Grouptable> getCurrentGroupById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select id_,group_name,parent_id from grouptable where parent_id=?";
+		String sql = "select id_,group_name,parent_id,ms,pxh from grouptable where parent_id=? order by pxh";
 		List<Grouptable> list = this.jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Grouptable>(){
 
 			@Override
@@ -545,6 +546,31 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 				grouptable.setId(result.getInt("id_"));
 				grouptable.setGroupName(result.getString("group_name"));
 				grouptable.setParentId(result.getInt("parent_id"));
+				grouptable.setMs(result.getString("ms"));
+				grouptable.setPxh(result.getInt("pxh"));
+				return grouptable;
+			}
+			
+		});
+		return list;
+	}
+
+	@Override
+	public Collection<Grouptable> getflushGroupById(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select id_,group_name,parent_id,ms,pxh from grouptable where parent_id=?";
+		List<Grouptable> list = this.jdbcTemplate.query(sql, new Object[]{id}, new RowMapper<Grouptable>(){
+
+			@Override
+			public Grouptable mapRow(ResultSet result, int i)
+					throws SQLException {
+				// TODO Auto-generated method stub
+				Grouptable grouptable = new Grouptable();
+				grouptable.setId(result.getInt("id_"));
+				grouptable.setGroupName(result.getString("group_name"));
+				grouptable.setParentId(result.getInt("parent_id"));
+				grouptable.setMs(result.getString("ms"));
+				grouptable.setPxh(result.getInt("pxh"));
 				return grouptable;
 			}
 			

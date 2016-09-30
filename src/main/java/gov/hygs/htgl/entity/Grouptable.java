@@ -26,6 +26,8 @@ public class Grouptable implements Serializable {
 	private Integer parentId;
 	
 	private Collection<Grouptable> child;
+	
+	private Integer pxh;
 
 	public Collection<Grouptable> getChild() {
 		return child;
@@ -126,6 +128,16 @@ public class Grouptable implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+
+	public Integer getPxh() {
+		return pxh;
+	}
+
+
+	public void setPxh(Integer pxh) {
+		this.pxh = pxh;
+	}
+
 
 	/**
 	 * {@inheritDoc}

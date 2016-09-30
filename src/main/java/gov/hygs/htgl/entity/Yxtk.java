@@ -57,6 +57,9 @@ public class Yxtk implements Serializable {
 	/** 正式库选中为Y否则N */
 	private String xybz;
 	
+	/** 导入标志. */
+	private String drbz;
+	
 	private Collection<Yxtkxzx> yxtkxzx;
 	private Collection<Yxtkxzx> daxzx;
 	
@@ -324,6 +327,14 @@ public class Yxtk implements Serializable {
 	 */
 	public String getMode() {
 		return this.mode;
+	}
+
+	public String getDrbz() {
+		return drbz;
+	}
+
+	public void setDrbz(String drbz) {
+		this.drbz = drbz;
 	}
 
 	/**
