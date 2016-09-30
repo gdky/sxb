@@ -278,6 +278,13 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		// TODO Auto-generated method stub
 		return qzBmCdglDao.getCurrentGroupById(id);
 	}
+	
+
+	@Override
+	public Collection<Grouptable> getflushGroupById(String id) {
+		// TODO Auto-generated method stub
+		return qzBmCdglDao.getflushGroupById(id);
+	}
 
 	@Override
 	public void updateGroup(List<Grouptable> groups) {
