@@ -62,4 +62,6 @@ public interface QzBmCdglService {
 	public Collection<Grouptable> getCurrentGroupById(String id);
 
 	public void updateGroup(List<Grouptable> groups);
+
+	public Collection<Grouptable> getflushGroupById(String id);
 }

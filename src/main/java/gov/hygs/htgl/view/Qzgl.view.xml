@@ -33,10 +33,19 @@
       <PropertyDef name="parentId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
+      <PropertyDef name="pxh">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">排序号</Property>
+      </PropertyDef>
       <Reference name="child">
         <Property name="dataType">[SELF]</Property>
         <Property name="parameter">$${this.id}</Property>
         <Property name="dataProvider">qzBmCdglController#getCurrentGroupById</Property>
+      </Reference>
+      <Reference name="oChild">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="dataProvider">qzBmCdglController#getflushGroupById</Property>
+        <Property name="parameter">$${this.id}</Property>
       </Reference>
     </DataType>
     <DataType name="userType">
@@ -389,12 +398,12 @@ dsUser.flushAsync();</ClientEvent>
       </Dialog>
       <Dialog id="updateZzxxDialog" layout="hbox">
         <Property name="height">260</Property>
-        <Property name="width">500</Property>
+        <Property name="width">650</Property>
         <Buttons/>
         <Children>
           <GroupBox layout="hbox">
             <Property name="caption">修改当前群组信息</Property>
-            <Property name="width">470</Property>
+            <Property name="width">640</Property>
             <Buttons>
               <Button>
                 <ClientEvent name="onClick">//groupUpdate&#xD;
@@ -428,8 +437,8 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
             <Children>
               <AutoForm>
                 <Property name="dataSet">groupDataSet</Property>
-                <Property name="cols">*</Property>
-                <Property name="width">468</Property>
+                <Property name="cols">*,*</Property>
+                <Property name="width">638</Property>
                 <Property name="dataPath">!current_Node</Property>
                 <AutoFormElement>
                   <Property name="name">groupName</Property>
@@ -437,6 +446,11 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
+                  <Property name="name">pxh</Property>
+                  <Property name="property">pxh</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
                   <Editor>
@@ -451,29 +465,31 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
       </Dialog>
       <Dialog id="dialog">
         <Property name="height">260</Property>
-        <Property name="width">500</Property>
+        <Property name="width">650</Property>
         <Buttons/>
         <Children>
           <GroupBox>
-            <Property name="width">470</Property>
+            <Property name="width">640</Property>
             <Property name="caption">添加群组节点</Property>
             <Buttons>
               <Button>
                 <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
 var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
-currentEntity.set({groupName:data.get(&quot;groupName&quot;),ms:data.get(&quot;ms&quot;)});&#xD;
+currentEntity.set({groupName:data.get(&quot;groupName&quot;),ms:data.get(&quot;ms&quot;),pxh:data.get(&quot;pxh&quot;)});&#xD;
 view.get(&quot;#updateGroup&quot;).execute(function(){ &#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	var current = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
+	//var current = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
 	var currentData = current.parent.parent;&#xD;
 	if(currentData != undefined){&#xD;
 		currentData.get(&quot;oChild&quot;).flush();&#xD;
 		var newNode = currentData.get(&quot;oChild&quot;).getLast();&#xD;
 		current.set({&#xD;
 			id:newNode.get(&quot;id&quot;),&#xD;
-			groupName:newNode.get(&quot;groupName&quot;),&#xD;
-			parentId:newNode.get(&quot;parentId&quot;),&#xD;
-			ms:newNode.get(&quot;ms&quot;)&#xD;
+			//groupName:newNode.get(&quot;groupName&quot;),&#xD;
+			parentId:newNode.get(&quot;parentId&quot;)//,&#xD;
+			//ms:newNode.get(&quot;ms&quot;)//,&#xD;
+			//pxh:newMode.get(&quot;pxh&quot;)&#xD;
 			});&#xD;
 	}else{&#xD;
 		view.get(&quot;#groupDataSet&quot;).flush();&#xD;
@@ -496,14 +512,19 @@ view.get(&quot;#dialog&quot;).close();&#xD;
             <Children>
               <AutoForm>
                 <Property name="dataSet">dsCondition</Property>
-                <Property name="cols">*</Property>
-                <Property name="width">468</Property>
+                <Property name="width">638</Property>
+                <Property name="cols">*,*</Property>
                 <AutoFormElement>
                   <Property name="name">groupName</Property>
                   <Property name="property">groupName</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
+                  <Property name="name">pxh</Property>
+                  <Property name="property">pxh</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
                   <Editor>
@@ -554,7 +575,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                 <AutoForm>
                   <Property name="dataSet">groupDataSet</Property>
                   <Property name="readOnly">true</Property>
-                  <Property name="cols">*</Property>
+                  <Property name="cols">*,*</Property>
                   <Property name="dataPath">!current_Node</Property>
                   <AutoFormElement>
                     <Property name="name">groupName</Property>
@@ -562,6 +583,11 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
+                    <Property name="name">pxh</Property>
+                    <Property name="property">pxh</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement layoutConstraint="colSpan:2">
                     <Property name="name">ms</Property>
                     <Property name="property">ms</Property>
                     <Editor>

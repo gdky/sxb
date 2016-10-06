@@ -361,8 +361,10 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
               <Property name="property">type</Property>
               <Editor/>
             </AutoFormElement>
-            <Button>
-              <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+            <Container>
+              <ToolBar>
+                <Button>
+                  <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
 var type = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;);&#xD;
 var dept = entity.get(&quot;dept&quot;);&#xD;
 var user = entity.get(&quot;user&quot;);&#xD;
@@ -395,9 +397,11 @@ if(type &lt; 7){&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
-              <Property name="caption">查找</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-            </Button>
+                  <Property name="caption">查找</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                </Button>
+              </ToolBar>
+            </Container>
           </AutoForm>
         </Children>
       </GroupBox>

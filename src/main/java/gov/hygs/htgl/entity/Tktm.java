@@ -60,6 +60,9 @@ public class Tktm implements Serializable {
 	/** 导入标志.  */
 	private String drbz;
 	
+	/** 考试标志. */
+	private String ksbz;
+	
 	/** 题干内容. */
 	private String tkfl;
 	/** 题干内容. */
@@ -102,6 +105,14 @@ public class Tktm implements Serializable {
 	 * Constructor.
 	 */
 	public Tktm() {
+	}
+
+	public String getKsbz() {
+		return ksbz;
+	}
+
+	public void setKsbz(String ksbz) {
+		this.ksbz = ksbz;
 	}
 
 	public String getTkfl() {

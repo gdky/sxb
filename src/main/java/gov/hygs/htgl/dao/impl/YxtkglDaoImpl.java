@@ -182,6 +182,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 						yxtk.setMode(result.getString("mode"));
 						yxtk.setYxbz(result.getString("yxbz"));
 						yxtk.setXybz(result.getString("xybz"));
+						yxtk.setKsbz(result.getString("ksbz"));
 						return yxtk;
 					}
 
@@ -354,13 +355,13 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
-		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int tmlyid = getTmlyInfoOrAddTmly(yxtk.getTmly(), yxtk.getTmlyContent());
 		Object[] obj = { yxtk.getId(), yxtk.getFlId(), yxtk.getUserId(),
 				sdf.format(yxtk.getCreateDate()), yxtk.getSpDate(),
 				yxtk.getSprId(), yxtk.getDeptid(), yxtk.getContent(),
 				list.get(0).get("value"), yxtk.getTmnd(), tmlyid,//yxtk.getTmlyId(),
-				yxtk.getMode(), "Y", "N", yxtk.getDrbz() };
+				yxtk.getMode(), "Y", "N", yxtk.getDrbz(),yxtk.getKsbz() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
@@ -396,11 +397,11 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
 		String sql = "update tktm set fl_id=?,user_id=?,create_date=?,"
 				+ "sp_date=?,spr_id=?,deptid=?," + "content=?,tmfz=?,tmnd=?,"
-				+ "tmly_id=?,mode=? where id_=?";
+				+ "tmly_id=?,mode=?,ksbz=? where id_=?";
 		Object[] obj = { yxtk.getFlId(), yxtk.getUserId(),
 				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
 				yxtk.getDeptid(), yxtk.getContent(), list.get(0).get("value"),
-				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), yxtk.getId() };
+				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), yxtk.getKsbz(), yxtk.getId() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
@@ -652,14 +653,14 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 					yxtk.getSpDate(), yxtk.getSprId(), yxtk.getDeptid(),
 					yxtk.getContent(), list.get(0).get("value"),
 					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
-					yxtk.getDrbz() });
+					yxtk.getDrbz(), "N" });
 			gxjlBatchArgs.add(new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
 					yxtk.getId(), gxz, 1, yxtk.getCreateDate()});	
 
 		}
 		
 		if (batchArgs.size() > 0) {
-			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			this.jdbcTemplate.batchUpdate(sql, batchArgs);
 			sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 			this.jdbcTemplate.batchUpdate(sql, gxjlBatchArgs);

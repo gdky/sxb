@@ -74,4 +74,6 @@ public interface QzBmCdglDao {
 
 	public Collection<Grouptable> getCurrentGroupById(String id);
 
+	public Collection<Grouptable> getflushGroupById(String id);
+
 }
