@@ -71,4 +71,6 @@ public interface ZstkglDao {
 
 	public void deleteKstsjlInfo(String examid);
 
+	public Map<String, Object> getDaMapInfoByZstkId(String id);
+
 }

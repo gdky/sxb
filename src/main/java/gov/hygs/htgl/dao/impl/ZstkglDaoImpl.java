@@ -271,6 +271,29 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	}
 
 	@Override
+	public Map<String, Object> getDaMapInfoByZstkId(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select x.* from tkxzx x,tkda d where x.id_=d.tkxzxid and d.tk_id=? order by x.xz_key";
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{ id });
+		Map<String,Object> da = null;
+		if(list != null){
+			da = new HashMap<String, Object>();
+			String content = "";
+			for(Map<String,Object> das : list){
+				if("0".equals(das.get("tk_id"))){
+					content += das.get("content")+";";
+				}else{
+					content += das.get("xz_key")+"、"+das.get("content")+";";
+				}
+			}
+			if(content.length() > 0){
+				da.put("content", content.substring(0, content.length()-1));
+			}
+		}
+		return da;
+	}
+	
+	@Override
 	public Collection<Tkxzx> getToFInfo() {
 		// TODO Auto-generated method stub
 		return this.getTkzxzInfoByZstkId("0");
@@ -963,5 +986,5 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		sql = "delete from exam_tsqz where exam_id=?";
 		this.jdbcTemplate.update(sql, new Object[]{ examid });
 	}
-	
+
 }

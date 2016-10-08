@@ -1,11 +1,12 @@
 package gov.hygs.htgl.controller;
 
-import gov.hygs.htgl.entity.Exam;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.service.ZstkglService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,16 @@ public class ZstkglController {
 	@DataProvider
 	public Collection<Tkxzx> getDaXzxInfoByZstkId(String id) {
 		return zstkglService.getDaXzxInfoByZstkId(id);
+	}
+	
+	@DataProvider
+	public Map<String,Object> getDaMapInfoByZstkId(String id){
+		return zstkglService.getDaMapInfoByZstkId(id);
+	}
+	
+	@DataProvider
+	public Map<String,Object> getDaylInfo(String param){
+		return zstkglService.getDaylInfo(param);
 	}
 
 	@DataProvider
