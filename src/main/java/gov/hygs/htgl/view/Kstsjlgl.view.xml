@@ -121,8 +121,8 @@
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="daxzx">
-        <Property name="dataType">[tkzxzType]</Property>
-        <Property name="dataProvider">zstkglController#getDaXzxInfoByZstkId</Property>
+        <Property name="dataType">tkzxzType</Property>
+        <Property name="dataProvider">zstkglController#getDaMapInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="tof">
@@ -147,6 +147,7 @@
       </PropertyDef>
       <PropertyDef name="content">
         <Property></Property>
+        <Property name="label">正确答案</Property>
       </PropertyDef>
     </DataType>
     <DataType name="tkdaType">
@@ -434,8 +435,8 @@
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="daxzx">
-        <Property name="dataType">[tkzxzType]</Property>
-        <Property name="dataProvider">zstkglController#getDaXzxInfoByZstkId</Property>
+        <Property name="dataType">tkzxzType</Property>
+        <Property name="dataProvider">zstkglController#getDaMapInfoByZstkId</Property>
         <Property name="parameter">$${this.id}</Property>
       </Reference>
       <Reference name="tof">
@@ -501,6 +502,7 @@
         <Property name="label">提干内容</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="choseType"/>
   </Model>
   <View>
     <Container id="datasets">
@@ -575,13 +577,17 @@
       </DataSet>
       <DataSet id="dsDa">
         <Property name="dataType">[tkzxzType]</Property>
-        <Property name="dataProvider">zstkglController#getDaXzxInfoByZstkId</Property>
+        <Property name="dataProvider">zstkglController#getDaMapInfoByZstkId</Property>
         <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsTof">
         <Property name="dataType">[tkzxzType]</Property>
         <Property name="dataProvider">zstkglController#getToFInfo</Property>
         <Property name="loadMode">manual</Property>
+      </DataSet>
+      <DataSet id="dsDayl">
+        <Property name="dataType">tkdaType</Property>
+        <Property name="dataProvider">zstkglController#getDaylInfo</Property>
       </DataSet>
     </Container>
     <Container id="dialogs">
@@ -763,6 +769,12 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#xjxzylDialog&quot;).show();&#xD;
+</ClientEvent>
+                <Property name="caption">预览</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
+              </Button>
             </Buttons>
             <Children>
               <ToolBar>
@@ -770,93 +782,6 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                   <Property name="dataSet">dsTktmFilter</Property>
                   <Property name="itemCodes">pages</Property>
                 </DataPilot>
-                <Button>
-                  <ClientEvent name="onClick">var dsTktmFilter = view.get(&quot;#dsTktmFilter&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#sjyxtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#sjtkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#sjSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#sjtofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsTktmFilter == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsTktmFilter.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#sjtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#sjtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#sjtofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-var entity = view.get(&quot;#dsTktmFilter&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#sjtofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#sjtkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#sjdaxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#sjdaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showSjxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#sjdaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsTktmFilter&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showSjxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#sjtkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#sjtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#sjtkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#sjdaxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#sjdaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		var xzs = view.get(&quot;#dsTktmFilter&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#sjdaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsTktmFilter&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#showSjxxDialog&quot;).show();&#xD;
-	view.get(&quot;#sjtofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                  <Property name="caption">题目信息</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                </Button>
               </ToolBar>
               <DataGrid>
                 <Property name="dataSet">dsTktmFilter</Property>
@@ -864,9 +789,6 @@ if(mode ==1 || mode == 2){&#xD;
                 <RowNumColumn/>
                 <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
-                </DataColumn>
-                <DataColumn name="createDate">
-                  <Property name="property">createDate</Property>
                 </DataColumn>
                 <DataColumn name="content">
                   <Property name="property">content</Property>
@@ -882,12 +804,6 @@ if(mode ==1 || mode == 2){&#xD;
                 </DataColumn>
                 <DataColumn name="mode">
                   <Property name="property">mode</Property>
-                </DataColumn>
-                <DataColumn name="user">
-                  <Property name="property">user</Property>
-                </DataColumn>
-                <DataColumn name="dept">
-                  <Property name="property">dept</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -973,6 +889,12 @@ if(entitys != undefined){&#xD;
             <Property name="caption">取消</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
           </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#tsxzylDialog&quot;).show();&#xD;
+</ClientEvent>
+            <Property name="caption">预览</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
+          </Button>
         </Buttons>
         <Children>
           <Container>
@@ -987,108 +909,7 @@ if(entitys != undefined){&#xD;
                         <Property name="caption">选中推送题目</Property>
                         <Buttons/>
                         <Children>
-                          <ToolBar>
-                            <Button>
-                              <ClientEvent name="onClick">var dsChose = view.get(&quot;#dsChose&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#yxtmForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#yxtmxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#yxtmSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#yxtofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsChose == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-var tmid = dsChose.get(&quot;id&quot;);&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsChose.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#yxtmxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#yxtmxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#yxtofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-//var entity = view.get(&quot;#dsChose&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-view.get(&quot;#dsDa&quot;).set(&quot;parameter&quot;,tmid);&#xD;
-view.get(&quot;#dsDa&quot;).flush();&#xD;
-var entity = view.get(&quot;#dsDa&quot;).getData();&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#yxtofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#yxtmxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#yxdaxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-	//if(entity == undefined){&#xD;
-		view.get(&quot;#yxdaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showYtstmxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#yxdaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		//var xzs = view.get(&quot;#dsChose&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		view.get(&quot;#dsXzx&quot;).set(&quot;parameter&quot;,tmid);&#xD;
-		view.get(&quot;#dsXzx&quot;).flush();&#xD;
-		var xzs = view.get(&quot;#dsXzx&quot;).getData();&#xD;
-		&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showYtstmxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#yxtmxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#yxtmxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#yxtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#yxtmxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#yxdaxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#yxdaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		//var xzs = view.get(&quot;#dsChose&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#dsTof&quot;).flush();&#xD;
-		var xzs = view.get(&quot;#dsTof&quot;).getData();&#xD;
-		&#xD;
-		&#xD;
-		view.get(&quot;#yxdaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsChose&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#showYtstmxxDialog&quot;).show();&#xD;
-	view.get(&quot;#yxtofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                              <Property name="caption">题目信息</Property>
-                              <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                            </Button>
-                          </ToolBar>
+                          <ToolBar/>
                           <DataGrid id="choseGrid">
                             <Property name="dataSet">dsChose</Property>
                             <Property name="readOnly">true</Property>
@@ -1097,9 +918,6 @@ if(mode ==1 || mode == 2){&#xD;
                             <RowNumColumn/>
                             <DataColumn name="tkfl">
                               <Property name="property">tkfl</Property>
-                            </DataColumn>
-                            <DataColumn name="createDate">
-                              <Property name="property">createDate</Property>
                             </DataColumn>
                             <DataColumn name="content">
                               <Property name="property">content</Property>
@@ -1115,12 +933,6 @@ if(mode ==1 || mode == 2){&#xD;
                             </DataColumn>
                             <DataColumn name="mode">
                               <Property name="property">mode</Property>
-                            </DataColumn>
-                            <DataColumn name="user">
-                              <Property name="property">user</Property>
-                            </DataColumn>
-                            <DataColumn name="dept">
-                              <Property name="property">dept</Property>
                             </DataColumn>
                           </DataGrid>
                         </Children>
@@ -1197,7 +1009,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
 				tmly:entity.get(&quot;tmly&quot;),&#xD;
 				mode:entity.get(&quot;mode&quot;),&#xD;
 				user:entity.get(&quot;user&quot;),&#xD;
-				dept:entity.get(&quot;dept&quot;)&#xD;
+				dept:entity.get(&quot;dept&quot;),&#xD;
+				daxzx:entity.get(&quot;daxzx&quot;)&#xD;
 			});&#xD;
 		}&#xD;
 	});&#xD;
@@ -1243,93 +1056,6 @@ view.get(&quot;#dsCon&quot;).insert({&#xD;
                               <Property name="caption">查询条件</Property>
                               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
                             </Button>
-                            <Button>
-                              <ClientEvent name="onClick">var dsTktmShow = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#tmSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#tofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsTktmShow == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsTktmShow.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-var entity = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		var xzs = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsTktmShow&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                              <Property name="caption">题目信息</Property>
-                              <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                            </Button>
                           </ToolBar>
                           <DataGrid id="optGrid">
                             <Property name="dataSet">dsTktmShow</Property>
@@ -1339,9 +1065,6 @@ if(mode ==1 || mode == 2){&#xD;
                             <RowNumColumn/>
                             <DataColumn name="tkfl">
                               <Property name="property">tkfl</Property>
-                            </DataColumn>
-                            <DataColumn name="createDate">
-                              <Property name="property">createDate</Property>
                             </DataColumn>
                             <DataColumn name="content">
                               <Property name="property">content</Property>
@@ -1357,12 +1080,6 @@ if(mode ==1 || mode == 2){&#xD;
                             </DataColumn>
                             <DataColumn name="mode">
                               <Property name="property">mode</Property>
-                            </DataColumn>
-                            <DataColumn name="user">
-                              <Property name="property">user</Property>
-                            </DataColumn>
-                            <DataColumn name="dept">
-                              <Property name="property">dept</Property>
                             </DataColumn>
                           </DataGrid>
                         </Container>
@@ -1408,7 +1125,7 @@ dsTktmShow.flushAsync();</ClientEvent>
       </Dialog>
       <Dialog id="ytsDialog">
         <Property name="height">500</Property>
-        <Property name="width">700</Property>
+        <Property name="width">70%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -1426,93 +1143,6 @@ dsTktmShow.flushAsync();</ClientEvent>
                   <Property name="dataSet">dsDetail</Property>
                   <Property name="itemCodes">pages</Property>
                 </DataPilot>
-                <Button>
-                  <ClientEvent name="onClick">var dsDetail = view.get(&quot;#dsDetail&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#detailtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#detailSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#detailtofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsDetail == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsDetail.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#detailtofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-var entity = view.get(&quot;#dsDetail&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#detailtofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#detailxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#detaildaxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsDetail&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#detailtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#detailxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#detaildaxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		var xzs = view.get(&quot;#dsDetail&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsDetail&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-	view.get(&quot;#detailtofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                  <Property name="caption">题目信息</Property>
-                  <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                </Button>
               </ToolBar>
               <DataGrid>
                 <Property name="dataSet">dsDetail</Property>
@@ -1520,30 +1150,39 @@ if(mode ==1 || mode == 2){&#xD;
                 <RowNumColumn/>
                 <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
+                  <Property name="width">100</Property>
                 </DataColumn>
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
+                  <Property name="width">80</Property>
                 </DataColumn>
                 <DataColumn name="content">
                   <Property name="property">content</Property>
+                  <Property name="width">400</Property>
                 </DataColumn>
                 <DataColumn name="tmfz">
                   <Property name="property">tmfz</Property>
+                  <Property name="width">55</Property>
                 </DataColumn>
                 <DataColumn name="tmnd">
                   <Property name="property">tmnd</Property>
+                  <Property name="width">95</Property>
                 </DataColumn>
                 <DataColumn name="tmly">
                   <Property name="property">tmly</Property>
+                  <Property name="width">100</Property>
                 </DataColumn>
                 <DataColumn name="mode">
                   <Property name="property">mode</Property>
+                  <Property name="width">55</Property>
                 </DataColumn>
                 <DataColumn name="user">
                   <Property name="property">user</Property>
+                  <Property name="width">50</Property>
                 </DataColumn>
                 <DataColumn name="dept">
                   <Property name="property">dept</Property>
+                  <Property name="width">100</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -1809,6 +1448,12 @@ if(entitys != undefined){&#xD;
             <Property name="caption">取消</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
           </Button>
+          <Button>
+            <ClientEvent name="onClick">view.get(&quot;#xgxzylDialog&quot;).show();&#xD;
+</ClientEvent>
+            <Property name="caption">预览</Property>
+            <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
+          </Button>
         </Buttons>
         <Children>
           <SplitPanel>
@@ -1822,95 +1467,7 @@ if(entitys != undefined){&#xD;
                       <Property name="caption">选中推送题目</Property>
                       <Buttons/>
                       <Children>
-                        <ToolBar>
-                          <Button>
-                            <ClientEvent name="onClick">var dsDetail = view.get(&quot;#dsDetail&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#detailSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#detailtofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsDetail == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsDetail.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#detailtofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-var entity = view.get(&quot;#dsDetail&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#detailtofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#detailxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#detaildaxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsDetail&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#detailtkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#detailtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#detailxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#detaildaxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		var xzs = view.get(&quot;#dsDetail&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#detaildaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsDetail&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#detailTmxxDialog&quot;).show();&#xD;
-	view.get(&quot;#detailtofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                            <Property name="caption">题目信息</Property>
-                            <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                          </Button>
-                        </ToolBar>
+                        <ToolBar/>
                         <DataGrid id="chosedGrid">
                           <Property name="readOnly">true</Property>
                           <Property name="selectionMode">multiRows</Property>
@@ -1919,9 +1476,6 @@ if(mode ==1 || mode == 2){&#xD;
                           <RowNumColumn/>
                           <DataColumn name="tkfl">
                             <Property name="property">tkfl</Property>
-                          </DataColumn>
-                          <DataColumn name="createDate">
-                            <Property name="property">createDate</Property>
                           </DataColumn>
                           <DataColumn name="content">
                             <Property name="property">content</Property>
@@ -1937,12 +1491,6 @@ if(mode ==1 || mode == 2){&#xD;
                           </DataColumn>
                           <DataColumn name="mode">
                             <Property name="property">mode</Property>
-                          </DataColumn>
-                          <DataColumn name="user">
-                            <Property name="property">user</Property>
-                          </DataColumn>
-                          <DataColumn name="dept">
-                            <Property name="property">dept</Property>
                           </DataColumn>
                         </DataGrid>
                       </Children>
@@ -2019,7 +1567,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
 				tmly:entity.get(&quot;tmly&quot;),&#xD;
 				mode:entity.get(&quot;mode&quot;),&#xD;
 				user:entity.get(&quot;user&quot;),&#xD;
-				dept:entity.get(&quot;dept&quot;)&#xD;
+				dept:entity.get(&quot;dept&quot;),&#xD;
+				daxzx:entity.get(&quot;daxzx&quot;)&#xD;
 			});&#xD;
 		}&#xD;
 	});&#xD;
@@ -2065,93 +1614,6 @@ view.get(&quot;#dsCon&quot;).insert({&#xD;
                             <Property name="caption">查询条件</Property>
                             <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
                           </Button>
-                          <Button>
-                            <ClientEvent name="onClick">var dsTktmShow = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#&quot;);&#xD;
-view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,true);&#xD;
-view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;readOnly&quot;,true);&#xD;
-//view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#tmSelect&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#tofselect&quot;).set(&quot;visible&quot;,false);&#xD;
-if(dsTktmShow == undefined){&#xD;
-	return;&#xD;
-}&#xD;
-//var content = dsYxtk.get(&quot;content&quot;);&#xD;
-var mode = dsTktmShow.get(&quot;mode&quot;);&#xD;
-&#xD;
-if(mode == 1){&#xD;
-	//content = content + &quot;(单选题)&quot;;&#xD;
-	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}else if(mode == 2){&#xD;
-	//content = content + &quot;(多选题)&quot;;&#xD;
-	view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;multiRows&quot;);&#xD;
-}else if(mode == 0){&#xD;
-	//content = content + &quot;(判断题)&quot;;&#xD;
-	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selectionMode&quot;,&quot;singleRow&quot;);&#xD;
-}&#xD;
-&#xD;
-var entity = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-&#xD;
-if(mode ==1 || mode == 2){&#xD;
-	//单选或多选题&#xD;
-&#xD;
-	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-	}else{&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var selects = [];&#xD;
-		var xzs = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.tkxzx&quot;);&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;id&quot;) == xz.get(&quot;id&quot;)){&#xD;
-					selects.push(xz);&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-		//view.get(&quot;#contentLable&quot;).set(&quot;text&quot;,content);&#xD;
-		view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-		if(mode == 1){&#xD;
-			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects[0]);&#xD;
-		}else if(mode == 2){&#xD;
-			view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;selection&quot;,selects);&#xD;
-		}&#xD;
-	}&#xD;
-	&#xD;
-}else{&#xD;
-	//判断题&#xD;
-	view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#updatetkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,false);&#xD;
-	&#xD;
-	if(entity.current == undefined){&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-	}else{&#xD;
-		var xzs = view.get(&quot;#dsTktmShow&quot;).getData(&quot;#.tof&quot;);//============&#xD;
-		view.get(&quot;#updatedaxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-		var select = null;&#xD;
-		entity.each(function(da){&#xD;
-			xzs.each(function(xz){&#xD;
-				if(da.get(&quot;xzKey&quot;) == xz.get(&quot;xzKey&quot;)){&#xD;
-					select = xz;&#xD;
-					da.set({tkId:view.get(&quot;#dsTktmShow&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)});&#xD;
-				}&#xD;
-			});&#xD;
-		});&#xD;
-				&#xD;
-	}&#xD;
-	//view.get(&quot;#tofcontentLable&quot;).set(&quot;text&quot;,content);	&#xD;
-	view.get(&quot;#showTmxxDialog&quot;).show();&#xD;
-	view.get(&quot;#tofxzxGrid&quot;).set(&quot;selection&quot;,select);&#xD;
-}&#xD;
-&#xD;
-</ClientEvent>
-                            <Property name="caption">题目信息</Property>
-                            <Property name="icon">url(>skin>common/icons.gif) -160px -0px</Property>
-                          </Button>
                         </ToolBar>
                         <DataGrid id="optsGrid">
                           <Property name="dataSet">dsTktmShow</Property>
@@ -2161,9 +1623,6 @@ if(mode ==1 || mode == 2){&#xD;
                           <RowNumColumn/>
                           <DataColumn name="tkfl">
                             <Property name="property">tkfl</Property>
-                          </DataColumn>
-                          <DataColumn name="createDate">
-                            <Property name="property">createDate</Property>
                           </DataColumn>
                           <DataColumn name="content">
                             <Property name="property">content</Property>
@@ -2179,12 +1638,6 @@ if(mode ==1 || mode == 2){&#xD;
                           </DataColumn>
                           <DataColumn name="mode">
                             <Property name="property">mode</Property>
-                          </DataColumn>
-                          <DataColumn name="user">
-                            <Property name="property">user</Property>
-                          </DataColumn>
-                          <DataColumn name="dept">
-                            <Property name="property">dept</Property>
                           </DataColumn>
                         </DataGrid>
                       </Container>
@@ -2337,23 +1790,12 @@ if(entity != undefined){&#xD;
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="showTmxxDialog">
-        <Property name="height">667</Property>
-        <Property name="width">900</Property>
+      <Dialog id="tsxzylDialog">
+        <Property name="width">90%</Property>
+        <Property name="height">600</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
-//view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-//view.get(&quot;#tofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#updatetofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-//view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-view.get(&quot;#showTmxxDialog&quot;).close();&#xD;
-&#xD;
-&#xD;
-&#xD;
+            <ClientEvent name="onClick">view.get(&quot;#tsxzylDialog&quot;).close();&#xD;
 </ClientEvent>
             <Property name="caption">关闭</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -2361,535 +1803,184 @@ view.get(&quot;#showTmxxDialog&quot;).close();&#xD;
         </Buttons>
         <Children>
           <GroupBox>
-            <Property name="caption">题目信息</Property>
+            <Property name="caption">题目信息预览</Property>
             <Buttons/>
             <Children>
-              <AutoForm id="updateyxtkForm">
-                <ClientEvent name="onCreate">//var entity = view.get('#tktmGrid.selection');&#xD;
-//view.get(&quot;#dsYxtk&quot;)&#xD;
-</ClientEvent>
-                <Property name="dataSet">dsTktmShow</Property>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tkfl</Property>
-                  <Property name="property">tkfl</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">tmly</Property>
-                  <Property name="property">tmly</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
-                  <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-              <GroupBox id="updatetkxzxGroup">
-                <Property name="caption">题目选择项</Property>
-                <Property name="height">180</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="updatetkxzxGrid">
-                    <Property name="dataSet">dsTktmShow</Property>
-                    <Property name="dataPath">#.tkxzx</Property>
-                    <Property name="hideMode">visibility</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn id="tmSelect"/>
-                    <DataColumn id="updatexzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="updatetofxzxGroup">
-                <Property name="hideMode">display</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="tofxzxGrid">
-                    <Property name="dataSet">dsTktmShow</Property>
-                    <Property name="dataPath">#.tof</Property>
-                    <Property name="height">200</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
-                    <RowSelectorColumn id="tofselect"/>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="updatedaxzxGroup">
-                <Property name="caption">答案</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="updatedaxzxGrid">
-                    <Property name="dataSet">dsTktmShow</Property>
-                    <Property name="dataPath">#.daxzx</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <DataColumn id="daxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">答案选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">答案内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-            </Children>
-          </GroupBox>
-        </Children>
-        <Tools/>
-      </Dialog>
-      <Dialog id="showYtstmxxDialog">
-        <Property name="height">667</Property>
-        <Property name="width">900</Property>
-        <Buttons>
-          <Button>
-            <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
-//view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-//view.get(&quot;#tofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#yxtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-//view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-view.get(&quot;#showYtstmxxDialog&quot;).close();&#xD;
-&#xD;
-&#xD;
-&#xD;
-</ClientEvent>
-            <Property name="caption">关闭</Property>
-            <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-          </Button>
-        </Buttons>
-        <Children>
-          <GroupBox>
-            <Property name="caption">题目信息</Property>
-            <Buttons/>
-            <Children>
-              <AutoForm id="yxtmForm">
-                <ClientEvent name="onCreate">//var entity = view.get('#tktmGrid.selection');&#xD;
-//view.get(&quot;#dsYxtk&quot;)&#xD;
-</ClientEvent>
+              <DataGrid>
                 <Property name="dataSet">dsChose</Property>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tkfl</Property>
+                <Property name="readOnly">true</Property>
+                <RowNumColumn/>
+                <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">tmly</Property>
-                  <Property name="property">tmly</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="content">
                   <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-              <GroupBox id="yxtmxzxGroup">
-                <Property name="caption">题目选择项</Property>
-                <Property name="height">180</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="yxtmxzxGrid">
-                    <Property name="dataSet">dsXzx</Property>
-                    <Property name="hideMode">visibility</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn id="yxtmSelect"/>
-                    <DataColumn id="yxxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="yxtofxzxGroup">
-                <Property name="hideMode">display</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="yxtofxzxGrid">
-                    <Property name="dataSet">dsTof</Property>
-                    <Property name="height">200</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
-                    <RowSelectorColumn id="yxtofselect"/>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="yxdaxzxGroup">
-                <Property name="caption">答案</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="yxdaxzxGrid">
-                    <Property name="dataSet">dsDa</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <DataColumn id="yxdaxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">答案选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">答案内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
+                  <Property name="width">300</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                  <Property name="width">95</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user</Property>
+                  <Property name="width">50</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="daxzx">
+                  <Property name="property">daxzx.content</Property>
+                  <Property name="width">415</Property>
+                </DataColumn>
+              </DataGrid>
             </Children>
           </GroupBox>
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="detailTmxxDialog">
-        <Property name="height">667</Property>
-        <Property name="width">900</Property>
+      <Dialog id="xgxzylDialog">
+        <Property name="height">600</Property>
+        <Property name="width">90%</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
-//view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-//view.get(&quot;#tofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#detailtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-//view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-view.get(&quot;#detailTmxxDialog&quot;).close();&#xD;
-&#xD;
-&#xD;
-&#xD;
-</ClientEvent>
+            <ClientEvent name="onClick">view.get(&quot;#xgxzylDialog&quot;).close();</ClientEvent>
             <Property name="caption">关闭</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
           </Button>
         </Buttons>
         <Children>
           <GroupBox>
-            <Property name="caption">题目信息</Property>
+            <Property name="caption">题目信息预览</Property>
             <Buttons/>
             <Children>
-              <AutoForm id="detailtkForm">
-                <ClientEvent name="onCreate">//var entity = view.get('#tktmGrid.selection');&#xD;
-//view.get(&quot;#dsYxtk&quot;)&#xD;
-</ClientEvent>
+              <DataGrid>
                 <Property name="dataSet">dsDetail</Property>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tkfl</Property>
+                <Property name="readOnly">true</Property>
+                <RowNumColumn/>
+                <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">tmly</Property>
-                  <Property name="property">tmly</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="content">
                   <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-              <GroupBox id="detailxzxGroup">
-                <Property name="caption">题目选择项</Property>
-                <Property name="height">180</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="detailtkxzxGrid">
-                    <Property name="dataSet">dsDetail</Property>
-                    <Property name="dataPath">#.tkxzx</Property>
-                    <Property name="hideMode">visibility</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn id="detailSelect"/>
-                    <DataColumn id="detailxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="detailtofxzxGroup">
-                <Property name="hideMode">display</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="detailtofxzxGrid">
-                    <Property name="dataSet">dsDetail</Property>
-                    <Property name="dataPath">#.tof</Property>
-                    <Property name="height">200</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
-                    <RowSelectorColumn id="detailtofselect"/>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="detaildaxzxGroup">
-                <Property name="caption">答案</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="detaildaxzxGrid">
-                    <Property name="dataSet">dsDetail</Property>
-                    <Property name="dataPath">#.daxzx</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
-                    <DataColumn id="detaildaxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">答案选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">答案内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
+                  <Property name="width">300</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                  <Property name="width">95</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user</Property>
+                  <Property name="width">50</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="daxzx">
+                  <Property name="property">daxzx.content</Property>
+                  <Property name="width">415</Property>
+                </DataColumn>
+              </DataGrid>
             </Children>
           </GroupBox>
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="showSjxxDialog">
-        <Property name="height">667</Property>
-        <Property name="width">900</Property>
+      <Dialog id="xjxzylDialog">
+        <Property name="height">600</Property>
+        <Property name="width">90%</Property>
         <Buttons>
           <Button>
-            <ClientEvent name="onClick">//view.get(&quot;#dsYxtk&quot;).getData(&quot;#&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.tkxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;).cancel();&#xD;
-//view.get(&quot;#dsYxtk&quot;).getData().cancel();&#xD;
-//view.get(&quot;#tkxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-//view.get(&quot;#tofxzxGroup&quot;).set(&quot;visible&quot;,false);&#xD;
-view.get(&quot;#sjtofxzxGroup&quot;).set(&quot;visible&quot;,true);&#xD;
-//view.get(&quot;#daxzKey&quot;).set(&quot;visible&quot;,true);&#xD;
-view.get(&quot;#showSjxxDialog&quot;).close();&#xD;
-&#xD;
-&#xD;
-&#xD;
-</ClientEvent>
+            <ClientEvent name="onClick">view.get(&quot;#xjxzylDialog&quot;).close();</ClientEvent>
             <Property name="caption">关闭</Property>
             <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
           </Button>
         </Buttons>
         <Children>
           <GroupBox>
-            <Property name="caption">题目信息</Property>
+            <Property name="caption">题目信息预览</Property>
             <Buttons/>
             <Children>
-              <AutoForm id="sjyxtkForm">
-                <ClientEvent name="onCreate">//var entity = view.get('#tktmGrid.selection');&#xD;
-//view.get(&quot;#dsYxtk&quot;)&#xD;
-</ClientEvent>
+              <DataGrid>
                 <Property name="dataSet">dsTktmFilter</Property>
-                <AutoFormElement>
-                  <Property name="name">createDate</Property>
-                  <Property name="property">createDate</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tkfl</Property>
+                <Property name="readOnly">true</Property>
+                <RowNumColumn/>
+                <DataColumn name="tkfl">
                   <Property name="property">tkfl</Property>
-                  <Property name="trigger">tkflDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">tmnd</Property>
-                  <Property name="property">tmnd</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement>
-                  <Property name="name">mode</Property>
-                  <Property name="property">mode</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">tmly</Property>
-                  <Property name="property">tmly</Property>
-                  <Property name="trigger">tmlyDropDown</Property>
-                  <Property name="editable">false</Property>
-                  <Editor/>
-                </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
-                  <Property name="name">content</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="createDate">
+                  <Property name="property">createDate</Property>
+                  <Property name="width">80</Property>
+                </DataColumn>
+                <DataColumn name="content">
                   <Property name="property">content</Property>
-                  <Editor>
-                    <TextArea/>
-                  </Editor>
-                </AutoFormElement>
-              </AutoForm>
-              <GroupBox id="sjtkxzxGroup">
-                <Property name="caption">题目选择项</Property>
-                <Property name="height">180</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="sjtkxzxGrid">
-                    <Property name="dataSet">dsTktmFilter</Property>
-                    <Property name="dataPath">#.tkxzx</Property>
-                    <Property name="hideMode">visibility</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <RowSelectorColumn id="sjSelect"/>
-                    <DataColumn id="sjxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="sjtofxzxGroup">
-                <Property name="hideMode">display</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="sjtofxzxGrid">
-                    <Property name="dataSet">dsTktmFilter</Property>
-                    <Property name="dataPath">#.tof</Property>
-                    <Property name="height">200</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <Property name="readOnly">true</Property>
-                    <RowSelectorColumn id="sjtofselect"/>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">选项</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
-              <GroupBox id="sjdaxzxGroup">
-                <Property name="caption">答案</Property>
-                <Property name="visible">false</Property>
-                <Buttons/>
-                <Children>
-                  <DataGrid id="sjdaxzxGrid">
-                    <Property name="dataSet">dsTktmFilter</Property>
-                    <Property name="dataPath">#.daxzx</Property>
-                    <Property name="highlightCurrentRow">false</Property>
-                    <Property name="highlightSelectedRow">false</Property>
-                    <DataColumn id="sjdaxzKey" name="xzKey">
-                      <Property name="property">xzKey</Property>
-                      <Property name="caption">答案选项</Property>
-                    </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
-                      <Property name="caption">答案内容</Property>
-                    </DataColumn>
-                  </DataGrid>
-                </Children>
-              </GroupBox>
+                  <Property name="width">300</Property>
+                </DataColumn>
+                <DataColumn name="tmfz">
+                  <Property name="property">tmfz</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="tmnd">
+                  <Property name="property">tmnd</Property>
+                  <Property name="width">95</Property>
+                </DataColumn>
+                <DataColumn name="tmly">
+                  <Property name="property">tmly</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="mode">
+                  <Property name="property">mode</Property>
+                  <Property name="width">55</Property>
+                </DataColumn>
+                <DataColumn name="user">
+                  <Property name="property">user</Property>
+                  <Property name="width">50</Property>
+                </DataColumn>
+                <DataColumn name="dept">
+                  <Property name="property">dept</Property>
+                  <Property name="width">100</Property>
+                </DataColumn>
+                <DataColumn name="daxzx">
+                  <Property name="property">daxzx.content</Property>
+                  <Property name="width">415</Property>
+                </DataColumn>
+              </DataGrid>
             </Children>
           </GroupBox>
         </Children>

@@ -1271,6 +1271,7 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
                     <Property name="dataPath">#.daxzx</Property>
                     <Property name="highlightCurrentRow">false</Property>
                     <Property name="highlightSelectedRow">false</Property>
+                    <Property name="readOnly">true</Property>
                     <DataColumn id="daxzKey" name="xzKey">
                       <Property name="property">xzKey</Property>
                       <Property name="caption">答案选项</Property>

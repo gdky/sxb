@@ -49,4 +49,8 @@ public interface ZstkglService {
 
 	public void deleteKstsjlInfo(String examid);
 
+	public Map<String, Object> getDaylInfo(String param);
+
+	public Map<String, Object> getDaMapInfoByZstkId(String id);
+
 }
