@@ -8,5 +8,7 @@ public interface TjglService {
 	public List countGxjl(Map<String, Object> param);
 
 	public List countDeptGxjl(Map<String, Object> param);
+
+	public String getGxtj(Map param) throws Exception;
 	
 }

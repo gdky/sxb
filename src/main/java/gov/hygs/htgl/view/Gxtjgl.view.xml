@@ -226,6 +226,7 @@ if(arg.value &lt; 7){&#xD;
       <DataSet id="dsResult">
         <Property name="dataType">[resultType]</Property>
         <Property name="dataProvider">tjglController#countGxjl</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsScore">
         <Property name="dataType">[scoreType]</Property>
@@ -359,6 +360,7 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
             <AutoFormElement>
               <Property name="name">type</Property>
               <Property name="property">type</Property>
+              <Property name="editable">false</Property>
               <Editor/>
             </AutoFormElement>
             <Container>
@@ -399,6 +401,16 @@ if(type &lt; 7){&#xD;
 </ClientEvent>
                   <Property name="caption">查找</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">var ajaxActionExport =view.get(&quot;#ajaxActionExport&quot;);&#xD;
+ajaxActionExport.set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+ajaxActionExport.execute(function(fileName){&#xD;
+	window.open($url(&quot;>/dorado/ysyk/ysykffqktjbg.display?fileName=&quot;+fileName),&quot;_self&quot;);&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">导出</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
                 </Button>
               </ToolBar>
             </Container>
@@ -456,5 +468,10 @@ if(type &lt; 7){&#xD;
         </Children>
       </GroupBox>
     </Container>
+    <AjaxAction id="ajaxActionExport">
+      <Property name="service">tjglController#exportExcel</Property>
+      <Property name="successMessage">执行成功</Property>
+      <Property name="executingMessage">正在执行 。。。</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>
