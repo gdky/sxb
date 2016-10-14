@@ -42,4 +42,14 @@ public class TjglController {
 	public String exportExcel(Map param) throws Exception {
 		return tjglService.getGxtj(param);
 	}
+	
+	@DataProvider
+	public List getExamInfo(){
+		return tjglService.getExamInfo();
+	}
+	
+	@DataProvider
+	public List getCurrentDeptQjById(String id){
+		return tjglService.getCurrentDeptQjById(id);
+	}
 }

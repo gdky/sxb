@@ -46,7 +46,7 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sqlCount, param);
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("Other".equals(roleName)) {// 普通用户
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
 					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' and a.deptid="
 					+ userDetails.getDeptid()
@@ -78,7 +78,7 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("Other".equals(roleName)) {// 普通用户
 			sql.append("and a.deptid=" + userDetails.getDeptid()
 					+ " and a.user_id=" + userDetails.getId() + " ");
 		}
@@ -123,11 +123,24 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		String dept = (String) param.get("dept");
 		String user = (String) param.get("user");
 		String content = (String) param.get("content");
-		if (!sql.toString().contains("deptid")) {
+		/*if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				//sql.append(" and deptid=" + deptid);
 				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
 			}
+		}*/
+		if(deptid != null){
+			
+			if(deptid != 1){
+				sql.append(" and a.deptid in ( ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" ) ");
+			}else if(deptid == 1){
+				//this.rebuildSqlWhenDeptidIs1(sql);
+				sql.append(" and a.deptid != 2 ");
+				sql.append(" and a.deptid != 307 ");
+			}
+			
 		}
 		if (userId != null || user != null) {
 			//sql.append(" and user_id=" + userId);
@@ -186,11 +199,13 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 			}
 		}
 		if (aRole == null) {
-			for (Role role : roles) {
-				if ("USER".equals(role.getRole_Name())) {// 普通用户
+			/*for (Role role : roles) {
+				if ("Other".equals(role.getRole_Name())) {// 普通用户
 					aRole = role;
 				}
-			}
+			}*/
+			aRole = roles.get(0);
+			aRole.setRole_Name("Other");
 		}
 		return aRole;
 	}

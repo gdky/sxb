@@ -26,5 +26,9 @@ public interface TjglDao {
 	public List countUserRushAnswerScore(Map<String, Object> param);
 
 	public List countUserExamScore(Map<String, Object> param);
+
+	public List getExamInfo();
+
+	public List getCurrentDeptQjById(String id);
 	
 }

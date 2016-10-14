@@ -47,7 +47,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
-		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
+		} else if ("Other".equals(roleName)) {// 鏅�氱敤鎴�
 			count.append("select count(*) from tktm a where a.xybz='Y' and a.deptid="
 					+ userDetails.getDeptid() + " and a.user_id="
 					+ userDetails.getId());
@@ -88,11 +88,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
-		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
+		} else if ("Other".equals(roleName)) {// 鏅�氱敤鎴�
 			//sql.append("select * from tktm where xybz='Y' and deptid="
 				//	+ userDetails.getDeptid() + " and user_id="
 				//	+ userDetails.getId() + " ");
-			sql.append(" a.xybz='Y' and a.deptid="
+			sql.append(" and a.xybz='Y' and a.deptid="
 				+ userDetails.getDeptid() + " and a.user_id="
 					+ userDetails.getId() + " ");
 		}
@@ -168,11 +168,13 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			}
 		}
 		if (aRole == null) {
-			for (Role role : roles) {
-				if ("USER".equals(role.getRole_Name())) {// 鏅�氱敤鎴�
+			/*for (Role role : roles) {
+				if ("Other".equals(role.getRole_Name())) {// 鏅�氱敤鎴�
 					aRole = role;
 				}
-			}
+			}*/
+			aRole = roles.get(0);
+			aRole.setRole_Name("Other");
 		}
 		return aRole;
 	}
@@ -189,12 +191,25 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		String tktmcontent = (String) param.get("tktmcontent");
-		if (!sql.toString().contains("deptid")) {
+		/*if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				// sql.append(" and deptid=" + deptid);
 				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
 						+ dept + "%') ");
 			}
+		}*/
+		if(deptid != null){
+			
+			if(deptid != 1){
+				sql.append(" and a.deptid in ( ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" ) ");
+			}else if(deptid == 1){
+				//this.rebuildSqlWhenDeptidIs1(sql);
+				sql.append(" and a.deptid != 2 ");
+				sql.append(" and a.deptid != 307 ");
+			}
+			
 		}
 		if (userId != null || user != null) {
 			// sql.append(" and user_id=" + userId);
@@ -224,6 +239,25 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// return null;
 	}
 
+	private void rebuildSqlWhenDeptidIs1(StringBuilder sb){
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList("select id_ from dept where parent_id = 1");
+		List id = new ArrayList();
+		if(list != null){
+			for(Map<String,Object> map : list){
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				for(Map<String,Object> maps : ids){
+					id.add(maps.get("id_"));
+				}
+			}
+		}
+		for(int i = 0; i < id.size(); i++){
+			sb.append(id.get(i));
+			if(i<id.size() - 1){
+				sb.append(",");
+			}
+		}
+	}
+	
 	@Override
 	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id) {
 		// TODO Auto-generated method stub
@@ -589,11 +623,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			 * "insert into kstsnr values(?,?,?)"; this.jdbcTemplate.update(sql,
 			 * new Object[] { null, jlId, id }); }
 			 */
-			String sql = "insert into exam values(?,?,?,?,?,?)";
+			String sql = "insert into exam values(?,?,?,?,?,?,?)";
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
 					new Object[] { null, begin, end, title, tpye,
-							userDetails.getId() }, new String[] { "id_" })
+							userDetails.getId(),null }, new String[] { "id_" })//remark=null
 					.intValue();
 			for(int j = 0; j < groupId.size(); j++){
 				sql = "insert into exam_tsqz value(?,?,?)";
@@ -867,8 +901,8 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
-		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
-			count.append("select count(*) from tktm where (a.xybz='Y' or ksbz='Y') and a.fl_id= ?  and a.deptid="
+		} else if ("Other".equals(roleName)) {// 鏅�氱敤鎴�
+			count.append("select count(*) from tktm a where (a.xybz='Y' or ksbz='Y') and a.fl_id= ?  and a.deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId());
 		}
@@ -911,7 +945,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
-		} else if ("USER".equals(roleName)) {// 鏅�氱敤鎴�
+		} else if ("Other".equals(roleName)) {// 鏅�氱敤鎴�
 			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  " );
 			//sql.append(" FROM tktm a,tkfl b, USER c,dept d,tmly e ");
 			sql.append(" from tktm a ");

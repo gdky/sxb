@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,16 +25,34 @@ import com.gdky.restfull.dao.BaseJdbcDao;
 public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
-	public List<Dept> getDeptRoot() {
+	public List<Dept> getDeptRoot(Map<String,Object> param) {
 		// TODO Auto-generated method stub
-		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null";
-
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
+		StringBuilder sql = new StringBuilder();
+		if(param == null){
+			//超级管理员
+			sql.append("select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null");
+		}else{
+			//其他管理员
+			Integer deptid = (Integer) param.get("id");
+			sql.append(" select ID_,DEPT_NAME,PARENT_ID,MS from dept where id_=( ");
+			sql.append(" select ifnull((select parent_id from dept where id_ = "+deptid+"),"+deptid+") from dual ");
+			sql.append(" ) ");
+			//sql = "select ifnull((select parent_id from dept where id_ = "+deptid+"),"+deptid+") from dual";
+		}
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString());
 		return this.mapToDeptList(list);
 	}
 
 	@Override
 	public List<Dept> getCurrentDeptById(String id_) {
+		if(id_ == null)
+			return this.getDeptRoot(null);
+		if(id_.contains("s")){
+			Map<String, Object> param = new HashMap<String,Object>();
+			param.put("id", Integer.parseInt(id_.substring(0, id_.length()-1)));
+			return this.getDeptRoot(param);
+		}
+			
 		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id=?";
 		Object[] objs = { id_ };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
@@ -255,7 +274,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Grouptable> getGrouptableInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select id_,group_name,ms,parent_id,pxh from grouptable where parent_id=0 order by pxh";
+		String sql = "select id_,group_name,ms,parent_id,pxh,lrr_id from grouptable where parent_id=0 order by pxh";
 		List<Grouptable> groups = this.jdbcTemplate.query(sql,
 				new RowMapper<Grouptable>() {
 
@@ -269,6 +288,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 						group.setMs(result.getString("ms"));
 						group.setParentId(result.getInt("parent_id"));
 						group.setPxh(result.getInt("pxh"));
+						group.setLrrID(result.getInt("lrr_id"));
 						return group;
 					}
 
@@ -292,11 +312,18 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 					//sql.append(" and deptid="+deptid+" ");
 				//}
 				if(deptid != 1){
-					sqlCount.append(" and id_ in ( ");
+					/*sqlCount.append(" and id_ in ( ");
 					sqlCount.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
 					sql.append(" and id_ in ( ");
-					sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
-				}	
+					sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");*/
+					sqlCount.append(" and deptid in( ");
+					sqlCount.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+"))) ");
+					sql.append(" and deptid in( ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+"))) ");
+				}else if(deptid == 1){
+					sqlCount.append(" and deptid != 2 and deptid != 307 ");
+					sql.append(" and deptid != 2 and deptid != 307 ");
+				}
 			}
 			if(username != null){
 				sqlCount.append(" and user_name like '%"+username+"%' ");
@@ -401,8 +428,8 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void addGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "insert into grouptable values(?,?,?,?,?)";
-		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId(),group.getPxh() };
+		String sql = "insert into grouptable values(?,?,?,?,?,?)";
+		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId(),group.getPxh(),group.getLrrID() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 

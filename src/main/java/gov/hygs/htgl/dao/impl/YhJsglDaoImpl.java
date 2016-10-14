@@ -8,6 +8,7 @@ import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.security.Md5Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	public void getUserInfo(Map<String, Object> para, Page page) {
 		// TODO Auto-generated method stub
 		StringBuilder sqlCount = new StringBuilder(
-				"select count(*) from user a where 1=1 ");
+				"select count(*) from user a,dept b where a.deptid=b.id_ ");
 		if (para != null) {
 			this.rebuildSqlByCondition(sqlCount, para);
 		}
@@ -66,9 +67,16 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 				//sql.append(" and a.deptid ="+deptid+" ");
 			//}
 			if(deptid != 1){
-				sql.append(" and a.id_ in( ");
-				sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
+				sql.append(" and b.id_ in( ");
+				//sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID  ");
+				sql.append(" select a.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID  ");
+				sql.append(" ) ");
+			}else if(deptid == 1){
+				//this.rebuildSqlWhenDeptidIs1(sql);
+				sql.append(" and b.id_ != 2 ");
+				sql.append(" and b.id_ != 307 ");
 			}
+			
 		}
 		if (begin != null) {
 			sql.append(" and a.rzsj >= date_format('" + sdf.format(begin) + "','%Y%m%d') ");
@@ -94,6 +102,25 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		}
 	}
 
+	private void rebuildSqlWhenDeptidIs1(StringBuilder sb){
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList("select id_ from dept where parent_id = 1");
+		List id = new ArrayList();
+		if(list != null){
+			for(Map<String,Object> map : list){
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				for(Map<String,Object> maps : ids){
+					id.add(maps.get("id_"));
+				}
+			}
+		}
+		for(int i = 0; i < id.size(); i++){
+			sb.append(id.get(i));
+			if(i<id.size() - 1){
+				sb.append(",");
+			}
+		}
+	}
+	
 	@Override
 	public Integer insertUser(User user) {
 		// TODO Auto-generated method stub

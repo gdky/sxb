@@ -6,6 +6,7 @@ import gov.hygs.htgl.entity.Grouptable;
 import gov.hygs.htgl.entity.Menu;
 import gov.hygs.htgl.entity.SystemProps;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.security.CustomUserDetails;
 import gov.hygs.htgl.service.QzBmCdglService;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bstek.dorado.data.entity.EntityState;
@@ -54,9 +56,9 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 	}
 
 	@Override
-	public List<Dept> getDeptRoot() {
+	public List<Dept> getDeptRoot(Map<String,Object> param) {
 		// TODO Auto-generated method stub
-		return qzBmCdglDao.getDeptRoot();
+		return qzBmCdglDao.getDeptRoot(param);
 	}
 
 	@Override
@@ -292,6 +294,9 @@ public class QzBmCdglServiceImpl implements QzBmCdglService {
 		if(groups != null){
 			for(Grouptable group : groups){
 				if(EntityUtils.getState(group).equals(EntityState.NEW)){
+					CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+							.getAuthentication().getPrincipal();
+					group.setLrrID(userDetails.getId());
 					qzBmCdglDao.addGroup(group);
 				}
 				if(EntityUtils.getState(group).equals(EntityState.MODIFIED)){

@@ -28,6 +28,8 @@ public class Grouptable implements Serializable {
 	private Collection<Grouptable> child;
 	
 	private Integer pxh;
+	
+	private Integer lrrID;
 
 	public Collection<Grouptable> getChild() {
 		return child;
@@ -138,6 +140,13 @@ public class Grouptable implements Serializable {
 		this.pxh = pxh;
 	}
 
+	public Integer getLrrID() {
+		return lrrID;
+	}
+
+	public void setLrrID(Integer lrrID) {
+		this.lrrID = lrrID;
+	}
 
 	/**
 	 * {@inheritDoc}

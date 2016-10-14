@@ -112,5 +112,17 @@ public class TjglServiceImpl implements TjglService {
 		}
 		return fileName;
 	}
+
+	@Override
+	public List getExamInfo() {
+		// TODO Auto-generated method stub
+		return tjglDao.getExamInfo();
+	}
+
+	@Override
+	public List getCurrentDeptQjById(String id) {
+		// TODO Auto-generated method stub
+		return tjglDao.getCurrentDeptQjById(id);
+	}
 	
 }
