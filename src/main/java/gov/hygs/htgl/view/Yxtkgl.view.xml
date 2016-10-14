@@ -617,6 +617,10 @@ if(datas.getLast() != null){&#xD;
       <DataSet id="dsErrMessage">
         <Property name="dataType">[excelErrMessageType]</Property>
       </DataSet>
+      <DataSet id="dsDeptIn">
+        <Property name="dataType">[deptType]</Property>
+        <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
+      </DataSet>
     </Container>
     <Container id="dropDowns">
       <CustomDropDown id="customDropDown">
@@ -911,6 +915,97 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
+      <CustomDropDown id="inDeptDropDown">
+        <Property name="autoOpen">true</Property>
+        <Property name="height">500</Property>
+        <DataTree id="indepttree">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsDeptIn</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">dept</Property>
+              <Property name="name">dept_name</Property>
+              <Property name="labelProperty">dept_name</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
+      <Trigger id="clearDept">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null&#xD;
+});&#xD;
+view.get(&quot;#dsDept&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearUser">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearTkfl">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		tkfl:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearLy">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		content:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearContent">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		tktmcontent:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearDeptIn">
+        <ClientEvent name="onExecute">view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null&#xD;
+});&#xD;
+view.get(&quot;#dsDeptIn&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearUserIn">
+        <ClientEvent name="onExecute">view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearTkflIn">
+        <ClientEvent name="onExecute">view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		tkfl:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearLyIn">
+        <ClientEvent name="onExecute">view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		content:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearContentIn">
+        <ClientEvent name="onExecute">view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		tktmcontent:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
     </Container>
     <Container id="dialogs">
       <Dialog id="addyxtkDialog">
@@ -1329,29 +1424,32 @@ if(data != undefined){&#xD;
                 <AutoFormElement>
                   <Property name="name">dept</Property>
                   <Property name="property">dept</Property>
-                  <Property name="trigger">deptDropDown</Property>
+                  <Property name="editable">false</Property>
+                  <Property name="trigger">clearDeptIn,inDeptDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">user</Property>
                   <Property name="property">user</Property>
-                  <Property name="trigger">userDropDown</Property>
+                  <Property name="trigger">clearUserIn,userDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">tkfl</Property>
                   <Property name="property">tkfl</Property>
-                  <Property name="trigger">tkflConditionDropDown</Property>
+                  <Property name="trigger">clearTkflIn,tkflConditionDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
+                  <Property name="trigger">clearLyIn</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
                   <Property name="name">tktmcontent</Property>
                   <Property name="property">tktmcontent</Property>
+                  <Property name="trigger">clearContentIn</Property>
                   <Editor/>
                 </AutoFormElement>
                 <Button id="fieterButton">
@@ -1405,6 +1503,7 @@ var entity = view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;);&#xD;
 if(entity != undefined){&#xD;
 	entity.set({&#xD;
 		dept:&quot;&quot;,&#xD;
+		deptid:null,&#xD;
 		user:&quot;&quot;,&#xD;
 		begin:&quot;&quot;,&#xD;
 		end:&quot;&quot;,&#xD;
@@ -1427,6 +1526,7 @@ var entity = view.get(&quot;#fieterForm&quot;).get(&quot;entity&quot;);&#xD;
 if(entity != undefined){&#xD;
 	entity.set({&#xD;
 		dept:&quot;&quot;,&#xD;
+		deptid:null,&#xD;
 		user:&quot;&quot;,&#xD;
 		begin:&quot;&quot;,&#xD;
 		end:&quot;&quot;,&#xD;
@@ -1447,6 +1547,24 @@ if(entity != undefined){&#xD;
                   <Property name="dataSet">dsYxtkToZstk</Property>
                   <Property name="itemCodes">pages</Property>
                 </DataPilot>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#yxtkGrid&quot;).selectAll();&#xD;
+</ClientEvent>
+                  <Property name="caption">全选</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -280px -280px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#yxtkGrid&quot;).unselectAll();&#xD;
+</ClientEvent>
+                  <Property name="caption">全不选</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -300px -280px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">view.get(&quot;#yxtkGrid&quot;).selectInvert();&#xD;
+</ClientEvent>
+                  <Property name="caption">反选</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -280px -220px</Property>
+                </Button>
               </ToolBar>
               <DataGrid id="yxtkGrid">
                 <Property name="dataSet">dsYxtkToZstk</Property>
@@ -1606,7 +1724,7 @@ if(data != undefined){&#xD;
 			dept:data.get(&quot;deptname&quot;),&#xD;
 			deptid:data.get(&quot;deptid&quot;)&#xD;
 		});&#xD;
-	}else if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+	}else if(data.get(&quot;rolename&quot;) == &quot;Other&quot;){&#xD;
 		self.set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 }&#xD;
@@ -1631,29 +1749,32 @@ if(data != undefined){&#xD;
             <AutoFormElement id="deptInfo">
               <Property name="name">dept</Property>
               <Property name="property">dept</Property>
-              <Property name="trigger">deptDropDown</Property>
+              <Property name="editable">false</Property>
+              <Property name="trigger">clearDept,deptDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement id="userInfoName">
               <Property name="name">user</Property>
               <Property name="property">user</Property>
-              <Property name="trigger">userDropDown</Property>
+              <Property name="trigger">clearUser,userDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">tkfl</Property>
               <Property name="property">tkfl</Property>
-              <Property name="trigger">tkflConditionDropDown</Property>
+              <Property name="trigger">clearTkfl,tkflConditionDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">content</Property>
               <Property name="property">content</Property>
+              <Property name="trigger">clearLy</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">tktmcontent</Property>
               <Property name="property">tktmcontent</Property>
+              <Property name="trigger">clearContent</Property>
               <Editor/>
             </AutoFormElement>
             <Button id="findbutton">
@@ -1701,7 +1822,7 @@ view.get(&quot;#dsYxtk&quot;).flush();&#xD;
           <ToolBar>
             <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
-	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;Other&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
@@ -1963,7 +2084,8 @@ if(mode ==1 || mode == 2){&#xD;
               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
             </Button>
             <Button id="inbutton">
-              <ClientEvent name="onClick">view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
+              <ClientEvent name="onClick">view.get(&quot;#dsDeptIn&quot;).flush();&#xD;
+view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">选题入库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>

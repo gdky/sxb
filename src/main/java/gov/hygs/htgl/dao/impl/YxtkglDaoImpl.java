@@ -57,7 +57,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			if (param != null) {
 				this.rebuileSqlByConditionAndRole(count, param);
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("Other".equals(roleName)) {// 普通用户
 
 			count.append("select count(*) from tktm a where a.yxbz='Y' and a.deptid="
 					+ userDetails.getDeptid() + " and a.user_id="
@@ -84,12 +84,27 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		String tktmcontent = (String) param.get("tktmcontent");
+		/*
 		if (!sql.toString().contains("deptid")) {
 			if (deptid != null || dept != null) {
 				// sql.append(" and deptid=" + deptid);
 				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
 						+ dept + "%') ");
 			}
+		}
+		*/
+		if(deptid != null){
+			
+			if(deptid != 1){
+				sql.append(" and a.deptid in ( ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" ) ");
+			}else if(deptid == 1){
+				//this.rebuildSqlWhenDeptidIs1(sql);
+				sql.append(" and a.deptid != 2 ");
+				sql.append(" and a.deptid != 307 ");
+			}
+			
 		}
 		if (userId != null || user != null) {
 			// sql.append(" and user_id=" + userId);
@@ -119,6 +134,25 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// return null;
 	}
 
+	private void rebuildSqlWhenDeptidIs1(StringBuilder sb){
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList("select id_ from dept where parent_id = 1");
+		List id = new ArrayList();
+		if(list != null){
+			for(Map<String,Object> map : list){
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				for(Map<String,Object> maps : ids){
+					id.add(maps.get("id_"));
+				}
+			}
+		}
+		for(int i = 0; i < id.size(); i++){
+			sb.append(id.get(i));
+			if(i<id.size() - 1){
+				sb.append(",");
+			}
+		}
+	}
+	
 	private List<Tktm> getYxtkInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
@@ -148,7 +182,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				this.rebuileSqlByConditionAndRole(sql, param);
 			}
 
-		} else if ("USER".equals(roleName)) {// 普通用户
+		} else if ("Other".equals(roleName)) {// 普通用户
 			sql.append(" and a.yxbz='Y' and a.deptid="
 					+ userDetails.getDeptid() + " and user_id="
 					+ userDetails.getId() + " ");
@@ -227,11 +261,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			}
 		}
 		if (aRole == null) {
-			for (Role role : roles) {
-				if ("USER".equals(role.getRole_Name())) {// 普通用户
-					aRole = role;
-				}
-			}
+			aRole = roles.get(0);
+			aRole.setRole_Name("Other");
 		}
 		return aRole;
 	}
@@ -249,6 +280,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 						// TODO Auto-generated method stub
 						Dept dept = new Dept();
 						dept.setDept_name(result.getString("dept_name"));
+						dept.setParentId(result.getInt("parent_id"));
 						return dept;
 					}
 
@@ -504,7 +536,9 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		List<Dept> depts = (List<Dept>) this.getDeptInfoByDeptId(userDetails
 				.getDeptid().toString());
 		map.put("deptname", depts.get(0).getDept_name());
+		map.put("parentid", depts.get(0).getParentId());
 		map.put("username", userDetails.getLogin_Name());
+		map.put("userid", userDetails.getId());
 		map.put("deptid", userDetails.getDeptid());
 		map.put("rolename", role.getRole_Name());
 		map.put("ms", role.getMs());

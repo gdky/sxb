@@ -32,6 +32,8 @@ public class Exam implements Serializable {
 	/** 发起人ID. */
 	private Integer fqrId;
 
+	private String remark;
+	
 	/**
 	 * Constructor.
 	 */
@@ -150,6 +152,14 @@ public class Exam implements Serializable {
 	 */
 	public Integer getFqrId() {
 		return this.fqrId;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	/**

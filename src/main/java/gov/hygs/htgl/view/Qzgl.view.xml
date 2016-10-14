@@ -37,6 +37,9 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">排序号</Property>
       </PropertyDef>
+      <PropertyDef name="lrrID">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
       <Reference name="child">
         <Property name="dataType">[SELF]</Property>
         <Property name="parameter">$${this.id}</Property>
@@ -149,6 +152,9 @@ self.flush();</ClientEvent>
         <ClientEvent name="onReady">self.insert();&#xD;
 </ClientEvent>
         <Property name="dataType">[conditionType]</Property>
+      </DataSet>
+      <DataSet id="dsUserName">
+        <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
       </DataSet>
     </Container>
     <Container id="dialogs">
@@ -603,20 +609,74 @@ view.get(&quot;#dialog&quot;).close();&#xD;
               <Children>
                 <ToolBar>
                   <Button>
-                    <ClientEvent name="onClick">//var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
+                    <ClientEvent name="onClick">/*&#xD;
+//var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;);&#xD;
 var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;);&#xD;
 if(group != undefined){&#xD;
 	//view.get(&quot;#userDataSet&quot;).insert({id_:group.get(&quot;id&quot;)});&#xD;
 	view.get(&quot;#userDialog&quot;).show();&#xD;
 }&#xD;
-&#xD;
+*/&#xD;
+var group = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;);&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(group != undefined){&#xD;
+	//view.get(&quot;#userDataSet&quot;).insert({id_:group.get(&quot;id&quot;)});&#xD;
+	&#xD;
+	if(data != undefined){&#xD;
+		var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+		if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+			if(data.get(&quot;userid&quot;) != currentEntity.get(&quot;lrrID&quot;)){&#xD;
+					//throw new dorado.Exception(&quot;你不能在'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组中添加所属用户！&quot;);&#xD;
+					throw new dorado.Exception(&quot;您的权限不能在'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组中添加所属用户！&quot;);&#xD;
+				}&#xD;
+		}&#xD;
+	}&#xD;
+	&#xD;
+	&#xD;
+	view.get(&quot;#userDialog&quot;).show();&#xD;
+}&#xD;
 </ClientEvent>
                     <Property name="caption">添加</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -120px -0px</Property>
                   </Button>
                   <Button>
-                    <ClientEvent name="onClick">var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
+                    <ClientEvent name="onClick">/*&#xD;
+var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+		&#xD;
+		user.set({deptid:groupId});&#xD;
+		user.remove();&#xD;
+		view.get(&quot;#userUpdate&quot;).execute(function(){&#xD;
+			view.get(&quot;#userDialog&quot;).close();&#xD;
+			&#xD;
+			//var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+			var id = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
+			&#xD;
+			var user = view.get(&quot;#userDataSet&quot;);&#xD;
+			user.set(&quot;parameter&quot;,{&quot;id&quot;:id});&#xD;
+			user.flush();&#xD;
+		});&#xD;
+	});&#xD;
+}&#xD;
+*/&#xD;
+var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+var user = view.get(&quot;#userDataSet&quot;).getData(&quot;#&quot;);&#xD;
+if(user != undefined){&#xD;
+	&#xD;
+	if(data != undefined){&#xD;
+		var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+		if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+			if(data.get(&quot;userid&quot;) != currentEntity.get(&quot;lrrID&quot;)){&#xD;
+				//throw new dorado.Exception(&quot;你不能删除'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组下的所属用户！&quot;);&#xD;
+				throw new dorado.Exception(&quot;您的权限不能删除'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组下的所属用户！&quot;);&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
 		//var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
 		var groupId = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node.#&quot;).get(&quot;id&quot;);&#xD;
@@ -713,21 +773,69 @@ view.get(&quot;#dialog&quot;).show();&#xD;
                     <Property name="icon">url(>skin>common/icons.gif) -60px -120px</Property>
                   </Button>
                   <Button>
-                    <ClientEvent name="onClick">view.get(&quot;#updateZzxxDialog&quot;).show();&#xD;
+                    <ClientEvent name="onClick">var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+if(data != undefined){&#xD;
+	var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		if(data.get(&quot;userid&quot;) != currentEntity.get(&quot;lrrID&quot;)){&#xD;
+				//throw new dorado.Exception(&quot;你不能修改'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组信息！&quot;);&#xD;
+				throw new dorado.Exception(&quot;您的权限不能修改'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组信息！&quot;);&#xD;
+			}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+view.get(&quot;#updateZzxxDialog&quot;).show();&#xD;
 </ClientEvent>
                     <Property name="caption">修改</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
                   </Button>
                   <Button>
                     <ClientEvent name="onClick">var currentNode = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;);&#xD;
+var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
 if(!currentNode){&#xD;
 	throw new dorado.Exception(&quot;请先点中一个树节点！&quot;);&#xD;
 }&#xD;
-dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){	&#xD;
-	var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
-	currentEntity.remove();&#xD;
-	view.get(&quot;#updateGroup&quot;).execute();&#xD;
+/*&#xD;
+dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+	if(data != undefined){&#xD;
+		var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+		if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+			if(data.get(&quot;userid&quot;) != currentEntity.get(&quot;lrrID&quot;)){&#xD;
+				//throw new dorado.Exception(&quot;你不能删除该节点！&quot;);&#xD;
+				//throw dorado.Exception(&quot;你不能删除该节点！&quot;);&#xD;
+				dorado.MessageBox.alert(&quot;因权限问题，你不能删除该节点！&quot;);&#xD;
+				return;&#xD;
+			}&#xD;
+		}&#xD;
+		currentEntity.remove();&#xD;
+		view.get(&quot;#updateGroup&quot;).execute();&#xD;
+	}	&#xD;
 });&#xD;
+*/&#xD;
+if(data != undefined){&#xD;
+	var currentEntity = currentNode.get(&quot;data&quot;);&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		if(data.get(&quot;userid&quot;) != currentEntity.get(&quot;lrrID&quot;)){&#xD;
+				//throw new dorado.Exception(&quot;你的权限不能删除'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组！&quot;);&#xD;
+				throw new dorado.Exception(&quot;您的权限不能删除'&quot;+currentEntity.get(&quot;groupName&quot;)+&quot;'群组！&quot;);&#xD;
+			}&#xD;
+	}&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		currentEntity.remove();&#xD;
+		view.get(&quot;#updateGroup&quot;).execute();&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+&#xD;
+	&#xD;
+		&#xD;
+		&#xD;
+			&#xD;
+		&#xD;
+		&#xD;
+		&#xD;
 </ClientEvent>
                     <Property name="caption">删除节点</Property>
                     <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>

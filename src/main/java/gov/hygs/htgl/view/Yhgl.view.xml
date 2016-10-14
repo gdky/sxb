@@ -152,7 +152,17 @@
       <Property name="dataProvider">yhJsglController#getUserInfo</Property>
       <Property name="pageSize">30</Property>
     </DataSet>
+    <DataSet id="dsUserName">
+      <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
+    </DataSet>
     <DataSet id="deptDataSet">
+      <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		//view.get(&quot;#deptDataSet&quot;).set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+		self.set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+	}&#xD;
+}</ClientEvent>
       <Property name="dataType">[deptType]</Property>
       <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
     </DataSet>
@@ -565,6 +575,17 @@ view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;).set(&quot;pwd&quot;,&quot;&
                 </ToolBarButton>
               </ToolBar>
               <DataGrid>
+                <ClientEvent name="onCreate">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+var dsUser = view.get(&quot;#dsUser&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		view.get(&quot;#deptDataSet&quot;).set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+		dsUser.set(&quot;parameter&quot;,{deptid: data.get(&quot;deptid&quot;)});&#xD;
+	}else{&#xD;
+		dsUser.set(&quot;parameter&quot;,{deptid: 1});&#xD;
+	}&#xD;
+}&#xD;
+dsUser.flushAsync();</ClientEvent>
                 <Property name="dataSet">dsUser</Property>
                 <Property name="readOnly">true</Property>
                 <DataColumn name="login_Name">

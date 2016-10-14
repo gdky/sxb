@@ -32,8 +32,8 @@ public class QzBmCdglController {
 	 * @return
 	 */
 	@DataProvider
-	public List<Dept> getDeptRoot() {
-		return qzBmCdglService.getDeptRoot();
+	public List<Dept> getDeptRoot(Map<String,Object> param) {
+		return qzBmCdglService.getDeptRoot(param);
 	}
 
 	/**
