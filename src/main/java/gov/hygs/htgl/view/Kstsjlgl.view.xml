@@ -306,6 +306,10 @@
         <Property name="dataProvider">zstkglController#getGroupByExamId</Property>
       </Reference>
       <PropertyDef name="groupId"/>
+      <PropertyDef name="remark">
+        <Property/>
+        <Property name="label">描述</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="fqrType">
       <Property name="creationType">gov.hygs.htgl.entity.User</Property>
@@ -1356,6 +1360,13 @@ view.get(&quot;#dsExam&quot;).getData(&quot;#.group&quot;).cancel();&#xD;
                   <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
+                <AutoFormElement layoutConstraint="colSpan:2">
+                  <Property name="name">remark</Property>
+                  <Property name="property">remark</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
               </AutoForm>
             </Children>
           </GroupBox>
@@ -1412,7 +1423,7 @@ view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	//&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
 	&quot;begin&quot;:condition.get(&quot;startTime&quot;),&#xD;
 	&quot;end&quot;:condition.get(&quot;endTime&quot;),&#xD;
-	//&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;remark&quot;),&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
 	//&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
@@ -2272,6 +2283,9 @@ if(data != undefined){&#xD;
             </DataColumn>
             <DataColumn name="group">
               <Property name="property">group.groupName</Property>
+            </DataColumn>
+            <DataColumn name="remark">
+              <Property name="property">remark</Property>
             </DataColumn>
           </DataGrid>
         </Children>

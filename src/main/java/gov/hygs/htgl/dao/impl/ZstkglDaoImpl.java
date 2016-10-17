@@ -627,7 +627,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
 					new Object[] { null, begin, end, title, tpye,
-							userDetails.getId(),null }, new String[] { "id_" })//remark=null
+							userDetails.getId(),ms }, new String[] { "id_" })
 					.intValue();
 			for(int j = 0; j < groupId.size(); j++){
 				sql = "insert into exam_tsqz value(?,?,?)";
@@ -653,9 +653,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			Date end = (Date) param.get("end");
 			String title = (String) param.get("title");
 			String tpye = (String) param.get("type");
+			String ms = (String) param.get("ms");
 			
-			String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=? where id_=?";
-			this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, examid });
+			String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=? where id_=?";
+			this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examid });
 			if(groupId != null){
 				sql = "delete from exam_tsqz where exam_id = ?";
 				this.jdbcTemplate.update(sql, new Object[]{ examid });
@@ -810,6 +811,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				exam.setTitle(result.getString("title"));
 				exam.setExamType(result.getString("exam_type"));
 				exam.setFqrId(result.getInt("fqr_id"));
+				exam.setRemark(result.getString("remark"));
 				return exam;
 			}
 			
