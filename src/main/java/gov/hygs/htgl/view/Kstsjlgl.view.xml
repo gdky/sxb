@@ -238,6 +238,10 @@
         </Property>
         <Property name="label">考试类型</Property>
       </PropertyDef>
+      <PropertyDef name="examtime">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">考试时间</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="groupType">
       <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
@@ -307,8 +311,12 @@
       </Reference>
       <PropertyDef name="groupId"/>
       <PropertyDef name="remark">
-        <Property/>
+        <Property></Property>
         <Property name="label">描述</Property>
+      </PropertyDef>
+      <PropertyDef name="examTime">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">考试时间</Property>
       </PropertyDef>
     </DataType>
     <DataType name="fqrType">
@@ -690,6 +698,11 @@ if(view.get(&quot;#grouptree.selection&quot;) != &quot;&quot;){&#xD;
                   <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">examtime</Property>
+                  <Property name="property">examtime</Property>
+                  <Editor/>
+                </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">title</Property>
                   <Property name="property">title</Property>
@@ -747,7 +760,8 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
 	&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
-	&quot;type&quot;:condition.get(&quot;type&quot;)&#xD;
+	&quot;type&quot;:condition.get(&quot;type&quot;),&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examtime&quot;)&#xD;
 });&#xD;
 &#xD;
 &#xD;
@@ -861,7 +875,8 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
 	&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
-	&quot;type&quot;:condition.get(&quot;type&quot;)&#xD;
+	&quot;type&quot;:condition.get(&quot;type&quot;),&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examtime&quot;)&#xD;
 });&#xD;
 &#xD;
 &#xD;
@@ -1352,6 +1367,11 @@ view.get(&quot;#dsExam&quot;).getData(&quot;#.group&quot;).cancel();&#xD;
                   <Property name="editable">false</Property>
                   <Editor/>
                 </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">examTime</Property>
+                  <Property name="property">examTime</Property>
+                  <Editor/>
+                </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">groupName</Property>
                   <Property name="property">groupName</Property>
@@ -1427,7 +1447,8 @@ view.get(&quot;#updateAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
 	//&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
-	&quot;type&quot;:condition.get(&quot;examType&quot;)&#xD;
+	&quot;type&quot;:condition.get(&quot;examType&quot;),&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examTime&quot;)&#xD;
 });&#xD;
 &#xD;
 &#xD;
@@ -2286,6 +2307,9 @@ if(data != undefined){&#xD;
             </DataColumn>
             <DataColumn name="remark">
               <Property name="property">remark</Property>
+            </DataColumn>
+            <DataColumn name="examTime">
+              <Property name="property">examTime</Property>
             </DataColumn>
           </DataGrid>
         </Children>

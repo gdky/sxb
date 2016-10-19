@@ -612,7 +612,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			Date end = (Date) param.get("end");
 			String title = (String) param.get("title");
 			String tpye = (String) param.get("type");
-
+			Integer examtime = (Integer) param.get("examtime");
 			/*
 			 * String sql = "insert into kstsjl values(?,?,?,?,?,?)"; int jlId =
 			 * this.insertAndGetKeyByJdbc( sql, new Object[] { null,
@@ -623,11 +623,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			 * "insert into kstsnr values(?,?,?)"; this.jdbcTemplate.update(sql,
 			 * new Object[] { null, jlId, id }); }
 			 */
-			String sql = "insert into exam values(?,?,?,?,?,?,?)";
+			String sql = "insert into exam values(?,?,?,?,?,?,?,?)";
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
 					new Object[] { null, begin, end, title, tpye,
-							userDetails.getId(),ms }, new String[] { "id_" })
+							userDetails.getId(),ms,examtime }, new String[] { "id_" })
 					.intValue();
 			for(int j = 0; j < groupId.size(); j++){
 				sql = "insert into exam_tsqz value(?,?,?)";
@@ -654,9 +654,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			String title = (String) param.get("title");
 			String tpye = (String) param.get("type");
 			String ms = (String) param.get("ms");
+			Integer examtime = (Integer) param.get("examtime");
 			
-			String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=? where id_=?";
-			this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examid });
+			String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=?,exam_time=? where id_=?";
+			this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examtime, examid });
 			if(groupId != null){
 				sql = "delete from exam_tsqz where exam_id = ?";
 				this.jdbcTemplate.update(sql, new Object[]{ examid });
@@ -812,6 +813,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				exam.setExamType(result.getString("exam_type"));
 				exam.setFqrId(result.getInt("fqr_id"));
 				exam.setRemark(result.getString("remark"));
+				exam.setExamTime(result.getInt("exam_time"));
 				return exam;
 			}
 			
