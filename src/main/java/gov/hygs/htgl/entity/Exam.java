@@ -34,6 +34,8 @@ public class Exam implements Serializable {
 
 	private String remark;
 	
+	private Integer examTime;
+	
 	/**
 	 * Constructor.
 	 */
@@ -160,6 +162,14 @@ public class Exam implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public Integer getExamTime() {
+		return examTime;
+	}
+
+	public void setExamTime(Integer examTime) {
+		this.examTime = examTime;
 	}
 
 	/**
