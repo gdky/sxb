@@ -28,18 +28,21 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	public List<Dept> getDeptRoot(Map<String,Object> param) {
 		// TODO Auto-generated method stub
 		StringBuilder sql = new StringBuilder();
+		List<Map<String, Object>> list = null;
 		if(param == null){
 			//超级管理员
 			sql.append("select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null");
+			list = this.jdbcTemplate.queryForList(sql.toString());
 		}else{
 			//其他管理员
 			Integer deptid = (Integer) param.get("id");
 			sql.append(" select ID_,DEPT_NAME,PARENT_ID,MS from dept where id_=( ");
-			sql.append(" select ifnull((select parent_id from dept where id_ = "+deptid+"),"+deptid+") from dual ");
+			//sql.append(" select ifnull((select parent_id from dept where id_ = "+deptid+"),"+deptid+") from dual ");
+			sql.append(" select ifnull((select parent_id from dept where id_ = ?),?) from dual ");
 			sql.append(" ) ");
 			//sql = "select ifnull((select parent_id from dept where id_ = "+deptid+"),"+deptid+") from dual";
+			list = this.jdbcTemplate.queryForList(sql.toString(), new Object[]{deptid,deptid});
 		}
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString());
 		return this.mapToDeptList(list);
 	}
 

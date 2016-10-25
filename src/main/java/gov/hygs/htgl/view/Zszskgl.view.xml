@@ -164,6 +164,10 @@
         <Property></Property>
         <Property name="label">知识库题目</Property>
       </PropertyDef>
+      <PropertyDef name="zsklyContent">
+        <Property></Property>
+        <Property name="label">来源内容</Property>
+      </PropertyDef>
       <PropertyDef name="yxbz">
         <Property></Property>
       </PropertyDef>
@@ -765,7 +769,9 @@ view.get(&quot;#dialog&quot;).show();&#xD;
 if(data != undefined){&#xD;
 	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
 		data.remove();&#xD;
-		view.get(&quot;#updateAction&quot;).execute();&#xD;
+		view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+			view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
+		});&#xD;
 	});&#xD;
 }</ClientEvent>
               <Property name="caption">删除</Property>

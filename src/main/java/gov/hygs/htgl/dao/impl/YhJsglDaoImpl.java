@@ -107,7 +107,7 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		List id = new ArrayList();
 		if(list != null){
 			for(Map<String,Object> map : list){
-				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?))",new Object[]{map.get("id_")});
 				for(Map<String,Object> maps : ids){
 					id.add(maps.get("id_"));
 				}

@@ -32,6 +32,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	public void getZszskInfo(Page<ZskJl> page, Map<String, Object> param,
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
 		String roleName = this.getRoleInfoByUserId(userDetails.getId())
@@ -41,23 +42,22 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d "
 					+ "where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' ");
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sqlCount, param);
+				args.addAll(this.rebuileSqlByConditionAndRole(sqlCount, param));
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d "
-					+ "where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid="
-					+ userDetails.getDeptid());
+					+ "where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid=?");
+			args.add(userDetails.getDeptid());
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sqlCount, param);
+				args.addAll(this.rebuileSqlByConditionAndRole(sqlCount, param));
 			}
 		} else if ("Other".equals(roleName)) {// 普通用户
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
-					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid="
-					+ userDetails.getDeptid()
-					+ " and a.user_id="
-					+ userDetails.getId());
+					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid=? and a.user_id=?");
+			args.add(userDetails.getDeptid());
+			args.add(userDetails.getId());
 		}
-		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),
+		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),args.toArray(),
 				Integer.class);
 		List<ZskJl> list = this.getYxzskInfo(pageSize * (pageNow - 1),
 				pageSize, userDetails, roleName, param);
@@ -68,26 +68,30 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	private List<ZskJl> getYxzskInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
-
+		List<Object> args = new ArrayList<Object>();
 		StringBuilder sql = new StringBuilder(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.* ");
 			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
 			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
 			sql.append(" and a.xybz='Y' ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sql, param);
+				args.addAll(this.rebuileSqlByConditionAndRole(sql, param));
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sql.append("and a.deptid=" + userDetails.getDeptid() + " ");
+			sql.append("and a.deptid=? ");
+			args.add(userDetails.getDeptid());
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sql, param);
+				args.addAll(this.rebuileSqlByConditionAndRole(sql, param));
 			}
 		} else if ("Other".equals(roleName)) {// 普通用户
-			sql.append("and a.deptid=" + userDetails.getDeptid()
-					+ " and a.user_id=" + userDetails.getId() + " ");
+			sql.append("and a.deptid=? and a.user_id=? ");
+			args.add(userDetails.getDeptid());
+			args.add(userDetails.getId());
 		}
-		sql.append(" order by a.create_date desc limit " + begin + "," + offest);
-		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),
+		sql.append(" order by a.create_date desc limit ?,?");
+		args.add(begin);
+		args.add(offest);
+		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),args.toArray(),
 				new RowMapper<ZskJl>() {
 
 					@Override
@@ -164,8 +168,9 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		return aRole;
 	}
 
-	private void rebuileSqlByConditionAndRole(StringBuilder sql,
+	private List<Object> rebuileSqlByConditionAndRole(StringBuilder sql,
 			Map<String, Object> param) {
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
@@ -185,8 +190,9 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 			
 			if(deptid != 1){
 				sql.append(" and a.deptid in ( ");
-				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
 				sql.append(" ) ");
+				args.add(deptid);
 			}else if(deptid == 1){
 				//this.rebuildSqlWhenDeptidIs1(sql);
 				sql.append(" and a.deptid != 2 ");
@@ -196,23 +202,24 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		}
 		if (userId != null || user != null) {
 			// sql.append(" and user_id=" + userId);
-			sql.append(" and a.user_id in (select id_ from user where user_name like '%"
-					+ user + "%') ");
+			sql.append(" and a.user_id in (select id_ from user where user_name like ?) ");
+			args.add("%"+user+"%");
 		}
 		if (begin != null) {
-			sql.append(" and a.create_date >= date_format('" + sdf.format(begin)
-					+ "','%Y%m%d')");
+			sql.append(" and a.create_date >= date_format(?,'%Y%m%d')");
+			args.add(sdf.format(begin));
 		}
 		if (end != null) {
-			sql.append(" and a.create_date <= date_format('" + sdf.format(end)
-					+ "','%Y%m%d')");
+			sql.append(" and a.create_date <= date_format(?,'%Y%m%d')");
+			args.add(sdf.format(end));
 		}
 		if (content != null) {
 			sql.append(" and a.zskly_id in "
-					+ "(select id_ from zskly where title like '%" + content
-					+ "%' or content like '%" + content + "%') ");
+					+ "(select id_ from zskly where title like ? or content like ?) ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
 		}
-		// return null;
+		return args;
 	}
 
 	@Override
@@ -251,11 +258,14 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	}
 	
 	private int getZsklyInfoOrAddZskly(String title, String content){
-		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from zskly where title='"+title+"' ");
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from zskly where title=? ");
+		args.add(title);
 		if(content != null){
-			sql.append(" and content='"+content+"' ");
+			sql.append(" and content=? ");
+			args.add(content);
 		}
-		int zsklyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
+		int zsklyid = this.jdbcTemplate.queryForObject(sql.toString(), args.toArray(), Integer.class);
 		if(zsklyid == 0){
 			zsklyid = this.addZskly(title, content);
 		}
@@ -354,6 +364,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 	private List<ZskJl> getYxzskInfo(int begin, int offest) {
 		//String sql = "select * from zsk_jl where yxbz='Y' and xybz='N' limit ?,?";
 		//StringBuilder sql = new StringBuilder("select * from zsk_jl where yxbz='Y'");
+		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.* ");
 			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
 			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
@@ -361,9 +372,11 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		if (offest == -1 && begin == -1) {
 			sql.append(" and a.xybz='Y' ");
 		} else {
-			sql.append(" and a.xybz='N' limit " + begin + "," + offest);
+			sql.append(" and a.xybz='N' limit ?,?");
+			args.add(begin);
+			args.add(offest);
 		}
-		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(), new RowMapper<ZskJl>() {
+		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(), args.toArray(), new RowMapper<ZskJl>() {
 
 			@Override
 			public ZskJl mapRow(ResultSet result, int i) throws SQLException {
@@ -570,7 +583,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		StringBuffer sql = new StringBuffer("select u.user_name tsr,jl.tsrq,g.group_name groupname,g.id_ groupId,jl.ms,jl.id_ jlid ");
 		StringBuffer sqlCount = new StringBuffer("select count(*)");
 		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
-		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit ?,?").toString(),new Object[]{pageSize * (pageNow - 1),pageSize});
 		page.setEntityCount(count);
 		page.setEntities(list);
 	}
@@ -583,11 +596,11 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		int id = (int) param.get("id");
 		StringBuffer sqlWhere = new StringBuffer(" from zsk_jl jl, zskly ly, dept d, user u ,zsktsnr nr, zsdtsjl z "
 				+ "where jl.zskly_id = ly.id_ and jl.user_id = u.id_ and jl.deptid = d.id_ "
-				+ "and nr.zskid = jl.id_ and z.id_ = nr.tsjlid and z.id_ = "+id+" ");
+				+ "and nr.zskid = jl.id_ and z.id_ = nr.tsjlid and z.id_ = ? ");
 		StringBuffer sql = new StringBuffer("select jl.id_ id,jl.create_date,jl.content,ly.title zsklyname,u.user_name username,d.dept_name deptname,jl.title");
 		StringBuffer sqlCount = new StringBuffer("select count(*)");
-		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit "+pageSize * (pageNow - 1)+","+pageSize).toString());
+		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), new Object[]{id}, Integer.class);
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit ?,?").toString(),new Object[]{id,pageSize * (pageNow - 1),pageSize});
 		page.setEntityCount(count);
 		page.setEntities(list);
 	}
