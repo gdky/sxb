@@ -19,7 +19,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		List id = new ArrayList();
 		if(list != null){
 			for(Map<String,Object> map : list){
-				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?))",new Object[]{map.get("id_")});
 				for(Map<String,Object> maps : ids){
 					id.add(maps.get("id_"));
 				}
@@ -36,6 +36,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List countGxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
@@ -73,27 +74,31 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		if(deptid != null){
 			sql.append(" and a.dept_id in ( ");
 			if(deptid != 1){
-				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+				args.add(deptid);
 			}else if(deptid == 1){
 				this.rebuildSqlWhenDeptidIs1(sql);
 			}
 			sql.append(" ) ");
 		}
 		if(user != null){
-			sql.append("and a.user_id in (select id_ from user where user_name like '%" + user + "%') ");
+			sql.append("and a.user_id in (select id_ from user where user_name like ?) ");
+			args.add("%"+user+"%");
 		}
 		if (begin != null) {
-			sql.append("and a.gx_date >= date_format('"
-					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
+			sql.append("and a.gx_date >= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("begin")));
 		}
 		if (end != null) {
-			sql.append("and a.gx_date <= date_format('"
-					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
+			sql.append("and a.gx_date <= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("end")));
 		}
 		sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
 		if (content != null) {
-			sql.append("where t.title like '%" + content + "%' ");
-			sql.append("or t.content like '%" + content + "%' ");
+			sql.append("where t.title like ? ");
+			sql.append("or t.content like ? ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
 		}
 		sql.append(") group by a.dept_id");
 		if (userId == null || userId != 0) {
@@ -101,13 +106,19 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		}
 		sql.append(")t, ");
 		sql.append("user u,dept d where t.did=d.id_ and u.id_=t.uid");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 
 	@Override
 	public List countDeptGxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
 		String dept =  param == null?null : (String)param.get("dept");
@@ -139,33 +150,41 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		if(deptid != null){
 			sql.append(" and a.dept_id in ( ");
 			if(deptid != 1){
-				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+				args.add(deptid);
 			}else if(deptid == 1){
 				this.rebuildSqlWhenDeptidIs1(sql);
 			}
 			sql.append(" ) ");
 		}
 		if (begin != null) {
-			sql.append(" and a.gx_date >= date_format('"
-					+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
+			sql.append(" and a.gx_date >= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("begin")));
 		}
 		if (end != null) {
-			sql.append(" and a.gx_date <= date_format('"
-					+ sdf.format(param.get("end")) + "','%Y%m%d') ");
+			sql.append(" and a.gx_date <= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("end")));
 		}
 		if (content != null) {
 			sql.append(" and b.tmly_id in (" + " select t.id_ "
-					+ " from tmly t " + " where t.title like '%" + content
-					+ "%' " + " or t.content like '%" + content + "%') ");
+					+ " from tmly t " + " where t.title like ? " + " or t.content like ?) ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
 		}
 		sql.append(")");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());;
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
 		return list;
 	}
 
 	@Override
 	public List countZskgxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
@@ -190,35 +209,47 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 						sql.append(" and a.dept_id in ( ");
 						if(deptid != 1){
 							
-							sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+							sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+							args.add(deptid);
 						}else if(deptid == 1){
 							this.rebuildSqlWhenDeptidIs1(sql);
 						}
 						sql.append(" ) ");
 					}
 					if(userId != null || user != null){
-						sql.append(" and a.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+						sql.append(" and a.user_id in (select id_ from user where user_name like ?) ");
+						args.add("%"+user+"%");
 					}
 					if(begin != null){
-						sql.append(" and a.gx_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+						sql.append(" and a.gx_date >= date_format(?,'%Y%m%d') ");
+						args.add(sdf.format(begin));
 					}
 					if(end != null){
-						sql.append(" and a.gx_date <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+						sql.append(" and a.gx_date <= date_format(?,'%Y%m%d') ");
+						args.add(sdf.format(end));
 					}
 					if(content != null){
 						sql.append(" and b.zskly_id in ( select t.id_ from zskly t ");
-						sql.append(" where t.title like '%"+content+"%' ");
-						sql.append(" or t.content like '%"+content+"%')");
+						sql.append(" where t.title like ? ");
+						sql.append(" or t.content like ?)");
+						args.add("%"+content+"%");
+						args.add("%"+content+"%");
 					}
 					sql.append(" group by a.dept_id,a.user_id )t,user u,dept d ");
 					sql.append(" where t.did=d.id_ and u.id_=t.uid");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 
 	@Override
 	public List countDeptZskgxjl(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
 		String dept =  param == null?null : (String)param.get("dept");
@@ -243,33 +274,42 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				if(deptid != null){
 					sql.append(" and a.dept_id in ( ");
 					if(deptid != 1){
-						sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+						sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+						args.add(deptid);
 					}else if(deptid == 1){
 						this.rebuildSqlWhenDeptidIs1(sql);
 					}
 					sql.append(" ) ");
 				}
 				if (begin != null) {
-					sql.append(" and a.gx_date >= date_format('"
-							+ sdf.format(param.get("begin")) + "','%Y%m%d') ");
+					sql.append(" and a.gx_date >= date_format(?,'%Y%m%d') ");
+					args.add(sdf.format(param.get("begin")));
 				}
 				if (end != null) {
-					sql.append(" and a.gx_date <= date_format('"
-							+ sdf.format(param.get("end")) + "','%Y%m%d') ");
+					sql.append(" and a.gx_date <= date_format(?,'%Y%m%d') ");
+					args.add(sdf.format(param.get("end")));
 				}
 				if (content != null) {
 					sql.append("and b.zskly_id in (select t.id_  from zskly t ");
-					sql.append("where t.title like '%"+content+"%' ");
-					sql.append("or t.content like '%"+content+"%') ");
+					sql.append("where t.title like ? ");
+					sql.append("or t.content like ?) ");
+					args.add("%"+content+"%");
+					args.add("%"+content+"%");
 				}
 				sql.append(")");
-			List list = this.jdbcTemplate.queryForList(sql.toString());
+			List list = null;
+			if(args.isEmpty()){
+				list = this.jdbcTemplate.queryForList(sql.toString());
+			}else{
+				list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+			}
 			return list;
 	}
 
 	@Override
 	public List countLaudRecord(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
@@ -294,36 +334,48 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 					if(deptid != null){
 						sql.append(" and b.deptid in ( ");
 						if(deptid != 1){
-							sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+							sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+							args.add(deptid);
 						}else if(deptid == 1){
 							this.rebuildSqlWhenDeptidIs1(sql);
 						}
 						sql.append(" ) ");
 					}
 					if(user != null){
-						sql.append(" and b.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+						sql.append(" and b.user_id in (select id_ from user where user_name like ?) ");
+						args.add("%"+user+"%");
 					}
 					if(begin != null){
 						//sql.append(" and b.create_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
-						sql.append(" and a.dz_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+						sql.append(" and a.dz_date >= date_format(?,'%Y%m%d') ");
+						args.add(sdf.format(begin));
 					}
 					if(end != null){
 						//sql.append(" and b.create_date <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
-						sql.append(" and a.dz_date <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+						sql.append(" and a.dz_date <= date_format(?,'%Y%m%d') ");
+						args.add(sdf.format(end));
 					}
 					if(content != null){
 						sql.append(" and b.tmly_id in (select t.id_ from tmly t ");
-						sql.append(" where t.title like '%"+content+"%' ");
-						sql.append(" or t.content like '%"+content+"%') ");
+						sql.append(" where t.title like ? ");
+						sql.append(" or t.content like ?) ");
+						args.add("%"+content+"%");
+						args.add("%"+content+"%");
 					}
 					sql.append("group by b.DEPTID,b.USER_ID )t,user u,dept d where t.did=d.id_ and u.id_=t.uid");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 
 	@Override
 	public List countDeptLaudRecord(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
 		String dept =  param == null?null : (String)param.get("dept");
@@ -345,7 +397,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
-					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+					args.add(deptid);
 				}else if(deptid == 1){
 					this.rebuildSqlWhenDeptidIs1(sql);
 				}
@@ -353,25 +406,35 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			}
 			if(begin != null){
 				//sql.append(" and b.create_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
-				sql.append(" and a.dz_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and a.dz_date >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
 				//sql.append(" and b.create_date <= date_format('"+end+"','%Y%m%d')   ");
-				sql.append(" and a.dz_date <= date_format('"+sdf.format(end)+"','%Y%m%d')   ");
+				sql.append(" and a.dz_date <= date_format(?,'%Y%m%d')   ");
+				args.add(sdf.format(end));
 			}
 			if(content != null){
 				sql.append(" and b.tmly_id in (select t.id_ from tmly t ");
-				sql.append(" where t.title like '%"+content+"%' ");
-				sql.append(" or t.content like '%"+content+"%') ");
+				sql.append(" where t.title like ? ");
+				sql.append(" or t.content like ? ");
+				args.add("%"+content+"%");
+				args.add("%"+content+"%");
 			}
 			sql.append(")");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 
 	@Override
 	public List countTktmLaudRecord(Map<String, Object> param) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date begin = param == null ? null : (Date) param.get("begin");
 		Date end = param == null ? null : (Date) param.get("end");
@@ -381,14 +444,21 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" from laud_record r,tktm t where t.id_ = r.zstk_id ");
 			if(begin != null){
 				//sql.append(" and b.create_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
-				sql.append(" and r.dz_date >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and r.dz_date >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
 				//sql.append(" and b.create_date <= date_format('"+end+"','%Y%m%d')   ");
-				sql.append(" and r.dz_date <= date_format('"+sdf.format(end)+"','%Y%m%d')   ");
+				sql.append(" and r.dz_date <= date_format(?,'%Y%m%d')   ");
+				args.add(sdf.format(end));
 			}
 			sql.append(" group by r.zstk_id ");
-		List list =  this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
 		return list;
 	}
 
@@ -396,6 +466,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	public List countUserAnswerCount(Map<String, Object> param) {//answerCount
 		// TODO Auto-generated method stub
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String user = (String) param.get("user");
 		String dept = (String) param.get("dept");
@@ -414,7 +485,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" u.user_name as user,count(r.user_id) as answerCount ");
 			sql.append(" from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_ ");
 			if(user != null){
-				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+				sql.append(" and r.user_id in (select id_ from user where user_name like ?) ");
+				args.add("%"+user+"%");
 			}
 			/*if(dept != null){
 				sql.append(" and d.id_ in (select id_ from dept where dept_name like '%"+dept+"%') ");
@@ -428,23 +500,32 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
-					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+					args.add(deptid);
 				}else if(deptid == 1){
 					this.rebuildSqlWhenDeptidIs1(sql);
 				}
 				sql.append(" ) ");
 			}
 			if(begin != null){
-				sql.append(" and r.start_time >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and r.start_time >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
-				sql.append(" and r.end_time <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+				sql.append(" and r.end_time <= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(end));
 			}
 			if(tkfl != null){
-				sql.append(" and r.TM_ID in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like '%"+tkfl+"%') ");
+				sql.append(" and r.TM_ID in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like ?) ");
+				args.add("%"+tkfl+"%");
 			}
 			sql.append(" group by r.user_id ");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
 		return list;
 	}
 
@@ -452,6 +533,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	public List countUserAnswerScore(Map<String, Object> param) {//answerScore
 		// TODO Auto-generated method stub
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String user = (String) param.get("user");
 		String dept = (String) param.get("dept");
@@ -470,7 +552,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" u.user_name as user,sum(r.result_score) as answerScore ");
 			sql.append(" from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_ ");
 			if(user != null){
-				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+				sql.append(" and r.user_id in (select id_ from user where user_name like ? ");
+				args.add("%"+user+"%");
 			}
 			/*if(dept != null){
 				sql.append(" and d.id_ in (select id_ from dept where dept_name like '%"+dept+"%') ");
@@ -484,23 +567,32 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
-					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+					args.add(deptid);
 				}else if(deptid == 1){
 					this.rebuildSqlWhenDeptidIs1(sql);
 				}
 				sql.append(" ) ");
 			}
 			if(begin != null){
-				sql.append(" and r.start_time >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and r.start_time >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
-				sql.append(" and r.end_time <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+				sql.append(" and r.end_time <= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(end));
 			}
 			if(tkfl != null){
-				sql.append(" and r.TM_ID in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like '%"+tkfl+"%') ");
+				sql.append(" and r.TM_ID in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like ?) ");
+				args.add("%"+tkfl+"%");
 			}
 			sql.append(" group by r.user_id ");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 
@@ -508,6 +600,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	public List countUserRushAnswerScore(Map<String, Object> param) {//rushAnswerScore
 		// TODO Auto-generated method stub
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String user = (String) param.get("user");
 		String dept = (String) param.get("dept");
@@ -526,7 +619,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" from exam_user_result r, user u, dept d, exam_detail ed, exam e ");
 			sql.append(" where r.user_id = u.id_ and u.deptid=d.id_ and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ and e.exam_type='2' ");
 			if(user != null){
-				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+				sql.append(" and r.user_id in (select id_ from user where user_name like ?) ");
+				args.add("%"+user+"%");
 			}
 			/*if(dept != null){
 				sql.append(" and d.id_ in (select id_ from dept where dept_name like '%"+dept+"%') ");
@@ -540,23 +634,32 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
-					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+					args.add(deptid);
 				}else if(deptid == 1){
 					this.rebuildSqlWhenDeptidIs1(sql);
 				}
 				sql.append(" ) ");
 			}
 			if(begin != null){
-				sql.append(" and r.start_time >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and r.start_time >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
-				sql.append(" and r.end_time <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+				sql.append(" and r.end_time <= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(end));
 			}
 			if(tkfl != null){
-				sql.append(" and ed.tm_id in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like '%"+tkfl+"%') ");
+				sql.append(" and ed.tm_id in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like ?) ");
+				args.add("%"+tkfl+"%");
 			}
 			sql.append(" group by r.user_id");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
 		return list;
 	}
 
@@ -564,6 +667,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	public List countUserExamScore(Map<String, Object> param) {//examScore
 		// TODO Auto-generated method stub
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String user = (String) param.get("user");
 		String dept = (String) param.get("dept");
@@ -583,7 +687,8 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" from exam_user_result r,user u,dept d,exam e,exam_detail ed where r.user_id = u.id_ and u.deptid=d.id_ ");
 			sql.append(" and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ ");
 			if(user != null){
-				sql.append(" and r.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+				sql.append(" and r.user_id in (select id_ from user where user_name like ?) ");
+				args.add("%"+user+"%");
 			}
 			/*if(dept != null){
 				sql.append(" and d.id_ in (select id_ from dept where dept_name like '%"+dept+"%') ");
@@ -597,27 +702,37 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
-					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+					args.add(deptid);
 				}else if(deptid == 1){
 					this.rebuildSqlWhenDeptidIs1(sql);
 				}
 				sql.append(" ) ");
 			}
 			if(begin != null){
-				sql.append(" and r.start_time >= date_format('"+sdf.format(begin)+"','%Y%m%d') ");
+				sql.append(" and r.start_time >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
 			}
 			if(end != null){
-				sql.append(" and r.end_time <= date_format('"+sdf.format(end)+"','%Y%m%d') ");
+				sql.append(" and r.end_time <= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(end));
 			}
 			if(title != null){
 				//sql.append(" and r.EXAM_DETAIL_ID in (select d.ID_ from exam e, exam_detail d where e.ID_ = d.EXAM_ID and e.TITLE like '%"+title+"%') ");
-				sql.append(" and e.TITLE like '%"+title+"%' ");
+				sql.append(" and e.TITLE like ? ");
+				args.add("%"+title+"%");
 			}
 			if(tkfl != null){
-				sql.append(" and ed.tm_id in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like '%"+tkfl+"%') ");
+				sql.append(" and ed.tm_id in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like ?) ");
+				args.add("%"+tkfl+"%");
 			}
 			sql.append(" group by r.user_id ");
-		List list = this.jdbcTemplate.queryForList(sql.toString());
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
 		return list;
 	}
 
