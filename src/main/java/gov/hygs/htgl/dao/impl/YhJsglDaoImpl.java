@@ -26,32 +26,30 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	@Override
 	public void getUserInfo(Map<String, Object> para, Page page) {
 		// TODO Auto-generated method stub
-		StringBuilder sqlCount = new StringBuilder(
-				"select count(*) from user a,dept b where a.deptid=b.id_ ");
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sqlCount = new StringBuffer("select count(*) from user a,dept b where a.deptid=b.id_ ");
 		if (para != null) {
-			this.rebuildSqlByCondition(sqlCount, para);
+			args.addAll(this.rebuildSqlByCondition(sqlCount, para));
 		}
-		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),args.toArray(),
 				Integer.class);
-
-		StringBuilder sql = new StringBuilder(
-				"select a.*,b.dept_name deptMc from user a,dept b where a.deptid=b.id_ ");
+		args.clear();
+		StringBuffer sql = new StringBuffer("select a.*,b.dept_name deptMc from user a,dept b where a.deptid=b.id_ ");
 		if (para != null) {
-			this.rebuildSqlByCondition(sql, para);
+			args.addAll(this.rebuildSqlByCondition(sql, para));
 		}
 		sql.append(" limit ?,? ");
-
-		List<Map<String, Object>> ls = this.jdbcTemplate.queryForList(
-				sql.toString(),
-				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
-						page.getPageSize() });
+		args.add(page.getPageSize() * (page.getPageNo() - 1));
+		args.add(page.getPageSize());
+		List<Map<String, Object>> ls = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
 		page.setEntityCount(entityCount);
 		page.setEntities(ls);
 
 	}
 
-	private void rebuildSqlByCondition(StringBuilder sql,
+	private List<Object> rebuildSqlByCondition(StringBuffer sql,
 			Map<String, Object> param) {
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date begin = (Date) param.get("begin");
 		Date end = (Date) param.get("end");
@@ -63,46 +61,49 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 		Integer deptid = (Integer) param.get("deptid");
 		Integer parentid = (Integer) param.get("parentid");
 		if (deptid != null) {
-			//if(parentid == null){
-				//sql.append(" and a.deptid ="+deptid+" ");
-			//}
 			if(deptid != 1){
 				sql.append(" and b.id_ in( ");
-				//sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID  ");
-				sql.append(" select a.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID  ");
+				sql.append(" select a.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo(?)) and a.id_=u.DEPTID  ");
 				sql.append(" ) ");
+				args.add(deptid);
 			}else if(deptid == 1){
-				//this.rebuildSqlWhenDeptidIs1(sql);
 				sql.append(" and b.id_ != 2 ");
 				sql.append(" and b.id_ != 307 ");
 			}
 			
 		}
 		if (begin != null) {
-			sql.append(" and a.rzsj >= date_format('" + sdf.format(begin) + "','%Y%m%d') ");
+			sql.append(" and a.rzsj >= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(begin));
 		}
 		if (end != null) {
-			sql.append(" and a.rzsj <= date_format('" + sdf.format(end) + "','%Y%m%d') ");
+			sql.append(" and a.rzsj <= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(end));
 		}
 		if (loginName != null) {
-			sql.append(" and a.login_name like '%" + loginName + "%' ");
+			sql.append(" and a.login_name like ? ");
+			args.add("%" + loginName + "%");
 		}
 		if (userName != null) {
-			sql.append(" and a.user_name like '%" + userName + "%' ");
+			sql.append(" and a.user_name like ? ");
+			args.add("%" + userName + "%");
 		}
 		if (phone != null && !"".equals(phone)) {
-			sql.append(" and a.phone like '%" + phone + "%' ");
+			sql.append(" and a.phone like ? ");
+			args.add("%" + phone + "%");
 		}
 		if (zw != null && !"".equals(zw)) {
-			sql.append(" and a.zw like '%" + zw + "%' ");
+			sql.append(" and a.zw like ? ");
+			args.add("%" + zw + "%");
 		}
 		if (dept != null) {
-			sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
-					+ dept + "%') ");
+			sql.append(" and a.deptid in (select id_ from dept where dept_name like ?) ");
+			args.add("%"+dept+"%");
 		}
+		return args;
 	}
 
-	private void rebuildSqlWhenDeptidIs1(StringBuilder sb){
+	private void rebuildSqlWhenDeptidIs1(StringBuffer sb){
 		List<Map<String,Object>> list = this.jdbcTemplate.queryForList("select id_ from dept where parent_id = 1");
 		List id = new ArrayList();
 		if(list != null){

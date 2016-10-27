@@ -44,7 +44,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		int pageNow = page.getPageNo();
 		String roleName = this.getRoleInfoByUserId(userDetails.getId())
 				.getRole_Name();
-		StringBuilder count = new StringBuilder("");
+		StringBuffer count = new StringBuffer("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
 
 			count.append("select count(*) from tktm a where a.yxbz='Y'");
@@ -83,7 +83,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		page.setEntities(list);
 	}
 
-	private List<Object> rebuileSqlByConditionAndRole(StringBuilder sql,
+	private List<Object> rebuileSqlByConditionAndRole(StringBuffer sql,
 			Map<String, Object> param) {
 		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -96,15 +96,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		String tktmcontent = (String) param.get("tktmcontent");
-		/*
-		if (!sql.toString().contains("deptid")) {
-			if (deptid != null || dept != null) {
-				// sql.append(" and deptid=" + deptid);
-				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"
-						+ dept + "%') ");
-			}
-		}
-		*/
 		if(deptid != null){
 			
 			if(deptid != 1){
@@ -113,14 +104,12 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				sql.append(" ) ");
 				args.add(deptid);
 			}else if(deptid == 1){
-				//this.rebuildSqlWhenDeptidIs1(sql);
 				sql.append(" and a.deptid != 2 ");
 				sql.append(" and a.deptid != 307 ");
 			}
 			
 		}
 		if (userId != null || user != null) {
-			// sql.append(" and user_id=" + userId);
 			sql.append(" and a.user_id in (select id_ from user where user_name like ?) ");
 			args.add("%"+user+"%");
 		}
@@ -137,8 +126,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			args.add("%"+tkfl+"%");
 		}
 		if (content != null) {
-			sql.append(" and a.tmly_id in "
-					+ "(select id_ from tmly where title like ? or content like ?) ");
+			sql.append(" and a.tmly_id in ");
+			sql.append("(select id_ from tmly where title like ? or content like ?) ");
 			args.add("%"+content+"%");
 			args.add("%"+content+"%");
 		}
@@ -149,12 +138,12 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		return args;
 	}
 
-	private void rebuildSqlWhenDeptidIs1(StringBuilder sb){
+	private void rebuildSqlWhenDeptidIs1(StringBuffer sb){
 		List<Map<String,Object>> list = this.jdbcTemplate.queryForList("select id_ from dept where parent_id = 1");
 		List id = new ArrayList();
 		if(list != null){
 			for(Map<String,Object> map : list){
-				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo("+map.get("id_")+"))");
+				List<Map<String,Object>> ids = this.jdbcTemplate.queryForList("select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?))",new Object[]{map.get("id_")});
 				for(Map<String,Object> maps : ids){
 					id.add(maps.get("id_"));
 				}
@@ -172,19 +161,13 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		/*
-		StringBuilder sql = new StringBuilder("select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*");
-			sql.append(" from tktm a,tkfl b, USER c,dept d,tmly e ");
-			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.TMLY_ID=e.ID_ AND a.FL_ID=b.ID_ ");
-		*/
 		List<Object> args = new ArrayList<Object>();
-		StringBuilder sql = new StringBuilder("select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*");
+		StringBuffer sql = new StringBuffer("select b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*");
 			sql.append(" from tktm a ");
 			sql.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
 			sql.append(" left join tkfl b on a.FL_ID=b.ID_, ");
 			sql.append(" USER c,dept d ");
 			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ ");
-		//Object[] objs = {};
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			sql.append(" and a.yxbz='Y' ");
 			if (param != null) {
@@ -382,10 +365,8 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public Collection<User> getUserByDeptId(String id) {
 		// TODO Auto-generated method stub
-		
-		//String sql = "select * from user where deptid="+id;
 		List<Object> args = new ArrayList<Object>();
-		StringBuilder sql = new StringBuilder("select * from user ");
+		StringBuffer sql = new StringBuffer("select * from user ");
 		if(!"0".equals(id)){
 			sql.append("where deptid=?");
 			args.add(id);
@@ -430,11 +411,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	@Override
 	public void addGrDeptGxJl(Tktm yxtk) {
-		// String sql = "select value from system_props where id_=104";
-		// Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		// sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
-		// Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-		// yxtk.getId(), value, 104, yxtk.getCreateDate() };
 		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
 				yxtk.getId(), this.getGxjlValueByKey("GxzA"), 1, yxtk.getCreateDate() };
@@ -451,35 +427,18 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		// TODO Auto-generated method stub
 		this.chackYxtkModeChangeOrNot(yxtk);
 		List<Map<String, Object>> list = this.getSysPropValueByTmnd(yxtk);
-		String sql = "update tktm set fl_id=?,user_id=?,create_date=?,"
-				+ "sp_date=?,spr_id=?,deptid=?," + "content=?,tmfz=?,tmnd=?,"
-				+ "tmly_id=?,mode=?,ksbz=? where id_=?";
+		StringBuffer sql = new StringBuffer("update tktm set fl_id=?,user_id=?,create_date=?,");
+			sql.append("sp_date=?,spr_id=?,deptid=?,content=?,tmfz=?,tmnd=?,");
+			sql.append("tmly_id=?,mode=?,ksbz=? where id_=?");
+		
 		Object[] obj = { yxtk.getFlId(), yxtk.getUserId(),
 				yxtk.getCreateDate(), yxtk.getSpDate(), yxtk.getSprId(),
 				yxtk.getDeptid(), yxtk.getContent(), list.get(0).get("value"),
 				yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), yxtk.getKsbz(), yxtk.getId() };
-		this.jdbcTemplate.update(sql, obj);
+		this.jdbcTemplate.update(sql.toString(), obj);
 	}
 
 	private void chackYxtkModeChangeOrNot(Tktm yxtk) {
-		/*
-		 * String sql = "select count(*) from yxtk where id_='" + yxtk.getId() +
-		 * "' and mode='" + yxtk.getMode()+"'"; int count =
-		 * this.jdbcTemplate.queryForObject(sql, Integer.class); if (count == 0)
-		 * { // sql = //
-		 * "select if((select mode from yxtk where id_='"+yxtk.getId
-		 * ()+"'),1,0) from dual"; sql =
-		 * "select if((select mode from yxtk where id_='"
-		 * +yxtk.getId()+"'),1,0) from dual"; count =
-		 * this.jdbcTemplate.queryForObject(sql, Integer.class); if((count == 0
-		 * && !yxtk.getMode().equals("0")) || (count == 1 &&
-		 * yxtk.getMode().equals("0"))){//mode从0变成1或2 //mode从1或2变成0 sql =
-		 * "delete from yxtkxzx where tk_id=? and tk_id != '0'";
-		 * this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() });
-		 * 
-		 * } sql = "delete from yxtkda where tk_id=?";
-		 * this.jdbcTemplate.update(sql, new Object[] { yxtk.getId() }); }
-		 */
 		String sql = "select count(*) from tktm where id_=? and mode=?";
 		int count = this.jdbcTemplate.queryForObject(sql,new Object[]{yxtk.getId(),yxtk.getMode()}, Integer.class);
 		if (count == 0) {
@@ -498,7 +457,6 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 
 	@Override
 	public void deleteGrDeptGxJl(Tktm yxtk) {
-		//String sql = "delete from tk_gxjl where tk_id=? and gxly=?";
 		String sql = "delete from tk_gxjl where tk_id=?";
 		Object[] objs = { yxtk.getId() };
 		this.jdbcTemplate.update(sql, objs);
@@ -597,10 +555,10 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	public List<Map<String, Object>> getUserIdByDeptIdAndTheyName(
 			String userName, String deptName) {
 		// TODO Auto-generated method stub
-		String sql = "select if(count(*),id_,0) userid,deptid "
-				+ "from user where user_name like ? "
-				+ "and deptid in (select id_ from dept where dept_name like ?);";
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{"%"+userName+"%","%"+deptName+"%"});
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) userid,deptid ");
+				sql.append("from user where user_name like ? ");
+				sql.append("and deptid in (select id_ from dept where dept_name like ?)");
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString(), new Object[]{"%"+userName+"%","%"+deptName+"%"});
 		String userid = String.valueOf(list.get(0).get("userid"));
 		if("0".equals(userid)){
 			return new ArrayList<Map<String, Object>>();
@@ -635,65 +593,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 				new Object[] { tktmContent }, Integer.class);
 		return record == 0 ? true : false;
 	}
-	/*	
-	@Override
-	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
-			List<Tkxzx> tkdas) {
-		// TODO Auto-generated method stub
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Map<Integer, Integer> chackTmnd = new HashMap<Integer, Integer>();
-		List<Map<String, Object>> list = null;
-		//List<Object[]> batchArgs = new ArrayList<Object[]>();
-		//List<Object[]> gxjlBatchArgs = new ArrayList<Object[]>();
-		Object[] batchArgs = null;
-		Object[] gxjlBatchArgs = null;
-		String gxz = this.getGxjlValueByKey("GxzA");
-		for (Tktm yxtk : tktms) {
-			if (chackTmnd.get(yxtk.getTmnd()) == null) {
-				list = this.getSysPropValueByTmnd(yxtk);
-			}
-			batchArgs = new Object[]{ yxtk.getId(), yxtk.getFlId(),
-					yxtk.getUserId(), sdf.format(yxtk.getCreateDate()),
-					yxtk.getSpDate(), yxtk.getSprId(), yxtk.getDeptid(),
-					yxtk.getContent(), list.get(0).get("value"),
-					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
-					yxtk.getDrbz() };
-			gxjlBatchArgs = new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-					yxtk.getId(), gxz, 1, yxtk.getCreateDate()};	
-
-		}
-		
-		if (batchArgs != null) {
-			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-			this.jdbcTemplate.update(sql, batchArgs);
-			sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
-			this.jdbcTemplate.update(sql, gxjlBatchArgs);
-
-			//List<Object[]> tkxzxBatchArgs = new ArrayList<Object[]>();
-			//List<Object[]> tkdaBatchArgs = new ArrayList<Object[]>();
-			Object[] tkxzxBatchArgs = null;
-			Object[] tkdaBatchArgs = null;
-			for (Tkxzx xz : tkxzxs) {
-				tkxzxBatchArgs = new Object[] { xz.getId(), xz.getTkId(),
-						xz.getXzKey(), xz.getContent() };
-			}
-			if (tkxzxBatchArgs != null) {
-				sql = "insert into tkxzx values(?,?,?,?)";
-				this.jdbcTemplate.update(sql, tkxzxBatchArgs);
-			}
-
-			for (Tkxzx da : tkdas) {
-				tkdaBatchArgs = new Object[] { da.getContent(), da.getTkId(),
-						da.getId() };
-			}
-			if (tkdaBatchArgs != null) {
-				sql = "insert into tkda values(?,?,?)";
-				this.jdbcTemplate.update(sql, tkdaBatchArgs);
-			}
-		}
-
-	}
-*/
+	
 	@Override
 	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
 			List<Tkxzx> tkdas) {
