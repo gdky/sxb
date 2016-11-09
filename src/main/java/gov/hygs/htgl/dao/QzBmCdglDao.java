@@ -14,7 +14,7 @@ import com.bstek.dorado.data.provider.Page;
 
 public interface QzBmCdglDao {
 
-	public List<Dept> getDeptRoot();
+	public List<Dept> getDeptRoot(Map<String, Object> param);
 
 	public List<Dept> getCurrentDeptById(String id_);
 
@@ -73,5 +73,8 @@ public interface QzBmCdglDao {
 	public void addUserInfoToGroup(Map<String, Object> param);
 
 	public Collection<Grouptable> getCurrentGroupById(String id);
+
+	public Collection<Grouptable> getflushGroupById(String id);
+
 
 }

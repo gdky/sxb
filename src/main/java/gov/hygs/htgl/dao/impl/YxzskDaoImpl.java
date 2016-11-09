@@ -2,7 +2,6 @@ package gov.hygs.htgl.dao.impl;
 
 import gov.hygs.htgl.dao.YxzskDao;
 import gov.hygs.htgl.entity.Role;
-import gov.hygs.htgl.entity.Yxzsk;
 import gov.hygs.htgl.entity.ZskJl;
 import gov.hygs.htgl.entity.Zskly;
 import gov.hygs.htgl.security.CustomUserDetails;
@@ -10,6 +9,7 @@ import gov.hygs.htgl.security.CustomUserDetails;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,34 +27,41 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	public void getYxzskInfo(Page<ZskJl> page, Map<String, Object> param,
 			CustomUserDetails userDetails) {
 		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
 		String roleName = this.getRoleInfoByUserId(userDetails.getId())
 				.getRole_Name();
-		StringBuilder sqlCount = new StringBuilder("");
+		StringBuffer sqlCount = new StringBuffer("");
 
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
-					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' ");
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d");
+			sqlCount.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' ");
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sqlCount, param);
+				List<Object> arg = this.rebuileSqlByConditionAndRole(sqlCount, param);
+				if(arg != null){
+					args.addAll(arg);
+				}
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
-					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' and a.deptid="
-					+ userDetails.getDeptid());
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d");
+			sqlCount.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' and a.deptid=?");
+			args.add(userDetails.getDeptid());
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sqlCount, param);
+				List<Object> arg = this.rebuileSqlByConditionAndRole(sqlCount, param);
+				if(arg != null){
+					args.add(arg);
+				}
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
-			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d"
-					+ " where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' and a.deptid="
-					+ userDetails.getDeptid()
-					+ " and a.user_id="
-					+ userDetails.getId());
+		} else if ("Other".equals(roleName)) {// 普通用户
+			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d");
+				sqlCount.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.yxbz='Y' and a.deptid=?");
+				sqlCount.append(" and a.user_id=?");
+			args.add(userDetails.getDeptid());
+			args.add(userDetails.getId());
 		}
 
-		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),
+		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),args.toArray(),
 				Integer.class);
 		List<ZskJl> list = this.getYxzskInfo(pageSize * (pageNow - 1),
 				pageSize, userDetails, roleName, param);
@@ -65,26 +72,36 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	private List<ZskJl> getYxzskInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
 			Map<String, Object> param) {
-		StringBuilder sql = new StringBuilder(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.*  ");
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.*  ");
 			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
 			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
 			sql.append(" and a.yxbz='Y' ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sql, param);
+				List<Object> arg = this.rebuileSqlByConditionAndRole(sql, param);
+				if(arg != null){
+					args.addAll(arg);
+				}
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sql.append("and a.deptid=" + userDetails.getDeptid() + " ");
+			sql.append("and a.deptid=? ");
+			args.add(userDetails.getDeptid());
 			if (param != null) {
-				this.rebuileSqlByConditionAndRole(sql, param);
+				List<Object> arg = this.rebuileSqlByConditionAndRole(sql, param);
+				if(arg != null){
+					args.add(arg);
+				}
 			}
-		} else if ("USER".equals(roleName)) {// 普通用户
-			sql.append("and a.deptid=" + userDetails.getDeptid()
-					+ " and a.user_id=" + userDetails.getId() + " ");
+		} else if ("Other".equals(roleName)) {// 普通用户
+			sql.append("and a.deptid=? and a.user_id=? ");
+			args.add(userDetails.getDeptid());
+			args.add(userDetails.getId());
 		}
-		sql.append(" order by a.create_date desc limit " + begin + "," + offest);
-		// String sql = "select * from yxzsk order by create_date desc";
-		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),
+		sql.append(" order by a.create_date desc limit ?,?");
+		args.add(begin);
+		args.add(offest);
+		List<ZskJl> list = this.jdbcTemplate.query(sql.toString(),args.toArray(),
 				new RowMapper<ZskJl>() {
 
 					@Override
@@ -113,8 +130,9 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		return list;
 	}
 
-	private void rebuileSqlByConditionAndRole(StringBuilder sql,
+	private List<Object> rebuileSqlByConditionAndRole(StringBuffer sql,
 			Map<String, Object> param) {
+		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
 		Integer userId = (Integer) param.get("userid");
@@ -123,30 +141,38 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		String dept = (String) param.get("dept");
 		String user = (String) param.get("user");
 		String content = (String) param.get("content");
-		if (!sql.toString().contains("deptid")) {
-			if (deptid != null || dept != null) {
-				//sql.append(" and deptid=" + deptid);
-				sql.append(" and a.deptid in (select id_ from dept where dept_name like '%"+dept+"%') ");
+		if(deptid != null){
+			
+			if(deptid != 1){
+				sql.append(" and a.deptid in ( ");
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+				sql.append(" ) ");
+				args.add(deptid);
+			}else if(deptid == 1){
+				sql.append(" and a.deptid != 2 ");
+				sql.append(" and a.deptid != 307 ");
 			}
+			
 		}
 		if (userId != null || user != null) {
-			//sql.append(" and user_id=" + userId);
-			sql.append(" and a.user_id in (select id_ from user where user_name like '%"+user+"%') ");
+			sql.append(" and a.user_id in (select id_ from user where user_name like ?) ");
+			args.add("%"+user+"%");
 		}
 		if (begin != null) {
-			sql.append(" and a.create_date >= date_format('" + sdf.format(begin)
-					+ "','%Y%m%d')");
+			sql.append(" and a.create_date >= date_format(?,'%Y%m%d')");
+			args.add(sdf.format(begin));
 		}
 		if (end != null) {
-			sql.append(" and a.create_date <= date_format('" + sdf.format(end)
-					+ "','%Y%m%d')");
+			sql.append(" and a.create_date <= date_format(?,'%Y%m%d')");
+			args.add(sdf.format(end));
 		}
 		if (content != null) {
-			sql.append(" and a.zskly_id in "
-					+ "(select id_ from zskly where title like '%" + content
-					+ "%' or content like '%" + content + "%') ");
+			sql.append(" and a.zskly_id in ");
+			sql.append("(select id_ from zskly where title like ? or content like ?) ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
 		}
-		// return null;
+		return args;
 	}
 
 	private Role getRoleInfoByUserId(Integer id) {
@@ -186,11 +212,8 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 			}
 		}
 		if (aRole == null) {
-			for (Role role : roles) {
-				if ("USER".equals(role.getRole_Name())) {// 普通用户
-					aRole = role;
-				}
-			}
+			aRole = roles.get(0);
+			aRole.setRole_Name("Other");
 		}
 		return aRole;
 	}
@@ -198,11 +221,13 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	@Override
 	public List<Zskly> getZsklyInfoByZsklyId(Integer id) {
 		// TODO Auto-generated method stub
-		StringBuilder sql = new StringBuilder("select * from zskly ");
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer("select * from zskly ");
 		if (id != null) {
-			sql.append("where id_=" + id);
+			sql.append("where id_=?");
+			args.add(id);
 		}
-		List<Zskly> list = this.jdbcTemplate.query(sql.toString(),
+		List<Zskly> list = this.jdbcTemplate.query(sql.toString(),args.toArray(),
 				new RowMapper<Zskly>() {
 
 					@Override
@@ -229,17 +254,20 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 		int zsklyid = this.getZsklyInfoOrAddZskly(yxzsk.getZskly(), yxzsk.getZsklyContent());
 		Object[] objs = { yxzsk.getId(), yxzsk.getUserId(),
 				sdf.format(yxzsk.getCreateDate()), yxzsk.getSpDate(), yxzsk.getSprId(),
-				yxzsk.getDeptid(), yxzsk.getContent(), zsklyid,//yxzsk.getZsklyId(),
+				yxzsk.getDeptid(), yxzsk.getContent(), zsklyid,
 				yxzsk.getTitle(), "Y", "N" };
 		this.jdbcTemplate.update(sql, objs);
 	}
 	
 	private int getZsklyInfoOrAddZskly(String title, String content){
-		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from zskly where title='"+title+"' ");
+		List<Object> args = new ArrayList<Object>();
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) from zskly where title=? ");
+		args.add(title);
 		if(content != null){
-			sql.append(" and content='"+content+"' ");
+			sql.append(" and content=? ");
+			args.add(content);
 		}
-		int zsklyid = this.jdbcTemplate.queryForObject(sql.toString(), Integer.class);
+		int zsklyid = this.jdbcTemplate.queryForObject(sql.toString(), args.toArray(), Integer.class);
 		if(zsklyid == 0){
 			zsklyid = this.addZskly(title, content);
 		}
@@ -256,11 +284,6 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	@Override
 	public void addGrDeptGxJl(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		//String sql = "select value from system_props where id_=110";
-		//Integer value = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		//sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
-		//Object[] objs = { yxzsk.getId(), yxzsk.getDeptid(), yxzsk.getUserId(),
-				//yxzsk.getId(), value, 110, yxzsk.getCreateDate() };
 		String sql = "insert into zsk_gxjl values(?,?,?,?,?,?,?)";
 		Object[] objs = { yxzsk.getId(), yxzsk.getDeptid(), yxzsk.getUserId(),
 		yxzsk.getId(), this.getGxjlValueByKey("GxzA2"), 1, yxzsk.getCreateDate() };
@@ -291,14 +314,14 @@ public class YxzskDaoImpl extends BaseJdbcDao implements YxzskDao {
 	@Override
 	public void updateYxzsk(ZskJl yxzsk) {
 		// TODO Auto-generated method stub
-		String sql = "update zsk_jl set " + "user_id=?,create_date=?,sp_date=?,"
-				+ "spr_id=?,deptid=?,content=?,zskly_id=?," + "title=? "
-				+ "where id_=?";
+		StringBuffer sql = new StringBuffer("update zsk_jl set user_id=?,create_date=?,sp_date=?,");
+				sql.append("spr_id=?,deptid=?,content=?,zskly_id=?,title=? ");
+				sql.append("where id_=?");
 		Object[] objs = { yxzsk.getUserId(), yxzsk.getCreateDate(),
 				yxzsk.getSpDate(), yxzsk.getSprId(), yxzsk.getDeptid(),
 				yxzsk.getContent(), yxzsk.getZsklyId(), yxzsk.getTitle(),
 				yxzsk.getId() };
-		this.jdbcTemplate.update(sql, objs);
+		this.jdbcTemplate.update(sql.toString(), objs);
 	}
 
 }

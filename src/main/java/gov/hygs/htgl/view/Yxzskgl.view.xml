@@ -41,7 +41,7 @@
         <Property name="label">来源题目</Property>
       </PropertyDef>
       <PropertyDef name="zsklyContent">
-        <Property/>
+        <Property></Property>
         <Property name="label">来源内容</Property>
       </PropertyDef>
       <PropertyDef name="title">
@@ -353,6 +353,28 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
+      <Trigger id="clearDept">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,&#xD;
+		deptid:null&#xD;
+});&#xD;
+view.get(&quot;#dsDept&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearUser">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearContent">
+        <ClientEvent name="onExecute">view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		content:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
@@ -516,7 +538,7 @@ if(data != undefined){&#xD;
 			dept:data.get(&quot;deptname&quot;),&#xD;
 			deptid:data.get(&quot;deptid&quot;)&#xD;
 		});&#xD;
-	}else if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+	}else if(data.get(&quot;rolename&quot;) == &quot;Other&quot;){&#xD;
 		self.set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
 }&#xD;
@@ -541,18 +563,20 @@ if(data != undefined){&#xD;
             <AutoFormElement id="deptInfo">
               <Property name="name">dept</Property>
               <Property name="property">dept</Property>
-              <Property name="trigger">deptDropDown</Property>
+              <Property name="trigger">clearDept,deptDropDown</Property>
+              <Property name="editable">false</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement id="userInfoName">
               <Property name="name">user</Property>
               <Property name="property">user</Property>
-              <Property name="trigger">userDropDown</Property>
+              <Property name="trigger">clearUser,userDropDown</Property>
               <Editor/>
             </AutoFormElement>
             <AutoFormElement>
               <Property name="name">content</Property>
               <Property name="property">content</Property>
+              <Property name="trigger">clearContent</Property>
               <Editor/>
             </AutoFormElement>
             <Button id="findbutton">
@@ -584,7 +608,6 @@ if(user == &quot;&quot;){&#xD;
 }&#xD;
 view.get(&quot;#dsYxzsk&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
 view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
-&#xD;
 </ClientEvent>
               <Property name="caption">查询</Property>
               <Property name="hideMode">display</Property>
@@ -600,7 +623,7 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
           <ToolBar>
             <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
-	if(data.get(&quot;rolename&quot;) == &quot;USER&quot;){&#xD;
+	if(data.get(&quot;rolename&quot;) == &quot;Other&quot;){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;

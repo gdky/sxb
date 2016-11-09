@@ -14,8 +14,8 @@
         http://www.springframework.org/schema/tx   
         http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		 <property name="url" value="jdbc:mysql://rm-wz9857sgx78431278o.mysql.rds.aliyuncs.com:3306/sxb?useUnicode=true&amp;characterEncoding=utf-8" /> <!--测试库-->
-		<!--<property name="url" value="jdbc:mysql://rm-wz95h5244c2s4pae9.mysql.rds.aliyuncs.com:3306/sxb?useUnicode=true&amp;characterEncoding=utf-8" />--><!--正式库内网-->
+		<property name="url" value="jdbc:mysql://rm-wz9857sgx78431278o.mysql.rds.aliyuncs.com:3306/sxb?useUnicode=true&amp;characterEncoding=utf-8" /> <!--测试库-->
+		<!-- <property name="url" value="jdbc:mysql://rm-wz95h5244c2s4pae9.mysql.rds.aliyuncs.com:3306/sxb?useUnicode=true&amp;characterEncoding=utf-8" />--><!--正式库内网-->
 		<!--<property name="url" value="jdbc:mysql://rm-wz95h5244c2s4pae9o.mysql.rds.aliyuncs.com:3306/sxb?useUnicode=true&amp;characterEncoding=utf-8" />--><!--正式库外网-->
 		
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />

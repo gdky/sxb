@@ -19,7 +19,7 @@ public interface QzBmCdglService {
 
 	public void saveDeptNodeInfo(List<Dept> depts);
 
-	public List<Dept> getDeptRoot();
+	public List<Dept> getDeptRoot(Map<String, Object> param);
 
 	public List<Dept> getCurrentDeptById(String id_);
 
@@ -62,4 +62,7 @@ public interface QzBmCdglService {
 	public Collection<Grouptable> getCurrentGroupById(String id);
 
 	public void updateGroup(List<Grouptable> groups);
+
+	public Collection<Grouptable> getflushGroupById(String id);
+
 }

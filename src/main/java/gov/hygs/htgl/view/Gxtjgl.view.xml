@@ -56,22 +56,55 @@
         <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
 	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
 	view.get(&quot;#dsScore&quot;).getData().clear();&#xD;
+	/*&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
-		dept:null,user:null,begin:null,end:null&#xD;
+		dept:null,user:null,begin:null,end:null,begintime:null,endtime:null,title:null,deptid:null,deptQj:null,tkfl:null&#xD;
 	});&#xD;
+	*/&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		dept:null,user:null,begin:null,end:null,title:null,deptid:null,deptQj:null,tkfl:null//,begintime:null,endtime:null&#xD;
+	});&#xD;
+	view.get(&quot;#dsDeptQj&quot;).flush();&#xD;
+	var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+	if(data != undefined){&#xD;
+		if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+			if(data.get(&quot;parentid&quot;) == 0){&#xD;
+				view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;deptid&quot;)});&#xD;
+			}else{&#xD;
+				view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;parentid&quot;)});&#xD;
+			}&#xD;
+			view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,data.get(&quot;deptid&quot;)+&quot;s&quot;);&#xD;
+		}else{&#xD;
+			view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,null);&#xD;
+		}&#xD;
+	}&#xD;
+	view.get(&quot;#dsDept&quot;).flush();&#xD;
+	view.get(&quot;#dsTkfl&quot;).flush();&#xD;
 }&#xD;
 if(arg.value &lt; 7){&#xD;
 	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#scoreGrid&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#title&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#tkfl&quot;).set(&quot;visible&quot;,false);&#xD;
+	//view.get(&quot;#begintime&quot;).set(&quot;visible&quot;,false);&#xD;
+	//view.get(&quot;#endtime&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
 	if(arg.value == 6){&#xD;
-		view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.get(&quot;#dept&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,false);&#xD;
+		//view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		//view.get(&quot;#deptQj&quot;).set(&quot;readOnly&quot;,true);&#xD;
 		view.get(&quot;#tm&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#laud&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
 	}else{&#xD;
-		view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.get(&quot;#dept&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,true);&#xD;
+		//view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		//view.get(&quot;#deptQj&quot;).set(&quot;readOnly&quot;,false);&#xD;
 		view.get(&quot;#tm&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#laud&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,true);&#xD;
@@ -80,25 +113,40 @@ if(arg.value &lt; 7){&#xD;
 	}&#xD;
 	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6){&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
-		view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		//view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
+		view.get(&quot;#user&quot;).set(&quot;visible&quot;,false);&#xD;
 	}else{&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
-		view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		//view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+		view.get(&quot;#user&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
+	/*&#xD;
 	if(arg.value > 3){&#xD;
 		view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
 	}else{&#xD;
 		view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
-	}	&#xD;
+	}&#xD;
+	*/	&#xD;
 }else{&#xD;
 	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#scoreGrid&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
-	view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	view.get(&quot;#title&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#tkfl&quot;).set(&quot;visible&quot;,true);&#xD;
+	//view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
+	//view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
+	//view.get(&quot;#begintime&quot;).set(&quot;visible&quot;,true);&#xD;
+	//view.get(&quot;#endtime&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
+	//view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
+	view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#dept&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#user&quot;).set(&quot;visible&quot;,true);&#xD;
+	//view.get(&quot;#deptQj&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	//view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,false);&#xD;
+	//view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,false);&#xD;
 	view.get(&quot;#answerCount&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#answerScore&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#rushAnswerScore&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -113,6 +161,7 @@ if(arg.value &lt; 7){&#xD;
 		view.get(&quot;#rushAnswerScore&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
 	if(arg.value == 10){&#xD;
+		view.get(&quot;#title&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
 }&#xD;
@@ -190,6 +239,23 @@ if(arg.value &lt; 7){&#xD;
       </PropertyDef>
       <PropertyDef name="deptid"/>
       <PropertyDef name="userid"/>
+      <PropertyDef name="deptQj">
+        <Property name="label">所属区局</Property>
+      </PropertyDef>
+      <PropertyDef name="begintime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间起</Property>
+      </PropertyDef>
+      <PropertyDef name="endtime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间止</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property name="label">考试主题</Property>
+      </PropertyDef>
+      <PropertyDef name="tkfl">
+        <Property name="label">题库类型</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="scoreType">
       <PropertyDef name="dept">
@@ -211,28 +277,219 @@ if(arg.value &lt; 7){&#xD;
         <Property name="label">考试分数</Property>
       </PropertyDef>
     </DataType>
+    <DataType name="examType">
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property></Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="deptQjType">
+      <Property name="creationType">gov.hygs.htgl.entity.Dept</Property>
+      <PropertyDef name="id_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="dept_name">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="dept">
+        <Property name="dataType">[SELF]</Property>
+        <Property name="parameter">$${this.id_}</Property>
+        <Property name="dataProvider">tjglController#getCurrentDeptQjById</Property>
+      </Reference>
+    </DataType>
+    <DataType name="tkflType">
+      <Property name="creationType">gov.hygs.htgl.entity.Tkfl</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="parentId">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="tkmc">
+        <Property></Property>
+      </PropertyDef>
+      <PropertyDef name="ms">
+        <Property></Property>
+      </PropertyDef>
+      <Reference name="tkfl">
+        <Property name="parameter">$${this.id}</Property>
+        <Property name="dataProvider">tkcspzController#getCurrentTkflById</Property>
+        <Property name="dataType">[SELF]</Property>
+      </Reference>
+    </DataType>
+    <DataType name="detailType">
+      <PropertyDef name="type">
+        <Property name="label">统计类型</Property>
+        <Property name="mapping">
+          <Property name="mapValues"></Property>
+        </Property>
+      </PropertyDef>
+      <PropertyDef name="begin">
+        <Property name="dataType">Date</Property>
+        <Property name="label">起始时间</Property>
+      </PropertyDef>
+      <PropertyDef name="end">
+        <Property name="dataType">Date</Property>
+        <Property name="label">终止时间</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="label">部门名称</Property>
+      </PropertyDef>
+      <PropertyDef name="user">
+        <Property name="label">用户名</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property name="label">来源</Property>
+      </PropertyDef>
+      <PropertyDef name="deptid"/>
+      <PropertyDef name="userid"/>
+      <PropertyDef name="deptQj">
+        <Property name="label">所属区局</Property>
+      </PropertyDef>
+      <PropertyDef name="begintime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间起</Property>
+      </PropertyDef>
+      <PropertyDef name="endtime">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">考试时间止</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property name="label">考试主题</Property>
+      </PropertyDef>
+      <PropertyDef name="tkfl">
+        <Property name="label">题库类型</Property>
+      </PropertyDef>
+    </DataType>
   </Model>
   <View>
     <Container id="datasets">
       <DataSet id="dsDept">
+        <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		self.set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+	}&#xD;
+}</ClientEvent>
         <Property name="dataType">[deptType]</Property>
-        <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
+        <Property name="dataProvider">qzBmCdglController#getCurrentDeptById</Property>
       </DataSet>
       <DataSet id="dsUser">
         <Property name="dataProvider">yxtkglController#getUserByDeptId</Property>
         <Property name="dataType">[userType]</Property>
         <Property name="loadMode">manual</Property>
       </DataSet>
+      <DataSet id="dsExam">
+        <Property name="dataType">[examType]</Property>
+        <Property name="dataProvider">tjglController#getExamInfo</Property>
+      </DataSet>
       <DataSet id="dsResult">
+        <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		if(data.get(&quot;parentid&quot;) == 0){&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;deptid&quot;)});&#xD;
+		}else{&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;parentid&quot;)});&#xD;
+		}&#xD;
+	}&#xD;
+}</ClientEvent>
         <Property name="dataType">[resultType]</Property>
         <Property name="dataProvider">tjglController#countGxjl</Property>
+        <Property name="loadMode">manual</Property>
       </DataSet>
       <DataSet id="dsScore">
+        <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		if(data.get(&quot;parentid&quot;) == 0){&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;deptid&quot;)});&#xD;
+		}else{&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;parentid&quot;)});&#xD;
+		}&#xD;
+	}&#xD;
+}</ClientEvent>
         <Property name="dataType">[scoreType]</Property>
         <Property name="dataProvider">tjglController#countGxjl</Property>
+        <Property name="loadMode">manual</Property>
+      </DataSet>
+      <DataSet id="dsDeptQj">
+        <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		self.set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+	}&#xD;
+}</ClientEvent>
+        <Property name="dataType">[deptQjType]</Property>
+        <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
+      </DataSet>
+      <DataSet id="dsTkfl">
+        <Property name="dataProvider">tkcspzController#getTkflRoot</Property>
+        <Property name="dataType">[tkflType]</Property>
+      </DataSet>
+      <DataSet id="dsUserName">
+        <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
       </DataSet>
     </Container>
     <Container id="dropDowns">
+      <Trigger id="clearQjTrigger">
+        <ClientEvent name="onExecute">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	dept:null,deptQj:null,deptid:null&#xD;
+});&#xD;
+view.get(&quot;#dsDeptQj&quot;).flush();&#xD;
+&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		if(data.get(&quot;parentid&quot;) == 0){&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;deptid&quot;)});&#xD;
+		}else{&#xD;
+			view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:data.get(&quot;parentid&quot;)});&#xD;
+		}&#xD;
+		view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,data.get(&quot;deptid&quot;)+&quot;s&quot;);&#xD;
+	}else{&#xD;
+		view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,null);&#xD;
+	}&#xD;
+}&#xD;
+view.get(&quot;#dsDept&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearDepyTrigger">
+        <ClientEvent name="onExecute">view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	dept:null,deptid:view.get(&quot;#dsDeptQj&quot;).getData(&quot;!current_Node.id_&quot;)//deptid:null&#xD;
+});&#xD;
+//view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,null);&#xD;
+view.get(&quot;#dsDept&quot;).flush();&#xD;
+</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearUserTrigger">
+        <ClientEvent name="onExecute">view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	user:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearTitleTrigger">
+        <ClientEvent name="onExecute">view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	title:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearTkflTrigger">
+        <ClientEvent name="onExecute">view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	tkfl:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
       <CustomDropDown id="conditionDropDown">
         <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
@@ -243,13 +500,13 @@ var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
 );&#xD;
-view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
 &#xD;
 view.get(&quot;#userInfoName&quot;).set(&quot;readOnly&quot;,false);&#xD;
 &#xD;
-view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:&quot;&quot;});&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({userid:&quot;&quot;});&#xD;
 &#xD;
-var user = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+var user = view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 	user: &quot;&quot;&#xD;
 });&#xD;
 </ClientEvent>
@@ -267,11 +524,11 @@ var user = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#x
       <DataSetDropDown id="dsConditionDropDown">
         <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
-	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
-        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;);&#xD;
+        <ClientEvent name="beforeExecute">var deptId = view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;);&#xD;
 view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,deptId);&#xD;
 view.get(&quot;#dsUser&quot;).flush();&#xD;
 </ClientEvent>
@@ -281,7 +538,6 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
       <CustomDropDown id="deptDropDown">
-        <Property name="autoOpen">true</Property>
         <Property name="height">500</Property>
         <DataTree id="depttree">
           <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
@@ -290,7 +546,7 @@ var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
 dropDown.close(&#xD;
 	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
 );&#xD;
-view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
 </ClientEvent>
           <Property name="dataSet">dsDept</Property>
           <BindingConfigs>
@@ -306,7 +562,7 @@ view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId}
       <DataSetDropDown id="userDropDown">
         <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
-	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({userid:user.get(&quot;id_&quot;)});&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
@@ -315,15 +571,66 @@ if(user != undefined){&#xD;
 view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,&quot;0&quot;);&#xD;
 view.get(&quot;#dsUser&quot;).flush();&#xD;
 </ClientEvent>
-        <Property name="autoOpen">true</Property>
         <Property name="property">user_Name</Property>
         <Property name="height">500</Property>
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
+      <DataSetDropDown id="examDropDown">
+        <Property name="dataSet">dsExam</Property>
+        <Property name="height">500</Property>
+        <Property name="property">title</Property>
+      </DataSetDropDown>
+      <CustomDropDown id="deptQjDropDown">
+        <Property name="height">500</Property>
+        <DataTree id="depttree2">
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+var deptId = node.get(&quot;data&quot;).get(&quot;id_&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;dept_name&quot;)&#xD;
+);&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({dept:null});&#xD;
+view.get(&quot;#dsDept&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).get(&quot;deptid&quot;));&#xD;
+view.get(&quot;#dsDept&quot;).flush();&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsDeptQj</Property>
+          <Property name="currentNodeDataPath">current_Node</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">dept</Property>
+              <Property name="name">dept_name</Property>
+              <Property name="labelProperty">dept_name</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
+      <CustomDropDown id="tkflDropDown">
+        <Property name="height">500</Property>
+        <DataTree>
+          <ClientEvent name="onDataRowClick">var dropDown = dorado.widget.DropDown.findDropDown(self);&#xD;
+var node = self.get(&quot;currentNode&quot;);&#xD;
+dropDown.close(&#xD;
+	node.get(&quot;data&quot;).get(&quot;tkmc&quot;)&#xD;
+);&#xD;
+</ClientEvent>
+          <Property name="dataSet">dsTkfl</Property>
+          <BindingConfigs>
+            <BindingConfig>
+              <Property name="childrenProperty">tkfl</Property>
+              <Property name="labelProperty">tkmc</Property>
+              <Property name="name">tkmc</Property>
+              <Property name="recursive">true</Property>
+            </BindingConfig>
+          </BindingConfigs>
+        </DataTree>
+      </CustomDropDown>
     </Container>
     <Container>
       <GroupBox>
         <Property name="caption">查询条件</Property>
+        <Property name="height">30%</Property>
         <Buttons/>
         <Children>
           <AutoForm id="conditionForm">
@@ -331,46 +638,33 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
 </ClientEvent>
             <Property name="dataType">conditionType</Property>
             <Property name="createPrivateDataSet">true</Property>
-            <AutoFormElement id="begin">
-              <Property name="name">begin</Property>
-              <Property name="property">begin</Property>
-              <Property name="hideMode">display</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement id="end">
-              <Property name="name">end</Property>
-              <Property name="property">end</Property>
-              <Property name="hideMode">display</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement id="dept">
-              <Property name="name">dept</Property>
-              <Property name="property">dept</Property>
-              <Property name="trigger">deptDropDown</Property>
-              <Editor/>
-            </AutoFormElement>
-            <AutoFormElement id="user">
-              <Property name="name">user</Property>
-              <Property name="property">user</Property>
-              <Property name="trigger">userDropDown</Property>
-              <Property name="hideMode">display</Property>
-              <Editor/>
-            </AutoFormElement>
             <AutoFormElement>
               <Property name="name">type</Property>
               <Property name="property">type</Property>
+              <Property name="editable">false</Property>
               <Editor/>
             </AutoFormElement>
-            <Button>
-              <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+            <Container>
+              <ToolBar>
+                <Button>
+                  <ClientEvent name="onClick">var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
+var detail = view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;);&#xD;
 var type = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;);&#xD;
-var dept = entity.get(&quot;dept&quot;);&#xD;
-var user = entity.get(&quot;user&quot;);&#xD;
-var begin = entity.get(&quot;begin&quot;);&#xD;
-var end = entity.get(&quot;end&quot;);&#xD;
+var dept = detail.get(&quot;dept&quot;);&#xD;
+var user = detail.get(&quot;user&quot;);&#xD;
+var begin = detail.get(&quot;begin&quot;);&#xD;
+var end = detail.get(&quot;end&quot;);&#xD;
+var begintime = detail.get(&quot;begintime&quot;);&#xD;
+var endtime = detail.get(&quot;endtime&quot;);&#xD;
+var title = detail.get(&quot;title&quot;);&#xD;
+var tkfl = detail.get(&quot;tkfl&quot;);&#xD;
 if(end &lt; begin &amp;&amp; end != null){&#xD;
 	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
 }&#xD;
+if(endtime &lt; begintime &amp;&amp; endtime != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+/*&#xD;
 if(dept == &quot;&quot; || dept == undefined){&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		dept:null,&#xD;
@@ -379,25 +673,111 @@ if(dept == &quot;&quot; || dept == undefined){&#xD;
 		//userid:null&#xD;
 	});&#xD;
 }&#xD;
+*/&#xD;
 if(user == &quot;&quot; || user == undefined){&#xD;
-	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		user:null,&#xD;
 		userid:null&#xD;
 	});&#xD;
 }&#xD;
-&#xD;
+if(title == &quot;&quot; || title == undefined){&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		title:null&#xD;
+	});&#xD;
+}&#xD;
+if(tkfl == &quot;&quot; || tkfl == undefined){&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		tkfl:null&#xD;
+	});&#xD;
+}&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({type:type});&#xD;
 if(type &lt; 7){&#xD;
-	view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+	view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 	view.get(&quot;#dsResult&quot;).flush();&#xD;
 }else{&#xD;
-	view.get(&quot;#dsScore&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+	view.get(&quot;#dsScore&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 	view.get(&quot;#dsScore&quot;).flush();&#xD;
 }&#xD;
 &#xD;
 </ClientEvent>
-              <Property name="caption">查找</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
-            </Button>
+                  <Property name="caption">查找</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -20px -40px</Property>
+                </Button>
+                <Button>
+                  <ClientEvent name="onClick">var ajaxActionExport =view.get(&quot;#ajaxActionExport&quot;);&#xD;
+ajaxActionExport.set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+ajaxActionExport.execute(function(fileName){&#xD;
+	window.open($url(&quot;>/dorado/ysyk/ysykffqktjbg.display?fileName=&quot;+fileName),&quot;_self&quot;);&#xD;
+});&#xD;
+</ClientEvent>
+                  <Property name="caption">导出</Property>
+                  <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
+                </Button>
+              </ToolBar>
+            </Container>
+            <Container layoutConstraint="colSpan:2">
+              <GroupBox>
+                <Property name="caption">详细查询条件</Property>
+                <Buttons/>
+                <Children>
+                  <AutoForm id="detailCondtionForm">
+                    <Property name="createPrivateDataSet">true</Property>
+                    <Property name="dataType">detailType</Property>
+                    <Property name="height">130</Property>
+                    <AutoFormElement id="begin">
+                      <Property name="name">begin</Property>
+                      <Property name="property">begin</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="end">
+                      <Property name="name">end</Property>
+                      <Property name="property">end</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="deptQj">
+                      <Property name="name">deptQj</Property>
+                      <Property name="property">deptQj</Property>
+                      <Property name="editable">false</Property>
+                      <Property name="trigger">clearQjTrigger,deptQjDropDown</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="dept">
+                      <Property name="name">dept</Property>
+                      <Property name="property">dept</Property>
+                      <Property name="trigger">clearDepyTrigger,deptDropDown</Property>
+                      <Property name="editable">false</Property>
+                      <Property name="hideMode">display</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="user">
+                      <Property name="name">user</Property>
+                      <Property name="property">user</Property>
+                      <Property name="hideMode">display</Property>
+                      <Property name="trigger">clearUserTrigger,userDropDown</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="title">
+                      <Property name="name">title</Property>
+                      <Property name="property">title</Property>
+                      <Property name="hideMode">display</Property>
+                      <Property name="trigger">clearTitleTrigger,examDropDown</Property>
+                      <Property name="visible">false</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                    <AutoFormElement id="tkfl">
+                      <Property name="name">tkfl</Property>
+                      <Property name="property">tkfl</Property>
+                      <Property name="hideMode">display</Property>
+                      <Property name="trigger">clearTkflTrigger,tkflDropDown</Property>
+                      <Editor/>
+                    </AutoFormElement>
+                  </AutoForm>
+                </Children>
+              </GroupBox>
+            </Container>
           </AutoForm>
         </Children>
       </GroupBox>
@@ -452,5 +832,10 @@ if(type &lt; 7){&#xD;
         </Children>
       </GroupBox>
     </Container>
+    <AjaxAction id="ajaxActionExport">
+      <Property name="service">tjglController#exportExcel</Property>
+      <Property name="successMessage">执行成功</Property>
+      <Property name="executingMessage">正在执行 。。。</Property>
+    </AjaxAction>
   </View>
 </ViewConfig>

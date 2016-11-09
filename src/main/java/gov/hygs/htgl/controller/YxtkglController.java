@@ -123,7 +123,7 @@ public class YxtkglController {
 			e.printStackTrace();
 			//return null;
 		}
-		return tkcj.size()>0?JsonUtils.list2json(tkcj):null;
+		return (tkcj != null && tkcj.size()>0)?JsonUtils.list2json(tkcj):null;
 	}
 	
 }

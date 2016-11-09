@@ -32,8 +32,8 @@ public class QzBmCdglController {
 	 * @return
 	 */
 	@DataProvider
-	public List<Dept> getDeptRoot() {
-		return qzBmCdglService.getDeptRoot();
+	public List<Dept> getDeptRoot(Map<String,Object> param) {
+		return qzBmCdglService.getDeptRoot(param);
 	}
 
 	/**
@@ -190,7 +190,17 @@ public class QzBmCdglController {
 	public Collection<Grouptable> getCurrentGroupById(String id){
 		return qzBmCdglService.getCurrentGroupById(id);
 	}
-
+	
+	/**
+	 * 获取节点刷新信息
+	 * @param id
+	 * @return
+	 */
+	@DataProvider
+	public Collection<Grouptable> getflushGroupById(String id){
+		return qzBmCdglService.getflushGroupById(id);
+	}
+	
 	/**
 	 * 获取所有用户信息
 	 * 
