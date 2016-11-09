@@ -9,6 +9,8 @@ import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -181,6 +183,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		String tktmcontent = (String) param.get("tktmcontent");
+		String ksbz = (String) param.get("ksbz");
 		if(deptid != null){
 			
 			if(deptid != 1){
@@ -219,6 +222,14 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		if (tktmcontent != null) {
 			sql.append(" and a.content like ? ");
 			args.add("%"+tktmcontent+"%");
+		}
+		if(ksbz != null){
+			if("是".equals(ksbz)){
+				sql.append(" and a.KSBZ='Y' ");
+			}else if("否".equals(ksbz)){
+				sql.append(" and a.KSBZ='N'  ");
+			}
+			
 		}
 		return args;
 	}
@@ -737,19 +748,36 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		// TODO Auto-generated method stub
 		int pageSize = page.getPageSize();
 		int pageNow = page.getPageNo();
-		
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:mm:ss");
 		String sql = "select count(*) from exam";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		sql = "select * from exam order by start_time desc limit ?,?";
+		sql = "select id_,date_format(start_time,'%Y-%m-%d %T') start_time,date_format(end_time,'%Y-%m-%d %T') end_time,title,exam_type,fqr_id,remark,exam_time from exam order by start_time desc limit ?,?";
 		List<Exam> list = this.jdbcTemplate.query(sql, new Object[]{pageSize * (pageNow - 1), pageSize}, new RowMapper<Exam>(){
 
 			@Override
 			public Exam mapRow(ResultSet result, int i) throws SQLException {
 				// TODO Auto-generated method stub
+				//Date date = result.getDate("start_time");
 				Exam exam = new Exam();
+				String date = result.getString("start_time");
+				if(date != null){
+					String[] dates = date.split(" ");
+					String[] ymd = dates[0].split("-");
+					String[] hms = dates[1].split(":");
+					exam.setStartTime(new Date(Integer.parseInt(ymd[0])-1900,Integer.parseInt(ymd[1])-1,Integer.parseInt(ymd[2]),
+							Integer.parseInt(hms[0]),Integer.parseInt(hms[1]),Integer.parseInt(hms[2])));
+				}
+				date = result.getString("end_time");
+				if(date != null){
+					String[] dates = date.split(" ");
+					String[] ymd = dates[0].split("-");
+					String[] hms = dates[1].split(":");
+					exam.setEndTime(new Date(Integer.parseInt(ymd[0])-1900,Integer.parseInt(ymd[1])-1,Integer.parseInt(ymd[2]),
+							Integer.parseInt(hms[0]),Integer.parseInt(hms[1]),Integer.parseInt(hms[2])));
+				}
 				exam.setId(result.getInt("id_"));
-				exam.setStartTime(result.getDate("start_time"));
-				exam.setEndTime(result.getDate("end_time"));
+				//exam.setStartTime(result.getDate("start_time"));
+				//exam.setEndTime(result.getDate("end_time"));
 				exam.setTitle(result.getString("title"));
 				exam.setExamType(result.getString("exam_type"));
 				exam.setFqrId(result.getInt("fqr_id"));

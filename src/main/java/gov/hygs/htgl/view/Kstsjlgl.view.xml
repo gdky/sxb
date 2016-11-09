@@ -240,7 +240,7 @@
       </PropertyDef>
       <PropertyDef name="examtime">
         <Property name="dataType">Integer</Property>
-        <Property name="label">考试时间</Property>
+        <Property name="label">考试时间(秒)</Property>
       </PropertyDef>
     </DataType>
     <DataType name="groupType">
@@ -267,11 +267,11 @@
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="startTime">
-        <Property name="dataType">Date</Property>
+        <Property name="dataType">DateTime</Property>
         <Property name="label">开始时间</Property>
       </PropertyDef>
       <PropertyDef name="endTime">
-        <Property name="dataType">Date</Property>
+        <Property name="dataType">DateTime</Property>
         <Property name="label">结束时间</Property>
       </PropertyDef>
       <PropertyDef name="title">
@@ -316,7 +316,7 @@
       </PropertyDef>
       <PropertyDef name="examTime">
         <Property name="dataType">Integer</Property>
-        <Property name="label">考试时间</Property>
+        <Property name="label">考试时间(秒)</Property>
       </PropertyDef>
     </DataType>
     <DataType name="fqrType">
@@ -513,6 +513,12 @@
       <PropertyDef name="tktmcontent">
         <Property name="label">提干内容</Property>
       </PropertyDef>
+      <PropertyDef name="ksbz">
+        <Property name="label">临时题目</Property>
+        <Property name="mapping">
+          <Property name="mapValues"></Property>
+        </Property>
+      </PropertyDef>
     </DataType>
     <DataType name="choseType"/>
   </Model>
@@ -561,7 +567,7 @@
       </DataSet>
       <DataSet id="dsDetail">
         <Property name="dataType">[detialType]</Property>
-        <Property name="pageSize">10</Property>
+        <Property name="pageSize">50</Property>
         <Property name="dataProvider">zstkglController#getExamDetailInfo</Property>
         <Property name="loadMode">manual</Property>
       </DataSet>
@@ -1806,6 +1812,13 @@ if(entity != undefined){&#xD;
                   <Property name="trigger">clearUser,userDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ksbz</Property>
+                  <Property name="property">ksbz</Property>
+                  <Property name="editable">false</Property>
+                  <Property name="trigger">clearKsbz,ksbzDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
                 <AutoFormElement layoutConstraint="colSpan:2">
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
@@ -2190,6 +2203,20 @@ view.get(&quot;#conForm&quot;).get(&quot;entity&quot;).set({deptid:deptId});&#xD
           </BindingConfigs>
         </DataTree>
       </CustomDropDown>
+      <ListDropDown id="ksbzDropDown">
+        <Property name="items">
+          <Collection>
+            <Entity>
+              <Property name="value">是</Property>
+            </Entity>
+            <Entity>
+              <Property name="value">否</Property>
+            </Entity>
+          </Collection>
+        </Property>
+        <Property name="displayProperty">value</Property>
+        <Property name="property">value</Property>
+      </ListDropDown>
       <DataSetDropDown id="userDropDown">
         <ClientEvent name="onClose">var user = view.get(&quot;#dsUser&quot;).getData(&quot;#&quot;);&#xD;
 if(user != undefined){&#xD;
@@ -2232,6 +2259,12 @@ view.get(&quot;#dsDept&quot;).flush();&#xD;
       <Trigger id="clearContent">
         <ClientEvent name="onExecute">view.get(&quot;#conForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		tktmcontent:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
+      <Trigger id="clearKsbz">
+        <ClientEvent name="onExecute">view.get(&quot;#conForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		ksbz:null&#xD;
 });</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
       </Trigger>

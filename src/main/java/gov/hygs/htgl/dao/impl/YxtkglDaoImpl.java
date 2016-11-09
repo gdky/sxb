@@ -96,6 +96,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		String tkfl = (String) param.get("tkfl");
 		String content = (String) param.get("content");
 		String tktmcontent = (String) param.get("tktmcontent");
+		String ksbz = (String) param.get("ksbz");
 		if(deptid != null){
 			
 			if(deptid != 1){
@@ -134,6 +135,13 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 		if(tktmcontent != null){
 			sql.append(" and a.content like ? ");
 			args.add("%"+tktmcontent+"%");
+		}
+		if(ksbz != null){
+			if("是".equals(ksbz)){
+				sql.append(" and a.KSBZ='Y' ");
+			}else if("否".equals(ksbz)){
+				sql.append(" and a.KSBZ='N' ");
+			}
 		}
 		return args;
 	}
