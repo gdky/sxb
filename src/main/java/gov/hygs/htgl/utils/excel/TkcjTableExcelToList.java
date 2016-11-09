@@ -42,14 +42,15 @@ public class TkcjTableExcelToList {
 				HSSFRow row = sheet.getRow(rownum);
 				// String xzx[] = {};
 				// int num[] = {};
-				if (row != null && row.getLastCellNum()>0 && row.getCell(row.getLastCellNum() - 1).getCellType() != Cell.CELL_TYPE_BLANK) {
+				
+				if (row != null && row.getLastCellNum()>0 && row.getCell(row.getLastCellNum() - 1).getCellType() != Cell.CELL_TYPE_BLANK && row.getCell(0) != null) {
 					Map<String, Object> rowParam = new HashMap<String, Object>();// 存放答案或其他信息
 					TkcjTable tkcjTable = new TkcjTable();
 					Class clazz = tkcjTable.getClass();
 					int i = 0;
 					for (int cellnum = 0; cellnum < row.getLastCellNum() - 1; cellnum++) {// 格
 						HSSFCell cell = row.getCell(cellnum);
-
+						
 						if (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC) {
 
 							Method method = clazz.getMethod("set"
