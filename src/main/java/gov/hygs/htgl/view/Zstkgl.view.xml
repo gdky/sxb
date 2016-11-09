@@ -352,6 +352,9 @@ if(datas.getLast() != null){&#xD;
       <PropertyDef name="tktmcontent">
         <Property name="label">提干内容</Property>
       </PropertyDef>
+      <PropertyDef name="ksbz">
+        <Property name="label">临时题目</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="yxtkType">
       <Property name="creationType">gov.hygs.htgl.entity.Tktm</Property>
@@ -924,6 +927,26 @@ view.get(&quot;#dsDeptIn&quot;).flush();</ClientEvent>
 });</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
       </Trigger>
+      <ListDropDown id="ksbzDropDown">
+        <Property name="items">
+          <Collection>
+            <Entity>
+              <Property name="value">是</Property>
+            </Entity>
+            <Entity>
+              <Property name="value">否</Property>
+            </Entity>
+          </Collection>
+        </Property>
+        <Property name="displayProperty">value</Property>
+        <Property name="property">value</Property>
+      </ListDropDown>
+      <Trigger id="clearKsbz">
+        <ClientEvent name="onExecute">view.get(&quot;#filterForm&quot;).get(&quot;entity&quot;).set({&#xD;
+		ksbz:null&#xD;
+});</ClientEvent>
+        <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
+      </Trigger>
     </Container>
     <Container id="dialogs">
       <Dialog id="addyxtkDialog">
@@ -1302,6 +1325,13 @@ if(data != undefined){&#xD;
                   <Property name="name">tkfl</Property>
                   <Property name="property">tkfl</Property>
                   <Property name="trigger">clearTkflIn,tkflDropDown</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">ksbz</Property>
+                  <Property name="property">ksbz</Property>
+                  <Property name="editable">false</Property>
+                  <Property name="trigger">clearKsbz,ksbzDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
