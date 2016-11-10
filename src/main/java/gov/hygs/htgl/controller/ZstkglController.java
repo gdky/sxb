@@ -130,4 +130,10 @@ public class ZstkglController {
 	public void deleteKstsjlInfo(String examid){
 		zstkglService.deleteKstsjlInfo(examid);
 	}
+	
+	@Transactional
+	@Expose
+	public void updateExamInfo(Map<String,Object> param){
+		zstkglService.updateExamInfo(param);
+	}
 }
