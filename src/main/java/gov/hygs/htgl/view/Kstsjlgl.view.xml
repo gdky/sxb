@@ -558,7 +558,6 @@
       </DataSet>
       <DataSet id="dsChose">
         <Property name="dataType">[tktmType]</Property>
-        <Property name="pageSize">2</Property>
       </DataSet>
       <DataSet id="dsExam">
         <Property name="dataType">[examType]</Property>
@@ -567,7 +566,7 @@
       </DataSet>
       <DataSet id="dsDetail">
         <Property name="dataType">[detialType]</Property>
-        <Property name="pageSize">50</Property>
+        <Property name="pageSize">200</Property>
         <Property name="dataProvider">zstkglController#getExamDetailInfo</Property>
         <Property name="loadMode">manual</Property>
       </DataSet>
@@ -577,6 +576,8 @@
         <Property name="loadMode">lazy</Property>
       </DataSet>
       <DataSet id="dsCon">
+        <ClientEvent name="onReady">self.insert();&#xD;
+</ClientEvent>
         <Property name="dataType">[conType]</Property>
       </DataSet>
       <DataSet id="dsDept">
@@ -1074,9 +1075,12 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                             </DataPilot>
                             <Button>
                               <ClientEvent name="onClick">view.get(&quot;#findtmDialog&quot;).show();&#xD;
+/*&#xD;
 view.get(&quot;#dsCon&quot;).insert({&#xD;
 	flId:view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;)&#xD;
 });&#xD;
+*/&#xD;
+view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).set(&quot;flId&quot;,view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;));&#xD;
 </ClientEvent>
                               <Property name="caption">查询条件</Property>
                               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
@@ -1113,9 +1117,39 @@ view.get(&quot;#dsCon&quot;).insert({&#xD;
                         <DataTreeGrid id="tkfltree">
                           <ClientEvent name="onClick">var dsTktmShow = view.get(&quot;#dsTktmShow&quot;);&#xD;
 var flid = view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;)&#xD;
+&#xD;
+var entity = view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;);&#xD;
+var dept = entity.get(&quot;dept&quot;);&#xD;
+var user = entity.get(&quot;user&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+entity.set({flId:flid});&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+if(dept == &quot;&quot;){&#xD;
+	entity.set({&#xD;
+		dept:null,&#xD;
+		deptid:null&#xD;
+	});&#xD;
+}&#xD;
+if(user == &quot;&quot; || user == null){&#xD;
+	entity.set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(entity.get(&quot;userid&quot;) == &quot;&quot;){&#xD;
+	entity.set({&#xD;
+		userid:null&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+dsTktmShow.set(&quot;parameter&quot;,entity);&#xD;
+/*&#xD;
 dsTktmShow.set(&quot;parameter&quot;,{&#xD;
-	flId: flid&#xD;
+	//flId: flid&#xD;
 })&#xD;
+*/&#xD;
 dsTktmShow.flushAsync();</ClientEvent>
                           <Property name="currentNodeDataPath">current_Node</Property>
                           <Property name="dataSet">dsTkfl</Property>
@@ -1300,6 +1334,40 @@ view.get(&quot;#tktmDialog&quot;).show();&#xD;
           <GroupBox>
             <Property name="caption">修改推送信息</Property>
             <Buttons>
+              <Button>
+                <ClientEvent name="onClick">//examUpdateAction&#xD;
+var condition = view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;);&#xD;
+if(condition.get(&quot;group&quot;).get(&quot;groupName&quot;) == &quot;&quot; || condition.get(&quot;group&quot;).get(&quot;groupName&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+}&#xD;
+view.get(&quot;#examUpdateAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	&quot;examid&quot;:condition.get(&quot;id&quot;),&#xD;
+	&quot;fqrid&quot;:condition.get(&quot;fqrId&quot;),&#xD;
+	//&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;begin&quot;:condition.get(&quot;startTime&quot;),&#xD;
+	&quot;end&quot;:condition.get(&quot;endTime&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;remark&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	//&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
+	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
+	&quot;type&quot;:condition.get(&quot;examType&quot;),&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examTime&quot;)&#xD;
+});&#xD;
+&#xD;
+&#xD;
+view.get(&quot;#examUpdateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#updateDialog&quot;).close();&#xD;
+	//view.get(&quot;#updateDetailDialog&quot;).close();&#xD;
+	if(view.get(&quot;#grouptree2.selection&quot;) != &quot;&quot;){&#xD;
+		view.get(&quot;#grouptree2&quot;).unselectAll();&#xD;
+	}&#xD;
+	//view.get(&quot;#dsExam&quot;).flushAsync();&#xD;
+&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
               <Button>
                 <ClientEvent name="onClick">var condition = view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;);&#xD;
 var beginTime = condition.get(&quot;startTime&quot;);&#xD;
@@ -1645,10 +1713,11 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                           </DataPilot>
                           <Button>
                             <ClientEvent name="onClick">view.get(&quot;#findtmDialog&quot;).show();&#xD;
+/*&#xD;
 view.get(&quot;#dsCon&quot;).insert({&#xD;
 	flId:view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;)&#xD;
-});&#xD;
-</ClientEvent>
+});*/&#xD;
+view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).set(&quot;flId&quot;,view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;));</ClientEvent>
                             <Property name="caption">查询条件</Property>
                             <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
                           </Button>
@@ -1684,9 +1753,37 @@ view.get(&quot;#dsCon&quot;).insert({&#xD;
                       <DataTreeGrid id="tkfltree2">
                         <ClientEvent name="onClick">var dsTktmShow = view.get(&quot;#dsTktmShow&quot;);&#xD;
 var flid = view.get(&quot;#dsTkfl&quot;).getData(&quot;!current_Node&quot;).get(&quot;id&quot;)&#xD;
+var entity = view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;);&#xD;
+var dept = entity.get(&quot;dept&quot;);&#xD;
+var user = entity.get(&quot;user&quot;);&#xD;
+var begin = entity.get(&quot;begin&quot;);&#xD;
+var end = entity.get(&quot;end&quot;);&#xD;
+entity.set({flId:flid});&#xD;
+if(end &lt; begin &amp;&amp; end != null){&#xD;
+	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+}&#xD;
+if(dept == &quot;&quot;){&#xD;
+	entity.set({&#xD;
+		dept:null,&#xD;
+		deptid:null&#xD;
+	});&#xD;
+}&#xD;
+if(user == &quot;&quot; || user == null){&#xD;
+	entity.set({&#xD;
+		user:null,&#xD;
+		userid:null&#xD;
+	});&#xD;
+}else if(entity.get(&quot;userid&quot;) == &quot;&quot;){&#xD;
+	entity.set({&#xD;
+		userid:null&#xD;
+	});&#xD;
+}&#xD;
+&#xD;
+dsTktmShow.set(&quot;parameter&quot;,entity);&#xD;
+/*&#xD;
 dsTktmShow.set(&quot;parameter&quot;,{&#xD;
 	flId: flid&#xD;
-})&#xD;
+})*/&#xD;
 dsTktmShow.flushAsync();</ClientEvent>
                         <Property name="currentNodeDataPath">current_Node</Property>
                         <Property name="dataSet">dsTkfl</Property>
@@ -1744,7 +1841,7 @@ if(dept == &quot;&quot;){&#xD;
 		//userid:null&#xD;
 	});&#xD;
 }&#xD;
-if(user == &quot;&quot;){&#xD;
+if(user == &quot;&quot; || user == null){&#xD;
 	//view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 	entity.set({&#xD;
 		user:null,&#xD;
@@ -1758,7 +1855,7 @@ if(user == &quot;&quot;){&#xD;
 }&#xD;
 view.get(&quot;#dsTktmShow&quot;).set(&quot;parameter&quot;,entity);&#xD;
 view.get(&quot;#findtmDialog&quot;).close();&#xD;
-view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).cancel();&#xD;
+//view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dsTktmShow&quot;).flush();&#xD;
 view.get(&quot;#dsDept&quot;).flush();</ClientEvent>
                 <Property name="caption">查询</Property>
@@ -1766,7 +1863,7 @@ view.get(&quot;#dsDept&quot;).flush();</ClientEvent>
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#findtmDialog&quot;).close();&#xD;
-view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).cancel();&#xD;
+//view.get(&quot;#dsCon&quot;).getData(&quot;#&quot;).cancel();&#xD;
 view.get(&quot;#dsDept&quot;).flush();&#xD;
 /*&#xD;
 var entity = view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;);&#xD;
@@ -2045,6 +2142,9 @@ if(entity != undefined){&#xD;
       </AjaxAction>
       <AjaxAction id="deleteAction">
         <Property name="service">zstkglController#deleteKstsjlInfo</Property>
+      </AjaxAction>
+      <AjaxAction id="examUpdateAction">
+        <Property name="service">zstkglController#updateExamInfo</Property>
       </AjaxAction>
     </Container>
     <Container id="dropdowns">

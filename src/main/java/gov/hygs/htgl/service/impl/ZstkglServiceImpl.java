@@ -249,4 +249,10 @@ public class ZstkglServiceImpl implements ZstkglService {
 		zstkglDao.deleteKstsjlInfo(examid);
 	}
 
+	@Override
+	public void updateExamInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.updateExamInfo(param);
+	}
+
 }
