@@ -73,4 +73,6 @@ public interface ZstkglDao {
 
 	public Map<String, Object> getDaMapInfoByZstkId(String id);
 
+	public void updateExamInfo(Map<String, Object> param);
+
 }

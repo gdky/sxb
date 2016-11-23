@@ -991,4 +991,28 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		this.jdbcTemplate.update(sql, new Object[]{ examid });
 	}
 
+	@Override
+	public void updateExamInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		List<String> groupId = (List<String>) param.get("groupId");
+		Integer examid = (Integer) param.get("examid");
+		Date begin = (Date) param.get("begin");
+		Date end = (Date) param.get("end");
+		String title = (String) param.get("title");
+		String tpye = (String) param.get("type");
+		String ms = (String) param.get("ms");
+		Integer examtime = (Integer) param.get("examtime");
+			
+		String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=?,exam_time=? where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examtime, examid });
+		if(groupId != null){
+			sql = "delete from exam_tsqz where exam_id = ?";
+			this.jdbcTemplate.update(sql, new Object[]{ examid });
+			for(int j = 0; j < groupId.size(); j++){
+				sql = "insert into exam_tsqz value(?,?,?)";
+				this.jdbcTemplate.update(sql, new Object[] { null, groupId.get(j), examid });
+			}
+		}
+	}
+
 }
