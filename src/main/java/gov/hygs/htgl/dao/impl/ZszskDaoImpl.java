@@ -547,7 +547,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		StringBuffer sql = new StringBuffer("select u.user_name tsr,jl.tsrq,g.group_name groupname,g.id_ groupId,jl.ms,jl.id_ jlid ");
 		StringBuffer sqlCount = new StringBuffer("select count(*)");
 		int count = this.jdbcTemplate.queryForObject(sqlCount.append(sqlWhere).toString(), Integer.class);
-		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("limit ?,?").toString(),new Object[]{pageSize * (pageNow - 1),pageSize});
+		List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql.append(sqlWhere).append("order by jl.tsrq desc limit ?,?").toString(),new Object[]{pageSize * (pageNow - 1),pageSize});
 		page.setEntityCount(count);
 		page.setEntities(list);
 	}
