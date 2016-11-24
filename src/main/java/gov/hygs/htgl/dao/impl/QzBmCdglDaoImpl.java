@@ -373,7 +373,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		int userId = user.getId_();
 		int groupId = user.getDeptid();
-		String sql = "insert into user_group values(?,?,?)";
+		String sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 		Object[] objs = new Object[] { null, userId, groupId };
 		this.jdbcTemplate.update(sql, objs);
 	}
@@ -500,7 +500,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		String flag = (String) param.get("add");
 		if(flag == null){
 			for(Integer userId : ids){
-				String sql = "insert into user_group values(?,?,?)";
+				String sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 				this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
 			}
 		}else{
@@ -515,7 +515,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 				List<Integer> list = this.jdbcTemplate.queryForList(sql, Integer.class, new Object[]{deptid,groupId});
 				if(list != null){
 					for(Integer userInfo : list){
-						sql = "insert into user_group values(?,?,?)";
+						sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 						this.jdbcTemplate.update(sql, new Object[]{ null, userInfo, groupId });
 					}
 				}
