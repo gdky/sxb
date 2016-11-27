@@ -30,5 +30,9 @@ public interface TjglDao {
 	public List getExamInfo();
 
 	public List getCurrentDeptQjById(String id);
+
+	public List countDeptCtslCount(Map<String, Object> param);
+
+	public List countUserCtslCount(Map<String, Object> param);
 	
 }
