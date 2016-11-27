@@ -55,6 +55,10 @@ public class TjglServiceImpl implements TjglService {
 			return tjglDao.countUserRushAnswerScore(param);
 		}else if("10".equals(type)){//用户考试分数
 			return tjglDao.countUserExamScore(param);
+		}else if("11".equals(type)){//部门出题数量查询
+			return tjglDao.countDeptCtslCount(param);
+		}else if("12".equals(type)){//个人出题数量查询
+			return tjglDao.countUserCtslCount(param);
 		}
 		return null;
 	}
@@ -105,6 +109,10 @@ public class TjglServiceImpl implements TjglService {
 				templateFile = "YhQdDtdf";
 			}else if("10".equals(type)){
 				templateFile = "YhKsfs";
+			}else if("11".equals(type)){
+				templateFile = "BmCtSlCx";
+			}else if("12".equals(type)){
+				templateFile = "GrCtSlCx";
 			}
 			gxtj = this.countGxjl(param);
 			beans.put("gxtj", gxtj);

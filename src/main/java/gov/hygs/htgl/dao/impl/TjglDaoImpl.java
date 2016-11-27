@@ -79,14 +79,14 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append("and a.gx_date <= date_format(?,'%Y%m%d') ");
 			args.add(sdf.format(param.get("end")));
 		}
-		sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
 		if (content != null) {
+			sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
 			sql.append("where t.title like ? ");
-			sql.append("or t.content like ? ");
+			sql.append("or t.content like ?) ");
 			args.add("%"+content+"%");
 			args.add("%"+content+"%");
 		}
-		sql.append(") group by a.dept_id");
+		sql.append(" group by a.dept_id");
 		if (userId == null || userId != 0) {
 			sql.append(",a.user_id ");
 		}
@@ -591,9 +591,9 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
 			sql.append(" ,d.dept_name) ");
 			sql.append("  as dept, ");	
-			sql.append(" u.user_name as user,sum(r.exam_score) as examScore ");
+			sql.append(" u.user_name as user,round(sum(if(r.exam_time >= e.exam_time,r.exam_score,0)),1) as examScore ");
 			sql.append(" from exam_user_result r,user u,dept d,exam e,exam_detail ed where r.user_id = u.id_ and u.deptid=d.id_ ");
-			sql.append(" and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ ");
+			sql.append(" and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ "); 
 			if(user != null){
 				sql.append(" and r.user_id in (select id_ from user where user_name like ?) ");
 				args.add("%"+user+"%");
@@ -637,7 +637,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List getExamInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select id_ id,title from exam";
+		String sql = "select id_ id,title,exam_time examTime from exam";
 		return this.jdbcTemplate.queryForList(sql);
 	}
 
@@ -646,6 +646,132 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		// TODO Auto-generated method stub
 		String sql = "select id_,dept_name,PARENT_ID parentId,ms from dept t where t.parent_id=? and dept_name like '%局'";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{ id });
+		return list;
+	}
+
+	@Override
+	public List countDeptCtslCount(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		//System.out.println("部门出题数量查询");
+		List<Object> args = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = param == null ? null : (Integer) param.get("deptid");
+		String dept =  param == null?null : (String)param.get("dept");
+		Date begin = param == null ? null : (Date) param.get("begin");
+		Date end = param == null ? null : (Date) param.get("end");
+		String content = param == null ? null : (String) param.get("content");
+		StringBuffer sql = new StringBuffer("select ifnull(");
+			sql.append("(select count(b.USER_ID) from dept a, tktm b ");
+			sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) ");
+			sql.append("and a.id_=b.deptid),0)");
+			sql.append("as ctslCount, ");
+			sql.append(" concat( ");
+			sql.append(" ifnull((select dept_name from dept where id_=pt.PARENT_ID),'') ");
+			sql.append(" ,pt.dept_name) as deptname ");
+			sql.append("from dept pt where pt.id_ in(");
+			sql.append(" select d.id_");
+			sql.append(" from dept d,tktm b");
+			sql.append(" where d.id_ = b.deptid");
+		if(deptid != null){
+			sql.append(" and b.deptid in ( ");
+			if(deptid != 1){
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+				args.add(deptid);
+			}else if(deptid == 1){
+				this.rebuildSqlWhenDeptidIs1(sql);
+			}
+			sql.append(" ) ");
+		}
+		if (begin != null) {
+			sql.append(" and b.create_date >= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("begin")));
+		}
+		if (end != null) {
+			sql.append(" and b.create_date <= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("end")));
+		}
+		if (content != null) {
+			sql.append(" and b.tmly_id in ");
+			sql.append(" (select t.id_ from tmly t where t.title like ?  or t.content like ?) ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
+		}
+		sql.append(")");
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());;
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
+		return list;
+	}
+
+	@Override
+	public List countUserCtslCount(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		//System.out.println("个人出题数量查询");
+		List<Object> args = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Integer deptid = (Integer) param.get("deptid");
+		Integer userId = (Integer) param.get("userid");
+		String dept = (String) param.get("dept");
+		String user = (String) param.get("user");
+		Date begin = (Date) param.get("begin");
+		Date end = (Date) param.get("end");
+		String content = (String) param.get("content");
+		StringBuffer sql = new StringBuffer("select ");
+			sql.append(" concat( ");
+			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
+			sql.append(" ,d.dept_name) ");
+			sql.append("  as deptname, ");
+		if (userId == null || userId != 0) {
+			sql.append("u.user_name as username,");
+		}
+		sql.append("ctslCount from ");
+		sql.append("(select b.deptid as did,b.user_id uid ,count(b.user_id) as ctslCount ");//sum(a.gxz)
+		sql.append("from tktm b ");//tk_gxjl a , 
+		sql.append("where 1=1 ");
+		if(deptid != null){
+			sql.append(" and b.deptid in ( ");
+			if(deptid != 1){
+				sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?)) ");
+				args.add(deptid);
+			}else if(deptid == 1){
+				this.rebuildSqlWhenDeptidIs1(sql);
+			}
+			sql.append(" ) ");
+		}
+		if(user != null){
+			sql.append("and b.user_id in (select id_ from user where user_name like ?) ");
+			args.add("%"+user+"%");
+		}
+		if (begin != null) {
+			sql.append("and b.create_date >= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("begin")));
+		}
+		if (end != null) {
+			sql.append("and b.create_date <= date_format(?,'%Y%m%d') ");
+			args.add(sdf.format(param.get("end")));
+		}
+		if (content != null) {
+			sql.append("and b.tmly_id in ( select t.id_ from tmly t ");
+			sql.append("where t.title like ? ");
+			sql.append("or t.content like ?) ");
+			args.add("%"+content+"%");
+			args.add("%"+content+"%");
+		}
+		sql.append(" group by b.deptid");
+		if (userId == null || userId != 0) {
+			sql.append(",b.user_id ");
+		}
+		sql.append(")t, ");
+		sql.append("user u,dept d where t.did=d.id_ and u.id_=t.uid");
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(), args.toArray());
+		}
 		return list;
 	}
 	

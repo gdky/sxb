@@ -50,19 +50,23 @@
       <PropertyDef name="laudCount">
         <Property name="label">题目点赞统计</Property>
       </PropertyDef>
+      <PropertyDef name="ctslCount">
+        <Property name="label">出题数量统计</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="conditionType">
       <PropertyDef name="type">
         <ClientEvent name="onSet">if(view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).get(&quot;type&quot;) != undefined){&#xD;
 	view.get(&quot;#dsResult&quot;).getData().clear();&#xD;
 	view.get(&quot;#dsScore&quot;).getData().clear();&#xD;
+	//view.get(&quot;#examTimeMessage&quot;).set(&quot;visible&quot;,false);&#xD;
 	/*&#xD;
 	view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
 		dept:null,user:null,begin:null,end:null,begintime:null,endtime:null,title:null,deptid:null,deptQj:null,tkfl:null&#xD;
 	});&#xD;
 	*/&#xD;
 	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
-		dept:null,user:null,begin:null,end:null,title:null,deptid:null,deptQj:null,tkfl:null//,begintime:null,endtime:null&#xD;
+		dept:null,user:null,begin:null,end:null,title:null,deptid:null,deptQj:null,tkfl:null,examid:null//,begintime:null,endtime:null&#xD;
 	});&#xD;
 	view.get(&quot;#dsDeptQj&quot;).flush();&#xD;
 	var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
@@ -81,7 +85,7 @@
 	view.get(&quot;#dsDept&quot;).flush();&#xD;
 	view.get(&quot;#dsTkfl&quot;).flush();&#xD;
 }&#xD;
-if(arg.value &lt; 7){&#xD;
+if(arg.value &lt; 7 || arg.value >10){&#xD;
 	view.get(&quot;#countGrid&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#scoreGrid&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#title&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -90,6 +94,7 @@ if(arg.value &lt; 7){&#xD;
 	//view.get(&quot;#endtime&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
+	view.get(&quot;#ctsl&quot;).set(&quot;visible&quot;,false);&#xD;
 	if(arg.value == 6){&#xD;
 		view.get(&quot;#dept&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -111,7 +116,11 @@ if(arg.value &lt; 7){&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#count&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
-	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6){&#xD;
+	if(arg.value == 11 || arg.value == 12){&#xD;
+		view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#ctsl&quot;).set(&quot;visible&quot;,true);&#xD;
+	}&#xD;
+	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6 || arg.value == 11){&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
 		//view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
 		view.get(&quot;#user&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -163,6 +172,8 @@ if(arg.value &lt; 7){&#xD;
 	if(arg.value == 10){&#xD;
 		view.get(&quot;#title&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,true);&#xD;
+		//view.get(&quot;#examTimeMessage&quot;).set(&quot;visible&quot;,true);&#xD;
+		//view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：0秒&quot;);&#xD;
 	}&#xD;
 }&#xD;
 &#xD;
@@ -195,6 +206,14 @@ if(arg.value &lt; 7){&#xD;
               <Entity>
                 <Property name="key">5</Property>
                 <Property name="value">个人被点赞数</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">11</Property>
+                <Property name="value">部门出题数量查询</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">12</Property>
+                <Property name="value">个人出题数量查询</Property>
               </Entity>
               <Entity>
                 <Property name="key">6</Property>
@@ -284,6 +303,7 @@ if(arg.value &lt; 7){&#xD;
       <PropertyDef name="title">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="examTime"/>
     </DataType>
     <DataType name="deptQjType">
       <Property name="creationType">gov.hygs.htgl.entity.Dept</Property>
@@ -363,11 +383,12 @@ if(arg.value &lt; 7){&#xD;
         <Property name="label">考试时间止</Property>
       </PropertyDef>
       <PropertyDef name="title">
-        <Property name="label">考试主题</Property>
+        <Property name="label">考试名称</Property>
       </PropertyDef>
       <PropertyDef name="tkfl">
         <Property name="label">题库类型</Property>
       </PropertyDef>
+      <PropertyDef name="examid"/>
     </DataType>
   </Model>
   <View>
@@ -480,8 +501,9 @@ view.get(&quot;#dsDept&quot;).flush();&#xD;
       </Trigger>
       <Trigger id="clearTitleTrigger">
         <ClientEvent name="onExecute">view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({&#xD;
-	title:null&#xD;
-});</ClientEvent>
+	title:null,examid:null&#xD;
+});&#xD;
+view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：0秒&quot;);</ClientEvent>
         <Property name="icon">url(>skin>common/icons.gif) -0px -300px</Property>
       </Trigger>
       <Trigger id="clearTkflTrigger">
@@ -576,6 +598,16 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
       <DataSetDropDown id="examDropDown">
+        <ClientEvent name="onClose">var exam = view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;);&#xD;
+if(exam != undefined){&#xD;
+	view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({examid:exam.get(&quot;id&quot;)});&#xD;
+	examTime = exam.get(&quot;examTime&quot;);&#xD;
+	if(examTime != null){&#xD;
+		view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：&quot;+examTime+&quot;秒&quot;);&#xD;
+	}else{&#xD;
+		view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：0秒&quot;);&#xD;
+	}&#xD;
+}</ClientEvent>
         <Property name="dataSet">dsExam</Property>
         <Property name="height">500</Property>
         <Property name="property">title</Property>
@@ -691,7 +723,7 @@ if(tkfl == &quot;&quot; || tkfl == undefined){&#xD;
 	});&#xD;
 }&#xD;
 view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set({type:type});&#xD;
-if(type &lt; 7){&#xD;
+if(type &lt; 7 || type > 10){&#xD;
 	view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 	view.get(&quot;#dsResult&quot;).flush();&#xD;
 }else{&#xD;
@@ -713,6 +745,10 @@ ajaxActionExport.execute(function(fileName){&#xD;
                   <Property name="caption">导出</Property>
                   <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
                 </Button>
+                <ToolBarLabel id="examTimeMessage">
+                  <Property name="hideMode">display</Property>
+                  <Property name="visible">false</Property>
+                </ToolBarLabel>
               </ToolBar>
             </Container>
             <Container layoutConstraint="colSpan:2">
@@ -759,19 +795,19 @@ ajaxActionExport.execute(function(fileName){&#xD;
                       <Property name="trigger">clearUserTrigger,userDropDown</Property>
                       <Editor/>
                     </AutoFormElement>
+                    <AutoFormElement id="tkfl">
+                      <Property name="name">tkfl</Property>
+                      <Property name="property">tkfl</Property>
+                      <Property name="hideMode">display</Property>
+                      <Property name="trigger">clearTkflTrigger,tkflDropDown</Property>
+                      <Editor/>
+                    </AutoFormElement>
                     <AutoFormElement id="title">
                       <Property name="name">title</Property>
                       <Property name="property">title</Property>
                       <Property name="hideMode">display</Property>
                       <Property name="trigger">clearTitleTrigger,examDropDown</Property>
                       <Property name="visible">false</Property>
-                      <Editor/>
-                    </AutoFormElement>
-                    <AutoFormElement id="tkfl">
-                      <Property name="name">tkfl</Property>
-                      <Property name="property">tkfl</Property>
-                      <Property name="hideMode">display</Property>
-                      <Property name="trigger">clearTkflTrigger,tkflDropDown</Property>
                       <Editor/>
                     </AutoFormElement>
                   </AutoForm>
@@ -804,6 +840,9 @@ ajaxActionExport.execute(function(fileName){&#xD;
             </DataColumn>
             <DataColumn id="laud" name="laudCount">
               <Property name="property">laudCount</Property>
+            </DataColumn>
+            <DataColumn id="ctsl" name="ctslCount">
+              <Property name="property">ctslCount</Property>
             </DataColumn>
           </DataGrid>
           <DataGrid id="scoreGrid">
