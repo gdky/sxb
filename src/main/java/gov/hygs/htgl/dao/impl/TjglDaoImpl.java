@@ -292,6 +292,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 					sql.append(" u.user_name as username, ");
 					sql.append("cou from (select b.DEPTID as did,b.USER_ID uid ,count(b.id_) as cou ");
 					sql.append("from laud_record a ,tktm b where a.zstk_id=b.id_ ");
+					sql.append(" and a.`type` = 1 ");
 					if(deptid != null){
 						sql.append(" and b.deptid in ( ");
 						if(deptid != 1){
@@ -343,12 +344,13 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		String content = param == null ? null : (String) param.get("content");
 		
 		StringBuffer sql = new StringBuffer("select ifnull((select count(b.id_)from dept a, laud_record b ");
-			sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id),0 )as cou,");
+			sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id and b.`type` = 1),0 )as cou,");
 			sql.append(" concat( ");
 			sql.append(" ifnull((select dept_name from dept where id_=pt.PARENT_ID),'') ");
 			sql.append(" ,pt.dept_name) as deptname ");
 			sql.append("  from dept pt where pt.id_ in(  ");
 			sql.append("select d.id_ from dept d,laud_record a ,tktm b where a.zstk_id=b.id_ and d.id_ = a.dept_id ");
+			sql.append(" and a.`type` = 1 ");
 			if(deptid != null){
 				sql.append(" and d.id_ in ( ");
 				if(deptid != 1){
@@ -393,6 +395,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		Date end = param == null ? null : (Date) param.get("end");
 		StringBuffer sql = new StringBuffer("select t.content as tmname,count(r.zstk_id) as laudCount ");
 			sql.append(" from laud_record r,tktm t where t.id_ = r.zstk_id ");
+			sql.append(" and r.`type` = 1 ");
 			if(begin != null){
 				sql.append(" and r.dz_date >= date_format(?,'%Y%m%d') ");
 				args.add(sdf.format(begin));
