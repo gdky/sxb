@@ -53,6 +53,9 @@
       <PropertyDef name="ctslCount">
         <Property name="label">出题数量统计</Property>
       </PropertyDef>
+      <PropertyDef name="errCount">
+        <Property name="label">题目纠错统计</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="conditionType">
       <PropertyDef name="type">
@@ -95,7 +98,8 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 	view.get(&quot;#begin&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#end&quot;).set(&quot;visible&quot;,true);&#xD;
 	view.get(&quot;#ctsl&quot;).set(&quot;visible&quot;,false);&#xD;
-	if(arg.value == 6){&#xD;
+	view.get(&quot;#err&quot;).set(&quot;visible&quot;,false);&#xD;
+	if(arg.value == 6 || arg.value == 13){&#xD;
 		view.get(&quot;#dept&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,false);&#xD;
 		//view.get(&quot;#dept&quot;).set(&quot;readOnly&quot;,true);&#xD;
@@ -105,6 +109,10 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 		view.get(&quot;#deptName&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
+		if(arg.value == 13){&#xD;
+			view.get(&quot;#laud&quot;).set(&quot;visible&quot;,false);&#xD;
+			view.get(&quot;#err&quot;).set(&quot;visible&quot;,true);&#xD;
+		}&#xD;
 	}else{&#xD;
 		view.get(&quot;#dept&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#deptQj&quot;).set(&quot;visible&quot;,true);&#xD;
@@ -120,7 +128,7 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 		view.get(&quot;#count&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#ctsl&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
-	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6 || arg.value == 11){&#xD;
+	if(arg.value == 0 || arg.value == 2 || arg.value == 4 || arg.value == 6 || arg.value == 11 || arg.value ==13){&#xD;
 		view.get(&quot;#userName&quot;).set(&quot;visible&quot;,false);&#xD;
 		//view.get(&quot;#user&quot;).set(&quot;readOnly&quot;,true);&#xD;
 		view.get(&quot;#user&quot;).set(&quot;visible&quot;,false);&#xD;
@@ -222,6 +230,10 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
               <Entity>
                 <Property name="key">6</Property>
                 <Property name="value">题目被点赞数</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">13</Property>
+                <Property name="value">题目纠错查询</Property>
               </Entity>
               <Entity>
                 <Property name="key">7</Property>
@@ -853,6 +865,10 @@ ajaxActionExport.execute(function(fileName){&#xD;
             </DataColumn>
             <DataColumn id="ctsl" name="ctslCount">
               <Property name="property">ctslCount</Property>
+            </DataColumn>
+            <DataColumn id="err">
+              <Property name="property">errCount</Property>
+              <Property name="name">errCount</Property>
             </DataColumn>
           </DataGrid>
           <DataGrid id="scoreGrid">
