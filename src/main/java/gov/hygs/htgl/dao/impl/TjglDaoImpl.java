@@ -586,12 +586,12 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		Date end = (Date) param.get("end");
 		String title = (String) param.get("title");
 		String tkfl = (String) param.get("tkfl");
-		StringBuffer sql = new StringBuffer("select ");
+		StringBuffer sql = new StringBuffer("select e.title,");
 			sql.append(" concat( ");
 			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
 			sql.append(" ,d.dept_name) ");
 			sql.append("  as dept, ");	
-			sql.append(" u.user_name as user,round(sum(if(r.exam_time >= e.exam_time,r.exam_score,0)),1) as examScore ");
+			sql.append(" u.user_name as user,round(sum(if(r.exam_time >= e.exam_time,r.exam_score,0)),1) as examScore, sum(r.EXAM_TIME) as examTime ");
 			sql.append(" from exam_user_result r,user u,dept d,exam e,exam_detail ed where r.user_id = u.id_ and u.deptid=d.id_ ");
 			sql.append(" and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ "); 
 			if(user != null){
@@ -624,7 +624,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				sql.append(" and ed.tm_id in (select t.ID_ from tktm t, tkfl l where t.FL_ID = l.ID_ and l.TKMC like ?) ");
 				args.add("%"+tkfl+"%");
 			}
-			sql.append(" group by r.user_id ");
+			sql.append(" group by r.user_id,e.id_ order by e.title ");
 		List list = null;
 		if(args.isEmpty()){
 			list = this.jdbcTemplate.queryForList(sql.toString());

@@ -160,6 +160,8 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 	view.get(&quot;#answerScore&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#rushAnswerScore&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#time&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#examtitle&quot;).set(&quot;visible&quot;,false);&#xD;
 	if(arg.value == 7){&#xD;
 		view.get(&quot;#answerCount&quot;).set(&quot;visible&quot;,true);&#xD;
 	}&#xD;
@@ -172,6 +174,8 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 	if(arg.value == 10){&#xD;
 		view.get(&quot;#title&quot;).set(&quot;visible&quot;,true);&#xD;
 		view.get(&quot;#examScore&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#time&quot;).set(&quot;visible&quot;,true);&#xD;
+		view.get(&quot;#examtitle&quot;).set(&quot;visible&quot;,true);&#xD;
 		//view.get(&quot;#examTimeMessage&quot;).set(&quot;visible&quot;,true);&#xD;
 		//view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：0秒&quot;);&#xD;
 	}&#xD;
@@ -192,6 +196,14 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
                 <Property name="value">个人出题贡献值</Property>
               </Entity>
               <Entity>
+                <Property name="key">11</Property>
+                <Property name="value">部门出题数量查询</Property>
+              </Entity>
+              <Entity>
+                <Property name="key">12</Property>
+                <Property name="value">个人出题数量查询</Property>
+              </Entity>
+              <Entity>
                 <Property name="key">2</Property>
                 <Property name="value">部门知识要点贡献值</Property>
               </Entity>
@@ -206,14 +218,6 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
               <Entity>
                 <Property name="key">5</Property>
                 <Property name="value">个人被点赞数</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">11</Property>
-                <Property name="value">部门出题数量查询</Property>
-              </Entity>
-              <Entity>
-                <Property name="key">12</Property>
-                <Property name="value">个人出题数量查询</Property>
               </Entity>
               <Entity>
                 <Property name="key">6</Property>
@@ -294,6 +298,12 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
       </PropertyDef>
       <PropertyDef name="examScore">
         <Property name="label">考试分数</Property>
+      </PropertyDef>
+      <PropertyDef name="examTime">
+        <Property name="label">个人考试时间</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property name="label">考试名称</Property>
       </PropertyDef>
     </DataType>
     <DataType name="examType">
@@ -849,6 +859,10 @@ ajaxActionExport.execute(function(fileName){&#xD;
             <Property name="hideMode">display</Property>
             <Property name="dataSet">dsScore</Property>
             <Property name="readOnly">true</Property>
+            <DataColumn id="examtitle">
+              <Property name="property">title</Property>
+              <Property name="name">title</Property>
+            </DataColumn>
             <DataColumn name="dept">
               <Property name="property">dept</Property>
             </DataColumn>
@@ -866,6 +880,9 @@ ajaxActionExport.execute(function(fileName){&#xD;
             </DataColumn>
             <DataColumn id="examScore" name="examScore">
               <Property name="property">examScore</Property>
+            </DataColumn>
+            <DataColumn id="time" name="examTime">
+              <Property name="property">examTime</Property>
             </DataColumn>
           </DataGrid>
         </Children>
