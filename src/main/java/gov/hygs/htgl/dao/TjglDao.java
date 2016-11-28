@@ -34,5 +34,7 @@ public interface TjglDao {
 	public List countDeptCtslCount(Map<String, Object> param);
 
 	public List countUserCtslCount(Map<String, Object> param);
+
+	public List countTktmErrRecord(Map<String, Object> param);
 	
 }

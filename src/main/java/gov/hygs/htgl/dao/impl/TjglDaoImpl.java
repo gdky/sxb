@@ -777,5 +777,33 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		}
 		return list;
 	}
+
+	@Override
+	public List countTktmErrRecord(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		List<Object> args = new ArrayList<Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date begin = param == null ? null : (Date) param.get("begin");
+		Date end = param == null ? null : (Date) param.get("end");
+		StringBuffer sql = new StringBuffer("select t.content as tmname,count(r.zstk_id) as errCount ");
+			sql.append(" from laud_record r,tktm t where t.id_ = r.zstk_id ");
+			sql.append(" and r.`type` = 2 ");
+			if(begin != null){
+				sql.append(" and r.dz_date >= date_format(?,'%Y%m%d') ");
+				args.add(sdf.format(begin));
+			}
+			if(end != null){
+				sql.append(" and r.dz_date <= date_format(?,'%Y%m%d')   ");
+				args.add(sdf.format(end));
+			}
+			sql.append(" group by r.zstk_id ");
+		List list = null;
+		if(args.isEmpty()){
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			list = this.jdbcTemplate.queryForList(sql.toString(),args.toArray());
+		}
+		return list;
+	}
 	
 }
