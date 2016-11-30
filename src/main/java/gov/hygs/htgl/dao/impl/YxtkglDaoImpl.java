@@ -587,7 +587,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	}
 
 	private int addFlId(String tkflTkmc) {
-		String sql = "insert into tkfl values(?,?,?,?)";
+		String sql = "insert into tkfl (id_,parent_id,tkmc,ms) values(?,?,?,?)";
 		return this.insertAndGetKeyByJdbc(sql,
 				new Object[] { null, 0, tkflTkmc, tkflTkmc },
 				new String[] { "id_" }).intValue();
