@@ -703,8 +703,21 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			sql.append(" USER c,dept d ");
 			sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ ");
 		if(flids!=null){
-			sql.append(" and fl_id in (?) ");
-			args.add(flids);
+			sql.append(" and fl_id in ( ");
+			if(flids.contains(",")){
+				flids = flids.substring(0, flids.length() - 1);
+				String[] flid = flids.split(",");
+				for(int i = 0; i < flid.length; i++){
+					sql.append("?");
+					if(i != flid.length - 1)
+						sql.append(",");
+					args.add(flid[i]);
+				}
+			}else{
+				sql.append(" ? ");
+				args.add(flids);
+			}
+			sql.append(" ) ");	
 		}
 		if (offest == -1 && begin == -1) {
 			sql.append(" and (xybz='Y' or ksbz='Y') ");
