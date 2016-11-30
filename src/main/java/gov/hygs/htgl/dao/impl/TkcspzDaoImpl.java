@@ -21,7 +21,6 @@ public class TkcspzDaoImpl extends BaseJdbcDao implements TkcspzDao {
 	@Override
 	public Collection<Tkfl> getTkflRoot() {
 		// TODO Auto-generated method stub
-		//String sql = "select * from tkfl where parent_id is null or parent_id = 0 order by id_ desc";
 		String sql = "select ID_,PARENT_ID,TKMC,MS from tkfl where parent_id = 0 order by id_ desc";
 		List<Tkfl> list = this.jdbcTemplate.query(sql, new RowMapper<Tkfl>() {
 

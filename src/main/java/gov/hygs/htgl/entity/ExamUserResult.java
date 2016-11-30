@@ -41,6 +41,8 @@ public class ExamUserResult implements Serializable {
 	/** 答题结束时间. */
 	private Date endTime;
 
+	private String type;
+	
 	/**
 	 * Constructor.
 	 */
@@ -216,6 +218,14 @@ public class ExamUserResult implements Serializable {
 	 */
 	public Date getEndTime() {
 		return this.endTime;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	/**

@@ -14,6 +14,12 @@
 		</property>
 	</bean>
 
-
+<bean parent="dorado.resolverRegister">
+		<property name="url" value="/dorado/ysyk/ysykffqktjbg.display" />
+		 
+		<property name="resolver">
+			<bean class="gov.hygs.htgl.utils.TjdcResolver"></bean>
+		</property>
+</bean>
 
 </beans>

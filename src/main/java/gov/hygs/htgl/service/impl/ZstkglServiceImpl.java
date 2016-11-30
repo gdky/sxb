@@ -59,6 +59,26 @@ public class ZstkglServiceImpl implements ZstkglService {
 	}
 
 	@Override
+	public Map<String, Object> getDaMapInfoByZstkId(String id) {
+		// TODO Auto-generated method stub
+		return zstkglDao.getDaMapInfoByZstkId(id);
+	}
+
+	@Override
+	public Map<String, Object> getDaylInfo(String param) {
+		// TODO Auto-generated method stub
+		Map<String, Object> dayl = null;
+		if(param != null){
+			String das = "";
+			List<Tkxzx> dayls = (List<Tkxzx>) this.getDaXzxInfoByZstkId(param);
+			for(Tkxzx da : dayls){
+				
+			}
+		}
+		return dayl;
+	}
+	
+	@Override
 	public Collection<Tkxzx> getToFInfo() {
 		// TODO Auto-generated method stub
 		return zstkglDao.getToFInfo();
@@ -228,4 +248,11 @@ public class ZstkglServiceImpl implements ZstkglService {
 		// TODO Auto-generated method stub
 		zstkglDao.deleteKstsjlInfo(examid);
 	}
+
+	@Override
+	public void updateExamInfo(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		zstkglDao.updateExamInfo(param);
+	}
+
 }

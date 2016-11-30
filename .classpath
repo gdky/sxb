@@ -31,7 +31,40 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/dorado-uploader-1.0.15-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-3.7 .jar"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-excelant-3.9-20121203.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jxls-core-1.0.4-SNAPSHOT.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jxls-reader-1.0.4-SNAPSHOT.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-3.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-excelant-3.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-ooxml-3.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-ooxml-schemas-3.9.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/poi-scratchpad-3.8-20120326.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

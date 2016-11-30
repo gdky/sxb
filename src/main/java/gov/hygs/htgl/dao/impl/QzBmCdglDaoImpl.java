@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,16 +25,35 @@ import com.gdky.restfull.dao.BaseJdbcDao;
 public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
-	public List<Dept> getDeptRoot() {
+	public List<Dept> getDeptRoot(Map<String,Object> param) {
 		// TODO Auto-generated method stub
-		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null";
-
-		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql);
+		StringBuffer sql = new StringBuffer();
+		List<Map<String, Object>> list = null;
+		if(param == null){
+			//超级管理员
+			sql.append("select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id is null");
+			list = this.jdbcTemplate.queryForList(sql.toString());
+		}else{
+			//其他管理员
+			Integer deptid = (Integer) param.get("id");
+			sql.append(" select ID_,DEPT_NAME,PARENT_ID,MS from dept where id_=( ");
+			sql.append(" select ifnull((select parent_id from dept where id_ = ?),?) from dual ");
+			sql.append(" ) ");
+			list = this.jdbcTemplate.queryForList(sql.toString(), new Object[]{deptid,deptid});
+		}
 		return this.mapToDeptList(list);
 	}
 
 	@Override
 	public List<Dept> getCurrentDeptById(String id_) {
+		if(id_ == null)
+			return this.getDeptRoot(null);
+		if(id_.contains("s")){
+			Map<String, Object> param = new HashMap<String,Object>();
+			param.put("id", Integer.parseInt(id_.substring(0, id_.length()-1)));
+			return this.getDeptRoot(param);
+		}
+			
 		String sql = "select ID_,DEPT_NAME,PARENT_ID,MS from dept t where t.parent_id=?";
 		Object[] objs = { id_ };
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql,
@@ -255,7 +275,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public Collection<Grouptable> getGrouptableInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select id_,group_name,ms,parent_id,pxh from grouptable where parent_id=0 order by pxh";
+		String sql = "select id_,group_name,ms,parent_id,pxh,lrr_id from grouptable where parent_id=0 order by pxh";
 		List<Grouptable> groups = this.jdbcTemplate.query(sql,
 				new RowMapper<Grouptable>() {
 
@@ -269,6 +289,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 						group.setMs(result.getString("ms"));
 						group.setParentId(result.getInt("parent_id"));
 						group.setPxh(result.getInt("pxh"));
+						group.setLrrID(result.getInt("lrr_id"));
 						return group;
 					}
 
@@ -278,70 +299,51 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 
 	@Override
 	public void getUserInfo(Page page, Map<String, Object> param) {
-		//String sqlCount = "select count(*) from user";
+		List<Object> args = new ArrayList<Object>();
 		StringBuffer sqlCount = new StringBuffer("select count(*) from user where 1=1 ");
-		//String sql = "select * from user limit ?,? ";
 		StringBuffer sql = new StringBuffer("select * from user where 1=1 ");
 		if(param != null){
 			Integer deptid = (Integer) param.get("deptid");
 			Integer parentid = (Integer) param.get("parentid");
 			String username = (String) param.get("username");
-			if(deptid != null ){//&& parentid != null){
-				//if(parentid == null){
-					//sqlCount.append(" and deptid="+deptid+" ");
-					//sql.append(" and deptid="+deptid+" ");
-				//}
+			if(deptid != null ){
 				if(deptid != 1){
-					sqlCount.append(" and id_ in ( ");
-					sqlCount.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
-					sql.append(" and id_ in ( ");
-					sql.append(" select u.ID_ from dept a,user u where find_in_set(a.id_,queryChildrenAreaInfo("+deptid+")) and a.id_=u.DEPTID ) ");
-				}	
+					sqlCount.append(" and deptid in( ");
+					sqlCount.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?))) ");
+					sql.append(" and deptid in( ");
+					sql.append(" select a.id_ from dept a where find_in_set(a.id_,queryChildrenAreaInfo(?))) ");
+					args.add(deptid);
+				}else if(deptid == 1){
+					sqlCount.append(" and deptid != 2 and deptid != 307 ");
+					sql.append(" and deptid != 2 and deptid != 307 ");
+				}
 			}
 			if(username != null){
-				sqlCount.append(" and user_name like '%"+username+"%' ");
-				sql.append(" and user_name like '%"+username+"%' ");
+				sqlCount.append(" and user_name like ? ");
+				sql.append(" and user_name like ? ");
+				args.add("%"+username+"%");
 			}
 			
 		}
 		
 		sql.append(" limit ?,? ");
-		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),
+		int entityCount = this.jdbcTemplate.queryForObject(sqlCount.toString(),args.toArray(),
 				Integer.class);
+		args.add(page.getPageSize() * (page.getPageNo() - 1));
+		args.add(page.getPageSize());
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString(),
-				new Object[] { page.getPageSize() * (page.getPageNo() - 1),
-						page.getPageSize() });
+				args.toArray());
 		page.setEntityCount(entityCount);
 		page.setEntities(list);
 	}
 
-	/*
-	 * private Collection<User> getAllUserInfo() { // TODO Auto-generated method
-	 * stub String sql = "select * from user"; List<User> users =
-	 * this.jdbcTemplate.query(sql, new RowMapper<User>() {
-	 * 
-	 * @Override public User mapRow(ResultSet result, int i) throws SQLException
-	 * { // TODO Auto-generated method stub User user = new User();
-	 * user.setId_(result.getInt("id_"));
-	 * user.setLogin_Name(result.getString("login_name"));
-	 * user.setUser_Name(result.getString("user_name"));
-	 * user.setPhone(result.getString("phone"));
-	 * user.setRzsj(result.getDate("rzsj")); user.setZw(result.getString("zw"));
-	 * user.setPwd(result.getString("pwd"));
-	 * user.setPhoto(result.getString("photo"));
-	 * user.setDeptid(result.getInt("deptid"));
-	 * user.setBirthday(result.getDate("birthday")); return user; }
-	 * 
-	 * }); return users; }
-	 */
-
 	@Override
 	public Collection<User> getUserByGroupId(Object id) {
 		// TODO Auto-generated method stub
-		String sql = "select a.* from user a,user_group b,grouptable c "
-				+ "where a.id_=b.user_id and b.group_id=c.id_ and c.id_=?";
+		StringBuffer sql = new StringBuffer("select a.* from user a,user_group b,grouptable c ");
+				sql.append("where a.id_=b.user_id and b.group_id=c.id_ and c.id_=?");
 		Object[] objs = { id };
-		List<User> users = this.jdbcTemplate.query(sql, objs,
+		List<User> users = this.jdbcTemplate.query(sql.toString(), objs,
 				new RowMapper<User>() {
 
 					@Override
@@ -371,7 +373,7 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 		// TODO Auto-generated method stub
 		int userId = user.getId_();
 		int groupId = user.getDeptid();
-		String sql = "insert into user_group values(?,?,?)";
+		String sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 		Object[] objs = new Object[] { null, userId, groupId };
 		this.jdbcTemplate.update(sql, objs);
 	}
@@ -388,21 +390,21 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void updataUser(User user) {
 		// TODO Auto-generated method stub
-		String sql = "update user set "
-				+ "login_name=?,user_name=?,phone=?,rzsj=?,"
-				+ "zw=?,pwd=?,photo=?,deptid=?,birthday=? " + "where id_=?";
+		StringBuffer sql = new StringBuffer("update user set ");
+			sql.append("login_name=?,user_name=?,phone=?,rzsj=?,");
+				sql.append("zw=?,pwd=?,photo=?,deptid=?,birthday=? where id_=?");
 		Object[] objs = { user.getLogin_Name(), user.getUser_Name(),
 				user.getPhone(), user.getRzsj(), user.getZw(), user.getPwd(),
 				user.getPhoto(), user.getDeptid(), user.getBirthday(),
 				user.getId_() };
-		this.jdbcTemplate.update(sql, objs);
+		this.jdbcTemplate.update(sql.toString(), objs);
 	}
 
 	@Override
 	public void addGroup(Grouptable group) {
 		// TODO Auto-generated method stub
-		String sql = "insert into grouptable values(?,?,?,?,?)";
-		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId(),group.getPxh() };
+		String sql = "insert into grouptable values(?,?,?,?,?,?)";
+		Object[] objs = { group.getId(), group.getGroupName(), group.getMs(), group.getParentId(),group.getPxh(),group.getLrrID() };
 		this.jdbcTemplate.update(sql, objs);
 	}
 
@@ -493,19 +495,12 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	@Override
 	public void addUserInfoToGroup(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		/*
-		int userId = user.getId_();
-		int groupId = user.getDeptid();
-		String sql = "insert into user_group values(?,?,?)";
-		Object[] objs = new Object[] { null, userId, groupId };
-		this.jdbcTemplate.update(sql, objs);
-		*/
 		int groupId = (int) param.get("groupId");
 		List<Integer> ids = (List<Integer>) param.get("ids");
 		String flag = (String) param.get("add");
 		if(flag == null){
 			for(Integer userId : ids){
-				String sql = "insert into user_group values(?,?,?)";
+				String sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 				this.jdbcTemplate.update(sql, new Object[]{ null, userId, groupId });
 			}
 		}else{
@@ -516,13 +511,11 @@ public class QzBmCdglDaoImpl extends BaseJdbcDao implements QzBmCdglDao {
 	private void addAllDeptToGroup(List<Integer> ids, Integer groupId){
 		if(ids != null){
 			for(Integer deptid : ids){
-				//String sql = "select u.id_ from dept d,user u where u.DEPTID = d.ID_ and d.id_=? and u.ID_ not in (select user_id from user_group where group_id = ?)";
 				String sql = "select u.id_ from user u where u.DEPTID = ? and u.ID_ not in (select user_id from user_group where group_id = ?)";
-				//List<Map<String,Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{deptid,groupId});
 				List<Integer> list = this.jdbcTemplate.queryForList(sql, Integer.class, new Object[]{deptid,groupId});
 				if(list != null){
 					for(Integer userInfo : list){
-						sql = "insert into user_group values(?,?,?)";
+						sql = "insert into user_group (id_,user_id,group_id) values(?,?,?)";
 						this.jdbcTemplate.update(sql, new Object[]{ null, userInfo, groupId });
 					}
 				}

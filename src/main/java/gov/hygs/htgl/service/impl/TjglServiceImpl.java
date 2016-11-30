@@ -1,5 +1,8 @@
 package gov.hygs.htgl.service.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,8 +10,12 @@ import javax.annotation.Resource;
 
 import gov.hygs.htgl.dao.TjglDao;
 import gov.hygs.htgl.service.TjglService;
+import gov.hygs.htgl.utils.excel.ImportExcel;
+import net.sf.jxls.exception.ParsePropertyException;
 
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 @Service
 public class TjglServiceImpl implements TjglService {
 	@Resource
@@ -48,6 +55,12 @@ public class TjglServiceImpl implements TjglService {
 			return tjglDao.countUserRushAnswerScore(param);
 		}else if("10".equals(type)){//用户考试分数
 			return tjglDao.countUserExamScore(param);
+		}else if("11".equals(type)){//部门出题数量查询
+			return tjglDao.countDeptCtslCount(param);
+		}else if("12".equals(type)){//个人出题数量查询
+			return tjglDao.countUserCtslCount(param);
+		}else if("13".equals(type)){//题目纠错查询
+			return tjglDao.countTktmErrRecord(param);
 		}
 		return null;
 	}
@@ -65,6 +78,63 @@ public class TjglServiceImpl implements TjglService {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public String getGxtj(Map param) throws Exception {
+		// TODO Auto-generated method stub
+		String fileName = null;
+		if(param != null){
+			String type=(String) param.get("type");
+			ImportExcel importExcel = new ImportExcel();
+			Map beans=new HashMap();
+			List gxtj=new ArrayList();
+			String templateFile = null;
+			if("0".equals(type)){
+				templateFile = "BmCtGxz";
+			}else if("1".equals(type)){
+				templateFile = "GrCtGxz";
+			}else if("2".equals(type)){
+				templateFile = "BmZsdGxz";
+			}else if("3".equals(type)){
+				templateFile = "GrZsydGxz";
+			}else if("4".equals(type)){
+				templateFile = "BmBdzs";
+			}else if("5".equals(type)){
+				templateFile = "GrBdzs";
+			}else if("6".equals(type)){
+				templateFile = "TmBdzs";
+			}else if("7".equals(type)){
+				templateFile = "YhDtsl";
+			}else if("8".equals(type)){
+				templateFile = "YhDtdf";
+			}else if("9".equals(type)){
+				templateFile = "YhQdDtdf";
+			}else if("10".equals(type)){
+				templateFile = "YhKsfs";
+			}else if("11".equals(type)){
+				templateFile = "BmCtSlCx";
+			}else if("12".equals(type)){
+				templateFile = "GrCtSlCx";
+			}else if("13".equals(type)){
+				templateFile = "TmJcCx";
+			}
+			gxtj = this.countGxjl(param);
+			beans.put("gxtj", gxtj);
+			fileName=importExcel.importExcel(beans, templateFile);
+		}
+		return fileName;
+	}
+
+	@Override
+	public List getExamInfo() {
+		// TODO Auto-generated method stub
+		return tjglDao.getExamInfo();
+	}
+
+	@Override
+	public List getCurrentDeptQjById(String id) {
+		// TODO Auto-generated method stub
+		return tjglDao.getCurrentDeptQjById(id);
+	}
 	
 }

@@ -42,11 +42,20 @@
   </Model>
   <View>
     <DataSet id="deptDataSet">
+      <ClientEvent name="onReady">var data = view.get(&quot;#dsUserName&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	if(data.get(&quot;rolename&quot;) != &quot;SuAdmin&quot;){&#xD;
+		view.get(&quot;#deptDataSet&quot;).set(&quot;parameter&quot;,{id:data.get(&quot;deptid&quot;)});&#xD;
+	}&#xD;
+}</ClientEvent>
       <Property name="dataType">[deptType]</Property>
       <Property name="dataProvider">qzBmCdglController#getDeptRoot</Property>
     </DataSet>
     <DataSet id="addNodeDataSet">
       <Property name="dataType">[deptType]</Property>
+    </DataSet>
+    <DataSet id="dsUserName">
+      <Property name="dataProvider">yxtkglController#getLoginUserInfo</Property>
     </DataSet>
     <SplitPanel>
       <Property name="position">16%</Property>
