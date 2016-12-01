@@ -580,4 +580,17 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		this.jdbcTemplate.update(sql, new Object[]{jlid});
 	}
 
+	@Override
+	public void updateTsxxInfo(Map param) {
+		// TODO Auto-generated method stub
+		Integer groupId = (Integer) param.get("groupId");
+		String ms = (String) param.get("ms");
+		Integer jlid = (Integer) param.get("jlid");
+			
+		String sql = "update zsdtsjl set ms=? where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{ ms, jlid });
+		sql = "update zsktsqz set group_id = ? where tsjlid=?";
+		this.jdbcTemplate.update(sql, new Object[]{ groupId, jlid });
+	}
+
 }

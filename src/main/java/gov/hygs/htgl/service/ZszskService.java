@@ -43,5 +43,7 @@ public interface ZszskService {
 	public void updateZsdtsDetailInfo(Map<String, Object> param);
 
 	public void deleteZsdtsInfo(String jlid);
+
+	public void updateTsxxInfo(Map param);
 	
 }

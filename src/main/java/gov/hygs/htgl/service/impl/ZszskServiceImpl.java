@@ -198,4 +198,10 @@ public class ZszskServiceImpl implements ZszskService {
 		zszskDao.deleteZsdtsInfo(jlid);
 	}
 
+	@Override
+	public void updateTsxxInfo(Map param) {
+		// TODO Auto-generated method stub
+		zszskDao.updateTsxxInfo(param);
+	}
+
 }

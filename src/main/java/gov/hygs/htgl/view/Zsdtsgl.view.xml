@@ -454,6 +454,30 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
             <Property name="caption">修改推送信息</Property>
             <Buttons>
               <Button>
+                <ClientEvent name="onClick">var condition = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
+&#xD;
+if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
+	condition.set({groupId:null});&#xD;
+	condition.set({groupname:null});&#xD;
+}&#xD;
+view.get(&quot;#tsxxUpdateAction&quot;).set(&quot;parameter&quot;,{&#xD;
+	//&quot;id&quot;:id,&#xD;
+	&quot;jlid&quot;:condition.get(&quot;jlid&quot;),&#xD;
+	&quot;tsrq&quot;:condition.get(&quot;tsrq&quot;),&#xD;
+	&quot;ms&quot;:condition.get(&quot;ms&quot;),&#xD;
+	&quot;groupId&quot;:condition.get(&quot;groupId&quot;),&#xD;
+	&quot;groupname&quot;:condition.get(&quot;groupname&quot;)&#xD;
+});&#xD;
+&#xD;
+view.get(&quot;#tsxxUpdateAction&quot;).execute(function(){&#xD;
+	//view.get(&quot;#updateTsxxDialog&quot;).close();&#xD;
+	view.get(&quot;#updateDialog&quot;).close();&#xD;
+	//view.get(&quot;#dsTsxx&quot;).flush();&#xD;
+});</ClientEvent>
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
+              <Button>
                 <ClientEvent name="onClick">var data = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
 	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;jlid&quot;)});&#xD;
@@ -955,6 +979,9 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
       </AjaxAction>
       <AjaxAction id="deleteAction">
         <Property name="service">zszskController#deleteZsdtsInfo</Property>
+      </AjaxAction>
+      <AjaxAction id="tsxxUpdateAction">
+        <Property name="service">zszskController#updateTsxxInfo</Property>
       </AjaxAction>
     </Container>
     <Container>
