@@ -186,6 +186,10 @@ if(arg.value &lt; 7 || arg.value >10){&#xD;
 		view.get(&quot;#examtitle&quot;).set(&quot;visible&quot;,true);&#xD;
 		//view.get(&quot;#examTimeMessage&quot;).set(&quot;visible&quot;,true);&#xD;
 		//view.get(&quot;#examTimeMessage&quot;).set(&quot;text&quot;,&quot;考试时间：0秒&quot;);&#xD;
+		view.get(&quot;#begin&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#end&quot;).set(&quot;visible&quot;,false);&#xD;
+		view.get(&quot;#tkfl&quot;).set(&quot;visible&quot;,false);&#xD;
+		//view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set(&quot;title&quot;,&quot;&quot;);&#xD;
 	}&#xD;
 }&#xD;
 &#xD;
@@ -749,6 +753,14 @@ if(type &lt; 7 || type > 10){&#xD;
 	view.get(&quot;#dsResult&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 	view.get(&quot;#dsResult&quot;).flush();&#xD;
 }else{&#xD;
+	if(type == 10){&#xD;
+		//alert(view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).get(&quot;title&quot;));&#xD;
+		if(title == null){&#xD;
+			view.get(&quot;#dsScore&quot;).clear();&#xD;
+			dorado.MessageBox.alert(&quot;请选择考试名称！&quot;);&#xD;
+			return;&#xD;
+		}&#xD;
+	}&#xD;
 	view.get(&quot;#dsScore&quot;).set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 	view.get(&quot;#dsScore&quot;).flush();&#xD;
 }&#xD;
@@ -830,6 +842,7 @@ ajaxActionExport.execute(function(fileName){&#xD;
                       <Property name="hideMode">display</Property>
                       <Property name="trigger">clearTitleTrigger,examDropDown</Property>
                       <Property name="visible">false</Property>
+                      <Property name="editable">false</Property>
                       <Editor/>
                     </AutoFormElement>
                   </AutoForm>

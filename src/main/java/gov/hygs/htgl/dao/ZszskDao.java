@@ -63,4 +63,6 @@ public interface ZszskDao {
 
 	public void deleteZsdtsInfo(String jlid);
 
+	public void updateTsxxInfo(Map param);
+
 }

@@ -202,10 +202,18 @@
       <PropertyDef name="begin">
         <Property name="dataType">DateTime</Property>
         <Property name="label">考试时间起</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试开始时间！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="end">
         <Property name="dataType">DateTime</Property>
         <Property name="label">考试时间止</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试结束时间！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="tsrq">
         <Property name="dataType">Date</Property>
@@ -217,9 +225,17 @@
       <PropertyDef name="groupId"/>
       <PropertyDef name="groupname">
         <Property name="label">群组名称</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择群组信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="title">
         <Property name="label">考试主题</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写考试主题！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="type">
         <Property name="mapping">
@@ -237,10 +253,18 @@
           </Property>
         </Property>
         <Property name="label">考试类型</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试类型！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="examtime">
         <Property name="dataType">Integer</Property>
         <Property name="label">考试时间(秒)</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage"> 请填写考试时间！</Property>
+        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="groupType">
@@ -251,6 +275,10 @@
       <PropertyDef name="groupName">
         <Property></Property>
         <Property name="label">群组名称</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择群组信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="ms">
         <Property></Property>
@@ -269,14 +297,26 @@
       <PropertyDef name="startTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">开始时间</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试开始时间！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="endTime">
         <Property name="dataType">DateTime</Property>
         <Property name="label">结束时间</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试结束时间！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">考试主题</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写考试主题！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="examType">
         <Property></Property>
@@ -295,6 +335,10 @@
           </Property>
         </Property>
         <Property name="label">考试类型</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择考试类型！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="fqrId">
         <Property name="dataType">Integer</Property>
@@ -317,6 +361,10 @@
       <PropertyDef name="examTime">
         <Property name="dataType">Integer</Property>
         <Property name="label">考试时间(秒)</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage"> 请填写考试时间！</Property>
+        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="fqrType">
@@ -639,14 +687,17 @@ if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
 	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
+/*&#xD;
 if(condition.get(&quot;type&quot;) == undefined){&#xD;
 	throw new dorado.Exception(&quot;请选择考试类型！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-&#xD;
-&#xD;
-view.get(&quot;#optDialog&quot;).show();&#xD;
-</ClientEvent>
+*/&#xD;
+if(view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).validate() == &quot;ok&quot;){&#xD;
+	view.get(&quot;#optDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+}</ClientEvent>
                 <Property name="caption">选择推送</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -80px -60px</Property>
               </Button>
@@ -659,11 +710,17 @@ if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
 	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
+/*&#xD;
 if(type == undefined){&#xD;
 	throw new dorado.Exception(&quot;请选择考试类型！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-view.get(&quot;#sjtsflDialog&quot;).show();&#xD;
+*/&#xD;
+if(view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).validate() == &quot;ok&quot;){&#xD;
+	view.get(&quot;#sjtsflDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+}&#xD;
 </ClientEvent>
                 <Property name="caption">随机推送</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
@@ -789,7 +846,6 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#tktmDialog&quot;).close();&#xD;
-&#xD;
 </ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
@@ -1289,7 +1345,11 @@ view.get(&quot;#tktmDialog&quot;).show();&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">view.get(&quot;#sjtsflDialog&quot;).hide();&#xD;
-</ClientEvent>
+var select = view.get(&quot;#sjtsDataGrid.selection&quot;);&#xD;
+if(select != &quot;&quot; &amp;&amp; select != undefined){&#xD;
+	view.get(&quot;#sjtsDataGrid&quot;).unselectAll();&#xD;
+}&#xD;
+view.get(&quot;#dsTkfl&quot;).flushAsync();</ClientEvent>
                 <Property name="caption">取消</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
               </Button>
@@ -1342,6 +1402,12 @@ view.get(&quot;#tktmDialog&quot;).show();&#xD;
 var condition = view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;);&#xD;
 if(condition.get(&quot;group&quot;).get(&quot;groupName&quot;) == &quot;&quot; || condition.get(&quot;group&quot;).get(&quot;groupName&quot;) == undefined){&#xD;
 	condition.set({groupId:null});&#xD;
+}&#xD;
+if(condition != undefined){&#xD;
+	if(condition.validate() != &quot;ok&quot; || condition.get(&quot;group.groupName&quot;) == null){		&#xD;
+		dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+		return;&#xD;
+	}&#xD;
 }&#xD;
 view.get(&quot;#examUpdateAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;examid&quot;:condition.get(&quot;id&quot;),&#xD;
@@ -1399,11 +1465,14 @@ if(condition.get(&quot;examType&quot;) == undefined){&#xD;
 &#xD;
 var data = view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;);&#xD;
 if(data != undefined){&#xD;
-	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;id&quot;)});&#xD;
-	view.get(&quot;#updateDetailDialog&quot;).show();&#xD;
-	view.get(&quot;#dsDetail&quot;).flushAsync();&#xD;
+	if(data.validate() == &quot;ok&quot; &amp;&amp; data.get(&quot;group.groupName&quot;) != null){&#xD;
+		view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;id&quot;)});&#xD;
+		view.get(&quot;#updateDetailDialog&quot;).show();&#xD;
+		view.get(&quot;#dsDetail&quot;).flushAsync();&#xD;
+	}else{&#xD;
+		dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+	}&#xD;
 }&#xD;
-&#xD;
 </ClientEvent>
                 <Property name="caption">修改推送题目</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
@@ -2250,7 +2319,10 @@ entity.each(function(e){&#xD;
 dropDown.close(&#xD;
 	group&#xD;
 );&#xD;
-view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientEvent>
+view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;).set({groupId:id});&#xD;
+if(id == &quot;&quot;){&#xD;
+	view.get(&quot;#dsExam&quot;).getData(&quot;#&quot;).get(&quot;group&quot;).set({groupName:null});&#xD;
+}</ClientEvent>
                   <Property name="caption">确定</Property>
                 </Button>
                 <Button>
