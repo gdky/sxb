@@ -176,7 +176,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 					sql.append(" ,d.dept_name) ");
 					sql.append("  as deptname, ");
 					sql.append(" u.user_name as username,cou from ( ");
-					sql.append("select a.dept_id as did,a.user_id uid ,round(sum(a.gxz,1)) as cou from zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_");
+					sql.append("select a.dept_id as did,a.user_id uid ,round(sum(a.gxz),1) as cou from zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_");
 					if(deptid != null){
 						sql.append(" and a.dept_id in ( ");
 						if(deptid != 1){
