@@ -114,4 +114,10 @@ public class ZszskController {
 	public void deleteZsdtsInfo(String jlid){
 		zszskService.deleteZsdtsInfo(jlid);
 	}
+	
+	@Transactional
+	@Expose
+	public void updateTsxxInfo(Map param){
+		zszskService.updateTsxxInfo(param);
+	}
 }
