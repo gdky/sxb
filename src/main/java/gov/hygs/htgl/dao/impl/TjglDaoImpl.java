@@ -54,7 +54,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append("u.user_name as username,");
 		}
 		sql.append("cou from ");
-		sql.append("(select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou ");
+		sql.append("(select a.dept_id as did,a.user_id uid ,round(sum(a.gxz),1) as cou ");
 		sql.append("from tk_gxjl a , tktm b ");
 		sql.append("where a.tk_id=b.id_ ");
 		if(deptid != null){
@@ -112,7 +112,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		Date end = param == null ? null : (Date) param.get("end");
 		String content = param == null ? null : (String) param.get("content");
 		StringBuffer sql = new StringBuffer("select ifnull(");
-			sql.append("(select sum(b.gxz) from dept a, tk_gxjl b ");
+			sql.append("(select round(sum(b.gxz),1) from dept a, tk_gxjl b ");
 			sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) ");
 			sql.append("and a.id_=b.dept_id),0)");
 			sql.append("as cou, ");
@@ -176,7 +176,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 					sql.append(" ,d.dept_name) ");
 					sql.append("  as deptname, ");
 					sql.append(" u.user_name as username,cou from ( ");
-					sql.append("select a.dept_id as did,a.user_id uid ,sum(a.gxz) as cou from zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_");
+					sql.append("select a.dept_id as did,a.user_id uid ,round(sum(a.gxz,1)) as cou from zsk_gxjl a ,zsk_jl b where a.zsk_id=b.id_");
 					if(deptid != null){
 						sql.append(" and a.dept_id in ( ");
 						if(deptid != 1){
@@ -229,7 +229,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		Date end = param == null ? null : (Date) param.get("end");
 		String content = param == null ? null : (String) param.get("content");
 		
-		StringBuffer sql = new StringBuffer("select ifnull((select sum(b.gxz) from dept a, zsk_gxjl b ");
+		StringBuffer sql = new StringBuffer("select ifnull((select round(sum(b.gxz),1) from dept a, zsk_gxjl b ");
 				sql.append("where find_in_set(a.id_,queryChildrenAreaInfo(pt.id_)) and a.id_=b.dept_id),0)as cou,");
 				sql.append(" concat( ");
 				sql.append(" ifnull((select dept_name from dept where id_=pt.PARENT_ID),'') ");
@@ -484,7 +484,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
 			sql.append(" ,d.dept_name) ");
 			sql.append("  as dept, ");
-			sql.append(" u.user_name as user,sum(r.result_score) as answerScore ");
+			sql.append(" u.user_name as user,round(sum(r.result_score),1) as answerScore ");
 			sql.append(" from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_ ");
 			if(user != null){
 				sql.append(" and r.user_id in (select id_ from user where user_name like ? ");
@@ -538,7 +538,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
 			sql.append(" ,d.dept_name) ");
 			sql.append("  as dept, ");
-			sql.append(" u.user_name as user,sum(r.exam_score) as rushAnswerScore ");
+			sql.append(" u.user_name as user,round(sum(r.exam_score),1) as rushAnswerScore ");
 			sql.append(" from exam_user_result r, user u, dept d, exam_detail ed, exam e ");
 			sql.append(" where r.user_id = u.id_ and u.deptid=d.id_ and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ and e.exam_type='2' ");
 			if(user != null){
