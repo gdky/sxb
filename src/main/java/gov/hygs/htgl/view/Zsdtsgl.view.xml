@@ -10,12 +10,20 @@
       <PropertyDef name="ms">
         <Property></Property>
         <Property name="label">描述</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="groupId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
       <PropertyDef name="groupname">
         <Property name="label">群组名称</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请选择群组名称！</Property>
+        </Validator>
       </PropertyDef>
     </DataType>
     <DataType name="groupType">
@@ -139,10 +147,16 @@
         <Property name="label">推送日期</Property>
       </PropertyDef>
       <PropertyDef name="groupname">
-        <Property name="label">群组</Property>
+        <Property name="label">群组名称</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写群组名称！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="ms">
         <Property name="label">描述</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="jlid"/>
       <PropertyDef name="groupId"/>
@@ -273,14 +287,20 @@ view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).set({groupId:id});</ClientE
             <Property name="caption">推送信息</Property>
             <Buttons>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#otpZsdDialog&quot;).show();&#xD;
-</ClientEvent>
+                <ClientEvent name="onClick">if(view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).validate() == &quot;ok&quot;){&#xD;
+	view.get(&quot;#otpZsdDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+}</ClientEvent>
                 <Property name="caption">选择推送</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -80px -60px</Property>
               </Button>
               <Button>
-                <ClientEvent name="onClick">view.get(&quot;#zskDialog&quot;).show();&#xD;
-</ClientEvent>
+                <ClientEvent name="onClick">if(view.get(&quot;#dsZsdtsjlInfo&quot;).getData(&quot;#&quot;).validate() == &quot;ok&quot;){&#xD;
+	view.get(&quot;#zskDialog&quot;).show();&#xD;
+}else{&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+}</ClientEvent>
                 <Property name="caption">随机推送</Property>
                 <Property name="icon">url(>skin>common/icons.gif) -100px -60px</Property>
               </Button>
@@ -454,8 +474,11 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
             <Property name="caption">修改推送信息</Property>
             <Buttons>
               <Button>
-                <ClientEvent name="onClick">var condition = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
-&#xD;
+                <ClientEvent name="onClick">if(view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).validate() != &quot;ok&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
+var condition = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
 if(condition.get(&quot;groupname&quot;) == &quot;&quot; || condition.get(&quot;groupname&quot;) == undefined){&#xD;
 	condition.set({groupId:null});&#xD;
 	condition.set({groupname:null});&#xD;
@@ -479,6 +502,10 @@ view.get(&quot;#tsxxUpdateAction&quot;).execute(function(){&#xD;
               </Button>
               <Button>
                 <ClientEvent name="onClick">var data = view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;);&#xD;
+if(view.get(&quot;#dsTsxx&quot;).getData(&quot;#&quot;).validate() != &quot;ok&quot;){&#xD;
+	dorado.MessageBox.alert(&quot;请正确填写信息！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 if(data != undefined){&#xD;
 	view.get(&quot;#dsDetail&quot;).set(&quot;parameter&quot;,{&quot;id&quot;:data.get(&quot;jlid&quot;)});&#xD;
 	view.get(&quot;#updateTsxxDialog&quot;).show();&#xD;
