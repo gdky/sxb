@@ -464,7 +464,7 @@ view.get(&quot;#dsRole&quot;).getData().setCurrent(entity)&#xD;
 var begin = entity.get(&quot;begin&quot;);&#xD;
 var end = entity.get(&quot;end&quot;);&#xD;
 if(end &lt; begin &amp;&amp; end != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 }&#xD;
 view.get(&quot;#dsUser&quot;).set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
 view.get(&quot;#dsUser&quot;).flush();&#xD;

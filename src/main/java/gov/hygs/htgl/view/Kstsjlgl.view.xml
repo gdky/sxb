@@ -221,6 +221,10 @@
       <PropertyDef name="ms">
         <Property></Property>
         <Property name="label">描述</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="groupId"/>
       <PropertyDef name="groupname">
@@ -357,6 +361,10 @@
       <PropertyDef name="remark">
         <Property></Property>
         <Property name="label">描述</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage"> 请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="examTime">
         <Property name="dataType">Integer</Property>
@@ -684,7 +692,7 @@ dsTktmShow.set(&quot;parameter&quot;,{&#xD;
 })&#xD;
 dsTktmShow.flushAsync();&#xD;
 if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 /*&#xD;
@@ -707,7 +715,7 @@ var beginTime = condition.get(&quot;begin&quot;);&#xD;
 var endTime = condition.get(&quot;end&quot;);&#xD;
 var type = condition.get(&quot;type&quot;);&#xD;
 if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 /*&#xD;
@@ -1409,6 +1417,11 @@ if(condition != undefined){&#xD;
 		return;&#xD;
 	}&#xD;
 }&#xD;
+&#xD;
+if(condition.get(&quot;endTime&quot;) &lt; condition.get(&quot;startTime&quot;) &amp;&amp; condition.get(&quot;endTime&quot;) != null){&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
+	return;&#xD;
+}&#xD;
 view.get(&quot;#examUpdateAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;examid&quot;:condition.get(&quot;id&quot;),&#xD;
 	&quot;fqrid&quot;:condition.get(&quot;fqrId&quot;),&#xD;
@@ -1455,7 +1468,7 @@ dsTktmShow.set(&quot;parameter&quot;,{&#xD;
 })&#xD;
 dsTktmShow.flushAsync();&#xD;
 if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
 if(condition.get(&quot;examType&quot;) == undefined){&#xD;
@@ -1906,7 +1919,7 @@ var user = entity.get(&quot;user&quot;);&#xD;
 var begin = entity.get(&quot;begin&quot;);&#xD;
 var end = entity.get(&quot;end&quot;);&#xD;
 if(end &lt; begin &amp;&amp; end != null){&#xD;
-	throw new dorado.Exception(&quot;起始日期不能小于终止日期！&quot;);&#xD;
+	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 }&#xD;
 if(dept == &quot;&quot;){&#xD;
 	//view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({&#xD;
