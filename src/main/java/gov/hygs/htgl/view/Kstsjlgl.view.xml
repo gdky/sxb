@@ -221,6 +221,10 @@
       <PropertyDef name="ms">
         <Property></Property>
         <Property name="label">描述</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="groupId"/>
       <PropertyDef name="groupname">
@@ -357,6 +361,10 @@
       <PropertyDef name="remark">
         <Property></Property>
         <Property name="label">描述</Property>
+        <Property name="required">true</Property>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage"> 请填写描述信息！</Property>
+        </Validator>
       </PropertyDef>
       <PropertyDef name="examTime">
         <Property name="dataType">Integer</Property>
