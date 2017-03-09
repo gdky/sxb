@@ -487,7 +487,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 			sql.append(" u.user_name as user,round(sum(r.result_score),1) as answerScore ");
 			sql.append(" from user_result r,user u,dept d where r.user_id = u.id_ and u.deptid=d.id_ ");
 			if(user != null){
-				sql.append(" and r.user_id in (select id_ from user where user_name like ? ");
+				sql.append(" and r.user_id in (select id_ from user where user_name like ?) ");
 				args.add("%"+user+"%");
 			}
 			if(deptid != null){
