@@ -658,7 +658,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List getCurrentDeptQjById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select id_,dept_name,PARENT_ID parentId,ms from dept t where t.parent_id=? and dept_name like '%灞�'";
+		String sql = "select id_,dept_name,PARENT_ID parentId,ms from dept t where t.parent_id=? and dept_name like '%局'";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{ id });
 		return list;
 	}
@@ -666,7 +666,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List countDeptCtslCount(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		//System.out.println("閮ㄩ棬鍑洪鏁伴噺鏌ヨ");
+		//System.out.println("部门出题数量查询");
 		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
@@ -723,7 +723,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List countUserCtslCount(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		//System.out.println("涓汉鍑洪鏁伴噺鏌ヨ");
+		//System.out.println("个人出题数量查询");
 		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
