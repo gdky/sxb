@@ -589,12 +589,22 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 		Date end = (Date) param.get("end");
 		String title = (String) param.get("title");
 		String tkfl = (String) param.get("tkfl");
-		StringBuffer sql = new StringBuffer("select e.title,");
+		StringBuffer sql = new StringBuffer("select t.title, ");
+		sql.append(" t.dept, ");
+		sql.append(" t.user,  ");
+		sql.append(" round(if(t.examTime >= t.exam_time,t.userScore,0),1) as examScore, ");
+		sql.append(" t.examTime ");
+		sql.append(" from ( ");
+			sql.append(" select e.title, ");
 			sql.append(" concat( ");
 			sql.append(" ifnull((select dept_name from dept where id_=d.PARENT_ID),'') ");
 			sql.append(" ,d.dept_name) ");
 			sql.append("  as dept, ");	
-			sql.append(" u.user_name as user,round(sum(if(r.exam_time >= e.exam_time,r.exam_score,0)),1) as examScore, sum(r.EXAM_TIME) as examTime ");
+			//sql.append(" u.user_name as user,round(sum(if(r.exam_time >= e.exam_time,r.exam_score,0)),1) as examScore, sum(r.EXAM_TIME) as examTime ");
+			sql.append(" u.user_name as user, ");
+			sql.append(" e.exam_time, ");
+			sql.append(" sum(r.exam_score) userScore, ");
+			sql.append(" sum(r.EXAM_TIME) as examTime ");
 			sql.append(" from exam_user_result r,user u,dept d,exam e,exam_detail ed where r.user_id = u.id_ and u.deptid=d.id_ ");
 			sql.append(" and r.exam_detail_id = ed.id_ and ed.exam_id = e.id_ "); 
 			if(user != null){
@@ -628,6 +638,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 				args.add("%"+tkfl+"%");
 			}
 			sql.append(" group by r.user_id,e.id_ order by e.title ");
+			sql.append(" )t ");
 		List list = null;
 		if(args.isEmpty()){
 			list = this.jdbcTemplate.queryForList(sql.toString());
@@ -647,7 +658,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List getCurrentDeptQjById(String id) {
 		// TODO Auto-generated method stub
-		String sql = "select id_,dept_name,PARENT_ID parentId,ms from dept t where t.parent_id=? and dept_name like '%局'";
+		String sql = "select id_,dept_name,PARENT_ID parentId,ms from dept t where t.parent_id=? and dept_name like '%灞�'";
 		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql, new Object[]{ id });
 		return list;
 	}
@@ -655,7 +666,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List countDeptCtslCount(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		//System.out.println("部门出题数量查询");
+		//System.out.println("閮ㄩ棬鍑洪鏁伴噺鏌ヨ");
 		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = param == null ? null : (Integer) param.get("deptid");
@@ -712,7 +723,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List countUserCtslCount(Map<String, Object> param) {
 		// TODO Auto-generated method stub
-		//System.out.println("个人出题数量查询");
+		//System.out.println("涓汉鍑洪鏁伴噺鏌ヨ");
 		List<Object> args = new ArrayList<Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer deptid = (Integer) param.get("deptid");
