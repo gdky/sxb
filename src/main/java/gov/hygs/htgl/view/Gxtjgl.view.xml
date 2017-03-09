@@ -771,7 +771,8 @@ if(type &lt; 7 || type > 10){&#xD;
                 </Button>
                 <Button>
                   <ClientEvent name="onClick">var ajaxActionExport =view.get(&quot;#ajaxActionExport&quot;);&#xD;
-ajaxActionExport.set(&quot;parameter&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;));&#xD;
+view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;).set(&quot;type&quot;,view.get(&quot;#conditionForm&quot;).get(&quot;entity.type&quot;));&#xD;
+ajaxActionExport.set(&quot;parameter&quot;,view.get(&quot;#detailCondtionForm&quot;).get(&quot;entity&quot;));&#xD;
 ajaxActionExport.execute(function(fileName){&#xD;
 	window.open($url(&quot;>/dorado/ysyk/ysykffqktjbg.display?fileName=&quot;+fileName),&quot;_self&quot;);&#xD;
 });&#xD;
