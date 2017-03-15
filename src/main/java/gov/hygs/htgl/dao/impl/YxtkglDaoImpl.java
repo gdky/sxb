@@ -596,7 +596,7 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 	@Override
 	public boolean chackTktmExistOrNot(String tktmContent) {
 		// TODO Auto-generated method stub
-		String sql = "select if(count(*),1,0) from tktm where content=?";
+		String sql = "select if(count(*),1,0) from tktm where content=? and yxbz='Y'";
 		int record = this.jdbcTemplate.queryForObject(sql,
 				new Object[] { tktmContent }, Integer.class);
 		return record == 0 ? true : false;
@@ -655,6 +655,26 @@ public class YxtkglDaoImpl extends BaseJdbcDao implements YxtkglDao {
 			}
 		}
 
+	}
+
+	@Override
+	public String chackIsImportOrNot(String tktmContent) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),t.ID_,'0') from tktm t where t.content=? and t.yxbz = 'N'";
+		String record = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tktmContent }, String.class);
+		return record;
+	}
+
+	@Override
+	public void deleteRecord(String tktmContentId) {
+		// TODO Auto-generated method stub
+		String sql = "delete from tktm where id_ = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
+		sql = "delete from tkxzx where tk_id = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
+		sql = "delete from tkda where tk_id = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
 	}
 
 	
