@@ -204,6 +204,8 @@ public class YxtkglServiceImpl implements YxtkglService {
 			} else {
 				if (tkcj.getTktmContent() != null) {
 					if (yxtkglDao.chackTktmExistOrNot(tkcj.getTktmContent()) && contentChack.get(tkcj.getTktmContent()) == null) {
+						String tktmContentId = yxtkglDao.chackIsImportOrNot(tkcj.getTktmContent());
+						
 						contentChack.put(tkcj.getTktmContent(), tkcj.getTktmContent());
 						Tktm tktm = new Tktm();
 						tktm.setDrbz("Y");
@@ -291,13 +293,36 @@ public class YxtkglServiceImpl implements YxtkglService {
 						}
 						tktm.setMode(mode);
 						tktm.setCreateDate(new Date());
-						String tktmid = this.getUUID();
+						String tktmid = null;
+						if(!"0".equals(tktmContentId)){
+							tktmid = tktmContentId;
+						}else{
+							tktmid = this.getUUID();
+						}
 						tktm.setId(tktmid);
-
 						//yxtkglDao.addYxtk(tktm);
 						//yxtkglDao.addGrDeptGxJl(tktm);
 						tktms.add(tktm);
-
+						
+						if(!"0".equals(tktmContentId)){
+							yxtkglDao.deleteRecord(tktmContentId);
+							tkcj.setErrMassage("该题目为经过删除操作题目，请重新录入该题目的选择项与答案!");
+							errMassage.add(tkcj);
+							//不需要记录答案与选择项,如果需要记录答案与选项下列代码删除至continue即可
+							if("1".equals(mode) || "2".equals(mode)){
+								String[] xzx = {"A","B","C","D","E"};
+								for(int i = 0; i < xzx.length; i++){
+									Tkxzx xz = new Tkxzx();
+									xz.setId(this.getUUID());
+									xz.setTkId(tktmid);
+									xz.setXzKey(xzx[i]);
+									tkxzxs.add(xz);
+								}
+							}
+							continue;
+						}
+							
+						
 						if ("0".equals(mode)) {
 							// 判断题
 							Tkxzx da = new Tkxzx();
@@ -311,7 +336,6 @@ public class YxtkglServiceImpl implements YxtkglService {
 
 							//yxtkglDao.addYxtkda(da);
 							tkdas.add(da);
-
 						} else if ("1".equals(mode) || "2".equals(mode)) {
 							// 单选题 或 多选题
 							int len = xzxFields.size();
@@ -334,12 +358,10 @@ public class YxtkglServiceImpl implements YxtkglService {
 
 									//yxtkglDao.addYxtkda(da);
 									tkdas.add(da);
-
 								}
 
 								//yxtkglDao.addYxtkxzx(xz);
 								tkxzxs.add(xz);
-
 							}
 						}
 						//yxtkglDao.batchInsertTk(tktms, tkxzxs, tkdas);
