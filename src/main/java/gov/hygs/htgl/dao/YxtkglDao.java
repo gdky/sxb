@@ -70,4 +70,8 @@ public interface YxtkglDao {
 	public List<Map<String, Object>> getUserIdByDeptIdAndTheyName(
 			String userName, String deptName);
 
+	public String chackIsImportOrNot(String tktmContent);
+
+	public void deleteRecord(String tktmContentId);
+
 }
