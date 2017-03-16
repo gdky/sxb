@@ -306,7 +306,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 						
 						if(!"0".equals(tktmContentId)){
 							yxtkglDao.deleteRecord(tktmContentId);
-							tkcj.setErrMassage("该题目为经过删除操作题目，请重新录入该题目的选择项与答案!");
+							/*tkcj.setErrMassage("该题目为经过删除操作题目，请重新录入该题目的选择项与答案!");
 							errMassage.add(tkcj);
 							//不需要记录答案与选择项,如果需要记录答案与选项下列代码删除至continue即可
 							if("1".equals(mode) || "2".equals(mode)){
@@ -319,7 +319,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 									tkxzxs.add(xz);
 								}
 							}
-							continue;
+							continue;*/
 						}
 							
 						
