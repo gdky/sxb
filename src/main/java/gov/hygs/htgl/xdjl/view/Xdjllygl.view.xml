@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="zsklyType">
+      <Property name="creationType">gov.hygs.htgl.xdjl.entity.Xdjlly</Property>
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="title">
+        <Property></Property>
+        <Property name="label">题目</Property>
+      </PropertyDef>
+      <PropertyDef name="content">
+        <Property></Property>
+        <Property name="label">内容</Property>
+      </PropertyDef>
+      <PropertyDef name="attachment">
+        <Property></Property>
+        <Property name="label">附件</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsZskly">
+      <Property name="dataType">[zsklyType]</Property>
+      <Property name="dataProvider">zsxdjlController#getZsklyInfo</Property>
+    </DataSet>
+    <Container id="actions">
+      <UpdateAction id="updateAction">
+        <Property name="dataResolver">zsxdjlController#updateZskly</Property>
+        <UpdateItem>
+          <Property name="dataSet">dsZskly</Property>
+        </UpdateItem>
+      </UpdateAction>
+      <UploadAction id="uploadAttachmentAction">
+        <ClientEvent name="onFilesAdded">var id = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;id&quot;); &#xD;
+if(id == undefined){&#xD;
+	id = 0;&#xD;
+}&#xD;
+self.set(&quot;parameter&quot;,{&#xD;
+	id:id&#xD;
+})&#xD;
+</ClientEvent>
+        <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;);&#xD;
+var returnValue = arg.returnValue;&#xD;
+view.get(&quot;#attachment&quot;).set(&quot;text&quot;,returnValue);&#xD;
+/*&#xD;
+if(!returnValue){&#xD;
+	view.get(&quot;#attachment&quot;).set(&quot;text&quot;,returnValue);&#xD;
+	//view.get(&quot;#dsZskly&quot;).flushAsync();&#xD;
+}else{&#xD;
+	view.get(&quot;#attachment&quot;).set(&quot;text&quot;,returnValue);&#xD;
+}&#xD;
+*/</ClientEvent>
+        <Property name="maxFileSize">10MB</Property>
+        <Property name="fileResolver">zsxdjlController#importAttachment</Property>
+        <Filters/>
+      </UploadAction>
+      <UploadAction id="uploadImmediately">
+        <ClientEvent name="onFilesAdded">self.set(&quot;parameter&quot;,{&#xD;
+	id: view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;id&quot;)&#xD;
+})</ClientEvent>
+        <ClientEvent name="onFileUploaded">dorado.MessageBox.alert(&quot;上传成功！&quot;);&#xD;
+view.get(&quot;#dsZskly&quot;).flushAsync();</ClientEvent>
+        <Property name="fileResolver">zsxdjlController#importAttachmentImmediately</Property>
+        <Filters/>
+      </UploadAction>
+      <AjaxAction id="cancelUploadAction">
+        <Property name="service">zsxdjlController#cancelUploadAttachmentFile</Property>
+      </AjaxAction>
+    </Container>
+    <Container>
+      <Dialog id="dialog">
+        <Property name="width">500</Property>
+        <Buttons/>
+        <Children>
+          <GroupBox>
+            <Property name="caption">知识库来源信息</Property>
+            <Buttons>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+	view.get(&quot;#dsZskly&quot;).flush();&#xD;
+});&#xD;
+</ClientEvent>
+                <Property name="caption">提交</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -20px -0px</Property>
+              </Button>
+              <Button>
+                <ClientEvent name="onClick">view.get(&quot;#cancelUploadAction&quot;).set(&quot;parameter&quot;,view.get(&quot;#attachment&quot;).get(&quot;text&quot;));&#xD;
+view.get(&quot;#cancelUploadAction&quot;).execute(function(){&#xD;
+	view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).cancel();&#xD;
+	view.get(&quot;#attachment&quot;).set(&quot;text&quot;,view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;attachment&quot;));&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+});&#xD;
+/*&#xD;
+var id = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;id&quot;);&#xD;
+if(id == undefined){&#xD;
+	view.get(&quot;#cancelUploadAction&quot;).set(&quot;parameter&quot;,view.get(&quot;#attachment&quot;).get(&quot;text&quot;));&#xD;
+	view.get(&quot;#cancelUploadAction&quot;).execute(function(){&#xD;
+		view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).cancel();&#xD;
+		view.get(&quot;#dialog&quot;).close();&#xD;
+	});&#xD;
+}else{&#xD;
+	view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).cancel();&#xD;
+	view.get(&quot;#dialog&quot;).close();&#xD;
+}&#xD;
+*/</ClientEvent>
+                <Property name="caption">取消</Property>
+                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
+              </Button>
+            </Buttons>
+            <Children>
+              <AutoForm>
+                <Property name="dataSet">dsZskly</Property>
+                <Property name="cols">*</Property>
+                <AutoFormElement>
+                  <Property name="name">title</Property>
+                  <Property name="property">title</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">content</Property>
+                  <Property name="property">content</Property>
+                  <Editor>
+                    <TextArea/>
+                  </Editor>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">attachment</Property>
+                  <Property name="property">attachment</Property>
+                  <Editor>
+                    <ToolBar>
+                      <TextEditor id="attachment">
+                        <Property name="dataSet">dsZskly</Property>
+                        <Property name="property">attachment</Property>
+                        <Property name="editable">false</Property>
+                      </TextEditor>
+                      <Button>
+                        <Property name="caption">上传</Property>
+                        <Property name="action">uploadAttachmentAction</Property>
+                        <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+                      </Button>
+                    </ToolBar>
+                  </Editor>
+                </AutoFormElement>
+              </AutoForm>
+            </Children>
+          </GroupBox>
+        </Children>
+        <Tools/>
+      </Dialog>
+      <GroupBox>
+        <Property name="caption">知识库来源信息</Property>
+        <Buttons/>
+        <Children>
+          <ToolBar>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dsZskly&quot;).insert();	&#xD;
+view.get(&quot;#dialog&quot;).show();</ClientEvent>
+              <Property name="caption">增加</Property>
+              <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">var data = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
+if(data != undefined){&#xD;
+	dorado.MessageBox.confirm(&quot;真的要删除当前节点数据？&quot;,function(){&#xD;
+		data.remove();&#xD;
+		view.get(&quot;#updateAction&quot;).execute();&#xD;
+	});&#xD;
+}</ClientEvent>
+              <Property name="caption">删除</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">view.get(&quot;#dialog&quot;).show();&#xD;
+</ClientEvent>
+              <Property name="caption">修改</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -200px -0px</Property>
+            </Button>
+            <Button>
+              <Property name="caption">上传附件</Property>
+              <Property name="action">uploadImmediately</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -120px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">&#xD;
+var attachment = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;).get(&quot;attachment&quot;);&#xD;
+window.open ('dorado/ndp/res/'+attachment) ;</ClientEvent>
+              <Property name="caption">下载附件</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -160px -120px</Property>
+            </Button>
+          </ToolBar>
+          <AutoForm>
+            <Property name="dataSet">dsZskly</Property>
+            <Property name="cols">*</Property>
+            <Property name="readOnly">true</Property>
+            <AutoFormElement>
+              <Property name="name">title</Property>
+              <Property name="property">title</Property>
+              <Editor/>
+            </AutoFormElement>
+            <AutoFormElement>
+              <Property name="name">content</Property>
+              <Property name="property">content</Property>
+              <Editor>
+                <TextArea/>
+              </Editor>
+            </AutoFormElement>
+          </AutoForm>
+        </Children>
+      </GroupBox>
+      <GroupBox>
+        <Property name="caption">知识库来源信息表</Property>
+        <Buttons/>
+        <Children>
+          <DataGrid>
+            <Property name="dataSet">dsZskly</Property>
+            <Property name="readOnly">true</Property>
+            <DataColumn name="title">
+              <Property name="property">title</Property>
+            </DataColumn>
+            <DataColumn name="content">
+              <Property name="property">content</Property>
+            </DataColumn>
+            <DataColumn name="attachment">
+              <Property name="property">attachment</Property>
+            </DataColumn>
+          </DataGrid>
+        </Children>
+      </GroupBox>
+    </Container>
+  </View>
+</ViewConfig>
