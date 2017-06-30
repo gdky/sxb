@@ -4,7 +4,7 @@
   <Context/>
   <Model>
     <DataType name="zszskType">
-      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
+      <Property name="creationType">gov.hygs.htgl.xdjl.entity.XdjlJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -34,13 +34,13 @@
         <Property></Property>
         <Property name="label">内容</Property>
       </PropertyDef>
-      <PropertyDef name="zsklyId">
+      <PropertyDef name="xdjllyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <PropertyDef name="zskly">
+      <PropertyDef name="xdjlly">
         <Property name="label">来源</Property>
       </PropertyDef>
-      <PropertyDef name="zsklyContent">
+      <PropertyDef name="xdjllyContent">
         <Property></Property>
         <Property name="label">来源内容</Property>
       </PropertyDef>
@@ -56,7 +56,7 @@
       </PropertyDef>
     </DataType>
     <DataType name="zsklyType">
-      <Property name="creationType">gov.hygs.htgl.entity.Zskly</Property>
+      <Property name="creationType">gov.hygs.htgl.xdjl.entity.Xdjlly</Property>
       <PropertyDef name="id">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
@@ -124,7 +124,7 @@
       <PropertyDef name="userid"/>
     </DataType>
     <DataType name="yxzskType">
-      <Property name="creationType">gov.hygs.htgl.entity.ZskJl</Property>
+      <Property name="creationType">gov.hygs.htgl.xdjl.entity.XdjlJl</Property>
       <PropertyDef name="id">
         <Property></Property>
       </PropertyDef>
@@ -154,17 +154,17 @@
         <Property></Property>
         <Property name="label">内容</Property>
       </PropertyDef>
-      <PropertyDef name="zsklyId">
+      <PropertyDef name="xdjllyId">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
-      <PropertyDef name="zskly">
+      <PropertyDef name="xdjlly">
         <Property name="label">来源</Property>
       </PropertyDef>
       <PropertyDef name="title">
         <Property></Property>
         <Property name="label">知识库题目</Property>
       </PropertyDef>
-      <PropertyDef name="zsklyContent">
+      <PropertyDef name="xdjllyContent">
         <Property></Property>
         <Property name="label">来源内容</Property>
       </PropertyDef>
@@ -208,11 +208,11 @@
       <DataSet id="dsZszsk">
         <Property name="dataType">[zszskType]</Property>
         <Property name="pageSize">20</Property>
-        <Property name="dataProvider">zszskController#getZszskInfo</Property>
+        <Property name="dataProvider">ZsxdjlController#getZszskInfo</Property>
       </DataSet>
       <DataSet id="dsZskly">
         <Property name="dataType">[zsklyType]</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
+        <Property name="dataProvider">yxxdjlController#getZsklyInfoByZsklyId</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -228,7 +228,7 @@
       <DataSet id="dsYxzsk">
         <Property name="dataType">[yxzskType]</Property>
         <Property name="pageSize">10</Property>
-        <Property name="dataProvider">zszskController#getYxzskInfo</Property>
+        <Property name="dataProvider">zsxdjlController#getYxzskInfo</Property>
       </DataSet>
       <DataSet id="dsZsdtsjlInfo">
         <Property name="dataType">[zsdtsjlInfoType]</Property>
@@ -240,10 +240,10 @@
       <DataSet id="dsZszskFilter">
         <Property name="dataType">[zszskType]</Property>
         <Property name="pageSize">10</Property>
-        <Property name="dataProvider">zszskController#getRandomdsZszskFilter</Property>
+        <Property name="dataProvider">zsxdjlController#getRandomdsZszskFilter</Property>
       </DataSet>
       <DataSet id="dsZsdtsValue">
-        <Property name="dataProvider">zszskController#getZsdtsInfoFromSystemProps</Property>
+        <Property name="dataProvider">zsxdjlController#getZsdtsInfoFromSystemProps</Property>
       </DataSet>
     </Container>
     <Container id="dropdowns">
@@ -293,9 +293,9 @@ view.get(&quot;#dsUser&quot;).flush();&#xD;
         <Property name="dataSet">dsUser</Property>
       </DataSetDropDown>
       <DataSetDropDown id="dsZsklyDropDown">
-        <ClientEvent name="onClose">var zskly = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
-if(zskly != undefined){&#xD;
-	view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;).set({zsklyId:zskly.get(&quot;id&quot;)});&#xD;
+        <ClientEvent name="onClose">var xdjlly = view.get(&quot;#dsZskly&quot;).getData(&quot;#&quot;);&#xD;
+if(xdjlly != undefined){&#xD;
+	view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;).set({xdjllyId:xdjlly.get(&quot;id&quot;)});&#xD;
 }&#xD;
 </ClientEvent>
         <Property name="dataSet">dsZskly</Property>
@@ -408,15 +408,15 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="property">createDate</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement id="zskly">
-                  <Property name="name">zskly</Property>
-                  <Property name="property">zskly</Property>
+                <AutoFormElement id="xdjlly">
+                  <Property name="name">xdjlly</Property>
+                  <Property name="property">xdjlly</Property>
                   <Property name="trigger">dsZsklyDropDown</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement id="zsklyContent">
-                  <Property name="name">zsklyContent</Property>
-                  <Property name="property">zsklyContent</Property>
+                <AutoFormElement id="xdjllyContent">
+                  <Property name="name">xdjllyContent</Property>
+                  <Property name="property">xdjllyContent</Property>
                   <Property name="hideMode">display</Property>
                   <Editor>
                     <TextArea/>
@@ -452,9 +452,9 @@ view.get(&quot;#dialog&quot;).close();&#xD;
             <Buttons>
               <Button>
                 <ClientEvent name="onClick">var entitys = view.get('#yxzskGrid.selection');&#xD;
-var zszsk = view.get(&quot;#dsZszsk&quot;);&#xD;
+var zsxdjl = view.get(&quot;#dsZszsk&quot;);&#xD;
 entitys.each(function(entity){&#xD;
-	zszsk.insert(entity.set({xybz:'Y'}));&#xD;
+	zsxdjl.insert(entity.set({xybz:'Y'}));&#xD;
 });&#xD;
 view.get(&quot;#yxTzsDialog&quot;).close();&#xD;
 view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
@@ -490,8 +490,8 @@ view.get(&quot;#dsYxzsk&quot;).flush();&#xD;
                 <DataColumn name="content">
                   <Property name="property">content</Property>
                 </DataColumn>
-                <DataColumn name="zskly">
-                  <Property name="property">zskly</Property>
+                <DataColumn name="xdjlly">
+                  <Property name="property">xdjlly</Property>
                 </DataColumn>
                 <DataColumn name="user">
                   <Property name="property">user</Property>
@@ -614,8 +614,8 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <DataColumn name="content">
                   <Property name="property">content</Property>
                 </DataColumn>
-                <DataColumn name="zskly">
-                  <Property name="property">zskly</Property>
+                <DataColumn name="xdjlly">
+                  <Property name="property">xdjlly</Property>
                 </DataColumn>
                 <DataColumn name="user">
                   <Property name="property">user</Property>
@@ -635,13 +635,13 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
     </Container>
     <Container id="actions">
       <UpdateAction id="updateAction">
-        <Property name="dataResolver">zszskController#updateZszsk</Property>
+        <Property name="dataResolver">zsxdjlController#updateZszsk</Property>
         <UpdateItem>
           <Property name="dataSet">dsZszsk</Property>
         </UpdateItem>
       </UpdateAction>
       <AjaxAction id="tsAction">
-        <Property name="service">zszskController#updateZsdtsInfo</Property>
+        <Property name="service">zsxdjlController#updateZsdtsInfo</Property>
       </AjaxAction>
     </Container>
     <Container>
@@ -753,9 +753,9 @@ if(data != undefined){&#xD;
 </ClientEvent>
             <Button>
               <ClientEvent name="onClick">view.get(&quot;#dsZszsk&quot;).insert();&#xD;
-//view.get(&quot;#dsZszsk&quot;).getData(&quot;#.zskly&quot;).insert();&#xD;
-view.get(&quot;#zskly&quot;).set(&quot;editable&quot;,true);&#xD;
-view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,true);&#xD;
+//view.get(&quot;#dsZszsk&quot;).getData(&quot;#.xdjlly&quot;).insert();&#xD;
+view.get(&quot;#xdjlly&quot;).set(&quot;editable&quot;,true);&#xD;
+view.get(&quot;#xdjllyContent&quot;).set(&quot;visible&quot;,true);&#xD;
 view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
 view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#dialog&quot;).show();&#xD;
@@ -779,8 +779,8 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
 	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,true);&#xD;
-	view.get(&quot;#zskly&quot;).set(&quot;editable&quot;,false);&#xD;
-	view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#xdjlly&quot;).set(&quot;editable&quot;,false);&#xD;
+	view.get(&quot;#xdjllyContent&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
@@ -791,7 +791,7 @@ if(data != undefined){&#xD;
             <Button>
               <ClientEvent name="onClick">if(view.get(&quot;#dsZszsk&quot;).getData(&quot;#&quot;) != undefined){&#xD;
 	view.get(&quot;#submitButton&quot;).set(&quot;visible&quot;,false);&#xD;
-	view.get(&quot;#zsklyContent&quot;).set(&quot;visible&quot;,false);&#xD;
+	view.get(&quot;#xdjllyContent&quot;).set(&quot;visible&quot;,false);&#xD;
 	view.get(&quot;#yxzskForm&quot;).set(&quot;readOnly&quot;,true);		&#xD;
 	view.get(&quot;#dialog&quot;).show();&#xD;
 }&#xD;
@@ -829,8 +829,8 @@ view.get(&quot;#zsdtsDialog&quot;).show();&#xD;
             <DataColumn name="content">
               <Property name="property">content</Property>
             </DataColumn>
-            <DataColumn name="zskly">
-              <Property name="property">zskly</Property>
+            <DataColumn name="xdjlly">
+              <Property name="property">xdjlly</Property>
             </DataColumn>
             <DataColumn name="user">
               <Property name="property">user</Property>
