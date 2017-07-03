@@ -170,7 +170,7 @@
         <Property></Property>
         <Property name="label">内容</Property>
       </PropertyDef>
-      <PropertyDef name="zsklyname">
+      <PropertyDef name="xdjllyname">
         <Property name="label">来源</Property>
       </PropertyDef>
       <PropertyDef name="username">
@@ -197,14 +197,14 @@
       <DataSet id="dsZszskFilter">
         <Property name="dataType">[zszskType]</Property>
         <Property name="pageSize">10</Property>
-        <Property name="dataProvider">zszskController#getRandomdsZszskFilter</Property>
+        <Property name="dataProvider">zsxdjlController#getRandomdsZszskFilter</Property>
       </DataSet>
       <DataSet id="dsZsdtsValue">
-        <Property name="dataProvider">zszskController#getZsdtsInfoFromSystemProps</Property>
+        <Property name="dataProvider">zsxdjlController#getZsdtsInfoFromSystemProps</Property>
       </DataSet>
       <DataSet id="dsZskly">
         <Property name="dataType">[zsklyType]</Property>
-        <Property name="dataProvider">yxzskController#getZsklyInfoByZsklyId</Property>
+        <Property name="dataProvider">yxxdjlController#getZsklyInfoByZsklyId</Property>
       </DataSet>
       <DataSet id="dsDept">
         <Property name="dataType">[deptType]</Property>
@@ -218,15 +218,15 @@
       <DataSet id="dsTsxx">
         <Property name="dataType">[tsxxType]</Property>
         <Property name="pageSize">10</Property>
-        <Property name="dataProvider">zszskController#getTsxxInfo</Property>
+        <Property name="dataProvider">zsxdjlController#getTsxxInfo</Property>
       </DataSet>
       <DataSet id="dsDetail">
         <Property name="dataType">[detialType]</Property>
         <Property name="pageSize">10</Property>
-        <Property name="dataProvider">zszskController#getZsdDetailInfo</Property>
+        <Property name="dataProvider">zsxdjlController#getZsdDetailInfo</Property>
       </DataSet>
       <DataSet id="dsZszskInfo">
-        <Property name="dataProvider">zszskController#getZszskInfo</Property>
+        <Property name="dataProvider">zsxdjlController#getZszskInfo</Property>
         <Property name="dataType">[zszskType]</Property>
         <Property name="pageSize">10</Property>
       </DataSet>
@@ -396,8 +396,8 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
                 </DataColumn>
-                <DataColumn name="content">
-                  <Property name="property">content</Property>
+                <DataColumn name="title">
+                  <Property name="property">title</Property>
                 </DataColumn>
                 <DataColumn name="xdjlly">
                   <Property name="property">xdjlly</Property>
@@ -408,8 +408,8 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <DataColumn name="dept">
                   <Property name="property">dept</Property>
                 </DataColumn>
-                <DataColumn name="title">
-                  <Property name="property">title</Property>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -445,11 +445,11 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <DataColumn name="create_date">
                   <Property name="property">create_date</Property>
                 </DataColumn>
-                <DataColumn name="content">
-                  <Property name="property">content</Property>
+                <DataColumn name="title">
+                  <Property name="property">title</Property>
                 </DataColumn>
-                <DataColumn name="zsklyname">
-                  <Property name="property">zsklyname</Property>
+                <DataColumn name="xdjllyname">
+                  <Property name="property">xdjllyname</Property>
                 </DataColumn>
                 <DataColumn name="username">
                   <Property name="property">username</Property>
@@ -457,8 +457,8 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
                 <DataColumn name="deptname">
                   <Property name="property">deptname</Property>
                 </DataColumn>
-                <DataColumn name="title">
-                  <Property name="property">title</Property>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -613,11 +613,11 @@ view.get(&quot;#updateInfoAction&quot;).execute(function(){&#xD;
                           <DataColumn name="create_date">
                             <Property name="property">create_date</Property>
                           </DataColumn>
-                          <DataColumn name="content">
-                            <Property name="property">content</Property>
+                          <DataColumn name="title">
+                            <Property name="property">title</Property>
                           </DataColumn>
-                          <DataColumn name="zsklyname">
-                            <Property name="property">zsklyname</Property>
+                          <DataColumn name="xdjllyname">
+                            <Property name="property">xdjllyname</Property>
                           </DataColumn>
                           <DataColumn name="username">
                             <Property name="property">username</Property>
@@ -625,8 +625,8 @@ view.get(&quot;#updateInfoAction&quot;).execute(function(){&#xD;
                           <DataColumn name="deptname">
                             <Property name="property">deptname</Property>
                           </DataColumn>
-                          <DataColumn name="title">
-                            <Property name="property">title</Property>
+                          <DataColumn name="content">
+                            <Property name="property">content</Property>
                           </DataColumn>
                         </DataGrid>
                       </Children>
@@ -729,7 +729,7 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
 				id:entity.get(&quot;id&quot;),&#xD;
 				create_date:entity.get(&quot;createDate&quot;),&#xD;
 				content:entity.get(&quot;content&quot;),&#xD;
-				zsklyname:entity.get(&quot;xdjlly&quot;),&#xD;
+				xdjllyname:entity.get(&quot;xdjlly&quot;),&#xD;
 				username:entity.get(&quot;user&quot;),&#xD;
 				deptname:entity.get(&quot;dept&quot;),&#xD;
 				title:entity.get(&quot;title&quot;)&#xD;
@@ -784,8 +784,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                     <DataColumn name="createDate">
                       <Property name="property">createDate</Property>
                     </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
+                    <DataColumn name="title">
+                      <Property name="property">title</Property>
                     </DataColumn>
                     <DataColumn name="xdjlly">
                       <Property name="property">xdjlly</Property>
@@ -796,8 +796,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                     <DataColumn name="dept">
                       <Property name="property">dept</Property>
                     </DataColumn>
-                    <DataColumn name="title">
-                      <Property name="property">title</Property>
+                    <DataColumn name="content">
+                      <Property name="property">content</Property>
                     </DataColumn>
                   </DataGrid>
                 </Children>
@@ -886,8 +886,8 @@ if(entitys != undefined){&#xD;
                           <DataColumn name="createDate">
                             <Property name="property">createDate</Property>
                           </DataColumn>
-                          <DataColumn name="content">
-                            <Property name="property">content</Property>
+                          <DataColumn name="title">
+                            <Property name="property">title</Property>
                           </DataColumn>
                           <DataColumn name="xdjlly">
                             <Property name="property">xdjlly</Property>
@@ -898,8 +898,8 @@ if(entitys != undefined){&#xD;
                           <DataColumn name="dept">
                             <Property name="property">dept</Property>
                           </DataColumn>
-                          <DataColumn name="title">
-                            <Property name="property">title</Property>
+                          <DataColumn name="content">
+                            <Property name="property">content</Property>
                           </DataColumn>
                         </DataGrid>
                       </Children>
@@ -973,8 +973,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                     <DataColumn name="createDate">
                       <Property name="property">createDate</Property>
                     </DataColumn>
-                    <DataColumn name="content">
-                      <Property name="property">content</Property>
+                    <DataColumn name="title">
+                      <Property name="property">title</Property>
                     </DataColumn>
                     <DataColumn name="xdjlly">
                       <Property name="property">xdjlly</Property>
@@ -985,8 +985,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
                     <DataColumn name="dept">
                       <Property name="property">dept</Property>
                     </DataColumn>
-                    <DataColumn name="title">
-                      <Property name="property">title</Property>
+                    <DataColumn name="content">
+                      <Property name="property">content</Property>
                     </DataColumn>
                   </DataGrid>
                 </Children>
@@ -999,16 +999,16 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
     </Container>
     <Container id="actions">
       <AjaxAction id="tsAction">
-        <Property name="service">zszskController#updateZsdtsInfo</Property>
+        <Property name="service">zsxdjlController#updateZsdtsInfo</Property>
       </AjaxAction>
       <AjaxAction id="updateInfoAction">
-        <Property name="service">zszskController#updateZsdtsDetailInfo</Property>
+        <Property name="service">zsxdjlController#updateZsdtsDetailInfo</Property>
       </AjaxAction>
       <AjaxAction id="deleteAction">
-        <Property name="service">zszskController#deleteZsdtsInfo</Property>
+        <Property name="service">zsxdjlController#deleteZsdtsInfo</Property>
       </AjaxAction>
       <AjaxAction id="tsxxUpdateAction">
-        <Property name="service">zszskController#updateTsxxInfo</Property>
+        <Property name="service">zsxdjlController#updateTsxxInfo</Property>
       </AjaxAction>
     </Container>
     <Container>

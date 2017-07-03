@@ -378,7 +378,7 @@ view.get(&quot;#dsDept&quot;).flush();&#xD;
     </Container>
     <Container id="dialogs">
       <Dialog id="dialog">
-        <Property name="height">420</Property>
+        <Property name="height">90%</Property>
         <Property name="width">700</Property>
         <Buttons/>
         <Children>
@@ -434,9 +434,10 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="name">content</Property>
                   <Property name="property">content</Property>
                   <Editor>
-                    <TextArea>
-                      <Property name="height">100</Property>
-                    </TextArea>
+                    <UEditor>
+                      <Property name="mode">simple</Property>
+                      <Property name="height">280</Property>
+                    </UEditor>
                   </Editor>
                 </AutoFormElement>
               </AutoForm>
@@ -490,8 +491,8 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
                 <DataColumn name="createDate">
                   <Property name="property">createDate</Property>
                 </DataColumn>
-                <DataColumn name="content">
-                  <Property name="property">content</Property>
+                <DataColumn name="title">
+                  <Property name="property">title</Property>
                 </DataColumn>
                 <DataColumn name="xdjlly">
                   <Property name="property">xdjlly</Property>
@@ -502,8 +503,8 @@ view.get(&quot;#inAction&quot;).execute(function(){&#xD;
                 <DataColumn name="dept">
                   <Property name="property">dept</Property>
                 </DataColumn>
-                <DataColumn name="title">
-                  <Property name="property">title</Property>
+                <DataColumn name="content">
+                  <Property name="property">content</Property>
                 </DataColumn>
               </DataGrid>
             </Children>
@@ -693,8 +694,8 @@ view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
             <DataColumn name="createDate">
               <Property name="property">createDate</Property>
             </DataColumn>
-            <DataColumn name="content">
-              <Property name="property">content</Property>
+            <DataColumn name="title">
+              <Property name="property">title</Property>
             </DataColumn>
             <DataColumn name="xdjlly">
               <Property name="property">xdjlly</Property>
@@ -704,9 +705,6 @@ view.get(&quot;#yxTzsDialog&quot;).show();&#xD;
             </DataColumn>
             <DataColumn name="dept">
               <Property name="property">dept</Property>
-            </DataColumn>
-            <DataColumn name="title">
-              <Property name="property">title</Property>
             </DataColumn>
             <DataColumn name="xybz">
               <Property name="property">xybz</Property>

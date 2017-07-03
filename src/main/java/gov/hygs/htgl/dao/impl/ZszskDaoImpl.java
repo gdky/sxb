@@ -40,20 +40,20 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		StringBuffer sqlCount = new StringBuffer("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d ");
-			sqlCount.append("where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' ");
+			sqlCount.append("where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y'  and a.yxbz ='Y' ");
 			if (param != null) {
 				args.addAll(this.rebuileSqlByConditionAndRole(sqlCount, param));
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d ");
-			sqlCount.append("where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid=?");
+			sqlCount.append("where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y'  and a.yxbz ='Y' and a.deptid=?");
 			args.add(userDetails.getDeptid());
 			if (param != null) {
 				args.addAll(this.rebuileSqlByConditionAndRole(sqlCount, param));
 			}
 		} else if ("Other".equals(roleName)) {// 普通用户
 			sqlCount.append("select count(*) from zsk_jl a,user b,dept c,zskly d");
-			sqlCount.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.deptid=? and a.user_id=?");
+			sqlCount.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ and a.xybz='Y' and a.yxbz ='Y' and a.deptid=? and a.user_id=?");
 			args.add(userDetails.getDeptid());
 			args.add(userDetails.getId());
 		}
@@ -72,7 +72,7 @@ public class ZszskDaoImpl extends BaseJdbcDao implements ZszskDao {
 		StringBuffer sql = new StringBuffer(" select d.TITLE zsktitle,b.USER_NAME,c.DEPT_NAME,a.* ");
 			sql.append(" from zsk_jl a,user b,dept c,zskly d ");
 			sql.append(" where a.USER_ID = b.ID_ and a.DEPTID = c.ID_ and a.ZSKLY_ID = d.ID_ ");
-			sql.append(" and a.xybz='Y' ");
+			sql.append(" and a.xybz='Y' and a.yxbz ='Y' ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
 			if (param != null) {
 				args.addAll(this.rebuileSqlByConditionAndRole(sql, param));
