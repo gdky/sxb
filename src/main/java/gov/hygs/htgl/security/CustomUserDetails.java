@@ -3,6 +3,7 @@ package gov.hygs.htgl.security;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import gov.hygs.htgl.entity.User;
@@ -74,5 +75,24 @@ public class CustomUserDetails extends User implements UserDetails {
 		return this.getId_();
 	}
 
+	/**
+	 * 获取当前用户最高权限
+	 * @return
+	 */
+	public String getRolePower() {
+		for (GrantedAuthority role : this.authorities) {
+			String dsa = role.getAuthority();
+			if ("ROLE_SuAdmin".equals(dsa)) {// 超级管理员
+				return "SuAdmin";
+			}
+		}
+		for (GrantedAuthority role : this.authorities) {
+			String dsa = role.getAuthority();
+			if ("ROLE_DeptAdmin".equals(dsa)) {// 部门管理员
+				return "DeptAdmin";
+			}
+		}
+		return "Other";
+	}
 
 }
