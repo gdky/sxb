@@ -1722,7 +1722,7 @@ if(entity != undefined){&#xD;
     </Container>
     <Container id="actionContainer">
       <UpdateAction id="updateAction">
-        <Property name="dataResolver">yxtkglController#updateYxtk</Property>
+        <Property name="dataResolver">tkglController#updateYxtk</Property>
         <Property name="alwaysExecute">true</Property>
         <Property name="executingMessage">正在执行...</Property>
         <Property name="successMessage">执行成功</Property>

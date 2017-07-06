@@ -101,7 +101,6 @@ public class ZstkglServiceImpl implements ZstkglService {
 					zstk.setContent(getUUID());
 					zstkglDao.addGxJl(zstk);
 				} else {
-					// zstkglDao.addYxtkToZstk(zstk);
 					zstkglDao.updateZstk(zstk);
 				}
 				zstk.setContent(getUUID());
@@ -111,8 +110,6 @@ public class ZstkglServiceImpl implements ZstkglService {
 				zstkglDao.updateZstk(zstk); // 鎶妝xbz鍜寈ybz閮借缃�
 			}
 			if (EntityUtils.getState(zstk).equals(EntityState.DELETED)) {
-				// zstkglDao.deleteYxtkFromZstk(zstk);
-				// zstkglDao.updateZstk(zstk); 鍒犻櫎璋冪敤璇ユ柟娉曪紝鍓嶅彴鎶妜ybz璁剧疆涓簄
 				zstkglDao.deleteZstk(zstk);// 鍓嶅彴涓嶉渶瑕佽繖鏄痻ybz锛岃鏂规硶浼氭妸xybz璁剧疆涓簄
 				zstkglDao.deleteGrDeptGxJl(zstk);
 			}
