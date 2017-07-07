@@ -2,6 +2,7 @@ package gov.hygs.htgl.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Model class of 群组.
@@ -31,6 +32,9 @@ public class Grouptable implements Serializable {
 	
 	private Integer lrrID;
 
+	private Date effective_date;
+	
+	
 	public Collection<Grouptable> getChild() {
 		return child;
 	}
@@ -39,6 +43,18 @@ public class Grouptable implements Serializable {
 
 	public void setChild(Collection<Grouptable> child) {
 		this.child = child;
+	}
+
+
+
+	public Date getEffective_date() {
+		return effective_date;
+	}
+
+
+
+	public void setEffective_date(Date effective_date) {
+		this.effective_date = effective_date;
 	}
 
 
