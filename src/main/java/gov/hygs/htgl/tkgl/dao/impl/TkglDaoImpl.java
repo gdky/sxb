@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import gov.hygs.htgl.entity.Role;
 import gov.hygs.htgl.entity.Tktm;
@@ -27,8 +29,14 @@ import com.gdky.restfull.dao.BaseJdbcDao;
 @Repository
 public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 
+
+	public String getUUID() {
+		return UUID.randomUUID().toString().trim().replaceAll("-", "");
+	}
+
+	
 	@Override
-	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param) {
+	public void getYxtkInfo(Page<Tktm> page, Map<String, Object> param,String xybz) {
 		// TODO Auto-generated method stub
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -38,7 +46,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 		String roleName = userDetails.getRolePower();
 		StringBuffer count = new StringBuffer("");
 		if ("SuAdmin".equals(roleName)) {// 超级用户
-			count.append("select count(*) from tktm a where a.xybz='N' and a.yxbz='Y'");
+			count.append("select count(*) from tktm a where a.xybz='"+xybz+"' and a.yxbz='Y'");
 			if (param != null) {
 				List<Object> arg = this.rebuileSqlByConditionAndRole(count,
 						param);
@@ -46,7 +54,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 					args.addAll(arg);
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			count.append("select count(*) from tktm a where a.xybz='N' and a.yxbz='Y' and a.deptid=?");
+			count.append("select count(*) from tktm a where a.xybz='"+xybz+"' and a.yxbz='Y' and a.deptid=?");
 			args.add(userDetails.getDeptid());
 			if (param != null) {
 				List<Object> arg = this.rebuileSqlByConditionAndRole(count,
@@ -56,7 +64,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 				}
 			}
 		} else if ("Other".equals(roleName)) {// 普通用户
-			count.append("select count(*) from tktm a where a.xybz='N' and a.yxbz='Y' and a.deptid=? and a.user_id=?");
+			count.append("select count(*) from tktm a where a.xybz='"+xybz+"' and a.yxbz='Y' and a.deptid=? and a.user_id=?");
 			args.add(userDetails.getDeptid());
 			args.add(userDetails.getId());
 		}
@@ -69,7 +77,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 					args.toArray(), Integer.class);
 		}
 		List<Tktm> list = this.getYxtkInfo(pageSize * (pageNow - 1), pageSize,
-				userDetails, roleName, param);
+				userDetails, roleName, param,xybz);
 		page.setEntityCount(entityCount);
 		page.setEntities(list);
 	}
@@ -137,7 +145,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 
 	private List<Tktm> getYxtkInfo(int begin, int offest,
 			CustomUserDetails userDetails, String roleName,
-			Map<String, Object> param) {
+			Map<String, Object> param, String xybz) {
 		// TODO Auto-generated method stub
 		List<Object> args = new ArrayList<Object>();
 		StringBuffer sql = new StringBuffer(
@@ -148,7 +156,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 		sql.append(" USER c,dept d ");
 		sql.append(" where a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ ");
 		if ("SuAdmin".equals(roleName)) {// 超级管理员
-			sql.append(" and a.xybz='N' and a.yxbz='Y' ");
+			sql.append(" and a.xybz='"+xybz+"' and a.yxbz='Y' ");
 			if (param != null) {
 				List<Object> arg = this
 						.rebuileSqlByConditionAndRole(sql, param);
@@ -158,7 +166,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 			}
 
 		} else if ("DeptAdmin".equals(roleName)) {// 部门管理员
-			sql.append(" and a.xybz='N' and a.yxbz='Y' and a.deptid=? ");
+			sql.append(" and a.xybz='"+xybz+"' and a.yxbz='Y' and a.deptid=? ");
 			args.add(userDetails.getDeptid());
 			if (param != null) {
 				List<Object> arg = this
@@ -169,7 +177,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 			}
 
 		} else if ("Other".equals(roleName)) {// 普通用户
-			sql.append(" and a.xybz='N' and a.yxbz='Y' and a.deptid=? and user_id=? ");
+			sql.append(" and a.xybz='"+xybz+"' and a.yxbz='Y' and a.deptid=? and user_id=? ");
 			args.add(userDetails.getDeptid());
 			args.add(userDetails.getId());
 		}
@@ -298,7 +306,7 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 				sdf.format(yxtk.getCreateDate()), yxtk.getSpDate(),
 				yxtk.getSprId(), yxtk.getDeptid(), yxtk.getContent(),
 				sysPropValue, yxtk.getTmnd(), tmlyid,// yxtk.getTmlyId(),
-				yxtk.getMode(), "Y", "N", yxtk.getDrbz(), yxtk.getKsbz() };
+				yxtk.getMode(), "Y", yxtk.getXybz(), yxtk.getDrbz(), yxtk.getKsbz() };
 		this.jdbcTemplate.update(sql, obj);
 	}
 
@@ -312,15 +320,6 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 		String sql = "select value from system_props where key_=?";
 		return this.jdbcTemplate.queryForObject(sql, new Object[] { key },
 				String.class);
-	}
-
-	@Override
-	public void addGrDeptGxJl(Tktm yxtk) {
-		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
-		Object[] objs = { yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
-				yxtk.getId(), this.getGxjlValueByKey("GxzA"), 1,
-				yxtk.getCreateDate() };
-		this.jdbcTemplate.update(sql, objs);
 	}
 
 	@Override
@@ -398,4 +397,201 @@ public class TkglDaoImpl extends BaseJdbcDao implements TkglDao {
 				new String[] { "id_" }).intValue();
 	}
 
+	@Override
+	public void yxtkToZstk(Tktm map,String lx) {
+		// TODO Auto-generated method stub
+		String sql = "update tktm set xybz='"+lx+"' where id_ = ?" ;
+		this.jdbcTemplate.update(sql, new Object[]{map.getId()});
+	}
+
+	@Override
+	public Collection<Tkxzx> getTkzxzInfoByZstkId(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select * from tkxzx where tk_id=? order by xz_key";
+		List<Tkxzx> list = this.jdbcTemplate.query(sql, new Object[] { id },
+				new RowMapper<Tkxzx>() {
+
+					@Override
+					public Tkxzx mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tkxzx tkxzx = new Tkxzx();
+						tkxzx.setId(result.getString("id_"));
+						tkxzx.setTkId(result.getString("tk_id"));
+						tkxzx.setXzKey(result.getString("xz_key"));
+						tkxzx.setContent(result.getString("content"));
+						return tkxzx;
+					}
+
+				});
+		return list;
+	}
+	
+	@Override
+	public Collection<Tkxzx> getDaXzxInfoByZstkId(String id) {
+		// TODO Auto-generated method stub
+		String sql = "select x.* from tkxzx x,tkda d where x.id_=d.tkxzxid and d.tk_id=? order by x.xz_key";
+		List<Tkxzx> list = this.jdbcTemplate.query(sql, new Object[] { id },
+				new RowMapper<Tkxzx>() {
+
+					@Override
+					public Tkxzx mapRow(ResultSet result, int i)
+							throws SQLException {
+						// TODO Auto-generated method stub
+						Tkxzx tkxzx = new Tkxzx();
+						tkxzx.setId(result.getString("id_"));
+						tkxzx.setTkId(result.getString("tk_id"));
+						tkxzx.setXzKey(result.getString("xz_key"));
+						tkxzx.setContent(result.getString("content"));
+						return tkxzx;
+					}
+
+				});
+		return list
+				;
+	}
+	@Override
+	public Collection<Tkxzx> getToFInfo() {
+		// TODO Auto-generated method stub
+		return this.getTkzxzInfoByZstkId("0");
+	}
+
+	@Override
+	public boolean chackTktmExistOrNot(String tktmContent) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),1,0) from tktm where content=? and yxbz='Y'";
+		int record = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tktmContent }, Integer.class);
+		return record == 0 ? true : false;
+	}
+
+	@Override
+	public String chackIsImportOrNot(String tktmContent) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),t.ID_,'0') from tktm t where t.content=? and t.yxbz = 'N'";
+		String record = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tktmContent }, String.class);
+		return record;
+	}
+
+
+	@Override
+	public List<Map<String, Object>> getUserIdByDeptIdAndTheyName(
+			String userName, String deptName) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer("select if(count(*),id_,0) userid,deptid ");
+				sql.append("from user where user_name like ? ");
+				sql.append("and deptid in (select id_ from dept where dept_name like ?)");
+		List<Map<String, Object>> list = this.jdbcTemplate.queryForList(sql.toString(), new Object[]{"%"+userName+"%","%"+deptName+"%"});
+		String userid = String.valueOf(list.get(0).get("userid"));
+		if("0".equals(userid)){
+			return new ArrayList<Map<String, Object>>();
+		}
+		return list;
+	}
+
+	@Override
+	public int getTkflInfoOrAddTkfl(String tkflTkmc) {
+		// TODO Auto-generated method stub
+		String sql = "select if(count(*),id_,0) from tkfl where tkmc=?";
+		int flId = this.jdbcTemplate.queryForObject(sql,
+				new Object[] { tkflTkmc }, Integer.class);
+		if (flId == 0) {
+			flId = this.addFlId(tkflTkmc);
+		}
+		return flId;
+	}
+
+	private int addFlId(String tkflTkmc) {
+		String sql = "insert into tkfl (id_,parent_id,tkmc,ms) values(?,?,?,?)";
+		return this.insertAndGetKeyByJdbc(sql,
+				new Object[] { null, 0, tkflTkmc, tkflTkmc },
+				new String[] { "id_" }).intValue();
+	}
+
+	@Override
+	public void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs,
+			List<Tkxzx> tkdas) {
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Map<Integer, Integer> chackTmnd = new HashMap<Integer, Integer>();
+		String list = null;
+		List<Object[]> batchArgs = new ArrayList<Object[]>();
+		List<Object[]> gxjlBatchArgs = new ArrayList<Object[]>();
+		String gxz = this.getGxjlValueByKey("GxzA");
+		for (Tktm yxtk : tktms) {
+			if (chackTmnd.get(yxtk.getTmnd()) == null) {
+				list = this.getSysPropValueByTmnd(yxtk);
+			}
+			batchArgs.add(new Object[] { yxtk.getId(), yxtk.getFlId(),
+					yxtk.getUserId(), sdf.format(yxtk.getCreateDate()),
+					yxtk.getSpDate(), yxtk.getSprId(), yxtk.getDeptid(),
+					yxtk.getContent(), list,
+					yxtk.getTmnd(), yxtk.getTmlyId(), yxtk.getMode(), "Y", "N",
+					yxtk.getDrbz(), "N" });
+			gxjlBatchArgs.add(new Object[]{yxtk.getId(), yxtk.getDeptid(), yxtk.getUserId(),
+					yxtk.getId(), gxz, 1, yxtk.getCreateDate()});	
+
+		}
+		
+		if (batchArgs.size() > 0) {
+			String sql = "insert into tktm values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			this.jdbcTemplate.batchUpdate(sql, batchArgs);
+			sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+			this.jdbcTemplate.batchUpdate(sql, gxjlBatchArgs);
+
+			List<Object[]> tkxzxBatchArgs = new ArrayList<Object[]>();
+			List<Object[]> tkdaBatchArgs = new ArrayList<Object[]>();
+
+			for (Tkxzx xz : tkxzxs) {
+				tkxzxBatchArgs.add(new Object[] { xz.getId(), xz.getTkId(),
+						xz.getXzKey(), xz.getContent() });
+			}
+			if (tkxzxBatchArgs.size() > 0) {
+				sql = "insert into tkxzx values(?,?,?,?)";
+				this.jdbcTemplate.batchUpdate(sql, tkxzxBatchArgs);
+			}
+
+			for (Tkxzx da : tkdas) {
+				tkdaBatchArgs.add(new Object[] { da.getContent(), da.getTkId(),
+						da.getId() });
+			}
+			if (tkdaBatchArgs.size() > 0) {
+				sql = "insert into tkda values(?,?,?)";
+				this.jdbcTemplate.batchUpdate(sql, tkdaBatchArgs);
+			}
+		}
+
+	}
+
+	@Override
+	public void deleteRecord(String tktmContentId) {
+		// TODO Auto-generated method stub
+		String sql = "delete from tktm where id_ = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
+		sql = "delete from tkxzx where tk_id = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
+		sql = "delete from tkda where tk_id = ?";
+		this.jdbcTemplate.update(sql, new Object[]{tktmContentId});
+	}
+
+
+	@Override
+	public void addYToZGxz(Tktm map) {
+		// TODO Auto-generated method stub
+		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		Object[] objs = { getUUID(), map.getDeptid(), map.getUserId(),
+				map.getId(), this.getGxjlValueByKey("GxzB"), 1,
+				map.getCreateDate() };
+		this.jdbcTemplate.update(sql, objs);
+	}
+
+	@Override
+	public void addGrDeptGxJl(Tktm yxtk) {
+		String sql = "insert into tk_gxjl values(?,?,?,?,?,?,?)";
+		Object[] objs = { getUUID(), yxtk.getDeptid(), yxtk.getUserId(),
+				yxtk.getId(), this.getGxjlValueByKey("GxzA"), 1,
+				yxtk.getCreateDate() };
+		this.jdbcTemplate.update(sql, objs);
+	}
 }

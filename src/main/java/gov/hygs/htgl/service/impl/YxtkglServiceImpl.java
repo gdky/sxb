@@ -133,7 +133,7 @@ public class YxtkglServiceImpl implements YxtkglService {
 		}
 	}
 
-	private String getUUID() {
+	public String getUUID() {
 		return UUID.randomUUID().toString().trim().replaceAll("-", "");
 	}
 

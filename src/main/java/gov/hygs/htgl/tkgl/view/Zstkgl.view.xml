@@ -377,52 +377,6 @@ if(datas.getLast() != null){&#xD;
         <Property name="dataProvider">tkcspzController#getCurrentTkflById</Property>
       </Reference>
     </DataType>
-    <DataType name="excelErrMessageType">
-      <Property name="creationType">gov.hygs.htgl.utils.excel.entity.TkcjTable</Property>
-      <PropertyDef name="num">
-        <Property></Property>
-        <Property name="label">序号</Property>
-      </PropertyDef>
-      <PropertyDef name="mode">
-        <Property></Property>
-        <Property name="label">题型</Property>
-      </PropertyDef>
-      <PropertyDef name="tkflTkmc">
-        <Property></Property>
-        <Property name="label">入库类型</Property>
-      </PropertyDef>
-      <PropertyDef name="tktmTmnd">
-        <Property></Property>
-        <Property name="label">题目类型</Property>
-      </PropertyDef>
-      <PropertyDef name="tktmContent">
-        <Property></Property>
-        <Property name="label">题目内容</Property>
-      </PropertyDef>
-      <PropertyDef name="daToF">
-        <Property></Property>
-      </PropertyDef>
-      <PropertyDef name="tmlyTitle">
-        <Property></Property>
-        <Property name="label">题目出处</Property>
-      </PropertyDef>
-      <PropertyDef name="tmlyContent">
-        <Property></Property>
-        <Property name="label">题目出处简要内容</Property>
-      </PropertyDef>
-      <PropertyDef name="userName">
-        <Property></Property>
-        <Property name="label">出题者</Property>
-      </PropertyDef>
-      <PropertyDef name="deptName">
-        <Property></Property>
-        <Property name="label">出题科室</Property>
-      </PropertyDef>
-      <PropertyDef name="errMassage">
-        <Property></Property>
-        <Property name="label">错误信息</Property>
-      </PropertyDef>
-    </DataType>
     <DataType name="tmlyType">
       <Property name="creationType">gov.hygs.htgl.entity.Tmly</Property>
       <PropertyDef name="id">
@@ -441,8 +395,9 @@ if(datas.getLast() != null){&#xD;
   <View>
     <DataSet id="dsYxtk">
       <Property name="dataType">[tktmType]</Property>
-      <Property name="dataProvider">tkglController#getYxtkInfo</Property>
+      <Property name="dataProvider">tkglController#getZstkInfo</Property>
       <Property name="pageSize">30</Property>
+      <Property name="loadMode">lazy</Property>
     </DataSet>
     <DataSet id="dsRolePower">
       <Property name="dataType">roleType</Property>
@@ -460,9 +415,6 @@ if(datas.getLast() != null){&#xD;
     <DataSet id="dsTkfl">
       <Property name="dataType">[tkflType]</Property>
       <Property name="dataProvider">tkcspzController#getTkflRoot</Property>
-    </DataSet>
-    <DataSet id="dsErrMessage">
-      <Property name="dataType">[excelErrMessageType]</Property>
     </DataSet>
     <DataSet id="dsTmly">
       <Property name="dataType">[tmlyType]</Property>
@@ -633,35 +585,6 @@ view.get(&quot;#conditionForm&quot;).get(&quot;entity&quot;).set({deptid:deptId}
       <Property name="service">tkglController#yxtkToZstk</Property>
       <Property name="successMessage">提交成功！</Property>
     </AjaxAction>
-    <UploadAction id="uploadAction">
-      <ClientEvent name="onFilesAdded">self.set(&quot;parameter&quot;,{&#xD;
-	&quot;fields&quot;:[&quot;Num,Mode,TkflTkmc,TktmTmnd,&quot;&#xD;
-				+&quot;TktmContent,DaToF,TmlyTitle,&quot;&#xD;
-				+&quot;TmlyContent,UserName,DeptName&quot;]&#xD;
-});</ClientEvent>
-      <ClientEvent name="onFileUploaded">var returnValue = arg.returnValue;&#xD;
-view.get(&quot;#dsErrMessage&quot;).getData().clear();&#xD;
-if(returnValue){&#xD;
-	var entityList = dorado.JSON.parse(returnValue);&#xD;
-	entityList.each(function(entity){&#xD;
-		view.get(&quot;#dsErrMessage&quot;).insert(entity);&#xD;
-	});&#xD;
-	view.get(&quot;#excelErrDialog&quot;).show();&#xD;
-	&#xD;
-}&#xD;
-view.get(&quot;#dsYxtk&quot;).flush();&#xD;
-&#xD;
-view.get(&quot;#tip&quot;).hide();</ClientEvent>
-      <ClientEvent name="beforeFileUpload">view.get(&quot;#tip&quot;).show();</ClientEvent>
-      <Property name="fileResolver">tkglController#ImportTkcjTableExcel</Property>
-      <Property name="maxFileSize">10MB</Property>
-      <Property name="successMessage">导入成功</Property>
-      <Filters/>
-    </UploadAction>
-    <Tip id="tip">
-      <Property name="text">正在导入......</Property>
-      <Property name="center">true</Property>
-    </Tip>
     <Container id="dialogs">
       <Dialog id="addyxtkDialog">
         <Property name="height">667</Property>
@@ -1064,62 +987,6 @@ view.get(&quot;#updateyxtkDialog&quot;).close();&#xD;
         </Children>
         <Tools/>
       </Dialog>
-      <Dialog id="excelErrDialog">
-        <Property name="height">600</Property>
-        <Property name="width">800</Property>
-        <Property name="closeable">false</Property>
-        <Buttons/>
-        <Children>
-          <GroupBox>
-            <Property name="caption">excel错误信息</Property>
-            <Buttons>
-              <Button>
-                <ClientEvent name="onClick">view.get(&quot;#excelErrDialog&quot;).close();&#xD;
-</ClientEvent>
-                <Property name="caption">关闭</Property>
-                <Property name="icon">url(>skin>common/icons.gif) -40px -0px</Property>
-              </Button>
-            </Buttons>
-            <Children>
-              <DataGrid id="errMassageGrid">
-                <Property name="dataSet">dsErrMessage</Property>
-                <Property name="readOnly">true</Property>
-                <DataColumn name="num">
-                  <Property name="property">num</Property>
-                </DataColumn>
-                <DataColumn name="mode">
-                  <Property name="property">mode</Property>
-                </DataColumn>
-                <DataColumn name="tkflTkmc">
-                  <Property name="property">tkflTkmc</Property>
-                </DataColumn>
-                <DataColumn name="tktmTmnd">
-                  <Property name="property">tktmTmnd</Property>
-                </DataColumn>
-                <DataColumn name="tktmContent">
-                  <Property name="property">tktmContent</Property>
-                </DataColumn>
-                <DataColumn name="tmlyTitle">
-                  <Property name="property">tmlyTitle</Property>
-                </DataColumn>
-                <DataColumn name="tmlyContent">
-                  <Property name="property">tmlyContent</Property>
-                </DataColumn>
-                <DataColumn name="userName">
-                  <Property name="property">userName</Property>
-                </DataColumn>
-                <DataColumn name="deptName">
-                  <Property name="property">deptName</Property>
-                </DataColumn>
-                <DataColumn name="errMassage">
-                  <Property name="property">errMassage</Property>
-                </DataColumn>
-              </DataGrid>
-            </Children>
-          </GroupBox>
-        </Children>
-        <Tools/>
-      </Dialog>
     </Container>
     <Container>
       <GroupBox>
@@ -1242,14 +1109,11 @@ if(data != undefined){&#xD;
 		view.get(&quot;#findbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 		view.get(&quot;#inbutton&quot;).set(&quot;visible&quot;,false);&#xD;
 	}&#xD;
-	if(data.get(&quot;rolename&quot;) == &quot;SuAdmin&quot;){&#xD;
-		view.get(&quot;#importExcel&quot;).set(&quot;visible&quot;,true);&#xD;
-	}&#xD;
 }</ClientEvent>
             <Button>
               <ClientEvent name="onClick">var yxtks = view.get(&quot;#dsYxtk&quot;).getData();&#xD;
 &#xD;
-view.get(&quot;#dsYxtk&quot;).insert({xybz:&quot;N&quot;});&#xD;
+view.get(&quot;#dsYxtk&quot;).insert({xybz:&quot;Y&quot;});&#xD;
 view.get(&quot;#addyxtkDialog&quot;).show();&#xD;
 </ClientEvent>
               <Property name="caption">增加</Property>
@@ -1466,10 +1330,10 @@ if(mode ==1 || mode == 2){&#xD;
             <Button id="inbutton">
               <ClientEvent name="onClick">var entitys = view.get('#tktmGrid.selection');&#xD;
 if(entitys != undefined){&#xD;
-dorado.MessageBox.confirm(&quot;确定选入正式题库？&quot;,function(){&#xD;
+dorado.MessageBox.confirm(&quot;确定选入历史题库？&quot;,function(){&#xD;
 	view.get(&quot;#inAction&quot;).set(&quot;parameter&quot;,{&#xD;
 		tms: entitys&#xD;
-	,lx:'Y'}).execute(function(){&#xD;
+	,lx:'L'}).execute(function(){&#xD;
 	view.get(&quot;#dsYxtk&quot;).flushAsync();&#xD;
 });&#xD;
 	});&#xD;
@@ -1478,16 +1342,9 @@ dorado.MessageBox.confirm(&quot;确定选入正式题库？&quot;,function(){&#x
 	dorado.MessageBox.alert(&quot;没有勾选记录，请勾选后在提交！&quot;);&#xD;
 }&#xD;
 </ClientEvent>
-              <Property name="caption">选题到正式题库</Property>
+              <Property name="caption">选题到历史题库</Property>
               <Property name="icon">url(>skin>common/icons.gif) -0px -20px</Property>
               <Property name="hideMode">display</Property>
-            </Button>
-            <Button id="importExcel">
-              <Property name="caption">导入</Property>
-              <Property name="action">uploadAction</Property>
-              <Property name="visible">false</Property>
-              <Property name="hideMode">display</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -80px -60px</Property>
             </Button>
             <DataPilot>
               <Property name="dataSet">dsYxtk</Property>

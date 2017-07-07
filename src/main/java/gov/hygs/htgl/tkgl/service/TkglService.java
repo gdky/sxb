@@ -3,6 +3,7 @@ package gov.hygs.htgl.tkgl.service;
 import gov.hygs.htgl.entity.Tktm;
 import gov.hygs.htgl.entity.Tkxzx;
 import gov.hygs.htgl.entity.User;
+import gov.hygs.htgl.utils.excel.entity.TkcjTable;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.bstek.dorado.data.provider.Page;
 
 public interface TkglService {
 
-	void getYxtkInfo(Page<Tktm> page, Map<String, Object> param);
+	void getYxtkInfo(Page<Tktm> page, Map<String, Object> param, String xybz);
 
 	Collection<User> getUser(String yhm);
 
@@ -36,6 +37,16 @@ public interface TkglService {
 	void updateYxtkda(Tkxzx da);
 
 	void deleteYxtkda(Tkxzx da);
+
+	void yxtkToZstk(List<Tktm> tms, String lx);
+
+	Collection<Tkxzx> getTkzxzInfoByZstkId(String id);
+
+	Collection<Tkxzx> getDaXzxInfoByZstkId(String id);
+
+	Collection<Tkxzx> getToFInfo();
+
+	List<TkcjTable> ImportTkcjTableExcel(List<Map<String, Object>> list);
 
 
 

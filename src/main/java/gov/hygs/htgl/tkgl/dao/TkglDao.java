@@ -6,6 +6,7 @@ import gov.hygs.htgl.entity.User;
 import gov.hygs.htgl.security.CustomUserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.bstek.dorado.data.provider.Page;
@@ -13,7 +14,7 @@ import com.bstek.dorado.data.provider.Page;
 
 public interface TkglDao {
 
-	void getYxtkInfo(Page<Tktm> page, Map<String, Object> param);
+	void getYxtkInfo(Page<Tktm> page, Map<String, Object> param, String xybz);
 
 	Collection<User> getUser(String yhm);
 
@@ -38,5 +39,32 @@ public interface TkglDao {
 	void updateYxtkxzx(Tkxzx xz);
 
 	void deleteYxtkxzx(Tkxzx xz);
+
+	void yxtkToZstk(Tktm map, String lx);
+
+	Collection<Tkxzx> getTkzxzInfoByZstkId(String id);
+
+	Collection<Tkxzx> getDaXzxInfoByZstkId(String id);
+
+	Collection<Tkxzx> getToFInfo();
+
+	boolean chackTktmExistOrNot(String tktmContent);
+
+	String chackIsImportOrNot(String tktmContent);
+
+	List<Map<String, Object>> getUserIdByDeptIdAndTheyName(String userName,
+			String deptName);
+
+	int getTmlyInfoOrAddTmly(String tmlyTitle, String tmlyContent);
+
+	int getTkflInfoOrAddTkfl(String tkflTkmc);
+
+	void deleteRecord(String tktmContentId);
+
+	void batchInsertTk(List<Tktm> tktms, List<Tkxzx> tkxzxs, List<Tkxzx> tkdas);
+
+	String getUUID();
+
+	void addYToZGxz(Tktm map);
 
 }
