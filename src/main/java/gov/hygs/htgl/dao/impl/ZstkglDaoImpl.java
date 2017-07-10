@@ -589,12 +589,12 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			Date begin = (Date) param.get("begin");
 			Date end = (Date) param.get("end");
 			String title = (String) param.get("title");
-			String tpye = (String) param.get("type");
+			String type = (String) param.get("type");
 			Integer examtime = (Integer) param.get("examtime");
 			String sql = "insert into exam values(?,?,?,?,?,?,?,?)";
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
-					new Object[] { null, begin, end, title, tpye,
+					new Object[] { null, begin, end, title, type,
 							userDetails.getId(),ms,examtime }, new String[] { "id_" })
 					.intValue();
 			for(int j = 0; j < groupId.size(); j++){

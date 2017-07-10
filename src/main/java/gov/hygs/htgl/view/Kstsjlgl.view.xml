@@ -251,7 +251,7 @@
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
-                <Property name="value">抢答</Property>
+                <Property name="value">逢训必考</Property>
               </Entity>
             </Collection>
           </Property>
@@ -333,7 +333,7 @@
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
-                <Property name="value">抢答</Property>
+                <Property name="value">逢训必考</Property>
               </Entity>
             </Collection>
           </Property>
@@ -695,12 +695,6 @@ if(endTime &lt; beginTime &amp;&amp; endTime != null){&#xD;
 	throw new dorado.Exception(&quot;终止日期不能小于起始日期！&quot;);&#xD;
 	return;&#xD;
 }&#xD;
-/*&#xD;
-if(condition.get(&quot;type&quot;) == undefined){&#xD;
-	throw new dorado.Exception(&quot;请选择考试类型！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-*/&#xD;
 if(view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;).validate() == &quot;ok&quot;){&#xD;
 	view.get(&quot;#optDialog&quot;).show();&#xD;
 }else{&#xD;
@@ -924,12 +918,6 @@ if(condition.get(&quot;type&quot;) == 1){&#xD;
  	throw new dorado.Exception(&quot;请选择题目！&quot;);&#xD;
 	return;&#xD;
  }&#xD;
-/* &#xD;
-if(i&lt;value){&#xD;
-	throw new dorado.Exception(&quot;选择题目数不足&quot;+value+&quot;题！&quot;);&#xD;
-	return;&#xD;
-}&#xD;
-*/&#xD;
 if(i>value){&#xD;
 	throw new dorado.Exception(&quot;选择题目数已超&quot;+value+&quot;题！&quot;);&#xD;
 	return;&#xD;
@@ -958,7 +946,6 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
 	view.get(&quot;#conditionDialog&quot;).close();&#xD;
 	view.get(&quot;#optDialog&quot;).close();&#xD;
 	entitys.clear();&#xD;
-	//view.get(&quot;#grouptree&quot;).unselectAll();&#xD;
 	if(view.get(&quot;#grouptree.selection&quot;) != &quot;&quot;){&#xD;
 		view.get(&quot;#grouptree&quot;).unselectAll();&#xD;
 	}&#xD;
