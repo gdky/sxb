@@ -126,12 +126,12 @@ public class YhJsglDaoImpl extends BaseJdbcDao implements YhJsglDao {
 	public Integer insertUser(User user) {
 		// TODO Auto-generated method stub
 		String imagePath ="images/mr.jpg";
-		String sql = "insert into USER (login_Name,user_Name, phone,rzsj,zw,pwd,photo,deptid,birthday) values(?,?,?,?,?,?,?,?,?) ";
+		String sql = "insert into USER (login_Name,user_Name, phone,rzsj,zw,pwd,deptid,birthday) values(?,?,?,?,?,?,?,?) ";
 		return this.insertAndGetKeyByJdbc(
 				sql,
 				new Object[] { user.getLogin_Name(), user.getUser_Name(),
 						user.getPhone(), user.getRzsj(), user.getZw(),
-						Md5Utils.encodeMd5(user.getPwd()), imagePath, user.getDeptid(),
+						Md5Utils.encodeMd5(user.getPwd()), user.getDeptid(),
 						user.getBirthday()
 
 				}, new String[] { "id_" }).intValue();
