@@ -52,11 +52,11 @@
             <Collection>
               <Entity>
                 <Property name="key">0</Property>
-                <Property name="value">税收业务类基础题</Property>
+                <Property name="value">基础题</Property>
               </Entity>
               <Entity>
                 <Property name="key">1</Property>
-                <Property name="value">税收业务类进阶题</Property>
+                <Property name="value">进阶题</Property>
               </Entity>
               <Entity>
                 <Property name="key">2</Property>
@@ -270,6 +270,34 @@
           <Property name="resultMessage"> 请填写考试时间！</Property>
         </Validator>
       </PropertyDef>
+      <PropertyDef name="jct">
+        <Property name="label">基础题分值</Property>
+        <Property name="dataType">Double</Property>
+        <Validator name="validator1" type="range">
+          <Property name="minValue">0</Property>
+          <Property name="maxValue">100</Property>
+          <Property name="resultMessage">必须在0到100之间</Property>
+          <Property name="maxValueValidateMode">allowEquals</Property>
+          <Property name="minValueValidateMode">allowEquals</Property>
+        </Validator>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">分值不能为空</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="jjt">
+        <Property name="label">进阶题分值</Property>
+        <Property name="dataType">Double</Property>
+        <Validator name="validator1" type="range">
+          <Property name="minValue">0</Property>
+          <Property name="maxValue">100</Property>
+          <Property name="resultMessage">必须在0到100之间</Property>
+          <Property name="minValueValidateMode">allowEquals</Property>
+          <Property name="maxValueValidateMode">allowEquals</Property>
+        </Validator>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">分值不能为空</Property>
+        </Validator>
+      </PropertyDef>
     </DataType>
     <DataType name="groupType">
       <Property name="creationType">gov.hygs.htgl.entity.Grouptable</Property>
@@ -372,6 +400,34 @@
         <Property name="required">true</Property>
         <Validator name="validator1" type="required">
           <Property name="resultMessage"> 请填写考试时间！</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="jct">
+        <Property name="label">基础题分值</Property>
+        <Property name="dataType">Double</Property>
+        <Validator name="validator1" type="range">
+          <Property name="minValue">0</Property>
+          <Property name="maxValue">100</Property>
+          <Property name="resultMessage">必须在0到100之间</Property>
+          <Property name="maxValueValidateMode">allowEquals</Property>
+          <Property name="minValueValidateMode">allowEquals</Property>
+        </Validator>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">分值不能为空</Property>
+        </Validator>
+      </PropertyDef>
+      <PropertyDef name="jjt">
+        <Property name="label">进阶题分值</Property>
+        <Property name="dataType">Double</Property>
+        <Validator name="validator1" type="range">
+          <Property name="minValue">0</Property>
+          <Property name="maxValue">100</Property>
+          <Property name="resultMessage">必须在0到100之间</Property>
+          <Property name="minValueValidateMode">allowEquals</Property>
+          <Property name="maxValueValidateMode">allowEquals</Property>
+        </Validator>
+        <Validator name="validator1" type="required">
+          <Property name="resultMessage">分值不能为空</Property>
         </Validator>
       </PropertyDef>
     </DataType>
@@ -668,7 +724,7 @@
     <Container id="dialogs">
       <Dialog id="conditionDialog">
         <Property name="width">650</Property>
-        <Property name="height">350</Property>
+        <Property name="height">380</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -762,6 +818,16 @@ if(view.get(&quot;#grouptree.selection&quot;) != &quot;&quot;){&#xD;
                   <Property name="name">type</Property>
                   <Property name="property">type</Property>
                   <Property name="editable">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">jct</Property>
+                  <Property name="property">jct</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">jjt</Property>
+                  <Property name="property">jjt</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
@@ -938,7 +1004,9 @@ view.get(&quot;#tsAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
 	&quot;type&quot;:condition.get(&quot;type&quot;),&#xD;
-	&quot;examtime&quot;:condition.get(&quot;examtime&quot;)&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examtime&quot;),&#xD;
+	&quot;jct&quot;:condition.get(&quot;jct&quot;),&#xD;
+	&quot;jjt&quot;:condition.get(&quot;jjt&quot;)&#xD;
 });&#xD;
 &#xD;
 &#xD;
@@ -1385,7 +1453,7 @@ view.get(&quot;#dsTkfl&quot;).flushAsync();</ClientEvent>
         <Tools/>
       </Dialog>
       <Dialog id="updateDialog">
-        <Property name="height">350</Property>
+        <Property name="height">380</Property>
         <Property name="width">650</Property>
         <Buttons/>
         <Children>
@@ -1420,7 +1488,9 @@ view.get(&quot;#examUpdateAction&quot;).set(&quot;parameter&quot;,{&#xD;
 	//&quot;groupname&quot;:condition.get(&quot;groupname&quot;),&#xD;
 	&quot;title&quot;:condition.get(&quot;title&quot;),&#xD;
 	&quot;type&quot;:condition.get(&quot;examType&quot;),&#xD;
-	&quot;examtime&quot;:condition.get(&quot;examTime&quot;)&#xD;
+	&quot;examtime&quot;:condition.get(&quot;examTime&quot;),&#xD;
+	&quot;jct&quot;:condition.get(&quot;jct&quot;),&#xD;
+	&quot;jjt&quot;:condition.get(&quot;jjt&quot;)&#xD;
 });&#xD;
 &#xD;
 &#xD;
@@ -1511,6 +1581,16 @@ view.get(&quot;#dsExam&quot;).getData(&quot;#.group&quot;).cancel();&#xD;
                   <Property name="name">examType</Property>
                   <Property name="property">examType</Property>
                   <Property name="editable">false</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">jct</Property>
+                  <Property name="property">jct</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">jjt</Property>
+                  <Property name="property">jjt</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>

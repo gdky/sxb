@@ -591,11 +591,13 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 			String title = (String) param.get("title");
 			String type = (String) param.get("type");
 			Integer examtime = (Integer) param.get("examtime");
-			String sql = "insert into exam values(?,?,?,?,?,?,?,?)";
+			Double jct = (Double) param.get("jct");
+			Double jjt = (Double) param.get("jjt");
+			String sql = "insert into exam values(?,?,?,?,?,?,?,?,?,?)";
 			int jlId = this.insertAndGetKeyByJdbc(
 					sql,
 					new Object[] { null, begin, end, title, type,
-							userDetails.getId(),ms,examtime }, new String[] { "id_" })
+							userDetails.getId(),ms,examtime,jct,jjt }, new String[] { "id_" })
 					.intValue();
 			for(int j = 0; j < groupId.size(); j++){
 				sql = "insert into exam_tsqz value(?,?,?)";
@@ -764,7 +766,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:mm:ss");
 		String sql = "select count(*) from exam";
 		int count = this.jdbcTemplate.queryForObject(sql, Integer.class);
-		sql = "select id_,date_format(start_time,'%Y-%m-%d %T') start_time,date_format(end_time,'%Y-%m-%d %T') end_time,title,exam_type,fqr_id,remark,exam_time from exam order by start_time desc limit ?,?";
+		sql = "select id_,date_format(start_time,'%Y-%m-%d %T') start_time,date_format(end_time,'%Y-%m-%d %T') end_time,title,exam_type,fqr_id,remark,exam_time,jct,jjt from exam order by start_time desc limit ?,?";
 		List<Exam> list = this.jdbcTemplate.query(sql, new Object[]{pageSize * (pageNow - 1), pageSize}, new RowMapper<Exam>(){
 
 			@Override
@@ -796,6 +798,8 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				exam.setFqrId(result.getInt("fqr_id"));
 				exam.setRemark(result.getString("remark"));
 				exam.setExamTime(result.getInt("exam_time"));
+				exam.setJct(result.getDouble("jct"));
+				exam.setJjt(result.getDouble("jjt"));
 				return exam;
 			}
 			
@@ -1015,9 +1019,11 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		String tpye = (String) param.get("type");
 		String ms = (String) param.get("ms");
 		Integer examtime = (Integer) param.get("examtime");
+		Double jct = (Double) param.get("jct");
+		Double jjt = (Double) param.get("jjt");
 			
-		String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=?,exam_time=? where id_=?";
-		this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examtime, examid });
+		String sql = "update exam set start_time=?,end_time=?,exam_type=?,title=?,remark=?,exam_time=?,jct=?,jjt=? where id_=?";
+		this.jdbcTemplate.update(sql, new Object[]{ begin, end, tpye, title, ms, examtime,jct,jjt, examid });
 		if(groupId != null){
 			sql = "delete from exam_tsqz where exam_id = ?";
 			this.jdbcTemplate.update(sql, new Object[]{ examid });

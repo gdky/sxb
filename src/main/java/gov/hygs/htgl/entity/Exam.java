@@ -36,6 +36,10 @@ public class Exam implements Serializable {
 	
 	private Integer examTime;
 	
+	private Double jct;
+	
+	private Double jjt;
+	
 	/**
 	 * Constructor.
 	 */
@@ -59,6 +63,22 @@ public class Exam implements Serializable {
 	 */
 	public Integer getId() {
 		return this.id;
+	}
+
+	public Double getJct() {
+		return jct;
+	}
+
+	public void setJct(Double jct) {
+		this.jct = jct;
+	}
+
+	public Double getJjt() {
+		return jjt;
+	}
+
+	public void setJjt(Double jjt) {
+		this.jjt = jjt;
 	}
 
 	/**
