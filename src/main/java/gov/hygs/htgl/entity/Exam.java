@@ -36,9 +36,9 @@ public class Exam implements Serializable {
 	
 	private Integer examTime;
 	
-	private Double jct;
+	private double jct;
 	
-	private Double jjt;
+	private double jjt;
 	
 	/**
 	 * Constructor.
@@ -65,19 +65,19 @@ public class Exam implements Serializable {
 		return this.id;
 	}
 
-	public Double getJct() {
+	public double getJct() {
 		return jct;
 	}
 
-	public void setJct(Double jct) {
+	public void setJct(double jct) {
 		this.jct = jct;
 	}
 
-	public Double getJjt() {
+	public double getJjt() {
 		return jjt;
 	}
 
-	public void setJjt(Double jjt) {
+	public void setJjt(double jjt) {
 		this.jjt = jjt;
 	}
 
