@@ -651,7 +651,7 @@ public class TjglDaoImpl extends BaseJdbcDao implements TjglDao {
 	@Override
 	public List getExamInfo() {
 		// TODO Auto-generated method stub
-		String sql = "select id_ id,title,exam_time examTime from exam";
+		String sql = "select id_ id,title,exam_time examTime from exam order by START_TIME desc";
 		return this.jdbcTemplate.queryForList(sql);
 	}
 
