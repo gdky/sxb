@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtGroup">
+      <PropertyDef name="id">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="groupName">
+        <Property></Property>
+        <Property name="label">群名称</Property>
+      </PropertyDef>
+      <PropertyDef name="wqdrs">
+        <Property></Property>
+        <Property name="label">未签到人数</Property>
+      </PropertyDef>
+      <PropertyDef name="zrs">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">总人数</Property>
+      </PropertyDef>
+      <PropertyDef name="pxh">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">排序号</Property>
+      </PropertyDef>
+      <PropertyDef name="effective_date">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">有效日期</Property>
+      </PropertyDef>
+    </DataType>
+    <DataType name="dtQd"/>
+  </Model>
+  <View>
+    <DataSet id="dsGroup">
+      <Property name="dataType">[dtGroup]</Property>
+    </DataSet>
+    <Container>
+      <SplitPanel>
+        <Property name="position">500</Property>
+        <MainControl/>
+        <SideControl>
+          <Container>
+            <DataGrid>
+              <Property name="dataSet">dsGroup</Property>
+              <DataColumn name="groupName">
+                <Property name="property">groupName</Property>
+                <Property name="width">400</Property>
+              </DataColumn>
+              <DataColumn name="wqdrs">
+                <Property name="property">wqdrs</Property>
+              </DataColumn>
+              <DataColumn name="zrs">
+                <Property name="property">zrs</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </SideControl>
+      </SplitPanel>
+    </Container>
+  </View>
+</ViewConfig>
