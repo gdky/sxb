@@ -41,7 +41,7 @@ public class QdtjServiceImpl implements QdtjService {
 	@Override
 	public List<Map<String,Object>> getGroup() {
 		// TODO Auto-generated method stub
-		return null;
+		return qdtjDao.getGroup();
 	}
 
 	

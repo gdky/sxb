@@ -8,6 +8,6 @@ import java.util.Map;
 public interface QdtjDao {
 
 	public List<Map<String,Object>> getGroup();
-
+	
 
 }

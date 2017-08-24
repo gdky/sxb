@@ -33,6 +33,7 @@
   <View>
     <DataSet id="dsGroup">
       <Property name="dataType">[dtGroup]</Property>
+      <Property name="dataProvider">qdtjController#getGroup</Property>
     </DataSet>
     <Container>
       <SplitPanel>
@@ -44,7 +45,7 @@
               <Property name="dataSet">dsGroup</Property>
               <DataColumn name="groupName">
                 <Property name="property">groupName</Property>
-                <Property name="width">400</Property>
+                <Property name="width">300</Property>
               </DataColumn>
               <DataColumn name="wqdrs">
                 <Property name="property">wqdrs</Property>

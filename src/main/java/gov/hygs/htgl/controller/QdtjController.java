@@ -20,7 +20,7 @@ public class QdtjController {
 	private QdtjService qdtjService;
 
 	@DataProvider
-	public List<Map<String,Object>> getGroup(Page<ZskJl> page, Map<String, Object> param) {
+	public List<Map<String,Object>> getGroup() {
 		return qdtjService.getGroup();
 	}
 	

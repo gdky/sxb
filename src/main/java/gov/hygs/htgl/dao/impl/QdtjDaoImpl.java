@@ -32,7 +32,10 @@ public class QdtjDaoImpl extends BaseJdbcDao implements QdtjDao {
 
 	@Override
 	public List<Map<String,Object>> getGroup() {
-		return null;
+		
+		String sql = "select * from grouptable t where t.effective_date is not null and t.effective_date >= now()";
+		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sql);
+		return ls;
 	}
 
 }
