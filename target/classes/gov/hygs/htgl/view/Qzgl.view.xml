@@ -37,6 +37,10 @@
         <Property name="dataType">Integer</Property>
         <Property name="label">排序号</Property>
       </PropertyDef>
+      <PropertyDef name="effective_date">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">有效日期</Property>
+      </PropertyDef>
       <PropertyDef name="lrrID">
         <Property name="dataType">Integer</Property>
       </PropertyDef>
@@ -443,7 +447,7 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
             <Children>
               <AutoForm>
                 <Property name="dataSet">groupDataSet</Property>
-                <Property name="cols">*,*</Property>
+                <Property name="cols">*,*,*</Property>
                 <Property name="width">638</Property>
                 <Property name="dataPath">!current_Node</Property>
                 <AutoFormElement>
@@ -452,11 +456,16 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
+                  <Property name="name">effective_date</Property>
+                  <Property name="property">effective_date</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
                   <Property name="name">pxh</Property>
                   <Property name="property">pxh</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
+                <AutoFormElement layoutConstraint="colSpan:3">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
                   <Editor>
@@ -481,21 +490,17 @@ view.get(&quot;#updateZzxxDialog&quot;).close();&#xD;
               <Button>
                 <ClientEvent name="onClick">var currentEntity = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
 var data = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
-currentEntity.set({groupName:data.get(&quot;groupName&quot;),ms:data.get(&quot;ms&quot;),pxh:data.get(&quot;pxh&quot;)});&#xD;
+currentEntity.set({groupName:data.get(&quot;groupName&quot;),ms:data.get(&quot;ms&quot;),pxh:data.get(&quot;pxh&quot;),effective_date:data.get(&quot;effective_date&quot;)});&#xD;
 view.get(&quot;#updateGroup&quot;).execute(function(){ &#xD;
 	view.get(&quot;#dialog&quot;).close();&#xD;
 	var current = view.get(&quot;#datatree&quot;).get(&quot;currentNode&quot;).get(&quot;data&quot;);&#xD;
-	//var current = view.get(&quot;#groupDataSet&quot;).getData(&quot;!current_Node&quot;);&#xD;
 	var currentData = current.parent.parent;&#xD;
 	if(currentData != undefined){&#xD;
 		currentData.get(&quot;oChild&quot;).flush();&#xD;
 		var newNode = currentData.get(&quot;oChild&quot;).getLast();&#xD;
 		current.set({&#xD;
 			id:newNode.get(&quot;id&quot;),&#xD;
-			//groupName:newNode.get(&quot;groupName&quot;),&#xD;
-			parentId:newNode.get(&quot;parentId&quot;)//,&#xD;
-			//ms:newNode.get(&quot;ms&quot;)//,&#xD;
-			//pxh:newMode.get(&quot;pxh&quot;)&#xD;
+			parentId:newNode.get(&quot;parentId&quot;)&#xD;
 			});&#xD;
 	}else{&#xD;
 		view.get(&quot;#groupDataSet&quot;).flush();&#xD;
@@ -519,10 +524,15 @@ view.get(&quot;#dialog&quot;).close();&#xD;
               <AutoForm>
                 <Property name="dataSet">dsCondition</Property>
                 <Property name="width">638</Property>
-                <Property name="cols">*,*</Property>
+                <Property name="cols">*,*,*</Property>
                 <AutoFormElement>
                   <Property name="name">groupName</Property>
                   <Property name="property">groupName</Property>
+                  <Editor/>
+                </AutoFormElement>
+                <AutoFormElement>
+                  <Property name="name">effective_date</Property>
+                  <Property name="property">effective_date</Property>
                   <Editor/>
                 </AutoFormElement>
                 <AutoFormElement>
@@ -530,7 +540,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                   <Property name="property">pxh</Property>
                   <Editor/>
                 </AutoFormElement>
-                <AutoFormElement layoutConstraint="colSpan:2">
+                <AutoFormElement layoutConstraint="colSpan:3">
                   <Property name="name">ms</Property>
                   <Property name="property">ms</Property>
                   <Editor>
@@ -581,7 +591,7 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                 <AutoForm>
                   <Property name="dataSet">groupDataSet</Property>
                   <Property name="readOnly">true</Property>
-                  <Property name="cols">*,*</Property>
+                  <Property name="cols">*,*,*</Property>
                   <Property name="dataPath">!current_Node</Property>
                   <AutoFormElement>
                     <Property name="name">groupName</Property>
@@ -589,11 +599,16 @@ view.get(&quot;#dialog&quot;).close();&#xD;
                     <Editor/>
                   </AutoFormElement>
                   <AutoFormElement>
+                    <Property name="name">effective_date</Property>
+                    <Property name="property">effective_date</Property>
+                    <Editor/>
+                  </AutoFormElement>
+                  <AutoFormElement>
                     <Property name="name">pxh</Property>
                     <Property name="property">pxh</Property>
                     <Editor/>
                   </AutoFormElement>
-                  <AutoFormElement layoutConstraint="colSpan:2">
+                  <AutoFormElement layoutConstraint="colSpan:3">
                     <Property name="name">ms</Property>
                     <Property name="property">ms</Property>
                     <Editor>

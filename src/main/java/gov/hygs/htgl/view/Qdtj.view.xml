@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ViewConfig>
+  <Arguments/>
+  <Context/>
+  <Model>
+    <DataType name="dtGroup">
+      <PropertyDef name="ID_">
+        <Property name="dataType">Integer</Property>
+      </PropertyDef>
+      <PropertyDef name="GROUP_NAME">
+        <Property></Property>
+        <Property name="label">群名称</Property>
+      </PropertyDef>
+      <PropertyDef name="wqdrs">
+        <Property></Property>
+        <Property name="label">未签到人数</Property>
+      </PropertyDef>
+      <PropertyDef name="zrs">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">总人数</Property>
+      </PropertyDef>
+      <PropertyDef name="pxh">
+        <Property name="dataType">Integer</Property>
+        <Property name="label">排序号</Property>
+      </PropertyDef>
+      <PropertyDef name="effective_date">
+        <Property name="dataType">DateTime</Property>
+        <Property name="label">有效日期</Property>
+      </PropertyDef>
+      <Reference name="wqdyh">
+        <Property name="label">未签到用户</Property>
+        <Property name="dataType">[dtWqd]</Property>
+        <Property name="parameter">$${this.ID_}</Property>
+        <Property name="dataProvider">qdtjController#getWqd</Property>
+      </Reference>
+    </DataType>
+    <DataType name="dtWqd">
+      <PropertyDef name="xming">
+        <Property name="label">姓名</Property>
+      </PropertyDef>
+      <PropertyDef name="loginname">
+        <Property name="label">登录名</Property>
+      </PropertyDef>
+      <PropertyDef name="dept">
+        <Property name="label">部门</Property>
+      </PropertyDef>
+    </DataType>
+  </Model>
+  <View>
+    <DataSet id="dsGroup">
+      <Property name="dataType">[dtGroup]</Property>
+      <Property name="dataProvider">qdtjController#getGroup</Property>
+    </DataSet>
+    <Container>
+      <ToolBar>
+        <Fill/>
+        <Button id="btnRefresh">
+          <ClientEvent name="onClick">var ds = view.get('#dsGroup');&#xD;
+ds.flushAsync() &#xD;
+</ClientEvent>
+          <Property name="caption">刷新</Property>
+          <Property name="icon"> url(>skin>common/icons.gif) -280px -220px</Property>
+        </Button>
+      </ToolBar>
+      <SplitPanel>
+        <Property name="position">500</Property>
+        <MainControl>
+          <DataGrid>
+            <Property name="dataSet">dsGroup</Property>
+            <Property name="dataPath">#.wqdyh</Property>
+            <DataColumn name="xming">
+              <Property name="property">xming</Property>
+            </DataColumn>
+            <DataColumn name="loginname">
+              <Property name="property">loginname</Property>
+            </DataColumn>
+            <DataColumn name="dept">
+              <Property name="property">dept</Property>
+            </DataColumn>
+          </DataGrid>
+        </MainControl>
+        <SideControl>
+          <Container>
+            <DataGrid>
+              <Property name="dataSet">dsGroup</Property>
+              <Property name="readOnly">true</Property>
+              <DataColumn>
+                <Property name="property">GROUP_NAME</Property>
+                <Property name="width">300</Property>
+                <Property name="name">GROUP_NAME</Property>
+                <Property name="align">center</Property>
+              </DataColumn>
+              <DataColumn name="wqdrs">
+                <Property name="property">wqdrs</Property>
+                <Property name="align">center</Property>
+              </DataColumn>
+              <DataColumn name="zrs">
+                <Property name="property">zrs</Property>
+                <Property name="align">center</Property>
+              </DataColumn>
+            </DataGrid>
+          </Container>
+        </SideControl>
+      </SplitPanel>
+    </Container>
+  </View>
+</ViewConfig>
