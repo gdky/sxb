@@ -7,5 +7,8 @@ import java.util.Map;
 public interface QdtjService {
 
 	public List<Map<String,Object>> getGroup();
+
+	public List<Map<String, Object>> getWqd(int iD_);
 	
+
 }

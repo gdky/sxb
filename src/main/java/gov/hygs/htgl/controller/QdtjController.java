@@ -24,5 +24,8 @@ public class QdtjController {
 		return qdtjService.getGroup();
 	}
 	
-	
+	 @DataProvider
+	    public List<Map<String,Object>> getWqd(int ID_){
+	        return qdtjService.getWqd(ID_);
+	    }
 }

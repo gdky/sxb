@@ -40,8 +40,12 @@ public class QdtjServiceImpl implements QdtjService {
 
 	@Override
 	public List<Map<String,Object>> getGroup() {
-		// TODO Auto-generated method stub
 		return qdtjDao.getGroup();
+	}
+
+	@Override
+	public List<Map<String, Object>> getWqd(int ID_) {
+		return qdtjDao.getWqd(ID_);
 	}
 
 	
