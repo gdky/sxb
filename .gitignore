@@ -5,4 +5,3 @@ target/
 build/
 
 *.class
-target/classes/com/gdky/restfull/entity/User.class
