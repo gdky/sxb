@@ -132,6 +132,10 @@
       <PropertyDef name="ksbz">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="tmxzx">
+        <Property/>
+        <Property name="label">题目选择项</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="tkzxzType">
       <Property name="creationType">gov.hygs.htgl.entity.Tkxzx</Property>
@@ -586,6 +590,10 @@
       <PropertyDef name="ksbz">
         <Property></Property>
       </PropertyDef>
+      <PropertyDef name="tmxzx">
+        <Property></Property>
+        <Property name="label">题目选择项</Property>
+      </PropertyDef>
     </DataType>
     <DataType name="tkflType">
       <Property name="creationType">gov.hygs.htgl.entity.Tkfl</Property>
@@ -739,8 +747,8 @@
     </Container>
     <Container id="dialogs">
       <Dialog id="conditionDialog">
-        <Property name="width">650</Property>
-        <Property name="height">380</Property>
+        <Property name="width">85%</Property>
+        <Property name="height">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -870,8 +878,8 @@ if(view.get(&quot;#grouptree.selection&quot;) != &quot;&quot;){&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="tktmDialog">
-        <Property name="height">500</Property>
-        <Property name="width">700</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -977,8 +985,8 @@ view.get(&quot;#tsAction&quot;).execute(function(){&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="optDialog">
-        <Property name="width">90%</Property>
-        <Property name="height">600</Property>
+        <Property name="width">85%</Property>
+        <Property name="height">85%</Property>
         <Buttons>
           <Button>
             <ClientEvent name="onClick">var condition = view.get(&quot;#dsCondition&quot;).getData(&quot;#&quot;);&#xD;
@@ -1174,7 +1182,8 @@ if(entitys != &quot;&quot; || entitys != undefined){&#xD;
 				mode:entity.get(&quot;mode&quot;),&#xD;
 				user:entity.get(&quot;user&quot;),&#xD;
 				dept:entity.get(&quot;dept&quot;),&#xD;
-				daxzx:entity.get(&quot;daxzx&quot;)&#xD;
+				daxzx:entity.get(&quot;daxzx&quot;),&#xD;
+				tmxzx:entity.get(&quot;tmxzx&quot;)&#xD;
 			});&#xD;
 		}&#xD;
 	});&#xD;
@@ -1321,8 +1330,8 @@ dsTktmShow.flushAsync();</ClientEvent>
         <Tools/>
       </Dialog>
       <Dialog id="ytsDialog">
-        <Property name="height">500</Property>
-        <Property name="width">70%</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -1388,8 +1397,8 @@ dsTktmShow.flushAsync();</ClientEvent>
         <Tools/>
       </Dialog>
       <Dialog id="sjtsflDialog">
-        <Property name="height">350</Property>
-        <Property name="width">600</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -1469,8 +1478,8 @@ view.get(&quot;#dsTkfl&quot;).flushAsync();</ClientEvent>
         <Tools/>
       </Dialog>
       <Dialog id="updateDialog">
-        <Property name="height">380</Property>
-        <Property name="width">650</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -1636,8 +1645,8 @@ view.get(&quot;#dsExam&quot;).getData(&quot;#.group&quot;).cancel();&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="updateDetailDialog">
-        <Property name="height">600</Property>
-        <Property name="width">90%</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons>
           <Button>
             <ClientEvent name="onClick">//dsExam&#xD;
@@ -1988,8 +1997,8 @@ dsTktmShow.flushAsync();</ClientEvent>
         <Tools/>
       </Dialog>
       <Dialog id="findtmDialog">
-        <Property name="height">350</Property>
-        <Property name="width">650</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons/>
         <Children>
           <GroupBox>
@@ -2109,8 +2118,8 @@ if(entity != undefined){&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="tsxzylDialog">
-        <Property name="width">90%</Property>
-        <Property name="height">600</Property>
+        <Property name="width">85%</Property>
+        <Property name="height">85%</Property>
         <Buttons>
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#tsxzylDialog&quot;).close();&#xD;
@@ -2168,6 +2177,10 @@ if(entity != undefined){&#xD;
                   <Property name="property">daxzx.content</Property>
                   <Property name="width">415</Property>
                 </DataColumn>
+                <DataColumn name="tmxzx">
+                  <Property name="property">tmxzx</Property>
+                  <Property name="width">1000</Property>
+                </DataColumn>
               </DataGrid>
             </Children>
           </GroupBox>
@@ -2175,8 +2188,8 @@ if(entity != undefined){&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="xgxzylDialog">
-        <Property name="height">600</Property>
-        <Property name="width">90%</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons>
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#xgxzylDialog&quot;).close();</ClientEvent>
@@ -2233,6 +2246,10 @@ if(entity != undefined){&#xD;
                   <Property name="property">daxzx.content</Property>
                   <Property name="width">415</Property>
                 </DataColumn>
+                <DataColumn name="tmxzx">
+                  <Property name="property">tmxzx</Property>
+                  <Property name="width">1000</Property>
+                </DataColumn>
               </DataGrid>
             </Children>
           </GroupBox>
@@ -2240,8 +2257,8 @@ if(entity != undefined){&#xD;
         <Tools/>
       </Dialog>
       <Dialog id="xjxzylDialog">
-        <Property name="height">600</Property>
-        <Property name="width">90%</Property>
+        <Property name="height">85%</Property>
+        <Property name="width">85%</Property>
         <Buttons>
           <Button>
             <ClientEvent name="onClick">view.get(&quot;#xjxzylDialog&quot;).close();</ClientEvent>

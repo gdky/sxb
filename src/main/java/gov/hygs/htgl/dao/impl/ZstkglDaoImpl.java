@@ -424,7 +424,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 	@Override
 	public void deleteZstk(Tktm zstk) {
 		// TODO Auto-generated method stub
-		String sql = "update tktm set xybz='N' where id_=?";
+		String sql = "update tktm set xybz='L' where id_=?";
 		this.jdbcTemplate.update(sql, new Object[] { zstk.getId() });
 	}
 
@@ -819,7 +819,10 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		StringBuffer sb=new StringBuffer("");
 		sb.append(" from tktm a ");
 		sb.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
-		sb.append(" left join tkfl b on a.FL_ID=b.ID_, ");
+		sb.append(" left join tkfl b on a.FL_ID=b.ID_ ");
+		sb.append(" left join (select a.ID_, ");
+		sb.append(" group_concat(xz_key,\":\",b.CONTENT order by xz_key )as tmxzx ");
+		sb.append("  from tktm a,tkxzx b where a.ID_=b.TK_ID group by a.ID_) tmxzx on a.id_ = tmxzx.id_ ,");
 		sb.append(" USER c,dept d ");
 		sb.append(" WHERE a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ AND a.id_ IN ( ");
 		sb.append(" SELECT DISTINCT tm_id ");
@@ -828,7 +831,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		args.add(id);
 		StringBuffer sqlCount = new StringBuffer("select count(*) ").append(sb);
 		int count = this.jdbcTemplate.queryForObject(sqlCount.toString(),new Object[]{id}, Integer.class);
-		StringBuffer sql = new StringBuffer(" SELECT b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  ").append(sb).append(" limit ?,?");
+		StringBuffer sql = new StringBuffer(" SELECT b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*,tmxzx.tmxzx  ").append(sb).append(" limit ?,?");
 		args.add((pageNow - 1) * pageSize);
 		args.add(pageSize);
 		
@@ -854,6 +857,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				tktm.setXybz(result.getString("xybz"));
 				tktm.setDrbz(result.getString("drbz"));
 				tktm.setKsbz(result.getString("ksbz"));
+				tktm.setTmxzx(result.getString("tmxzx"));
 				return tktm;
 			}
 			
@@ -908,9 +912,12 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 		Integer flid = (Integer)param.get("flId");
 		StringBuffer sql = new StringBuffer("");
 		if ("SuAdmin".equals(roleName)) {// 瓒呯骇绠＄悊鍛�
-			sql.append("select  b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*   ");
+			sql.append("select  b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*,tmxzx.tmxzx   ");
 			sql.append(" from tktm a ");
 			sql.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
+			sql.append(" left join (select a.ID_, ");
+			sql.append(" group_concat(xz_key,\":\",b.CONTENT order by xz_key )as tmxzx ");
+			sql.append("  from tktm a,tkxzx b where a.ID_=b.TK_ID group by a.ID_) tmxzx on a.id_ = tmxzx.id_ ");			
 			sql.append(" left join tkfl b on a.FL_ID=b.ID_, ");
 			sql.append(" USER c,dept d ");
 			sql.append(" WHERE (a.xybz='Y' or ksbz='Y') and a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ and a.fl_id = ?  ");
@@ -919,9 +926,12 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				args.addAll(this.rebuileSqlByConditionAndRole(sql, param));
 			}
 		} else if ("DeptAdmin".equals(roleName)) {// 閮ㄩ棬绠＄悊鍛�
-			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  " );
+			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*,tmxzx.tmxzx  " );
 			sql.append(" from tktm a ");
 			sql.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
+			sql.append(" left join (select a.ID_, ");
+			sql.append(" group_concat(xz_key,\":\",b.CONTENT order by xz_key )as tmxzx ");
+			sql.append("  from tktm a,tkxzx b where a.ID_=b.TK_ID group by a.ID_) tmxzx on a.id_ = tmxzx.id_ ");			
 			sql.append(" left join tkfl b on a.FL_ID=b.ID_, ");
 			sql.append(" USER c,dept d ");
 			sql.append(" WHERE a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ and a.fl_id = ? ");
@@ -932,9 +942,12 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 				args.addAll(this.rebuileSqlByConditionAndRole(sql, param));
 			}
 		} else if ("Other".equals(roleName)) {// 鏅�氱敤鎴�
-			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.*  " );
+			sql.append("select   b.TKMC,c.USER_NAME,d.DEPT_NAME,e.TITLE,a.* ,tmxzx.tmxzx " );
 			sql.append(" from tktm a ");
 			sql.append(" left join tmly e on a.TMLY_ID=e.ID_ ");
+			sql.append(" left join (select a.ID_, ");
+			sql.append(" group_concat(xz_key,\":\",b.CONTENT order by xz_key )as tmxzx ");
+			sql.append("  from tktm a,tkxzx b where a.ID_=b.TK_ID group by a.ID_) tmxzx on a.id_ = tmxzx.id_ ");			
 			sql.append(" left join tkfl b on a.FL_ID=b.ID_, ");
 			sql.append(" USER c,dept d ");
 			sql.append(" WHERE a.USER_ID=c.ID_ AND a.DEPTID=d.ID_ and a.fl_id = ? ");
@@ -970,6 +983,7 @@ public class ZstkglDaoImpl extends BaseJdbcDao implements ZstkglDao {
 						zstk.setYxbz(result.getString("yxbz"));
 						zstk.setXybz(result.getString("xybz"));
 						zstk.setKsbz(result.getString("ksbz"));
+						zstk.setTmxzx(result.getString("tmxzx"));
 						return zstk;
 					}
 

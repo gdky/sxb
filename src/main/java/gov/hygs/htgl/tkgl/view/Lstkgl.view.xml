@@ -1213,7 +1213,8 @@ if(mode ==1 || mode == 2){&#xD;
             </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">var entitys = view.get('#tktmGrid.selection');&#xD;
-if(entitys != undefined){&#xD;
+console.log();&#xD;
+if(entitys != undefined&amp;&amp;entitys.length!=0){&#xD;
 dorado.MessageBox.confirm(&quot;确定选入正式题库？&quot;,function(){&#xD;
 	view.get(&quot;#inAction&quot;).set(&quot;parameter&quot;,{&#xD;
 		tms: entitys&#xD;

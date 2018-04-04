@@ -1802,34 +1802,6 @@ view.get(&quot;#addyxtkDialog&quot;).show();</ClientEvent>
               <Property name="icon"> url(>skin>common/icons.gif) -120px -0px</Property>
             </Button>
             <Button>
-              <ClientEvent name="onClick">//var current = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
-var entitys = view.get('#tktmGrid.selection');&#xD;
-if(entitys != &quot;&quot;){&#xD;
-	dorado.MessageBox.confirm(&quot;真的要删除当前数据？&quot;,function(){&#xD;
-		/*&#xD;
-		var das = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
-		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
-		das.each(function(da){&#xD;
-			da.remove();&#xD;
-		});&#xD;
-		xzs.each(function(xz){&#xD;
-			xz.remove();&#xD;
-		});&#xD;
-		*/&#xD;
-		//current.remove();&#xD;
-		entitys.each(function(entity){&#xD;
-			entity.remove();&#xD;
-		});&#xD;
-		view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
-			view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
-		});&#xD;
-	});&#xD;
-}&#xD;
-</ClientEvent>
-              <Property name="caption">删除</Property>
-              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
-            </Button>
-            <Button>
               <ClientEvent name="onClick">var dsZstk = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
 view.get(&quot;#updateyxtkForm&quot;).set(&quot;readOnly&quot;,false);&#xD;
 view.get(&quot;#updatetkxzxGrid&quot;).set(&quot;readOnly&quot;,false);&#xD;
@@ -2002,6 +1974,34 @@ if(mode ==1 || mode == 2){&#xD;
 </ClientEvent>
               <Property name="caption">查看题目</Property>
               <Property name="icon">url(>skin>common/icons.gif) -40px -100px</Property>
+            </Button>
+            <Button>
+              <ClientEvent name="onClick">//var current = view.get(&quot;#dsZstk&quot;).getData(&quot;#&quot;);&#xD;
+var entitys = view.get('#tktmGrid.selection');&#xD;
+if(entitys != &quot;&quot;){&#xD;
+	dorado.MessageBox.confirm(&quot;移到历史题库？&quot;,function(){&#xD;
+		/*&#xD;
+		var das = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.daxzx&quot;);&#xD;
+		var xzs = view.get(&quot;#dsYxtk&quot;).getData(&quot;#.yxtkxzx&quot;);&#xD;
+		das.each(function(da){&#xD;
+			da.remove();&#xD;
+		});&#xD;
+		xzs.each(function(xz){&#xD;
+			xz.remove();&#xD;
+		});&#xD;
+		*/&#xD;
+		//current.remove();&#xD;
+		entitys.each(function(entity){&#xD;
+			entity.remove();&#xD;
+		});&#xD;
+		view.get(&quot;#updateAction&quot;).execute(function(){&#xD;
+			view.get(&quot;#dsTktmFilter&quot;).flush();&#xD;
+		});&#xD;
+	});&#xD;
+}&#xD;
+</ClientEvent>
+              <Property name="caption">移到历史题库</Property>
+              <Property name="icon">url(>skin>common/icons.gif) -140px -0px</Property>
             </Button>
             <Button id="inbutton">
               <ClientEvent name="onClick">view.get(&quot;#dsDeptIn&quot;).flush();&#xD;
