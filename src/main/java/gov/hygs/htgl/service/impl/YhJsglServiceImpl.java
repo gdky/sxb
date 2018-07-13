@@ -215,7 +215,8 @@ public class YhJsglServiceImpl implements YhJsglService {
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
 			    .getAuthentication()
 			    .getPrincipal();
-		String path = "/usr/local/tomcat/app/images/";
+		//String path = "/usr/local/tomcat/app/images/";
+		String path = "D:/app/tomcat/app/images/";
 		path=path+loginname;
 		File outfile = new File(path);
 		outfile.mkdirs();
